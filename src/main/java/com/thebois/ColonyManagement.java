@@ -11,7 +11,7 @@ import com.thebois.views.GameScreen;
 class ColonyManagement extends Game {
 
     private ShapeRenderer batch;
-    private BitmapFont fontGlapoi;
+    private BitmapFont font;
     private GameScreen gameScreen;
 
     @Override
