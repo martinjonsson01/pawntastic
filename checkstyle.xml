@@ -671,7 +671,7 @@
         <module name="AbbreviationAsWordInName">
             <property name="ignoreFinal" value="false" />
             <property name="allowedAbbreviationLength" value="0" />
-            <property name="allowedAbbreviations" value="AST" />
+            <property name="allowedAbbreviations" value="AST,I" />
         </module>
         <module name="AbstractClassName" />
         <module name="ClassTypeParameterName" />
