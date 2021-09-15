@@ -299,10 +299,6 @@
         </module>
 
         <!-- Class Design -->
-        <module name="DesignForExtension">
-            <property name="ignoredAnnotations" value="Override, Test, Before, After, BeforeClass, AfterClass" />
-            <property name="ignoredAnnotations" value="BeforeAll, AfterAll, BeforeEach, AfterEach" />
-        </module>
         <module name="FinalClass" />
         <module name="HideUtilityClassConstructor" />
         <module name="InnerTypeLast" />
