@@ -1,9 +1,12 @@
 package com.thebois;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import com.thebois.controllers.GameInputProcessor;
 import com.thebois.views.GameScreen;
 
 /**
@@ -22,8 +25,9 @@ class ColonyManagement extends Game {
         // use libGDX's default Arial font
         font = new BitmapFont();
         gameScreen = new GameScreen(batch);
-
         this.setScreen(gameScreen);
+
+        initInputProcessors();
     }
 
     @Override
@@ -31,6 +35,13 @@ class ColonyManagement extends Game {
         batch.dispose();
         font.dispose();
         gameScreen.dispose();
+    }
+
+    private void initInputProcessors() {
+        final InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(new GameInputProcessor());
+
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
 }
