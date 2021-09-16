@@ -33,14 +33,14 @@ public class RoleTests {
 
     @ParameterizedTest
     @MethodSource("getEqualRoles")
-    public void equalsReturnsTrueWhenEqual(Role first, Role second) {
+    public void equalsReturnsTrueWhenEqual(final Role first, final Role second) {
         // Assert
         assertThat(first).isEqualTo(second);
     }
 
     @ParameterizedTest
     @MethodSource("getUnequalRoles")
-    public void equalsReturnsFalseWhenUnequal(Role first, Role second) {
+    public void equalsReturnsFalseWhenUnequal(final Role first, final Role second) {
         // Assert
         assertThat(first).isNotEqualTo(second);
     }
