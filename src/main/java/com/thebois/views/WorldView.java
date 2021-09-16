@@ -27,6 +27,7 @@ public class WorldView {
 
     /**
      * Renders the world on the screen.
+     *
      * @param batch Used for rendering.
      * @param rectangleSize Size of all rectangles in the world.
      */
