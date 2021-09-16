@@ -32,7 +32,6 @@ public class WorldView {
      * @param rectangleSize Size of all rectangles in the world.
      */
     public void draw(final ShapeRenderer batch, final float rectangleSize) {
-        batch.begin(ShapeRenderer.ShapeType.Filled);
         batch.setColor(grassColor);
         for (int posX = 0; posX < worldGrid.length; posX++) {
             for (int posY = 0; posY < worldGrid[0].length; posY++) {
@@ -40,6 +39,5 @@ public class WorldView {
                            rectangleSize);
             }
         }
-        batch.end();
     }
 }

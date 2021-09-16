@@ -50,10 +50,11 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(backgroundColor);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
+        batch.begin(ShapeRenderer.ShapeType.Filled);
 
+        // render views
         worldView.draw(batch, rectangleSize);
 
-        batch.begin(ShapeRenderer.ShapeType.Filled);
         batch.setColor(blueColor);
         batch.rect(worldWidth / 2 - rectangleSize, worldHeight / 2 - rectangleSize, rectangleSize,
                    rectangleSize);
