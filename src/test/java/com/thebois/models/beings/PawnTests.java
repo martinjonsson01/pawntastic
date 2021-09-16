@@ -12,9 +12,10 @@ public class PawnTests {
     public void walkToPositiveTest() {
 
         // arrange
-        int steps = 10;
-
-        float startX, startY, endX, endY;
+        final float startX;
+        final float startY;
+        final float endX;
+        final float endY;
 
         startX = 0f;
         startY = 0f;
@@ -22,10 +23,12 @@ public class PawnTests {
         endX = 10f;
         endY = 10f;
 
-        Position startPosition = new Position(startX, startY);
-        Position endPosition = new Position(endX, endY);
+        final Position startPosition = new Position(startX, startY);
+        final Position endPosition = new Position(endX, endY);
 
-        Pawn pawn = new Pawn(startPosition);
+        final Pawn pawn = new Pawn(startPosition);
+
+        final int steps = 10;
 
         // Act
         pawn.walkTo(endPosition);
@@ -42,9 +45,10 @@ public class PawnTests {
     public void walkToNegativeTest() {
 
         // arrange
-        int steps = 10;
-
-        float startX, startY, endX, endY;
+        final float startX;
+        final float startY;
+        final float endX;
+        final float endY;
 
         startX = 0f;
         startY = 0f;
@@ -52,11 +56,12 @@ public class PawnTests {
         endX = -10f;
         endY = -10f;
 
-        Position startPosition = new Position(startX, startY);
-        Position endPosition = new Position(endX, endY);
+        final Position startPosition = new Position(startX, startY);
+        final Position endPosition = new Position(endX, endY);
 
-        Pawn pawn = new Pawn(startPosition);
+        final Pawn pawn = new Pawn(startPosition);
 
+        final int steps = 10;
         // Act
         pawn.walkTo(endPosition);
         for (int i = 0; i < steps; i++) {
