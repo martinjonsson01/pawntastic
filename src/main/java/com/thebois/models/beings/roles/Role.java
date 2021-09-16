@@ -12,15 +12,9 @@ public class Role {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        else if (obj == null) {
-            return false;
-        }
-        else {
-            return this.getClass().equals(obj.getClass());
-        }
+        if (obj == this) return true;
+        if (obj == null) return false;
+        return this.getClass().equals(obj.getClass());
     }
 
 }

@@ -1,7 +1,8 @@
 package com.thebois.views;
 
-import com.badlogic.gdx.math.Vector2;
 import com.thebois.models.Position;
+
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Adapts different position formats to each other.
