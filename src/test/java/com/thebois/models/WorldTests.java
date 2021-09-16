@@ -21,6 +21,18 @@ public class WorldTests {
         assertThat(matrixEquals(worldMatrix, testWorld)).isTrue();
     }
 
+    @Test
+    public void worldFind() {
+        // Arrange
+        final World world = new World(2);
+
+        // Act
+        final Object worldObject = world.find();
+
+        // Assert
+        assertThat(worldObject).isEqualTo(null);
+    }
+
     private boolean matrixEquals(ITile[][] worldMatrix1, ITile[][]worldMatrix2) {
         for (int y = 0; y < worldMatrix2.length; y++) {
             final ITile[] row = worldMatrix2[y];
