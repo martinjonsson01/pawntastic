@@ -15,10 +15,18 @@ class ColonyManagement extends Game {
 
     private ShapeRenderer batch;
     private BitmapFont font;
-    private GameScreen gameScreen;
-    private World world;
-    private WorldView worldView;
     private final int worldSize = 50;
+
+    // Models
+    private World world;
+
+    // Views
+    private WorldView worldView;
+
+    // Screens
+    private GameScreen gameScreen;
+
+    // Controllers
 
     @Override
     public void create() {
@@ -26,9 +34,17 @@ class ColonyManagement extends Game {
 
         // use libGDX's default Arial font
         font = new BitmapFont();
+
+        // Models
         world = new World(worldSize);
+
+        // Views
         worldView = new WorldView(world.getWorld());
+
+        // Screens
         gameScreen = new GameScreen(batch, worldView);
+
+        // Controllers
 
         this.setScreen(gameScreen);
     }
