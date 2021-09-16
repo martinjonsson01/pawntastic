@@ -1,10 +1,10 @@
 package com.thebois;
 
-import com.thebois.views.GameScreen;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
+import com.thebois.views.GameScreen;
 
 /**
  * The main representation of the game.
