@@ -508,22 +508,10 @@
         </module>
         <module name="AvoidStaticImport" />
         <module name="CustomImportOrder">
-            <property name="customImportOrderRules" value="STANDARD_JAVA_PACKAGE###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE###STATIC" />
-            <property name="standardPackageRegExp" value="^java\." />
-            <property name="specialImportsRegExp" value="^javax\." />
-            <property name="thirdPartyPackageRegExp" value="^org\." />
-            <property name="sortImportsInGroupAlphabetically" value="true" />
-            <property name="separateLineBetweenGroups" value="true" />
+            <property name="customImportOrderRules" value="STANDARD_JAVA_PACKAGE###THIRD_PARTY_PACKAGE###SAME_PACKAGE(2)###STATIC"/>
+            <property name="standardPackageRegExp" value="^(java|javax)\."/>
         </module>
         <module name="IllegalImport" />
-        <module name="ImportOrder">
-            <property name="staticGroups" value="org,java"/>
-            <property name="groups" value="/^java\./,javax,org" />
-            <property name="ordered" value="true" />
-            <property name="separated" value="true" />
-            <property name="option" value="bottom" />
-            <property name="sortStaticImportsAlphabetically" value="true" />
-        </module>
         <module name="RedundantImport" />
         <module name="UnusedImports" />
 
