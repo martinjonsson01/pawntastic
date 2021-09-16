@@ -32,4 +32,22 @@ public interface IRoleAllocator {
      */
     int countBeingsWithRole(Role role);
 
+    /**
+     * Checks if the allocation of a role can be decreased.
+     *
+     * @param role The role to check
+     *
+     * @return Whether the allocation for the role can be decreased
+     */
+    boolean canDecreaseAllocation(Role role);
+
+    /**
+     * Checks if the allocation of a role can be increased.
+     *
+     * @param role The role to check
+     *
+     * @return Whether the allocation for the role can be increased
+     */
+    boolean canIncreaseAllocation(Role role);
+
 }

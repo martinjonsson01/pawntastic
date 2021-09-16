@@ -25,8 +25,7 @@ public class RoleAllocator implements IRoleAllocator {
 
     @Override
     public boolean tryIncreaseAllocation(final Role role) {
-        final Stream<IBeing> idleBeings = beings.stream().filter(this::isIdle);
-        final Optional<IBeing> idleBeing = idleBeings.findAny();
+        final Optional<IBeing> idleBeing = findIdleBeing();
         if (idleBeing.isPresent()) {
             idleBeing.get().setRole(role);
             return true;
@@ -35,11 +34,18 @@ public class RoleAllocator implements IRoleAllocator {
         return false;
     }
 
+    private Optional<IBeing> findIdleBeing() {
+        final Stream<IBeing> idleBeings = beings.stream().filter(this::isIdle);
+        return idleBeings.findAny();
+    }
+
+    private boolean isIdle(final IBeing being) {
+        return being.getRole() == null;
+    }
+
     @Override
     public boolean tryDecreaseAllocation(final Role role) {
-        final Optional<IBeing>
-            beingWithRole =
-            beings.stream().filter(being -> role.equals(being.getRole())).findFirst();
+        final Optional<IBeing> beingWithRole = findBeingWithRole(role);
         if (beingWithRole.isPresent()) {
             beingWithRole.get().setRole(null);
             return true;
@@ -47,13 +53,23 @@ public class RoleAllocator implements IRoleAllocator {
         return false;
     }
 
+    private Optional<IBeing> findBeingWithRole(final Role role) {
+        return beings.stream().filter(being -> role.equals(being.getRole())).findFirst();
+    }
+
     @Override
     public int countBeingsWithRole(final Role role) {
         return (int) beings.stream().filter(being -> role.equals(being.getRole())).count();
     }
 
-    private boolean isIdle(final IBeing being) {
-        return being.getRole() == null;
+    @Override
+    public boolean canDecreaseAllocation(final Role role) {
+        return findBeingWithRole(role).isPresent();
+    }
+
+    @Override
+    public boolean canIncreaseAllocation(final Role role) {
+        return findIdleBeing().isPresent();
     }
 
 }

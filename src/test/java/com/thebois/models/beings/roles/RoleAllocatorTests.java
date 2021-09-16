@@ -169,4 +169,69 @@ public class RoleAllocatorTests {
         assertThat(thirdCount).isEqualTo(expectedThirdCount);
     }
 
+    @Test
+    public void canDecreaseAllocationReturnsTrueWhenOneHasRole() {
+        // Arrange
+        final Role role = RoleFactory.lumberjack();
+
+        final List<IBeing> beings = mockBeings(3);
+        beings.addAll(mockBeingsWithRole(1, role));
+
+        final IRoleAllocator cut = new RoleAllocator(beings);
+
+        // Act
+        final boolean canDecrease = cut.canDecreaseAllocation(role);
+
+        // Assert
+        assertThat(canDecrease).isTrue();
+    }
+
+    @Test
+    public void canDecreaseAllocationReturnsFalseWhenNoneHaveRole() {
+        // Arrange
+        final Role role = RoleFactory.lumberjack();
+
+        final List<IBeing> beings = mockBeings(3);
+
+        final IRoleAllocator cut = new RoleAllocator(beings);
+
+        // Act
+        final boolean canDecrease = cut.canDecreaseAllocation(role);
+
+        // Assert
+        assertThat(canDecrease).isFalse();
+    }
+
+    @Test
+    public void canIncreaseAllocationReturnsTrueWhenNoneHaveRole() {
+        // Arrange
+        final Role role = RoleFactory.lumberjack();
+
+        final List<IBeing> beings = mockBeings(3);
+
+        final IRoleAllocator cut = new RoleAllocator(beings);
+
+        // Act
+        final boolean canIncrease = cut.canIncreaseAllocation(role);
+
+        // Assert
+        assertThat(canIncrease).isTrue();
+    }
+
+    @Test
+    public void canIncreaseAllocationReturnsFalseWhenAllHaveRole() {
+        // Arrange
+        final Role role = RoleFactory.lumberjack();
+
+        final List<IBeing> beings = mockBeingsWithRole(3, role);
+
+        final IRoleAllocator cut = new RoleAllocator(beings);
+
+        // Act
+        final boolean canIncrease = cut.canIncreaseAllocation(role);
+
+        // Assert
+        assertThat(canIncrease).isFalse();
+    }
+
 }
