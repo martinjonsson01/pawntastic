@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 public class StructureView {
 
     private final float houseWidth = 64f;
-    private final float houseHieght = 64f;
+    private final float houseHeight = 64f;
     private final Color blueColor = new Color(0, 0, 1, 1);
     private ArrayList<Vector2> structures = new ArrayList<>();
 
@@ -25,16 +25,17 @@ public class StructureView {
     public void draw(ShapeRenderer batch, float delta) {
         for (Vector2 structure : structures) {
             batch.setColor(blueColor);
-            batch.rect(structure.x, structure.y, houseWidth, houseHieght);
+            batch.rect(structure.x, structure.y, houseWidth, houseHeight);
         }
     }
 
     /**
-     * Updates the structres that should be displayed in the game.
+     * Updates the structures that should be displayed in the game.
      *
      * @param lStructures The position of the structures.
      */
     public void updateStructureView(ArrayList<Vector2> lStructures) {
         structures = lStructures;
     }
+
 }
