@@ -1,5 +1,7 @@
 package com.thebois.models;
 
+import java.util.Objects;
+
 /**
  * A two-dimensional location.
  */
@@ -40,6 +42,23 @@ public final class Position {
 
     public void setPosY(final float posY) {
         this.posY = posY;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Position position = (Position) o;
+        return Float.compare(position.posX, posX) == 0 && Float.compare(position.posY, posY) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(posX, posY);
     }
 
 }
