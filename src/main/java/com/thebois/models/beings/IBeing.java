@@ -16,12 +16,14 @@ public interface IBeing {
 
     /**
      * Sets a position to move towards.
-     * @param destination the desired position to move towards.
+     *
+     * @param position the desired destination to move towards.
      */
-    void walkTo(Position destination);
+    void walkTo(Position position);
 
     /**
      * Updates the objects internal state.
      */
     void update();
+
 }
