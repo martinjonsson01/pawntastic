@@ -2,9 +2,10 @@ package com.thebois;
 
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
-
 import com.thebois.models.World;
+import com.thebois.models.tiles.ITile;
+
+import static org.assertj.core.api.Assertions.*;
 
 public class WorldTests {
 
@@ -14,7 +15,7 @@ public class WorldTests {
         final int[][] testWorld = new int[2][2];
 
         final World world = new World(2);
-        final int[][] worldMatrix = world.getWorld();
+        final ITile[][] worldMatrix = world.getWorld();
         assertThat(testWorld.length).isEqualTo(worldMatrix.length);
     }
 }

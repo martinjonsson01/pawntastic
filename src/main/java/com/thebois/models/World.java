@@ -1,11 +1,13 @@
 package com.thebois.models;
 
+import com.thebois.models.tiles.ITile;
+
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
 public class World implements IFinder {
 
-    private int[][] worldMatrix;
+    private ITile[][] worldMatrix;
 
     private World() {
     }
@@ -16,7 +18,7 @@ public class World implements IFinder {
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
      */
     public World(int worldSize) {
-        worldMatrix = new int[worldSize][worldSize];
+        worldMatrix = new ITile[worldSize][worldSize];
     }
 
     /**
@@ -31,9 +33,9 @@ public class World implements IFinder {
     /**
      * Returns the matrix of the world.
      *
-     * @return int[][]
+     * @return ITile[][]
      */
-    public int[][] getWorld() {
+    public ITile[][] getWorld() {
         return worldMatrix;
     }
 
