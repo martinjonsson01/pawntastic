@@ -13,7 +13,7 @@ public class WorldTests {
 
         final int[][] testWorld = new int[2][2];
 
-        final World world = new World();
+        final World world = new World(2);
         final int[][] worldMatrix = world.getWorld();
         assertThat(testWorld.length).isEqualTo(worldMatrix.length);
     }
