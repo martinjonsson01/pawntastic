@@ -1,6 +1,7 @@
 package com.thebois.views;
 
 import com.badlogic.gdx.math.Vector2;
+
 import com.thebois.models.Position;
 
 /**
