@@ -36,12 +36,12 @@ public class Pawn implements IBeing {
         final float distanceY = Math.signum(deltaY) * walkDistanceY;
 
         // Calculate new position
-        final float newXPos = this.currentPosition.getPosX() + distanceX;
-        final float newYPos = this.currentPosition.getPosY() + distanceY;
+        final float newPosX = this.currentPosition.getPosX() + distanceX;
+        final float newPosY = this.currentPosition.getPosY() + distanceY;
 
         // Apply new position to current position
-        this.currentPosition.setPosX(newXPos);
-        this.currentPosition.setPosY(newYPos);
+        this.currentPosition.setPosX(newPosX);
+        this.currentPosition.setPosY(newPosY);
     }
 
     @Override
