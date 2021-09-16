@@ -504,7 +504,7 @@
 
         <!-- Imports -->
         <module name="AvoidStarImport">
-            <property name="excludes" value="java.io,java.net,java.lang.Math,org.assertj.core.api.Assertions"/>
+            <property name="excludes" value="java.io,java.net,java.lang.Math,org.assertj.core.api.Assertions,org.mockito.Mockito.*,org.mockito.ArgumentMatchers.*" />
         </module>
         <module name="AvoidStaticImport" />
         <module name="CustomImportOrder">
