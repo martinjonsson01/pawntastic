@@ -15,9 +15,9 @@ public class GameScreen implements Screen {
     private final ShapeRenderer batch;
     private final OrthographicCamera camera;
     private final FitViewport viewport;
-    private final float worldWidth = 1000f;
-    private final float worldHeight = 1000f;
-    private final float rectangleSize = 20f;
+    private final float viewportWidth = 1000f;
+    private final float viewportHeight = 1000f;
+    private final float rectangleSize;
     private final Color backgroundColor = new Color(0, 0, 0.2f, 1);
     private final int moveSpeed = 200;
     private int posY = 0;
@@ -29,16 +29,18 @@ public class GameScreen implements Screen {
      *
      * @param batch The batch to use when rendering
      * @param worldView The view of the world with information on how to draw itself.
+     * @param worldSize The size of the matrix for the world.
      */
-    public GameScreen(final ShapeRenderer batch, WorldView worldView) {
+    public GameScreen(final ShapeRenderer batch, WorldView worldView, final int worldSize) {
         this.batch = batch;
 
         this.worldView = worldView;
 
         // create the camera and the SpriteBatch
         camera = new OrthographicCamera();
-        viewport = new FitViewport(worldWidth, worldHeight, camera);
-        camera.translate(worldWidth / 2, worldHeight / 2);
+        viewport = new FitViewport(viewportWidth, viewportHeight, camera);
+        camera.translate(viewportWidth / 2, viewportHeight / 2);
+        rectangleSize = (float) Math.min(viewportHeight, viewportWidth) / worldSize;
     }
 
     @Override
@@ -56,8 +58,8 @@ public class GameScreen implements Screen {
         worldView.draw(batch, rectangleSize);
 
         batch.setColor(blueColor);
-        batch.rect(worldWidth / 2 - rectangleSize, worldHeight / 2 - rectangleSize, rectangleSize,
-                   rectangleSize);
+        batch.rect(viewportWidth / 2 - rectangleSize, viewportHeight / 2 - rectangleSize,
+                   rectangleSize, rectangleSize);
         batch.setColor(1, 1, 1, 1);
         batch.rect(0, posY, rectangleSize, rectangleSize);
         batch.end();

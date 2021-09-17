@@ -42,7 +42,7 @@ class ColonyManagement extends Game {
         worldView = new WorldView(world.getWorld());
 
         // Screens
-        gameScreen = new GameScreen(batch, worldView);
+        gameScreen = new GameScreen(batch, worldView, worldSize);
 
         // Controllers
 
