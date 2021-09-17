@@ -3,7 +3,7 @@ package com.thebois.models;
 /**
  * A two-dimensional location.
  */
-public final class Position {
+public final class Position implements IDeepClonable<Position> {
 
     private float posX;
     private float posY;
@@ -40,6 +40,11 @@ public final class Position {
 
     public void setPosY(final float posY) {
         this.posY = posY;
+    }
+
+    @Override
+    public Position deepClone() {
+        return new Position(this.posX, this.posY);
     }
 
 }
