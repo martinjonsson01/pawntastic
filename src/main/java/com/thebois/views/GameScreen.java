@@ -26,14 +26,14 @@ public class GameScreen implements Screen {
      * Creates an instance of GameScreen.
      *
      * @param batch          The batch to use when rendering
-     * @param worldView      The view of the world with information on how to draw itself.
-     * @param worldSize      The size of the matrix for the world.
-     * @param viewportHeight
-     * @param viewportWidth
+     * @param viewportHeight The height used for viewport
+     * @param viewportWidth  The width used for viewport
+     * @param views          Views to draw
      */
     public GameScreen(final ShapeRenderer batch,
                       final float viewportHeight,
-                      final float viewportWidth, Collection<IView> views) {
+                      final float viewportWidth,
+                      Collection<IView> views) {
         this.batch = batch;
 
         this.viewportHeight = viewportHeight;
@@ -59,7 +59,7 @@ public class GameScreen implements Screen {
         batch.begin(ShapeRenderer.ShapeType.Filled);
 
         // render views
-        for ( IView view: views) {
+        for (IView view : views) {
             view.draw(batch);
         }
         batch.end();

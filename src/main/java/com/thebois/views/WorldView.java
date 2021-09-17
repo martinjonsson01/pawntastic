@@ -16,6 +16,11 @@ public class WorldView implements IView {
     private ArrayList<ITerrain> terrainTiles = new ArrayList<>();
     private float tileSize;
 
+    /**
+     * Creates the WorldView with a tileSize.
+     *
+     * @param tileSize Is used for correct scaling.
+     */
     public WorldView(final float tileSize) {
         this.tileSize = tileSize;
     }
@@ -33,7 +38,6 @@ public class WorldView implements IView {
      * Renders the world on the screen.
      *
      * @param batch Used for rendering.
-     * @param tileSize Size of all tiles in the world.
      */
     @Override
     public void draw(final ShapeRenderer batch) {

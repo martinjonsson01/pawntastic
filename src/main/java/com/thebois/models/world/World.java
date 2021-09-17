@@ -11,9 +11,6 @@ public class World implements IFinder {
 
     private ITerrain[][] terrainMatrix;
 
-    private World() {
-    }
-
     /**
      * Initiates the world with the given size.
      *

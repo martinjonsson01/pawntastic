@@ -8,7 +8,7 @@ package com.thebois.models;
 public interface IDeepClonable<T> {
 
     /**
-     * Createas a clone with no references to the original object.
+     * Creates a clone with no references to the original object.
      *
      * @return The deep clone object.
      */

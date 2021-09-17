@@ -1,17 +1,19 @@
 package com.thebois.models.world;
 
-import com.thebois.models.IDeepClonable;
 import com.thebois.models.Position;
 
-public abstract class Terrain implements ITerrain {
+/**
+ * Abstract implementation of ITerrain.
+ */
+public abstract class AbstractTerrain implements ITerrain {
 
     private final Position position;
 
-    protected Terrain(Position position) {
+    protected AbstractTerrain(Position position) {
         this.position = position;
     }
 
-    protected Terrain(float posX, float posY) {
+    protected AbstractTerrain(float posX, float posY) {
         this.position = new Position(posX, posY);
     }
 
