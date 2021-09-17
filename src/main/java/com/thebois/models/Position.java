@@ -3,7 +3,7 @@ package com.thebois.models;
 /**
  * A two-dimensional location.
  */
-public final class Position implements IDeepClonable {
+public final class Position implements IDeepClonable<Position> {
 
     private float posX;
     private float posY;
