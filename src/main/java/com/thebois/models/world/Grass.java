@@ -35,5 +35,4 @@ public class Grass extends AbstractTerrain {
     public Grass deepClone() {
         return new Grass(getPosition());
     }
-
 }
