@@ -3,7 +3,7 @@ package com.thebois.views;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import com.thebois.models.tiles.ITile;
+import com.thebois.models.world.ITile;
 
 /**
  * World view handles all the drawing of the world itself and its information on how to draw it.

@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import com.thebois.models.World;
+import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
 import com.thebois.views.WorldView;
 
