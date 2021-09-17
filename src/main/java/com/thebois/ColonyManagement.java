@@ -21,7 +21,7 @@ class ColonyManagement extends Game {
 
         // use libGDX's default Arial font
         font = new BitmapFont();
-        gameScreen = new GameScreen(batch);
+        gameScreen = new GameScreen(batch, font);
 
         this.setScreen(gameScreen);
     }

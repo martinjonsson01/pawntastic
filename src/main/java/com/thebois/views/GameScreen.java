@@ -3,6 +3,7 @@ package com.thebois.views;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class GameScreen implements Screen {
 
     private final ShapeRenderer batch;
+    private final BitmapFont font;
     private final OrthographicCamera camera;
     private final FitViewport viewport;
     private final float worldWidth = 800f;
@@ -27,9 +29,11 @@ public class GameScreen implements Screen {
      * Creates an instance of GameScreen.
      *
      * @param batch The batch to use when rendering
+     * @param font  The font for all text in the game
      */
-    public GameScreen(final ShapeRenderer batch) {
+    public GameScreen(final ShapeRenderer batch, final BitmapFont font) {
         this.batch = batch;
+        this.font = font;
 
         // create the camera and the SpriteBatch
         camera = new OrthographicCamera();
@@ -42,14 +46,16 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void render(float delta) {
+    public void render(final float delta) {
         ScreenUtils.clear(backgroundColor);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin(ShapeRenderer.ShapeType.Filled);
         batch.setColor(blueColor);
-        batch.rect(worldWidth / 2 - rectangleSize, worldHeight / 2 - rectangleSize, rectangleSize,
+        batch.rect(worldWidth / 2 - rectangleSize,
+                   worldHeight / 2 - rectangleSize,
+                   rectangleSize,
                    rectangleSize);
         batch.setColor(1, 1, 1, 1);
         batch.rect(0, posY, rectangleSize, rectangleSize);
@@ -59,7 +65,7 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {
+    public void resize(final int width, final int height) {
         viewport.update(width, height);
     }
 
