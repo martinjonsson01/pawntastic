@@ -1,11 +1,17 @@
 package com.thebois.views;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import com.thebois.models.Position;
+import com.thebois.models.beings.Colony;
+import com.thebois.models.beings.IBeing;
 
 /**
  * The main screen displaying the world and UI.
@@ -22,6 +28,9 @@ public class GameScreen implements Screen {
     private final int moveSpeed = 200;
     private int posY = 0;
     private final Color blueColor = new Color(0, 0, 1, 1);
+    private ColonyView colonyView;
+    private Colony colony;
+    private final Random random = new Random();
 
     /**
      * Creates an instance of GameScreen.
@@ -35,6 +44,30 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         viewport = new FitViewport(worldWidth, worldHeight, camera);
         camera.translate(worldWidth / 2, worldHeight / 2);
+
+        initColony();
+    }
+
+    /**
+     * This method is temporary do not forget to remove!!!.
+     */
+    void initColony() {
+        // Change this variable to spawn a different amount of pawns on the screen.
+        final int numberOfPawns = 1000;
+
+        colony = new Colony();
+
+        for (int i = 0; i < numberOfPawns; i++) {
+            colony.createBeing(new Position(random.nextInt((int) worldWidth * 2),
+                                            random.nextInt((int) worldWidth * 2)));
+        }
+
+        for (IBeing pawn : colony.getBeings()) {
+            pawn.walkTo(new Position(random.nextInt((int) worldWidth),
+                                     random.nextInt((int) worldWidth)));
+        }
+
+        colonyView = new ColonyView();
     }
 
     @Override
@@ -47,15 +80,8 @@ public class GameScreen implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
-        batch.begin(ShapeRenderer.ShapeType.Filled);
-        batch.setColor(blueColor);
-        batch.rect(worldWidth / 2 - rectangleSize, worldHeight / 2 - rectangleSize, rectangleSize,
-                   rectangleSize);
-        batch.setColor(1, 1, 1, 1);
-        batch.rect(0, posY, rectangleSize, rectangleSize);
-        batch.end();
-
-        posY += moveSpeed * delta;
+        colony.update();
+        colonyView.drawAllPawns(batch, colony.getBeings());
     }
 
     @Override
