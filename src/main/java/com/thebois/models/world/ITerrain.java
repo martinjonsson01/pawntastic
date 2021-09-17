@@ -1,9 +1,11 @@
 package com.thebois.models.world;
 
+import com.thebois.models.IDeepClonable;
+
 /**
  * Represents a tile of terrain. E.g. grass, dirt etc.
  */
-public interface ITerrain extends ITile {
+public interface ITerrain extends ITile, IDeepClonable<ITerrain> {
 
     /**
      * Returns the specific type of terrain.

@@ -1,5 +1,7 @@
 package com.thebois.models.world;
 
+import java.util.ArrayList;
+
 import com.thebois.models.IFinder;
 
 /**
@@ -19,6 +21,12 @@ public class World implements IFinder {
      */
     public World(int worldSize) {
         terrainMatrix = new ITerrain[worldSize][worldSize];
+
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
+                terrainMatrix[y][x] = new Grass(x, y);
+            }
+        }
     }
 
     /**
@@ -35,8 +43,14 @@ public class World implements IFinder {
      *
      * @return ITile[][]
      */
-    public ITerrain[][] getWorld() {
-        return terrainMatrix;
+    public ArrayList<ITerrain> getTerrainTiles() {
+        final ArrayList<ITerrain> copy = new ArrayList<>();
+        for (final ITerrain[] matrix : terrainMatrix) {
+            for (final ITerrain iTerrain : matrix) {
+                copy.add(iTerrain.deepClone());
+            }
+        }
+        return copy;
     }
 
 }
