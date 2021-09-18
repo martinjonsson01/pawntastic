@@ -13,7 +13,7 @@ public class Structure implements IStructure {
     private StructureType structureType;
 
     /**
-     * Creates a structure with a position.
+     * Creates a structure with a position and type.
      *
      * @param position      The position the structure have.
      * @param structureType The type of structures to create.

@@ -5,6 +5,9 @@ import java.util.Collection;
 
 import org.junit.jupiter.api.Test;
 
+import com.thebois.models.Position;
+import com.thebois.models.world.structures.IStructure;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class WorldTests {
@@ -41,6 +44,28 @@ public class WorldTests {
 
         // Assert
         assertThat(worldObject).isEqualTo(null);
+    }
+
+    @Test
+    public void getStructuresTest() {
+        final World world = new World(25);
+        world.createStructure(new Position(123, 123));
+        final IStructure structure = world.getStructures().get(0);
+
+        assertThat(structure.getPosition()).isEqualTo(new Position(123, 123));
+    }
+
+    @Test
+    public void createStructureTest() {
+        final World world = new World(25);
+
+        final Boolean isEmpty = world.getStructures().isEmpty();
+        assertThat(isEmpty).isTrue();
+        final Boolean isStructureBuilt = world.createStructure(new Position(0, 0));
+        assertThat(isStructureBuilt).isTrue();
+
+        final int numberOfStructures = world.getStructures().size();
+        assertThat(numberOfStructures).isEqualTo(1);
     }
 
     private boolean matrixEquals(ITile[][] worldMatrix1, ITile[][] worldMatrix2) {
