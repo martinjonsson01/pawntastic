@@ -24,4 +24,15 @@ public final class PositionAdapter {
         return new Vector2(position.getPosX(), position.getPosY());
     }
 
+    /**
+     * Converts vector to custom position.
+     *
+     * @param vector2 The vector to convert from.
+     *
+     * @return The same vector in position form.
+     */
+    public static Position toPosition(Vector2 vector2) {
+        return new Position(vector2.x, vector2.y);
+    }
+
 }

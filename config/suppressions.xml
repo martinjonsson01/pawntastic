@@ -6,4 +6,5 @@
 
 <suppressions>
     <suppress checks="MissingJavadocMethod" files="IBeingGroup"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="ColonyManagement"/>
 </suppressions>

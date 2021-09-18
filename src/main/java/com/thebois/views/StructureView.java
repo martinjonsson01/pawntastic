@@ -2,40 +2,55 @@ package com.thebois.views;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
+
+import com.thebois.models.world.structures.IStructure;
 
 /**
  * Responsible for displaying structures.
  */
-public class StructureView {
+public final class StructureView implements IView {
 
-    private float tileSize;
-    private ArrayList<Vector2> structures = new ArrayList<>();
+    private final float tileSize;
+    private ArrayList<IStructure> structures = new ArrayList<>();
+    private final Color brown = new Color(0.4f, 0.2f, 0f, 1);
 
-    private StructureView(final float tileSize) {
+    /**
+     * Creates an instance of a Structure view.
+     *
+     * @param tileSize The tile size of the world in order to render structures in the right size.
+     */
+    public StructureView(final float tileSize) {
         this.tileSize = tileSize;
     }
 
-    /**
-     * Adds drawings to drawing Batch.
-     *
-     * @param batch Batch to add drawings to
-     * @param delta Time since last update
-     */
-    public void draw(ShapeRenderer batch, float delta) {
-        for (Vector2 structure : structures) {
-            batch.rect(structure.x, structure.y, tileSize, tileSize);
+    @Override
+    public void draw(ShapeRenderer batch) {
+        for (IStructure structure : structures) {
+            batch.setColor(brown);
+            final int posX = (int) ((structure.getPosition().getPosX()) * tileSize);
+            final int poxY = (int) ((structure.getPosition().getPosY()) * tileSize);
+            batch.rect(posX, poxY, tileSize, tileSize);
         }
+    }
+
+    /**
+     * Gets the tile size of the world.
+     *
+     * @return the tile size as a float.
+     */
+    public float getTileSize() {
+        return tileSize;
     }
 
     /**
      * Updates the structures that should be displayed in the game.
      *
-     * @param lStructures The position of the structures.
+     * @param Structures The structures that are to be displayed.
      */
-    public void updateStructureView(ArrayList<Vector2> lStructures) {
-        structures = lStructures;
+    public void updateStructureView(ArrayList<IStructure> Structures) {
+        structures = Structures;
     }
 
 }

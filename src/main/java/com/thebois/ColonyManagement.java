@@ -8,10 +8,13 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import com.thebois.controllers.StructureController;
 import com.thebois.controllers.TerrainController;
 import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
+import com.thebois.views.IProjector;
 import com.thebois.views.IView;
+import com.thebois.views.StructureView;
 import com.thebois.views.WorldView;
 
 /**
@@ -28,9 +31,11 @@ class ColonyManagement extends Game {
     private World world;
     // Views
     private WorldView worldView;
+    private StructureView structureView;
     // Screens
     private GameScreen gameScreen;
     private TerrainController terrainController;
+    private StructureController structureController;
     private float tileSize;
 
     // Controllers
@@ -49,14 +54,20 @@ class ColonyManagement extends Game {
 
         // Views
         worldView = new WorldView(tileSize);
+        structureView = new StructureView(tileSize);
+
+        // Arrange Views for gameScreen
         final ArrayList<IView> views = new ArrayList<>();
         views.add(worldView);
+        views.add(structureView);
 
         // Screens
         gameScreen = new GameScreen(batch, viewportHeight, viewportWidth, views);
 
+        final IProjector projector = gameScreen.getProjector();
         // Controllers
         this.terrainController = new TerrainController(world, worldView);
+        this.structureController = new StructureController(world, structureView, projector);
 
         this.setScreen(gameScreen);
 
@@ -78,7 +89,7 @@ class ColonyManagement extends Game {
 
     private void initInputProcessors() {
         final InputMultiplexer multiplexer = new InputMultiplexer();
-
+        multiplexer.addProcessor(structureController);
         Gdx.input.setInputProcessor(multiplexer);
     }
 

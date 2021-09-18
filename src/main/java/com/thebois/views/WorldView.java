@@ -14,7 +14,7 @@ public class WorldView implements IView {
 
     private final Color grassColor = new Color(0.005f, 0.196f, 0.107f, 1);
     private ArrayList<ITerrain> terrainTiles = new ArrayList<>();
-    private float tileSize;
+    private final float tileSize;
 
     /**
      * Creates the WorldView with a tileSize.

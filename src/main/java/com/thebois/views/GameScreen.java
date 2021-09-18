@@ -47,6 +47,10 @@ public class GameScreen implements Screen {
         this.views = views;
     }
 
+    public IProjector getProjector() {
+        return new ViewportWrapper(viewport);
+    }
+
     @Override
     public void show() {
     }
@@ -56,8 +60,8 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(backgroundColor);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
-        batch.begin(ShapeRenderer.ShapeType.Filled);
 
+        batch.begin(ShapeRenderer.ShapeType.Filled);
         // render views
         for (IView view : views) {
             view.draw(batch);

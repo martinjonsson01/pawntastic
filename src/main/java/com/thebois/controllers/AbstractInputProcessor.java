@@ -5,6 +5,11 @@ package com.thebois.controllers;
  */
 public abstract class AbstractInputProcessor implements com.badlogic.gdx.InputProcessor {
 
+    /**
+     * Identifier for left click mouse button.
+     */
+    public static final int LEFT_CLICK = 0;
+
     @Override
     public boolean keyDown(final int keycode) {
         return false;

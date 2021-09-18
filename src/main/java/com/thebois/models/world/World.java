@@ -14,7 +14,7 @@ import com.thebois.models.world.structures.StructureType;
 public class World implements IFinder {
 
     private ITerrain[][] terrainMatrix;
-    private ArrayList<IStructure> structures;
+    private ArrayList<IStructure> structures = new ArrayList<>();
 
     /**
      * Initiates the world with the given size.
@@ -23,7 +23,6 @@ public class World implements IFinder {
      */
     public World(int worldSize) {
         terrainMatrix = new ITerrain[worldSize][worldSize];
-
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
                 terrainMatrix[y][x] = new Grass(x, y);
@@ -56,9 +55,18 @@ public class World implements IFinder {
     }
 
     /**
+     * Returns the structures in an arraylist as the interface IStructures.
+     *
+     * @return The list to be returned.
+     */
+    public ArrayList<IStructure> getStructures() {
+        return structures;
+    }
+
+    /**
      * Builds a structure at a given position if possible.
      *
-     * @param position The position where the struture should be built.
+     * @param position The position where the structure should be built.
      *
      * @return Whether or not the structure was built.
      */
@@ -71,6 +79,9 @@ public class World implements IFinder {
     }
 
     private boolean isPositionBuildable(final Position position) {
+        if (structures.isEmpty()) {
+            return true;
+        }
         for (IStructure structure : structures) {
             if (structure.getPosition().equals(position)) {
                 return false;
