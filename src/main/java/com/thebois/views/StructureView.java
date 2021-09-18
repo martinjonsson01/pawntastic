@@ -2,7 +2,6 @@ package com.thebois.views;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
@@ -11,10 +10,12 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class StructureView {
 
-    private final float houseWidth = 64f;
-    private final float houseHeight = 64f;
-    private final Color blueColor = new Color(0, 0, 1, 1);
+    private float tileSize;
     private ArrayList<Vector2> structures = new ArrayList<>();
+
+    private StructureView(final float tileSize) {
+        this.tileSize = tileSize;
+    }
 
     /**
      * Adds drawings to drawing Batch.
@@ -24,8 +25,7 @@ public class StructureView {
      */
     public void draw(ShapeRenderer batch, float delta) {
         for (Vector2 structure : structures) {
-            batch.setColor(blueColor);
-            batch.rect(structure.x, structure.y, houseWidth, houseHeight);
+            batch.rect(structure.x, structure.y, tileSize, tileSize);
         }
     }
 

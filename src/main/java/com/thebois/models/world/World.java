@@ -3,6 +3,10 @@ package com.thebois.models.world;
 import java.util.ArrayList;
 
 import com.thebois.models.IFinder;
+import com.thebois.models.Position;
+import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.Structure;
+import com.thebois.models.world.structures.StructureType;
 
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
@@ -10,6 +14,7 @@ import com.thebois.models.IFinder;
 public class World implements IFinder {
 
     private ITerrain[][] terrainMatrix;
+    private ArrayList<IStructure> structures;
 
     /**
      * Initiates the world with the given size.
@@ -48,6 +53,30 @@ public class World implements IFinder {
             }
         }
         return copy;
+    }
+
+    /**
+     * Builds a structure at a given position if possible.
+     *
+     * @param position The position where the struture should be built.
+     *
+     * @return Whether or not the structure was built.
+     */
+    public boolean createStructure(Position position) {
+        if (isPositionBuildable(position)) {
+            structures.add(new Structure(position, StructureType.HOUSE));
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isPositionBuildable(final Position position) {
+        for (IStructure structure : structures) {
+            if (structure.getPosition().equals(position)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

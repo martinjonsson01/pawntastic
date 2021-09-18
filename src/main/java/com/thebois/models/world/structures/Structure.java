@@ -1,4 +1,4 @@
-package com.thebois.models.world;
+package com.thebois.models.world.structures;
 
 import java.util.Objects;
 
@@ -7,17 +7,20 @@ import com.thebois.models.Position;
 /**
  * Base structure for the game.
  */
-public class Structure implements ITile {
+public class Structure implements IStructure {
 
     private Position position;
+    private StructureType structureType;
 
     /**
      * Creates a structure with a position.
      *
-     * @param position The position the structure have.
+     * @param position      The position the structure have.
+     * @param structureType The type of structures to create.
      */
-    public Structure(Position position) {
+    public Structure(Position position, StructureType structureType) {
         this.position = new Position(position.getPosX(), position.getPosY());
+        this.structureType = structureType;
     }
 
     /**
@@ -50,6 +53,11 @@ public class Structure implements ITile {
     @Override
     public int hashCode() {
         return Objects.hash(position);
+    }
+
+    @Override
+    public StructureType getType() {
+        return structureType;
     }
 
 }

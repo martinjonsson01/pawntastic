@@ -8,7 +8,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import com.thebois.controllers.GameInputProcessor;
 import com.thebois.controllers.TerrainController;
 import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
@@ -79,7 +78,6 @@ class ColonyManagement extends Game {
 
     private void initInputProcessors() {
         final InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(new GameInputProcessor());
 
         Gdx.input.setInputProcessor(multiplexer);
     }

@@ -3,8 +3,7 @@ package com.thebois.controllers;
 /**
  * A controller handling input from mouse and keyboard.
  */
-
-public class GameInputProcessor implements com.badlogic.gdx.InputProcessor {
+public abstract class AbstractInputProcessor implements com.badlogic.gdx.InputProcessor {
 
     @Override
     public boolean keyDown(final int keycode) {
@@ -23,11 +22,6 @@ public class GameInputProcessor implements com.badlogic.gdx.InputProcessor {
 
     @Override
     public boolean touchDown(final int x, final int y, final int pointer, final int button) {
-
-        if (button == 0) {
-            System.out.println("Build House");
-            return true;
-        }
         return false;
     }
 
