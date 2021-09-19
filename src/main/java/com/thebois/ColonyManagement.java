@@ -20,11 +20,11 @@ import com.thebois.models.beings.roles.RoleAllocator;
 import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
 import com.thebois.views.GameView;
+import com.thebois.views.IActorView;
 import com.thebois.views.IView;
+import com.thebois.views.InfoView;
 import com.thebois.views.RoleView;
 import com.thebois.views.WorldView;
-
-import static org.mockito.Mockito.*;
 
 /**
  * The main representation of the game.
@@ -36,14 +36,14 @@ class ColonyManagement extends Game {
     private static final float VIEWPORT_WIDTH = 1200;
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 30;
+    // LibGDX assets
     private BitmapFont font;
-    // Screens
-    private GameScreen gameScreen;
-    private TerrainController terrainController;
     private TextureAtlas atlas;
     private Skin skin;
-
+    // Screens
+    private GameScreen gameScreen;
     // Controllers
+    private TerrainController terrainController;
 
     @Override
     public void create() {
@@ -61,16 +61,16 @@ class ColonyManagement extends Game {
         final World world = new World(WORLD_SIZE);
         final RoleAllocator roleAllocator = new RoleAllocator(mockBeings(10));
 
-        // Views
+        // Game Views
         final WorldView worldView = new WorldView(tileSize);
-        final RoleView roleView = new RoleView(roleAllocator, font);
-        final ArrayList<IView> views = new ArrayList<>();
-        views.add(worldView);
-        views.add(roleView);
+        final List<IView> views = List.of(worldView);
         final GameView gameView = new GameView(views, WORLD_SIZE, tileSize);
+        // Info Views
+        final List<IActorView> widgetViews = List.of(new RoleView(skin, roleAllocator, font));
+        final InfoView infoView = new InfoView(widgetViews, skin);
 
         // Screens
-        gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, skin, gameView);
+        gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, skin, gameView, infoView);
 
         // Controllers
         this.terrainController = new TerrainController(world, worldView);
@@ -105,8 +105,9 @@ class ColonyManagement extends Game {
     private IBeing mockBeing() {
         final IBeing being = Mockito.mock(IBeing.class);
         // Mocks the getter and setter to simulate a real implementation.
-        doAnswer(answer -> when(being.getRole()).thenReturn((Role) answer.getArguments()[0])).when(
-            being).setRole(any());
+        Mockito.doAnswer(answer -> {
+            return Mockito.when(being.getRole()).thenReturn((Role) answer.getArguments()[0]);
+        }).when(being).setRole(Mockito.any());
         return being;
     }
 
