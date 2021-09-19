@@ -1,4 +1,4 @@
-package com.thebois.models.tiles;
+package com.thebois.models.world;
 
 import com.thebois.models.Position;
 

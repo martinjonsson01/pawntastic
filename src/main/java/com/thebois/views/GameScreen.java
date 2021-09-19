@@ -1,5 +1,7 @@
 package com.thebois.views;
 
+import java.util.Collection;
+
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,28 +19,37 @@ public class GameScreen implements Screen {
     private final BitmapFont font;
     private final OrthographicCamera camera;
     private final FitViewport viewport;
-    private final float worldWidth = 800f;
-    private final float worldHeight = 480f;
-    private final float rectangleSize = 64f;
+    private final float viewportWidth;
+    private final float viewportHeight;
     private final Color backgroundColor = new Color(0, 0, 0.2f, 1);
-    private final int moveSpeed = 200;
-    private int posY = 0;
-    private final Color blueColor = new Color(0, 0, 1, 1);
+    private final Collection<IView> views;
 
     /**
      * Creates an instance of GameScreen.
      *
-     * @param batch The batch to use when rendering
-     * @param font  The font for all text in the game
+     * @param batch          The batch to use when rendering
+     * @param font           The font for all text in the game
+     * @param viewportHeight The height used for viewport
+     * @param viewportWidth  The width used for viewport
+     * @param views          Views to draw
      */
-    public GameScreen(final ShapeRenderer batch, final BitmapFont font) {
+    public GameScreen(final ShapeRenderer batch,
+                      final BitmapFont font,
+                      final float viewportHeight,
+                      final float viewportWidth,
+                      final Collection<IView> views) {
         this.batch = batch;
         this.font = font;
 
+        this.viewportHeight = viewportHeight;
+        this.viewportWidth = viewportWidth;
+
         // create the camera and the SpriteBatch
         camera = new OrthographicCamera();
-        viewport = new FitViewport(worldWidth, worldHeight, camera);
-        camera.translate(worldWidth / 2, worldHeight / 2);
+        viewport = new FitViewport(this.viewportWidth, this.viewportHeight, camera);
+        camera.translate(this.viewportWidth / 2, this.viewportHeight / 2);
+
+        this.views = views;
     }
 
     @Override
@@ -50,18 +61,13 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(backgroundColor);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
-
         batch.begin(ShapeRenderer.ShapeType.Filled);
-        batch.setColor(blueColor);
-        batch.rect(worldWidth / 2 - rectangleSize,
-                   worldHeight / 2 - rectangleSize,
-                   rectangleSize,
-                   rectangleSize);
-        batch.setColor(1, 1, 1, 1);
-        batch.rect(0, posY, rectangleSize, rectangleSize);
-        batch.end();
 
-        posY += moveSpeed * delta;
+        // render views
+        for (final IView view : views) {
+            view.draw(batch);
+        }
+        batch.end();
     }
 
     @Override
