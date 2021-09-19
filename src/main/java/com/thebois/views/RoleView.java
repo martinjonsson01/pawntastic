@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 
-import com.thebois.models.beings.roles.Role;
+import com.thebois.models.beings.roles.AbstractRole;
 
 /**
  * Displays all the different roles and the controls used to assign them.
@@ -15,7 +15,7 @@ import com.thebois.models.beings.roles.Role;
 public class RoleView implements IActorView {
 
     private final Skin skin;
-    private Iterable<Role> roles = new ArrayList<>();
+    private Iterable<AbstractRole> roles = new ArrayList<>();
     private VerticalGroup root;
 
     /**
@@ -32,7 +32,7 @@ public class RoleView implements IActorView {
      *
      * @param newRoles The new list of roles.
      */
-    public void updateRoles(final Iterable<Role> newRoles) {
+    public void updateRoles(final Iterable<AbstractRole> newRoles) {
         this.roles = newRoles;
         createRoleButtons();
     }
@@ -40,8 +40,8 @@ public class RoleView implements IActorView {
     private void createRoleButtons() {
         root.clearChildren();
         final TextButton.TextButtonStyle buttonStyle = skin.get(TextButton.TextButtonStyle.class);
-        for (final Role role : roles) {
-            final TextButton roleButton = new TextButton(role.getClass().getName(), buttonStyle);
+        for (final AbstractRole role : roles) {
+            final TextButton roleButton = new TextButton(role.getName(), buttonStyle);
             root.addActor(roleButton);
         }
     }

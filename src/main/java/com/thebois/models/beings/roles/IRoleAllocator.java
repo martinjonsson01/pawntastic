@@ -12,7 +12,7 @@ public interface IRoleAllocator {
      *
      * @return Whether the allocation could be increased
      */
-    boolean tryIncreaseAllocation(Role role);
+    boolean tryIncreaseAllocation(AbstractRole role);
 
     /**
      * Requests the amount of beings assigned to a role to be decreased.
@@ -21,7 +21,7 @@ public interface IRoleAllocator {
      *
      * @return Whether the allocation could be decreased
      */
-    boolean tryDecreaseAllocation(Role role);
+    boolean tryDecreaseAllocation(AbstractRole role);
 
     /**
      * Counts the amount of beings with a role.
@@ -30,7 +30,7 @@ public interface IRoleAllocator {
      *
      * @return The amount of beings with the role
      */
-    int countBeingsWithRole(Role role);
+    int countBeingsWithRole(AbstractRole role);
 
     /**
      * Checks if the allocation of a role can be decreased.
@@ -39,7 +39,7 @@ public interface IRoleAllocator {
      *
      * @return Whether the allocation for the role can be decreased
      */
-    boolean canDecreaseAllocation(Role role);
+    boolean canDecreaseAllocation(AbstractRole role);
 
     /**
      * Checks if the allocation of a role can be increased.
@@ -48,6 +48,6 @@ public interface IRoleAllocator {
      *
      * @return Whether the allocation for the role can be increased
      */
-    boolean canIncreaseAllocation(Role role);
+    boolean canIncreaseAllocation(AbstractRole role);
 
 }

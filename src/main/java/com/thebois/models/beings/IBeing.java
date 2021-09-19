@@ -1,7 +1,7 @@
 package com.thebois.models.beings;
 
 import com.thebois.models.Position;
-import com.thebois.models.beings.roles.Role;
+import com.thebois.models.beings.roles.AbstractRole;
 
 /**
  * An entity.
@@ -20,13 +20,13 @@ public interface IBeing {
      *
      * @return The role
      */
-    Role getRole();
+    AbstractRole getRole();
 
     /**
      * Sets the role.
      *
      * @param role The role
      */
-    void setRole(Role role);
+    void setRole(AbstractRole role);
 
 }

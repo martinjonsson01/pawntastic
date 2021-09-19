@@ -16,8 +16,8 @@ public final class RoleFactory {
      *
      * @return All roles
      */
-    public static Collection<Role> all() {
-        final ArrayList<Role> roles = new ArrayList<>();
+    public static Collection<AbstractRole> all() {
+        final ArrayList<AbstractRole> roles = new ArrayList<>();
         roles.add(lumberjack());
         roles.add(farmer());
         roles.add(guard());
@@ -32,7 +32,7 @@ public final class RoleFactory {
      *
      * @return A new lumberjack role
      */
-    public static Role lumberjack() {
+    public static AbstractRole lumberjack() {
         return new LumberjackRole();
     }
 
@@ -41,7 +41,7 @@ public final class RoleFactory {
      *
      * @return A new farmer role
      */
-    public static Role farmer() {
+    public static AbstractRole farmer() {
         return new FarmerRole();
     }
 
@@ -50,7 +50,7 @@ public final class RoleFactory {
      *
      * @return A new guard role
      */
-    public static Role guard() {
+    public static AbstractRole guard() {
         return new GuardRole();
     }
 
@@ -59,7 +59,7 @@ public final class RoleFactory {
      *
      * @return A new miner role
      */
-    public static Role miner() {
+    public static AbstractRole miner() {
         return new MinerRole();
     }
 
@@ -68,7 +68,7 @@ public final class RoleFactory {
      *
      * @return A new fisher role
      */
-    public static Role fisher() {
+    public static AbstractRole fisher() {
         return new FisherRole();
     }
 
@@ -77,7 +77,7 @@ public final class RoleFactory {
      *
      * @return A new builder role
      */
-    public static Role builder() {
+    public static AbstractRole builder() {
         return new BuilderRole();
     }
 

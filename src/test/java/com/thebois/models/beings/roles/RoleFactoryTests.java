@@ -11,7 +11,7 @@ public class RoleFactoryTests {
     @Test
     public void factoryGetAllRolesReturnsAllRoles() {
         // Act
-        final Collection<Role> roles = RoleFactory.all();
+        final Collection<AbstractRole> roles = RoleFactory.all();
 
         // Assert
         assertThat(roles).contains(new LumberjackRole(), new BuilderRole(), new FarmerRole(),

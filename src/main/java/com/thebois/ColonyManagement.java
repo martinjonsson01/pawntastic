@@ -16,7 +16,7 @@ import org.mockito.Mockito;
 import com.thebois.controllers.RoleController;
 import com.thebois.controllers.TerrainController;
 import com.thebois.models.beings.IBeing;
-import com.thebois.models.beings.roles.Role;
+import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleAllocator;
 import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
@@ -110,17 +110,16 @@ class ColonyManagement extends Game {
         final IBeing being = Mockito.mock(IBeing.class);
         // Mocks the getter and setter to simulate a real implementation.
         Mockito.doAnswer(answer -> {
-            return Mockito.when(being.getRole()).thenReturn((Role) answer.getArguments()[0]);
+            return Mockito.when(being.getRole()).thenReturn((AbstractRole) answer.getArguments()[0]);
         }).when(being).setRole(Mockito.any());
         return being;
     }
 
     @Override
     public void dispose() {
-        font.dispose();
+        gameScreen.dispose();
         atlas.dispose();
         skin.dispose();
-        gameScreen.dispose();
     }
 
     @Override

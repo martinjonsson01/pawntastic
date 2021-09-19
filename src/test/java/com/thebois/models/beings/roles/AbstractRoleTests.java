@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class RoleTests {
+public class AbstractRoleTests {
 
     public static Stream<Arguments> getEqualRoles() {
         final LumberjackRole sameLumberjack = new LumberjackRole();
@@ -33,14 +33,14 @@ public class RoleTests {
 
     @ParameterizedTest
     @MethodSource("getEqualRoles")
-    public void equalsReturnsTrueWhenEqual(final Role first, final Role second) {
+    public void equalsReturnsTrueWhenEqual(final AbstractRole first, final AbstractRole second) {
         // Assert
         assertThat(first).isEqualTo(second);
     }
 
     @ParameterizedTest
     @MethodSource("getUnequalRoles")
-    public void equalsReturnsFalseWhenUnequal(final Role first, final Role second) {
+    public void equalsReturnsFalseWhenUnequal(final AbstractRole first, final AbstractRole second) {
         // Assert
         assertThat(first).isNotEqualTo(second);
     }
