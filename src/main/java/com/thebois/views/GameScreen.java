@@ -1,19 +1,21 @@
 package com.thebois.views;
 
-import java.util.Collection;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -25,9 +27,8 @@ public class GameScreen implements Screen {
     private final OrthographicCamera camera;
     private final FitViewport viewport;
     private final Color backgroundColor = new Color(0, 0, 0.2f, 1);
-    private final int worldSize;
-    private final float tileSize;
-    private final Collection<IView> views;
+    private final Skin skin;
+    private final GameView gameView;
     private Stage stage;
     private SpriteBatch spriteBatch;
 
@@ -36,20 +37,16 @@ public class GameScreen implements Screen {
      *
      * @param viewportHeight The height used for viewport
      * @param viewportWidth  The width used for viewport
-     * @param worldSize      The size of the world in tiles
-     * @param tileSize       The size of a single tile in world space
-     * @param views          Views to draw
+     * @param skin           The skin with styles to apply to all widgets
+     * @param gameView       The view of the game world to render
      */
     public GameScreen(final float viewportHeight,
                       final float viewportWidth,
-                      final int worldSize,
-                      final float tileSize,
-                      final Collection<IView> views) {
-        this.worldSize = worldSize;
-        this.tileSize = tileSize;
-        this.views = views;
+                      final Skin skin,
+                      final GameView gameView) {
+        this.skin = skin;
+        this.gameView = gameView;
 
-        // create the camera and the SpriteBatch
         camera = new OrthographicCamera();
         viewport = new FitViewport(viewportWidth, viewportHeight, camera);
         camera.translate(viewportWidth / 2, viewportHeight / 2);
@@ -58,46 +55,38 @@ public class GameScreen implements Screen {
     }
 
     private void createStage() {
-        // UI Stage
         spriteBatch = new SpriteBatch();
         stage = new Stage(viewport, spriteBatch);
         Gdx.input.setInputProcessor(stage);
 
-        final HorizontalGroup group = new HorizontalGroup();
-        group.setFillParent(true);
-        stage.addActor(group);
+        final Table infoAndWorldGroup = new Table();
+        infoAndWorldGroup.setFillParent(true);
+        stage.addActor(infoAndWorldGroup);
 
-        group.setDebug(true);
-
-        final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
-        final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-        skin.addRegions(atlas);
-
-        group.center();
+        infoAndWorldGroup.left();
 
         final TextButton.TextButtonStyle buttonStyle = skin.get(TextButton.TextButtonStyle.class);
         final TextButton button1 = new TextButton("Button 1", buttonStyle);
-        group.addActor(button1);
+        final TextButton button2 = new TextButton("Button 2", buttonStyle);
+        final TextButton button3 = new TextButton("Button 3", buttonStyle);
 
-        group.addActor(new Widget() {
-            @Override
-            public float getPrefWidth() {
-                return tileSize * worldSize;
-            }
+        final VerticalGroup infoPaneGroup = new VerticalGroup();
+        infoPaneGroup.addActor(button1);
+        infoPaneGroup.addActor(button2);
+        infoPaneGroup.addActor(button3);
 
-            @Override
-            public float getPrefHeight() {
-                return getPrefWidth();
-            }
+        final Container<VerticalGroup> infoPane = new Container<>(infoPaneGroup).fill();
+        infoPane.setBackground(createBackground(Color.BLUE));
 
-            @Override
-            public void draw(final Batch batch, final float parentAlpha) {
-                // render views
-                for (final IView view : views) {
-                    view.draw(batch, getX(), getY());
-                }
-            }
-        });
+        infoAndWorldGroup.add(infoPane).expand().fill();
+        infoAndWorldGroup.add(gameView);
+    }
+
+    private Drawable createBackground(final Color color) {
+        final Pixmap bgPixmap = new Pixmap(1, 1, Pixmap.Format.RGB565);
+        bgPixmap.setColor(color);
+        bgPixmap.fill();
+        return new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
     }
 
     @Override

@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import org.mockito.Mockito;
 
@@ -14,6 +19,7 @@ import com.thebois.models.beings.roles.Role;
 import com.thebois.models.beings.roles.RoleAllocator;
 import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
+import com.thebois.views.GameView;
 import com.thebois.views.IView;
 import com.thebois.views.RoleView;
 import com.thebois.views.WorldView;
@@ -26,12 +32,16 @@ import static org.mockito.Mockito.*;
 class ColonyManagement extends Game {
 
     private static final int WORLD_SIZE = 50;
-    private static final float VIEWPORT_WIDTH = 1920f;
-    private static final float VIEWPORT_HEIGHT = 1080f;
+    /* These two decide the aspect ratio that will be preserved. */
+    private static final float VIEWPORT_WIDTH = 1200;
+    private static final float VIEWPORT_HEIGHT = 1000;
+    private static final int DEFAULT_FONT_SIZE = 30;
     private BitmapFont font;
     // Screens
     private GameScreen gameScreen;
     private TerrainController terrainController;
+    private TextureAtlas atlas;
+    private Skin skin;
 
     // Controllers
 
@@ -39,8 +49,13 @@ class ColonyManagement extends Game {
     public void create() {
         final float tileSize = Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH) / WORLD_SIZE;
 
-        // use libGDX's default Arial font
-        font = new BitmapFont();
+        // Load LibGDX assets.
+        generateFont();
+        skin = new Skin();
+        skin.add("default-font", font);
+        atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
+        skin.addRegions(atlas);
+        skin.load(Gdx.files.internal("uiskin.json"));
 
         // Models
         final World world = new World(WORLD_SIZE);
@@ -52,14 +67,29 @@ class ColonyManagement extends Game {
         final ArrayList<IView> views = new ArrayList<>();
         views.add(worldView);
         views.add(roleView);
+        final GameView gameView = new GameView(views, WORLD_SIZE, tileSize);
 
         // Screens
-        gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, WORLD_SIZE, tileSize, views);
+        gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, skin, gameView);
 
         // Controllers
         this.terrainController = new TerrainController(world, worldView);
 
         this.setScreen(gameScreen);
+    }
+
+    private void generateFont() {
+        final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(
+            "fonts/arial.ttf"));
+        final FreeTypeFontGenerator.FreeTypeFontParameter
+            parameter =
+            new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = DEFAULT_FONT_SIZE;
+        font = generator.generateFont(parameter);
+        // To smooth out the text.
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear,
+                                                Texture.TextureFilter.Linear);
+        generator.dispose();
     }
 
     /* temporary until 9-pawns is merged */
@@ -83,6 +113,8 @@ class ColonyManagement extends Game {
     @Override
     public void dispose() {
         font.dispose();
+        atlas.dispose();
+        skin.dispose();
         gameScreen.dispose();
     }
 

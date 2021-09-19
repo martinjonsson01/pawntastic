@@ -1,9 +1,4 @@
 {
-  "BitmapFont": {
-    "default-font": {
-      "file": "default.fnt"
-    }
-  },
   "Color": {
     "green": {
       "a": 1,
