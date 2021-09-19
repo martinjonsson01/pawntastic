@@ -20,7 +20,7 @@ public abstract class AbstractRole {
         }
         if (this.getClass().equals(obj.getClass())) {
             final AbstractRole other = (AbstractRole) obj;
-            return this.getName().equals(other.getName());
+            return this.getName().equals(other.getName()) && this.getType().equals(other.getType());
         }
         return false;
     }
@@ -35,5 +35,12 @@ public abstract class AbstractRole {
         final int roleSuffixLength = 4;
         return className.substring(0, className.length() - roleSuffixLength);
     }
+
+    /**
+     * Gets the occupation type.
+     *
+     * @return The occupation type.
+     */
+    public abstract RoleType getType();
 
 }

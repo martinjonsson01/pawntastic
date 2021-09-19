@@ -5,4 +5,9 @@ package com.thebois.models.beings.roles;
  */
 class FarmerRole extends AbstractRole {
 
+    @Override
+    public RoleType getType() {
+        return RoleType.FARMER;
+    }
+
 }
