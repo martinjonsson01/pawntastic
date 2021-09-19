@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class AbstractRoleTests {
+public class RoleTests {
 
     public static Stream<Arguments> getEqualRoles() {
         final LumberjackRole sameLumberjack = new LumberjackRole();

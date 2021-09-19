@@ -40,8 +40,9 @@ public class RoleAllocatorTests {
     private IBeing mockBeing() {
         final IBeing being = Mockito.mock(IBeing.class);
         // Mocks the getter and setter to simulate a real implementation.
-        doAnswer(answer -> when(being.getRole()).thenReturn((AbstractRole) answer.getArguments()[0])).when(
-            being).setRole(any());
+        doAnswer(answer -> when(being.getRole()).thenReturn((AbstractRole) answer.getArguments()[0]))
+            .when(being)
+            .setRole(any());
         return being;
     }
 

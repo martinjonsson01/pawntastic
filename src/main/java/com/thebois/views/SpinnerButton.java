@@ -5,6 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
+/**
+ * A widget for changing an amount in discrete steps using two buttons.
+ */
 public class SpinnerButton extends HorizontalGroup {
 
     private static final float PAD_Y = 5f;
