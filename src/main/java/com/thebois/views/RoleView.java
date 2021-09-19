@@ -3,6 +3,8 @@ package com.thebois.views;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
@@ -16,8 +18,9 @@ public class RoleView implements IActorView {
 
     private static final float PADDING = 20f;
     private static final float BUTTON_PADDING = 5f;
-    private final Skin skin;
     private final VerticalGroup root;
+    private final TextButton.TextButtonStyle buttonStyle;
+    private final Skin skin;
     private Iterable<AbstractRole> roles = new ArrayList<>();
 
     /**
@@ -28,9 +31,11 @@ public class RoleView implements IActorView {
     public RoleView(final Skin skin) {
         this.skin = skin;
 
-        root = new VerticalGroup();
+        root = new VerticalGroup().space(BUTTON_PADDING * 2f);
         root.expand().fill();
         root.pad(PADDING, PADDING / 2f, 0f, PADDING / 2f);
+
+        buttonStyle = skin.get(TextButton.TextButtonStyle.class);
     }
 
     /**
@@ -45,18 +50,22 @@ public class RoleView implements IActorView {
 
     private void createRoleButtons() {
         root.clearChildren();
-        final TextButton.TextButtonStyle buttonStyle = skin.get(TextButton.TextButtonStyle.class);
         for (final AbstractRole role : roles) {
-            final Actor roleButton = createRoleButton(buttonStyle, role);
+            final Actor roleButton = createRoleButton(role);
             root.addActor(roleButton);
         }
     }
 
-    private Actor createRoleButton(final TextButton.TextButtonStyle buttonStyle,
-                                   final AbstractRole role) {
-        final TextButton button = new TextButton(role.getName(), buttonStyle);
+    private Actor createRoleButton(final AbstractRole role) {
+        final SpinnerButton button = new SpinnerButton(skin);
         button.pad(BUTTON_PADDING);
-        return button;
+
+        final Label roleLabel = new Label(role.getName(), skin);
+
+        final Group buttonGroup = new VerticalGroup();
+        buttonGroup.addActor(roleLabel);
+        buttonGroup.addActor(button);
+        return buttonGroup;
     }
 
     @Override
