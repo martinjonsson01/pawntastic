@@ -34,7 +34,7 @@ class ColonyManagement extends Game {
 
     private static final int WORLD_SIZE = 50;
     /* These two decide the aspect ratio that will be preserved. */
-    private static final float VIEWPORT_WIDTH = 1200;
+    private static final float VIEWPORT_WIDTH = 1500;
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 30;
     // LibGDX assets
@@ -110,7 +110,9 @@ class ColonyManagement extends Game {
         final IBeing being = Mockito.mock(IBeing.class);
         // Mocks the getter and setter to simulate a real implementation.
         Mockito.doAnswer(answer -> {
-            return Mockito.when(being.getRole()).thenReturn((AbstractRole) answer.getArguments()[0]);
+            return Mockito
+                .when(being.getRole())
+                .thenReturn((AbstractRole) answer.getArguments()[0]);
         }).when(being).setRole(Mockito.any());
         return being;
     }

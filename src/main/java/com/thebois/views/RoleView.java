@@ -14,9 +14,11 @@ import com.thebois.models.beings.roles.AbstractRole;
  */
 public class RoleView implements IActorView {
 
+    private static final float PADDING = 20f;
+    private static final float BUTTON_PADDING = 5f;
     private final Skin skin;
+    private final VerticalGroup root;
     private Iterable<AbstractRole> roles = new ArrayList<>();
-    private VerticalGroup root;
 
     /**
      * The view needs an IRoleAllocator to render.
@@ -25,6 +27,10 @@ public class RoleView implements IActorView {
      */
     public RoleView(final Skin skin) {
         this.skin = skin;
+
+        root = new VerticalGroup();
+        root.expand().fill();
+        root.pad(PADDING, PADDING / 2f, 0f, PADDING / 2f);
     }
 
     /**
@@ -41,14 +47,20 @@ public class RoleView implements IActorView {
         root.clearChildren();
         final TextButton.TextButtonStyle buttonStyle = skin.get(TextButton.TextButtonStyle.class);
         for (final AbstractRole role : roles) {
-            final TextButton roleButton = new TextButton(role.getName(), buttonStyle);
+            final Actor roleButton = createRoleButton(buttonStyle, role);
             root.addActor(roleButton);
         }
     }
 
+    private Actor createRoleButton(final TextButton.TextButtonStyle buttonStyle,
+                                   final AbstractRole role) {
+        final TextButton button = new TextButton(role.getName(), buttonStyle);
+        button.pad(BUTTON_PADDING);
+        return button;
+    }
+
     @Override
     public Actor getRoot() {
-        root = new VerticalGroup();
         createRoleButtons();
         return root;
     }
