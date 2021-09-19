@@ -1,12 +1,13 @@
 package com.thebois.views;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import java.util.ArrayList;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 
-import com.thebois.models.beings.roles.IRoleAllocator;
+import com.thebois.models.beings.roles.Role;
 
 /**
  * Displays all the different roles and the controls used to assign them.
@@ -14,34 +15,42 @@ import com.thebois.models.beings.roles.IRoleAllocator;
 public class RoleView implements IActorView {
 
     private final Skin skin;
-    private final IRoleAllocator roleAllocator;
-    private final BitmapFont font;
+    private Iterable<Role> roles = new ArrayList<>();
+    private VerticalGroup root;
 
     /**
      * The view needs an IRoleAllocator to render.
      *
-     * @param skin          The skin to style widgets with
-     * @param roleAllocator Used for getting the current role allocations
-     * @param font          The font to render all text in
+     * @param skin The skin to style widgets with
      */
-    public RoleView(final Skin skin, final IRoleAllocator roleAllocator, final BitmapFont font) {
+    public RoleView(final Skin skin) {
         this.skin = skin;
-        this.roleAllocator = roleAllocator;
-        this.font = font;
+    }
+
+    /**
+     * Updates the roles to render allocation options for.
+     *
+     * @param newRoles The new list of roles.
+     */
+    public void updateRoles(final Iterable<Role> newRoles) {
+        this.roles = newRoles;
+        createRoleButtons();
+    }
+
+    private void createRoleButtons() {
+        root.clearChildren();
+        final TextButton.TextButtonStyle buttonStyle = skin.get(TextButton.TextButtonStyle.class);
+        for (final Role role : roles) {
+            final TextButton roleButton = new TextButton(role.getClass().getName(), buttonStyle);
+            root.addActor(roleButton);
+        }
     }
 
     @Override
     public Actor getRoot() {
-        final TextButton.TextButtonStyle buttonStyle = skin.get(TextButton.TextButtonStyle.class);
-        final TextButton button1 = new TextButton("Button 1", buttonStyle);
-        final TextButton button2 = new TextButton("Button 2", buttonStyle);
-        final TextButton button3 = new TextButton("Button 3", buttonStyle);
-
-        final VerticalGroup group = new VerticalGroup();
-        group.addActor(button1);
-        group.addActor(button2);
-        group.addActor(button3);
-        return group;
+        root = new VerticalGroup();
+        createRoleButtons();
+        return root;
     }
 
 }

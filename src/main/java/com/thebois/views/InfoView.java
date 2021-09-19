@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -23,9 +22,8 @@ public class InfoView {
      * Instantiates a new view displaying info for the player.
      *
      * @param widgetViews The widget views to render within this view
-     * @param skin        The skin to style widgets with
      */
-    public InfoView(final List<IActorView> widgetViews, final Skin skin) {
+    public InfoView(final List<IActorView> widgetViews) {
 
         final VerticalGroup infoPaneGroup = new VerticalGroup();
         for (final IActorView actorView : widgetViews) {

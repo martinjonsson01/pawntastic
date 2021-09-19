@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import org.mockito.Mockito;
 
+import com.thebois.controllers.RoleController;
 import com.thebois.controllers.TerrainController;
 import com.thebois.models.beings.IBeing;
 import com.thebois.models.beings.roles.Role;
@@ -44,6 +45,7 @@ class ColonyManagement extends Game {
     private GameScreen gameScreen;
     // Controllers
     private TerrainController terrainController;
+    private RoleController roleController;
 
     @Override
     public void create() {
@@ -66,14 +68,16 @@ class ColonyManagement extends Game {
         final List<IView> views = List.of(worldView);
         final GameView gameView = new GameView(views, WORLD_SIZE, tileSize);
         // Info Views
-        final List<IActorView> widgetViews = List.of(new RoleView(skin, roleAllocator, font));
-        final InfoView infoView = new InfoView(widgetViews, skin);
+        final RoleView roleView = new RoleView(skin);
+        final List<IActorView> widgetViews = List.of(roleView);
+        final InfoView infoView = new InfoView(widgetViews);
 
         // Screens
         gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, skin, gameView, infoView);
 
         // Controllers
         this.terrainController = new TerrainController(world, worldView);
+        this.roleController = new RoleController(roleAllocator, roleView);
 
         this.setScreen(gameScreen);
     }
