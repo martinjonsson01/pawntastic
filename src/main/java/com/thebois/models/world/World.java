@@ -4,9 +4,8 @@ import java.util.ArrayList;
 
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
+import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
-import com.thebois.models.world.structures.Structure;
-import com.thebois.models.world.structures.StructureType;
 
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
@@ -31,7 +30,7 @@ public class World implements IFinder {
         }
 
         // Structures
-        structuresMatrix = new Structure[worldSize][worldSize];
+        structuresMatrix = new House[worldSize][worldSize];
     }
 
     /**
@@ -86,7 +85,7 @@ public class World implements IFinder {
     public boolean createStructure(int posX, final int posY) {
         final Position position = new Position(posX, posY);
         if (isPositionPlaceable(position)) {
-            structuresMatrix[posY][posX] = new Structure(position, StructureType.HOUSE);
+            structuresMatrix[posY][posX] = new House(position);
             return true;
         }
         return false;
