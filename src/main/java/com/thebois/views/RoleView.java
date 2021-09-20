@@ -1,6 +1,8 @@
 package com.thebois.views;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -9,7 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 
+import com.thebois.listeners.IEventSource;
+import com.thebois.listeners.events.ValueChangedEvent;
 import com.thebois.models.beings.roles.AbstractRole;
+import com.thebois.models.beings.roles.RoleType;
 
 /**
  * Displays all the different roles and the controls used to assign them.
@@ -21,6 +26,9 @@ public class RoleView implements IActorView {
     private final VerticalGroup root;
     private final TextButton.TextButtonStyle buttonStyle;
     private final Skin skin;
+    private final AbstractMap<RoleType, IEventSource<ValueChangedEvent<Integer>>>
+        roleButtons =
+        new HashMap<>();
     private Iterable<AbstractRole> roles = new ArrayList<>();
 
     /**
@@ -60,12 +68,18 @@ public class RoleView implements IActorView {
         final SpinnerButton button = new SpinnerButton(skin, 0, 99);
         button.pad(0f, BUTTON_PADDING, BUTTON_PADDING, BUTTON_PADDING);
 
+        roleButtons.put(role.getType(), button);
+
         final Label roleLabel = new Label(role.getName() + "s", skin);
 
         final Group buttonGroup = new VerticalGroup();
         buttonGroup.addActor(roleLabel);
         buttonGroup.addActor(button);
         return buttonGroup;
+    }
+
+    public AbstractMap<RoleType, IEventSource<ValueChangedEvent<Integer>>> getRoleButtons() {
+        return roleButtons;
     }
 
     @Override
