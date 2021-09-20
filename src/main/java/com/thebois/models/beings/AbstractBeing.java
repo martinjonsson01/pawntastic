@@ -57,7 +57,10 @@ public abstract class AbstractBeing implements IBeing {
         final float normDeltaX = deltaX / totalDistance;
         final float normDeltaY = deltaY / totalDistance;
 
-        if (!(Float.isNaN(normDeltaX) || Float.isNaN(normDeltaY))) {
+        if (Float.isNaN(normDeltaX) || Float.isNaN(normDeltaY)) {
+            this.currentPosition = destination;
+        }
+        else {
 
             // Calculate new position
             final float
@@ -81,9 +84,6 @@ public abstract class AbstractBeing implements IBeing {
     @Override
     public void update() {
         move();
-        if (currentPosition.equals(destination)) {
-            this.destination = new Position(random.nextInt(worldSize), random.nextInt(worldSize));
-        }
     }
 
 }
