@@ -48,23 +48,30 @@ public class WorldTests {
 
     @Test
     public void getStructuresTest() {
+        // Arrange
         final World world = new World(25);
+
+        // Act
         world.createStructure(new Position(123, 123));
         final IStructure structure = world.getStructures().get(0);
 
+        // Assert
         assertThat(structure.getPosition()).isEqualTo(new Position(123, 123));
     }
 
     @Test
     public void createStructureTest() {
+        // Arrange
         final World world = new World(25);
 
+        // Act
         final Boolean isEmpty = world.getStructures().isEmpty();
-        assertThat(isEmpty).isTrue();
         final Boolean isStructureBuilt = world.createStructure(new Position(0, 0));
-        assertThat(isStructureBuilt).isTrue();
-
         final int numberOfStructures = world.getStructures().size();
+
+        // Assert
+        assertThat(isEmpty).isTrue();
+        assertThat(isStructureBuilt).isTrue();
         assertThat(numberOfStructures).isEqualTo(1);
     }
 
