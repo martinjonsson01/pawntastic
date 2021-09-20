@@ -9,6 +9,10 @@ import com.thebois.models.Position;
  */
 public class Pawn extends AbstractBeing {
 
+    public Pawn() {
+        super();
+    }
+
     public Pawn(Random random) {
         super(random);
     }

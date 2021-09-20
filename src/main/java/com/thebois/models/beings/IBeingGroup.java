@@ -9,14 +9,14 @@ import com.thebois.models.Position;
  */
 public interface IBeingGroup {
 
+    /**
+     * Updates the internal state of the IBeingGroup.
+     */
     void update();
 
+    /**
+     * Returns a collection of IBeings that belong to the IBeingGroup.
+     */
     Collection<IBeing> getBeings();
-
-    void createBeing();
-
-    void createBeing(Position spawnPosition);
-
-    void createBeing(Position spawnPosition, int numberOfNewBeings);
 
 }
