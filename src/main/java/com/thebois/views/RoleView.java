@@ -3,6 +3,7 @@ package com.thebois.views;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -11,9 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 
-import com.thebois.listeners.IEventSource;
-import com.thebois.listeners.events.ValueChangedEvent;
-import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleType;
 
 /**
@@ -26,10 +24,8 @@ public class RoleView implements IActorView {
     private final VerticalGroup root;
     private final TextButton.TextButtonStyle buttonStyle;
     private final Skin skin;
-    private final AbstractMap<RoleType, IEventSource<ValueChangedEvent<Integer>>>
-        roleButtons =
-        new HashMap<>();
-    private Iterable<AbstractRole> roles = new ArrayList<>();
+    private final AbstractMap<RoleType, SpinnerButton> roleButtons = new HashMap<>();
+    private Iterable<RoleType> roles = new ArrayList<>();
 
     /**
      * The view needs an IRoleAllocator to render.
@@ -51,26 +47,27 @@ public class RoleView implements IActorView {
      *
      * @param newRoles The new list of roles.
      */
-    public void updateRoles(final Iterable<AbstractRole> newRoles) {
+    public void updateRoles(final Iterable<RoleType> newRoles) {
         this.roles = newRoles;
         createRoleButtons();
     }
 
     private void createRoleButtons() {
         root.clearChildren();
-        for (final AbstractRole role : roles) {
-            final Actor roleButton = createRoleButton(role);
+        for (final RoleType roleType : roles) {
+            final Actor roleButton = createRoleButton(roleType);
             root.addActor(roleButton);
         }
     }
 
-    private Actor createRoleButton(final AbstractRole role) {
+    private Actor createRoleButton(final RoleType roleType) {
         final SpinnerButton button = new SpinnerButton(skin, 0, 99);
         button.pad(0f, BUTTON_PADDING, BUTTON_PADDING, BUTTON_PADDING);
 
-        roleButtons.put(role.getType(), button);
+        roleButtons.put(roleType, button);
 
-        final Label roleLabel = new Label(role.getName() + "s", skin);
+        final String roleName = capitalizeFirst(roleType.name().toLowerCase(Locale.ROOT) + "s");
+        final Label roleLabel = new Label(roleName, skin);
 
         final Group buttonGroup = new VerticalGroup();
         buttonGroup.addActor(roleLabel);
@@ -78,7 +75,11 @@ public class RoleView implements IActorView {
         return buttonGroup;
     }
 
-    public AbstractMap<RoleType, IEventSource<ValueChangedEvent<Integer>>> getRoleButtons() {
+    private String capitalizeFirst(final String text) {
+        return text.substring(0, 1).toUpperCase() + text.substring(1);
+    }
+
+    public AbstractMap<RoleType, SpinnerButton> getRoleButtons() {
         return roleButtons;
     }
 

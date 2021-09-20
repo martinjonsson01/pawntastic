@@ -2,6 +2,7 @@ package com.thebois.views;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -31,6 +32,8 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
     private final TextButton removeButton;
     private final Collection<IEventListener<ValueChangedEvent<Integer>>> valueChangedListeners =
         new ArrayList<>();
+    private Predicate<Integer> canIncrease = currentValue -> true;
+    private Predicate<Integer> canDecrease = currentValue -> true;
     private int value = 0;
 
     /**
@@ -61,6 +64,14 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
         this.add(addButton);
     }
 
+    public void setCanIncrease(final Predicate<Integer> canIncrease) {
+        this.canIncrease = canIncrease;
+    }
+
+    public void setCanDecrease(final Predicate<Integer> canDecrease) {
+        this.canDecrease = canDecrease;
+    }
+
     private void setPadding() {
         this.padTop(PAD_TOP);
         addButton.pad(PAD_Y, PAD_X, PAD_Y, PAD_X);
@@ -84,9 +95,20 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
         });
     }
 
-    private void updateButtonDisabledState() {
-        addButton.setDisabled(value >= max);
-        removeButton.setDisabled(value <= min);
+    /**
+     * Recalculate whether the add/remove-buttons should be disabled.
+     */
+    public void updateButtonDisabledState() {
+        addButton.setDisabled(!canIncreaseValue());
+        removeButton.setDisabled(!canDecreaseValue());
+    }
+
+    private boolean canDecreaseValue() {
+        return value > min && canDecrease.test(value);
+    }
+
+    private boolean canIncreaseValue() {
+        return value < max && canIncrease.test(value);
     }
 
     private void updateValue(final int newValue) {
@@ -94,9 +116,11 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
         value = newValue;
         countLabel.setText(value);
 
-        updateButtonDisabledState();
-
         notifyListeners(oldValue, newValue);
+
+        // Update disabled-state after listeners have been notified because it might
+        // depend on the state of the listeners.
+        updateButtonDisabledState();
     }
 
     private void notifyListeners(final int oldValue, final int newValue) {
@@ -107,7 +131,7 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
     }
 
     @Override
-    public void addListener(final IEventListener<ValueChangedEvent<Integer>> listener) {
+    public void registerListener(final IEventListener<ValueChangedEvent<Integer>> listener) {
         valueChangedListeners.add(listener);
     }
 

@@ -1,13 +1,15 @@
 package com.thebois.controllers;
 
 import java.util.AbstractMap;
+import java.util.stream.Collectors;
 
-import com.thebois.listeners.IEventSource;
 import com.thebois.listeners.events.ValueChangedEvent;
+import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.views.RoleView;
+import com.thebois.views.SpinnerButton;
 
 /**
  * Controls the interactions from the player regarding role allocations.
@@ -16,6 +18,7 @@ public class RoleController {
 
     private final IRoleAllocator roleAllocator;
     private final RoleView roleView;
+    private final AbstractMap<RoleType, SpinnerButton> roleButtons;
 
     /**
      * Instantiates a new role controller that controls the provided role view.
@@ -27,13 +30,17 @@ public class RoleController {
         this.roleAllocator = roleAllocator;
         this.roleView = roleView;
 
-        roleView.updateRoles(RoleFactory.all());
+        roleView.updateRoles(RoleFactory.all()
+                                        .stream()
+                                        .map(AbstractRole::getType)
+                                        .collect(Collectors.toList()));
 
-        final AbstractMap<RoleType, IEventSource<ValueChangedEvent<Integer>>> roleButtons =
-            roleView.getRoleButtons();
-        for (final RoleType role : roleButtons.keySet()) {
-            final IEventSource<ValueChangedEvent<Integer>> button = roleButtons.get(role);
-            button.addListener(event -> onRoleButtonClick(role, event));
+        roleButtons = roleView.getRoleButtons();
+        for (final RoleType roleType : roleButtons.keySet()) {
+            final SpinnerButton button = roleButtons.get(roleType);
+            button.registerListener(event -> onRoleButtonClick(roleType, event));
+            button.setCanDecrease(roleCount -> roleAllocator.canDecreaseAllocation(roleType));
+            button.setCanIncrease(roleCount -> roleAllocator.canIncreaseAllocation(roleType));
         }
     }
 
@@ -54,6 +61,11 @@ public class RoleController {
                 }
             }
             default -> throw new IllegalStateException("Expected a difference but there was none");
+        }
+
+        // Update disabled state of all role buttons whenever a role allocation is made.
+        for (final SpinnerButton roleButton : roleButtons.values()) {
+            roleButton.updateButtonDisabledState();
         }
     }
 
