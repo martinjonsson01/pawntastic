@@ -12,7 +12,7 @@ public class ColonyController {
     private final ColonyView colonyView;
 
     /**
-     * Creates a Terrain Controller.
+     * Creates a colony controller.
      *
      * @param world      The world that controller should get data from.
      * @param colonyView The view the controller updates.
