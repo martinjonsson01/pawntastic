@@ -2,9 +2,11 @@ package com.thebois.models.beings.roles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 
 import com.thebois.models.beings.IBeing;
 
@@ -17,7 +19,7 @@ public class RoleAllocatorTests {
     @Test
     public void tryIncreaseAllocationSucceedsWhenNoRolesAssigned() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final RoleType role = RoleFactory.lumberjack().getType();
         final List<IBeing> beings = mockBeings(3);
         final IRoleAllocator cut = new RoleAllocator(beings);
 
@@ -26,7 +28,7 @@ public class RoleAllocatorTests {
 
         // Assert
         assertThat(success).isTrue();
-        assertThat(beings).anyMatch(being -> role.equals(being.getRole()));
+        assertThat(beings).anyMatch(being -> role.equals(being.getRole().getType()));
     }
 
     private List<IBeing> mockBeings(final int beingCount) {
@@ -40,17 +42,20 @@ public class RoleAllocatorTests {
     private IBeing mockBeing() {
         final IBeing being = Mockito.mock(IBeing.class);
         // Mocks the getter and setter to simulate a real implementation.
-        doAnswer(answer -> when(being.getRole()).thenReturn((AbstractRole) answer.getArguments()[0]))
-            .when(being)
-            .setRole(any());
+        doAnswer(returnArgumentAsGetRole(being)).when(being).setRole(any());
         return being;
+    }
+
+    @SuppressWarnings("rawtypes")
+    private Answer returnArgumentAsGetRole(final IBeing being) {
+        return answer -> when(being.getRole()).thenReturn((AbstractRole) answer.getArguments()[0]);
     }
 
     @Test
     public void tryIncreaseAllocationFailsWhenAllRolesAssigned() {
         // Arrange
-        final AbstractRole newRole = RoleFactory.builder();
-        final AbstractRole existingRole = RoleFactory.farmer();
+        final RoleType newRole = RoleFactory.lumberjack().getType();
+        final RoleType existingRole = RoleFactory.farmer().getType();
         final List<IBeing> beingsWithRoles = mockBeingsWithRole(3, existingRole);
         final IRoleAllocator cut = new RoleAllocator(beingsWithRoles);
 
@@ -59,11 +64,12 @@ public class RoleAllocatorTests {
 
         // Assert
         assertThat(success).isFalse();
-        assertThat(beingsWithRoles).noneMatch(being -> newRole.equals(being.getRole()));
+        assertThat(beingsWithRoles).noneMatch(being -> newRole.equals(being.getRole().getType()));
     }
 
-    private List<IBeing> mockBeingsWithRole(final int beingCount, final AbstractRole role) {
+    private List<IBeing> mockBeingsWithRole(final int beingCount, final RoleType roleType) {
         final List<IBeing> beings = mockBeings(beingCount);
+        final AbstractRole role = RoleFactory.fromType(roleType);
         beings.forEach(being -> being.setRole(role));
         return beings;
     }
@@ -71,9 +77,9 @@ public class RoleAllocatorTests {
     @Test
     public void tryIncreaseAllocationSucceedsWhenOneIdle() {
         // Arrange
-        final AbstractRole firstRole = RoleFactory.lumberjack();
-        final AbstractRole secondRole = RoleFactory.miner();
-        final AbstractRole newRole = RoleFactory.farmer();
+        final RoleType firstRole = RoleFactory.lumberjack().getType();
+        final RoleType secondRole = RoleFactory.miner().getType();
+        final RoleType newRole = RoleFactory.farmer().getType();
 
         final List<IBeing> beings = mockBeingsWithRole(3, firstRole);
         beings.add(mockBeing());
@@ -86,16 +92,15 @@ public class RoleAllocatorTests {
 
         // Assert
         assertThat(success).isTrue();
-        assertThat(beings)
-            .filteredOn(being -> newRole.equals(being.getRole()))
-            .singleElement()
-            .isNotNull();
+        assertThat(beings).filteredOn(being -> newRole.equals(being.getRole().getType()))
+                          .singleElement()
+                          .isNotNull();
     }
 
     @Test
     public void tryDecreaseAllocationFailsWhenNoRolesAssigned() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final RoleType role = RoleFactory.lumberjack().getType();
         final List<IBeing> beings = mockBeings(3);
         final IRoleAllocator cut = new RoleAllocator(beings);
 
@@ -104,13 +109,15 @@ public class RoleAllocatorTests {
 
         // Assert
         assertThat(success).isFalse();
-        assertThat(beings).noneMatch(being -> role.equals(being.getRole()));
+        final Predicate<IBeing> hasRole =
+            being -> being.getRole() != null && role.equals(being.getRole().getType());
+        assertThat(beings).noneMatch(hasRole);
     }
 
     @Test
     public void tryDecreaseAllocationSucceedsWhenAllRolesAssigned() {
         // Arrange
-        final AbstractRole existingRole = RoleFactory.farmer();
+        final RoleType existingRole = RoleFactory.farmer().getType();
         final List<IBeing> beingsWithRoles = mockBeingsWithRole(3, existingRole);
         final IRoleAllocator cut = new RoleAllocator(beingsWithRoles);
 
@@ -119,15 +126,15 @@ public class RoleAllocatorTests {
 
         // Assert
         assertThat(success).isTrue();
-        assertThat(beingsWithRoles)
-            .filteredOn(being -> existingRole.equals(being.getRole()))
-            .hasSize(beingsWithRoles.size() - 1);
+        final Predicate<IBeing> hasRole = being -> being.getRole() != null && existingRole.equals(
+            being.getRole().getType());
+        assertThat(beingsWithRoles).filteredOn(hasRole).hasSize(beingsWithRoles.size() - 1);
     }
 
     @Test
     public void tryDecreaseAllocationSucceedsWhenOneHasRole() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final RoleType role = RoleFactory.lumberjack().getType();
 
         final List<IBeing> beings = mockBeings(3);
         beings.addAll(mockBeingsWithRole(1, role));
@@ -139,15 +146,17 @@ public class RoleAllocatorTests {
 
         // Assert
         assertThat(success).isTrue();
-        assertThat(beings).noneMatch(being -> role.equals(being.getRole()));
+        final Predicate<IBeing> hasRole =
+            being -> being.getRole() != null && role.equals(being.getRole().getType());
+        assertThat(beings).noneMatch(hasRole);
     }
 
     @Test
     public void countBeingsWithRoleReturnsCorrectCountWhenThereAreMultipleRoles() {
         // Arrange
-        final AbstractRole firstRole = RoleFactory.lumberjack();
-        final AbstractRole secondRole = RoleFactory.miner();
-        final AbstractRole thirdRole = RoleFactory.farmer();
+        final RoleType firstRole = RoleFactory.lumberjack().getType();
+        final RoleType secondRole = RoleFactory.miner().getType();
+        final RoleType thirdRole = RoleFactory.farmer().getType();
 
         final int expectedFirstCount = 3;
         final int expectedSecondCount = 5;
@@ -173,7 +182,7 @@ public class RoleAllocatorTests {
     @Test
     public void canDecreaseAllocationReturnsTrueWhenOneHasRole() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final RoleType role = RoleFactory.lumberjack().getType();
 
         final List<IBeing> beings = mockBeings(3);
         beings.addAll(mockBeingsWithRole(1, role));
@@ -190,7 +199,7 @@ public class RoleAllocatorTests {
     @Test
     public void canDecreaseAllocationReturnsFalseWhenNoneHaveRole() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final RoleType role = RoleFactory.lumberjack().getType();
 
         final List<IBeing> beings = mockBeings(3);
 
@@ -206,7 +215,7 @@ public class RoleAllocatorTests {
     @Test
     public void canIncreaseAllocationReturnsTrueWhenNoneHaveRole() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final RoleType role = RoleFactory.lumberjack().getType();
 
         final List<IBeing> beings = mockBeings(3);
 
@@ -222,7 +231,7 @@ public class RoleAllocatorTests {
     @Test
     public void canIncreaseAllocationReturnsFalseWhenAllHaveRole() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final RoleType role = RoleFactory.lumberjack().getType();
 
         final List<IBeing> beings = mockBeingsWithRole(3, role);
 

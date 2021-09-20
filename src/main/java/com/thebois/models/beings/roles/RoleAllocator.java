@@ -24,9 +24,10 @@ public class RoleAllocator implements IRoleAllocator {
     }
 
     @Override
-    public boolean tryIncreaseAllocation(final AbstractRole role) {
+    public boolean tryIncreaseAllocation(final RoleType roleType) {
         final Optional<IBeing> idleBeing = findIdleBeing();
         if (idleBeing.isPresent()) {
+            final AbstractRole role = RoleFactory.fromType(roleType);
             idleBeing.get().setRole(role);
             return true;
         }
@@ -44,7 +45,8 @@ public class RoleAllocator implements IRoleAllocator {
     }
 
     @Override
-    public boolean tryDecreaseAllocation(final AbstractRole role) {
+    public boolean tryDecreaseAllocation(final RoleType roleType) {
+        final AbstractRole role = RoleFactory.fromType(roleType);
         final Optional<IBeing> beingWithRole = findBeingWithRole(role);
         if (beingWithRole.isPresent()) {
             beingWithRole.get().setRole(null);
@@ -58,17 +60,19 @@ public class RoleAllocator implements IRoleAllocator {
     }
 
     @Override
-    public int countBeingsWithRole(final AbstractRole role) {
+    public int countBeingsWithRole(final RoleType roleType) {
+        final AbstractRole role = RoleFactory.fromType(roleType);
         return (int) beings.stream().filter(being -> role.equals(being.getRole())).count();
     }
 
     @Override
-    public boolean canDecreaseAllocation(final AbstractRole role) {
+    public boolean canDecreaseAllocation(final RoleType roleType) {
+        final AbstractRole role = RoleFactory.fromType(roleType);
         return findBeingWithRole(role).isPresent();
     }
 
     @Override
-    public boolean canIncreaseAllocation(final AbstractRole role) {
+    public boolean canIncreaseAllocation(final RoleType roleType) {
         return findIdleBeing().isPresent();
     }
 

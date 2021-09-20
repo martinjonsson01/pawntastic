@@ -8,46 +8,46 @@ public interface IRoleAllocator {
     /**
      * Requests the amount of beings in a role to be increased.
      *
-     * @param role The role to add more of
+     * @param roleType The role to add more of
      *
      * @return Whether the allocation could be increased
      */
-    boolean tryIncreaseAllocation(AbstractRole role);
+    boolean tryIncreaseAllocation(RoleType roleType);
 
     /**
      * Requests the amount of beings assigned to a role to be decreased.
      *
-     * @param role The role to add more of
+     * @param roleType The role to add more of
      *
      * @return Whether the allocation could be decreased
      */
-    boolean tryDecreaseAllocation(AbstractRole role);
+    boolean tryDecreaseAllocation(RoleType roleType);
 
     /**
      * Counts the amount of beings with a role.
      *
-     * @param role The role to count
+     * @param roleType The role to count
      *
      * @return The amount of beings with the role
      */
-    int countBeingsWithRole(AbstractRole role);
+    int countBeingsWithRole(RoleType roleType);
 
     /**
      * Checks if the allocation of a role can be decreased.
      *
-     * @param role The role to check
+     * @param roleType The role to check
      *
      * @return Whether the allocation for the role can be decreased
      */
-    boolean canDecreaseAllocation(AbstractRole role);
+    boolean canDecreaseAllocation(RoleType roleType);
 
     /**
      * Checks if the allocation of a role can be increased.
      *
-     * @param role The role to check
+     * @param roleType The role to check
      *
      * @return Whether the allocation for the role can be increased
      */
-    boolean canIncreaseAllocation(AbstractRole role);
+    boolean canIncreaseAllocation(RoleType roleType);
 
 }
