@@ -27,6 +27,7 @@ class ColonyManagement extends Game {
     private final int worldSize = 50;
     private final float viewportWidth = 1000f;
     private final float viewportHeight = 1000f;
+    private float tileSize;
     // Models
     private World world;
     // Views
@@ -34,11 +35,9 @@ class ColonyManagement extends Game {
     private StructureView structureView;
     // Screens
     private GameScreen gameScreen;
+    // Controllers
     private TerrainController terrainController;
     private StructureController structureController;
-    private float tileSize;
-
-    // Controllers
 
     @Override
     public void create() {
