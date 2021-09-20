@@ -10,7 +10,8 @@ public interface IStructure extends ITile {
     /**
      * Returns the specific type of terrain.
      *
-     * @return The terrain type.
+     * @return The Structure type.
      */
     StructureType getType();
+
 }

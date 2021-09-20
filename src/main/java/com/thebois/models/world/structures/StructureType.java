@@ -5,7 +5,7 @@ package com.thebois.models.world.structures;
  */
 public enum StructureType {
     /**
-     * A strucutre in form of a house.
+     * A structure in form of a house.
      */
     HOUSE
 }

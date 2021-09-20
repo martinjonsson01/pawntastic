@@ -47,6 +47,11 @@ public class GameScreen implements Screen {
         this.views = views;
     }
 
+    /**
+     * Gets a projector which is a wrapped viewport.
+     *
+     * @return The wrapped viewport as a Projector.
+     */
     public IProjector getProjector() {
         return new ViewportWrapper(viewport);
     }

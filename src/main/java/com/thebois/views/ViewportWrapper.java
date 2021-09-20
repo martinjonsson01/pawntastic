@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
- * Wrapper class for viewports.
+ * Wrapper class for viewport.
  */
 class ViewportWrapper implements IProjector {
 
@@ -20,7 +20,7 @@ class ViewportWrapper implements IProjector {
     }
 
     @Override
-    public Vector2 unProject(final int screenCordX, final int screenCordY) {
+    public Vector2 unproject(final int screenCordX, final int screenCordY) {
         return viewport.unproject(new Vector2(screenCordX, screenCordY));
     }
 

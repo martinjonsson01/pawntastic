@@ -3,18 +3,18 @@ package com.thebois.views;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Interface for a Projector.
+ * Projector used to convert space and world coordinates.
  */
 public interface IProjector {
 
     /**
-     * Unprojects screen coordiantes to world coordinates.
+     * Unprojects screen coordinates to world coordinates.
      *
-     * @param screenCordX X coordinate of the screen.
-     * @param screenCordY Y coordinate of the screen.
+     * @param screenCordX X coordinate of a position in screen space.
+     * @param screenCordY Y coordinate of a position in screen space.
      *
-     * @return Returns a Vector2 with the world coordinates.
+     * @return Returns a Vector2 in the world coordinates.
      */
-    Vector2 unProject(int screenCordX, int screenCordY);
+    Vector2 unproject(int screenCordX, int screenCordY);
 
 }

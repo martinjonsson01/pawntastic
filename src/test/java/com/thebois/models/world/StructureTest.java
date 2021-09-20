@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.*;
 public class StructureTest {
 
     @Test
-    public void getPositionTest() {
+    public void getPositionSetInConstructor() {
 
         // Arrange
         final Position position = new Position(123, 456);
@@ -25,7 +25,7 @@ public class StructureTest {
     }
 
     @Test
-    public void getTypeTest() {
+    public void getTypeSetInConstructor() {
 
         // Arrange
         final Position position = new Position(123, 456);

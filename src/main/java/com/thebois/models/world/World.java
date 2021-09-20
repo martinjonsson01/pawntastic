@@ -71,14 +71,14 @@ public class World implements IFinder {
      * @return Whether or not the structure was built.
      */
     public boolean createStructure(Position position) {
-        if (isPositionBuildable(position)) {
+        if (isPositionPlacable(position)) {
             structures.add(new Structure(position, StructureType.HOUSE));
             return true;
         }
         return false;
     }
 
-    private boolean isPositionBuildable(final Position position) {
+    private boolean isPositionPlacable(final Position position) {
         if (structures.isEmpty()) {
             return true;
         }

@@ -47,7 +47,7 @@ public class WorldTests {
     }
 
     @Test
-    public void getStructuresTest() {
+    public void getStructureReturnsStructuresAddedToWorld() {
         // Arrange
         final World world = new World(25);
 

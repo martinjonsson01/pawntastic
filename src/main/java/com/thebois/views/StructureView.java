@@ -14,12 +14,12 @@ public final class StructureView implements IView {
 
     private final float tileSize;
     private ArrayList<IStructure> structures = new ArrayList<>();
-    private final Color brown = new Color(0.4f, 0.2f, 0f, 1);
+    private final Color houseColor = new Color(0.4f, 0.2f, 0f, 1);
 
     /**
      * Creates an instance of a Structure view.
      *
-     * @param tileSize The tile size of the world in order to render structures in the right size.
+     * @param tileSize The size of a single world tile in screen space.
      */
     public StructureView(final float tileSize) {
         this.tileSize = tileSize;
@@ -28,7 +28,7 @@ public final class StructureView implements IView {
     @Override
     public void draw(ShapeRenderer batch) {
         for (IStructure structure : structures) {
-            batch.setColor(brown);
+            batch.setColor(houseColor);
             final int posX = (int) ((structure.getPosition().getPosX()) * tileSize);
             final int poxY = (int) ((structure.getPosition().getPosY()) * tileSize);
             batch.rect(posX, poxY, tileSize, tileSize);
@@ -47,10 +47,10 @@ public final class StructureView implements IView {
     /**
      * Updates the structures that should be displayed in the game.
      *
-     * @param Structures The structures that are to be displayed.
+     * @param structures The structures that are to be displayed.
      */
-    public void updateStructureView(ArrayList<IStructure> Structures) {
-        structures = Structures;
+    public void update(ArrayList<IStructure> structures) {
+        this.structures = structures;
     }
 
 }
