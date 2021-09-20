@@ -36,4 +36,31 @@ public class PositionTests {
         assertThat(position.getPosY()).isEqualTo(posY);
     }
 
+    @Test
+    public void positionEqualsToItSelfIsTrue() {
+        // Arrange
+        final Position position = new Position(123, 123);
+        final boolean isEqual;
+
+        // Act
+        isEqual = position.equals(position);
+
+        // Assert
+        assertThat(isEqual).isTrue();
+    }
+
+    @Test
+    public void positionEqualsToIsTrueIfCoordinatesAreSame() {
+        // Arrange
+        final Position position1 = new Position(123, 123);
+        final Position position2 = new Position(123, 123);
+        final boolean isEqual;
+
+        // Act
+        isEqual = position1.equals(position2);
+
+        // Assert
+        assertThat(isEqual).isTrue();
+    }
+
 }

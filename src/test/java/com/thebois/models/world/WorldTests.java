@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
+import com.thebois.models.world.structures.IStructure;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -46,8 +47,47 @@ public class WorldTests {
     }
 
     @Test
-    public void getStructureReturnsStructuresAddedToWorld() {
+    public void createWorldWithNoStructures() {
+        // Arrange
+        final World world = new World(2);
 
+        // Act
+        final ArrayList<IStructure> structures = world.getStructures();
+
+        // Assert
+        assertThat(structures.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void numberOfStructuresIncreasesIfStructureSuccessfullyPlaced() {
+        // Arrange
+        final World world = new World(2);
+        final Position position = new Position(1, 1);
+        final ArrayList<IStructure> structures;
+
+        // Act
+        world.createStructure(position);
+        structures = world.getStructures();
+
+        // Assert
+        assertThat(structures.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void numberOfStructuresDoesNotChangeIfStructuresUnsuccessfullyPlaced() {
+        // Arrange
+        final World world = new World(2);
+        final Position position = new Position(1, 1);
+        final ArrayList<IStructure> structures;
+
+        // Act
+        world.createStructure(position);
+        world.createStructure(position);
+        world.createStructure(position);
+        structures = world.getStructures();
+
+        // Assert
+        assertThat(structures.size()).isEqualTo(1);
     }
 
     @Test
