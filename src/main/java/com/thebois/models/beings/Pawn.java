@@ -49,8 +49,7 @@ public class Pawn implements IBeing {
         return this.currentPosition;
     }
 
-    @Override
-    public void walkTo(Position position) {
+    private void walkTo(Position position) {
         this.destination = position;
     }
 

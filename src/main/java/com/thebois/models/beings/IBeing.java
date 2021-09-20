@@ -15,13 +15,6 @@ public interface IBeing {
     Position getPosition();
 
     /**
-     * Sets a position to move towards.
-     *
-     * @param position the desired destination to move towards.
-     */
-    void walkTo(Position position);
-
-    /**
      * Updates the objects internal state.
      */
     void update();
