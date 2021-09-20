@@ -14,7 +14,7 @@ public interface IEventSource<TEvent extends IEvent> {
      *
      * @param listener The listener to register
      */
-    void addListener(IEventListener<TEvent> listener);
+    void registerListener(IEventListener<TEvent> listener);
 
     /**
      * Unregisters a listener so that it will no longer be notified about new events.

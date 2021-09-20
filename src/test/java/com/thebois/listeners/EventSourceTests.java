@@ -20,7 +20,7 @@ public class EventSourceTests {
         final List<IEventListener<TestEvent>> listeners = mockListeners();
         final TestEventSource cut = new TestEventSource();
         for (final IEventListener<TestEvent> listener : listeners) {
-            cut.addListener(listener);
+            cut.registerListener(listener);
         }
 
         // Act
@@ -46,7 +46,7 @@ public class EventSourceTests {
         final List<IEventListener<TestEvent>> listeners = mockListeners();
         final TestEventSource cut = new TestEventSource();
         for (final IEventListener<TestEvent> listener : listeners) {
-            cut.addListener(listener);
+            cut.registerListener(listener);
         }
 
         // Act
@@ -68,9 +68,9 @@ public class EventSourceTests {
         final List<IEventListener<TestEvent>> listenersToKeep = mockListeners();
         final TestEventSource cut = new TestEventSource();
         for (final IEventListener<TestEvent> listener : listenersToKeep) {
-            cut.addListener(listener);
+            cut.registerListener(listener);
         }
-        cut.addListener(listenerToRemove);
+        cut.registerListener(listenerToRemove);
 
         // Act
         cut.removeListener(listenerToRemove);
@@ -104,7 +104,7 @@ public class EventSourceTests {
         private final Collection<IEventListener<TestEvent>> listeners = new ArrayList<>();
 
         @Override
-        public void addListener(final IEventListener<TestEvent> listener) {
+        public void registerListener(final IEventListener<TestEvent> listener) {
             listeners.add(listener);
         }
 
