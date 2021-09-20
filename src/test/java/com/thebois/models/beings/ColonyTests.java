@@ -11,7 +11,7 @@ public class ColonyTests {
     @Test
     public void createBeingEqualTo3Test() {
 
-        // arrange
+        // Arrange
         final Colony colony = new Colony();
         // Act
         colony.createBeing();
@@ -25,7 +25,7 @@ public class ColonyTests {
     @Test
     public void createBeingNotEqualTo4Test() {
 
-        // arrange
+        // Arrange
         final Colony colony = new Colony();
 
         // Act

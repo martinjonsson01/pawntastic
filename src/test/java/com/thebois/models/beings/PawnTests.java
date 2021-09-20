@@ -1,38 +1,28 @@
 package com.thebois.models.beings;
 
+import java.util.Random;
+
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.stubbing.OngoingStubbing;
 
 import com.thebois.models.Position;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class PawnTests {
 
     @Test
-    public void walkToPositiveTest() {
+    public void arriveAtDestinationTest() {
+        // Arrange
+        Position startPosition = new Position(0, 0);
+        Position endPosition = new Position(2, 2);
 
-        // arrange
-        final float startX;
-        final float startY;
-        final float endX;
-        final float endY;
-
-        startX = 0f;
-        startY = 0f;
-
-        endX = 10f;
-        endY = 10f;
-
-        final Position startPosition = new Position(startX, startY);
-        final Position endPosition = new Position(endX, endY);
-
-        final Pawn pawn = new Pawn(startPosition);
-
-        final int steps = 10;
+        Pawn pawn = new Pawn(startPosition, endPosition);
 
         // Act
-        pawn.walkTo(endPosition);
-        pawn.walkTo(endPosition);
+        final int steps = 2;
         for (int i = 0; i < steps; i++) {
             pawn.update();
         }
@@ -42,28 +32,15 @@ public class PawnTests {
     }
 
     @Test
-    public void walkToNegativeTest() {
+    public void arriveAtDestinationNegativeTest() {
+        // Arrange
+        Position startPosition = new Position(0, 0);
+        Position endPosition = new Position(-10, -10);
 
-        // arrange
-        final float startX;
-        final float startY;
-        final float endX;
-        final float endY;
+        Pawn pawn = new Pawn(startPosition, endPosition);
 
-        startX = 0f;
-        startY = 0f;
-
-        endX = -10f;
-        endY = -10f;
-
-        final Position startPosition = new Position(startX, startY);
-        final Position endPosition = new Position(endX, endY);
-
-        final Pawn pawn = new Pawn(startPosition);
-
-        final int steps = 10;
         // Act
-        pawn.walkTo(endPosition);
+        final int steps = 10;
         for (int i = 0; i < steps; i++) {
             pawn.update();
         }
