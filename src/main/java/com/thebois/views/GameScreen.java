@@ -56,6 +56,7 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(backgroundColor);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
+        //<<<<<<< HEAD
         batch.begin(ShapeRenderer.ShapeType.Filled);
 
         // render views

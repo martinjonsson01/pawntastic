@@ -1,8 +1,8 @@
 package com.thebois.models.beings;
 
-import com.thebois.models.Position;
-
 import org.junit.jupiter.api.Test;
+
+import com.thebois.models.Position;
 
 import static org.assertj.core.api.Assertions.*;
 

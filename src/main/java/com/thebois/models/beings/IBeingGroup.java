@@ -9,6 +9,8 @@ import com.thebois.models.Position;
  */
 public interface IBeingGroup {
 
+    void update();
+
     Collection<IBeing> getBeings();
 
     void createBeing();

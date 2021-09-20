@@ -10,28 +10,35 @@ import com.thebois.models.Position;
  */
 public class Colony implements IBeingGroup {
 
-    private final Collection<IBeing> Pawns = new ArrayList<>();
+    private final Collection<IBeing> pawns = new ArrayList<>();
 
     @Override
     public Collection<IBeing> getBeings() {
-        return Pawns;
+        return pawns;
     }
 
     @Override
     public void createBeing() {
         final Position spawnPosition = new Position();
-        Pawns.add(new Pawn(spawnPosition));
+        pawns.add(new Pawn(spawnPosition));
     }
 
     @Override
     public void createBeing(Position spawnPosition) {
-        Pawns.add(new Pawn(spawnPosition));
+        pawns.add(new Pawn(spawnPosition));
     }
 
     @Override
     public void createBeing(Position spawnPosition, int numberOfNewBeings) {
         for (int i = 0; i < numberOfNewBeings; i++) {
-            Pawns.add(new Pawn(spawnPosition));
+            pawns.add(new Pawn(spawnPosition));
+        }
+    }
+
+    @Override
+    public void update() {
+        for (IBeing pawn : this.pawns) {
+            pawn.update();
         }
     }
 
