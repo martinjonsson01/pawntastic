@@ -36,15 +36,6 @@ public final class StructureView implements IView {
     }
 
     /**
-     * Gets the tile size of the world.
-     *
-     * @return the tile size as a float.
-     */
-    public float getTileSize() {
-        return tileSize;
-    }
-
-    /**
      * Updates the structures that should be displayed in the game.
      *
      * @param updatedStructures The structures that are to be displayed.

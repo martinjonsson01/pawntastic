@@ -25,11 +25,14 @@ public class StructureController extends AbstractInputProcessor {
      */
     public StructureController(final World world,
                                final StructureView structureView,
-                               final IProjector projector) {
+                               final IProjector projector,
+                               float tileSize) {
+
         this.world = world;
         this.structureView = structureView;
         this.projector = projector;
-        tileSize = structureView.getTileSize();
+        this.tileSize = tileSize;
+
         structureView.update(world.getStructures());
     }
 

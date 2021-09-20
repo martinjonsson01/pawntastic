@@ -66,7 +66,10 @@ class ColonyManagement extends Game {
         final IProjector projector = gameScreen.getProjector();
         // Controllers
         this.terrainController = new TerrainController(world, worldView);
-        this.structureController = new StructureController(world, structureView, projector);
+        this.structureController = new StructureController(world,
+                                                           structureView,
+                                                           projector,
+                                                           tileSize);
 
         this.setScreen(gameScreen);
 
