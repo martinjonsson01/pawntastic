@@ -2,7 +2,6 @@ package com.thebois.controllers;
 
 import com.badlogic.gdx.math.Vector2;
 
-import com.thebois.models.Position;
 import com.thebois.models.world.World;
 import com.thebois.views.IProjector;
 import com.thebois.views.StructureView;
@@ -41,7 +40,7 @@ public class StructureController extends AbstractInputProcessor {
             final int worldPosX = (int) (worldSpaceCords.x / tileSize);
             final int worldPosY = (int) (worldSpaceCords.y / tileSize);
 
-            if (world.createStructure(new Position(worldPosX, worldPosY))) {
+            if (world.createStructure(worldPosX, worldPosY)) {
                 structureView.update(world.getStructures());
                 return true;
             }

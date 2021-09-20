@@ -2,8 +2,6 @@ package com.thebois.models.world;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.utils.Null;
-
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.world.structures.IStructure;
@@ -80,19 +78,29 @@ public class World implements IFinder {
     /**
      * Builds a structure at a given position if possible.
      *
+     * @param posX The X coordinate where the structure should be built.
+     * @param posY The Y coordinate where the structure should be built.
+     *
+     * @return Whether or not the structure was built.
+     */
+    public boolean createStructure(int posX, final int posY) {
+        final Position position = new Position(posX, posY);
+        if (isPositionPlaceable(position)) {
+            structuresMatrix[posY][posX] = new Structure(position, StructureType.HOUSE);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Builds a structure at a given position if possible.
+     *
      * @param position The position where the structure should be built.
      *
      * @return Whether or not the structure was built.
      */
     public boolean createStructure(Position position) {
-        if (isPositionPlaceable(position)) {
-            final int posIntX = (int) position.getPosX();
-            final int posIntY = (int) position.getPosY();
-
-            structuresMatrix[posIntY][posIntX] = new Structure(position, StructureType.HOUSE);
-            return true;
-        }
-        return false;
+        return createStructure((int) position.getPosX(), (int) position.getPosY());
     }
 
     private boolean isPositionPlaceable(final Position position) {

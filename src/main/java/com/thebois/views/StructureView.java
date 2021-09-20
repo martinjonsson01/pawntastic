@@ -47,10 +47,10 @@ public final class StructureView implements IView {
     /**
      * Updates the structures that should be displayed in the game.
      *
-     * @param structures The structures that are to be displayed.
+     * @param updatedStructures The structures that are to be displayed.
      */
-    public void update(ArrayList<IStructure> structures) {
-        this.structures = structures;
+    public void update(ArrayList<IStructure> updatedStructures) {
+        this.structures = updatedStructures;
     }
 
 }

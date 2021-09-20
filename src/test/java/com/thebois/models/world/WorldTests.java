@@ -6,7 +6,6 @@ import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
-import com.thebois.models.world.structures.IStructure;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -48,15 +47,7 @@ public class WorldTests {
 
     @Test
     public void getStructureReturnsStructuresAddedToWorld() {
-        // Arrange
-        final World world = new World(25);
 
-        // Act
-        world.createStructure(new Position(123, 123));
-        final IStructure structure = world.getStructures().get(0);
-
-        // Assert
-        assertThat(structure.getPosition()).isEqualTo(new Position(123, 123));
     }
 
     @Test

@@ -2,7 +2,6 @@ package com.thebois.models.world.structures;
 
 import java.util.Objects;
 
-import com.thebois.models.IDeepClonable;
 import com.thebois.models.Position;
 
 /**
