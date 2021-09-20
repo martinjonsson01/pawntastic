@@ -2,6 +2,7 @@ package com.thebois.models.world.structures;
 
 import java.util.Objects;
 
+import com.thebois.models.IDeepClonable;
 import com.thebois.models.Position;
 
 /**
@@ -13,14 +14,25 @@ public class Structure implements IStructure {
     private StructureType structureType;
 
     /**
+     * Creates a structure with a position.
+     *
+     * @param posX          Position in X-axis
+     * @param posY          Position in Y-axis
+     * @param structureType The type of structure to create.
+     */
+    public Structure(float posX, float posY, StructureType structureType) {
+        this.position = new Position(posX, posY);
+        this.structureType = structureType;
+    }
+
+    /**
      * Creates a structure with a position and type.
      *
      * @param position      The position the structure have.
-     * @param structureType The type of structures to create.
+     * @param structureType The type of structure to create.
      */
     public Structure(Position position, StructureType structureType) {
-        this.position = new Position(position.getPosX(), position.getPosY());
-        this.structureType = structureType;
+        this(position.getPosX(), position.getPosY(), structureType);
     }
 
     /**
@@ -29,13 +41,13 @@ public class Structure implements IStructure {
      * @param posX Position in X-axis
      * @param posY Position in Y-axis
      */
-    public Structure(int posX, int posY) {
-        this.position = new Position(posX, posY);
+    public Structure(float posX, float posY) {
+        this(posX, posY, StructureType.HOUSE);
     }
 
     @Override
     public Position getPosition() {
-        return new Position(position.getPosX(), position.getPosY());
+        return position.deepClone();
     }
 
     @Override
@@ -58,6 +70,11 @@ public class Structure implements IStructure {
     @Override
     public StructureType getType() {
         return structureType;
+    }
+
+    @Override
+    public Structure deepClone() {
+        return new Structure(position.deepClone(), getType());
     }
 
 }

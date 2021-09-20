@@ -2,6 +2,8 @@ package com.thebois.models.world;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.utils.Null;
+
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.world.structures.IStructure;
@@ -14,7 +16,7 @@ import com.thebois.models.world.structures.StructureType;
 public class World implements IFinder {
 
     private ITerrain[][] terrainMatrix;
-    private ArrayList<IStructure> structures = new ArrayList<>();
+    private IStructure[][] structuresMatrix;
 
     /**
      * Initiates the world with the given size.
@@ -22,12 +24,16 @@ public class World implements IFinder {
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
      */
     public World(int worldSize) {
+        // Terrain
         terrainMatrix = new ITerrain[worldSize][worldSize];
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
                 terrainMatrix[y][x] = new Grass(x, y);
             }
         }
+
+        // Structures
+        structuresMatrix = new Structure[worldSize][worldSize];
     }
 
     /**
@@ -60,7 +66,15 @@ public class World implements IFinder {
      * @return The list to be returned.
      */
     public ArrayList<IStructure> getStructures() {
-        return structures;
+        final ArrayList<IStructure> copy = new ArrayList<>();
+        for (final IStructure[] matrix : structuresMatrix) {
+            for (final IStructure structure : matrix) {
+                if (structure != null) {
+                    copy.add(structure.deepClone());
+                }
+            }
+        }
+        return copy;
     }
 
     /**
@@ -71,23 +85,21 @@ public class World implements IFinder {
      * @return Whether or not the structure was built.
      */
     public boolean createStructure(Position position) {
-        if (isPositionPlacable(position)) {
-            structures.add(new Structure(position, StructureType.HOUSE));
+        if (isPositionPlaceable(position)) {
+            final int posIntX = (int) position.getPosX();
+            final int posIntY = (int) position.getPosY();
+
+            structuresMatrix[posIntY][posIntX] = new Structure(position, StructureType.HOUSE);
             return true;
         }
         return false;
     }
 
-    private boolean isPositionPlacable(final Position position) {
-        if (structures.isEmpty()) {
-            return true;
-        }
-        for (IStructure structure : structures) {
-            if (structure.getPosition().equals(position)) {
-                return false;
-            }
-        }
-        return true;
+    private boolean isPositionPlaceable(final Position position) {
+        final int posIntX = (int) position.getPosX();
+        final int posIntY = (int) position.getPosY();
+        return structuresMatrix[posIntY][posIntX] == null;
     }
 
 }
+
