@@ -23,4 +23,9 @@ public class Pawn extends AbstractBeing {
         super(currentPosition, destination);
     }
 
+    @Override
+    public IBeing deepClone() {
+        return new Pawn(this.getPosition(), this.getDestination());
+    }
+
 }

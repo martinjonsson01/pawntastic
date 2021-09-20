@@ -2,12 +2,13 @@ package com.thebois.models.beings;
 
 import java.util.Random;
 
+import com.thebois.models.IDeepClonable;
 import com.thebois.models.Position;
 
 /**
  * An abstract implementation of IBeing.
  */
-public abstract class AbstractBeing implements IBeing {
+public abstract class AbstractBeing implements IBeing, IDeepClonable<IBeing> {
 
     // The current position held by the AbstractBeing.
     private Position currentPosition;
@@ -57,6 +58,7 @@ public abstract class AbstractBeing implements IBeing {
         final float normDeltaX = deltaX / totalDistance;
         final float normDeltaY = deltaY / totalDistance;
 
+        // To avoid the position being set to NaN
         if (Float.isNaN(normDeltaX) || Float.isNaN(normDeltaY)) {
             this.currentPosition = destination;
         }
@@ -74,6 +76,10 @@ public abstract class AbstractBeing implements IBeing {
             this.currentPosition.setPosX(newPosX);
             this.currentPosition.setPosY(newPosY);
         }
+    }
+
+    protected Position getDestination() {
+        return this.destination;
     }
 
     @Override
