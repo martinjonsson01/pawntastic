@@ -12,7 +12,6 @@ public class HouseTests {
 
     @Test
     public void getPositionSetInConstructor() {
-
         // Arrange
         final Position position = new Position(123, 456);
         final House structure = new House(123, 456);
@@ -26,7 +25,6 @@ public class HouseTests {
 
     @Test
     public void getTypeEqualsHouse() {
-
         // Arrange
         final Position position = new Position(123, 456);
 
