@@ -29,8 +29,7 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
     private final int max;
     private final TextButton addButton;
     private final TextButton removeButton;
-    private final Collection<IEventListener<ValueChangedEvent<Integer>>>
-        valueChangedListeners =
+    private final Collection<IEventListener<ValueChangedEvent<Integer>>> valueChangedListeners =
         new ArrayList<>();
     private int value = 0;
 
@@ -91,10 +90,20 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
     }
 
     private void updateValue(final int newValue) {
+        final int oldValue = value;
         value = newValue;
         countLabel.setText(value);
 
         updateButtonDisabledState();
+
+        notifyListeners(oldValue, newValue);
+    }
+
+    private void notifyListeners(final int oldValue, final int newValue) {
+        final ValueChangedEvent<Integer> event = new ValueChangedEvent<>(oldValue, newValue);
+        for (final IEventListener<ValueChangedEvent<Integer>> listener : valueChangedListeners) {
+            listener.onEvent(event);
+        }
     }
 
     @Override
