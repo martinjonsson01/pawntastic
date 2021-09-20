@@ -1,6 +1,7 @@
 package com.thebois.listeners;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ public class EventSourceTests {
     public void sendEventCallsAllListeners() {
         // Arrange
         final List<IEventListener<TestEvent>> listeners = mockListeners();
-        final AbstractEventSource<TestEvent> cut = new TestEventSource();
+        final TestEventSource cut = new TestEventSource();
         for (final IEventListener<TestEvent> listener : listeners) {
             cut.addListener(listener);
         }
@@ -41,7 +42,7 @@ public class EventSourceTests {
     public void sendEventWithEventDataSendsEventDataToAllListeners() {
         // Arrange
         final List<IEventListener<TestEvent>> listeners = mockListeners();
-        final AbstractEventSource<TestEvent> cut = new TestEventSource();
+        final TestEventSource cut = new TestEventSource();
         for (final IEventListener<TestEvent> listener : listeners) {
             cut.addListener(listener);
         }
@@ -63,7 +64,7 @@ public class EventSourceTests {
         // Arrange
         final IEventListener<TestEvent> listenerToRemove = mockListener();
         final List<IEventListener<TestEvent>> listenersToKeep = mockListeners();
-        final AbstractEventSource<TestEvent> cut = new TestEventSource();
+        final TestEventSource cut = new TestEventSource();
         for (final IEventListener<TestEvent> listener : listenersToKeep) {
             cut.addListener(listener);
         }
@@ -96,7 +97,28 @@ public class EventSourceTests {
 
     }
 
-    private static class TestEventSource extends AbstractEventSource<TestEvent> {
+    private static class TestEventSource implements IEventSource<TestEvent> {
+
+        private final Collection<IEventListener<TestEvent>> listeners = new ArrayList<>();
+
+        @Override
+        public void addListener(final IEventListener<TestEvent> listener) {
+            listeners.add(listener);
+        }
+
+        @Override
+        public void removeListener(final IEventListener<TestEvent> listener) {
+            if (!listeners.contains(listener)) {
+                throw new IllegalArgumentException("Can not remove listener that is not listening");
+            }
+            listeners.remove(listener);
+        }
+
+        public void send(final TestEvent event) {
+            for (final IEventListener<TestEvent> listener : listeners) {
+                listener.onEvent(event);
+            }
+        }
 
     }
 
