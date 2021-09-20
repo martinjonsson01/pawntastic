@@ -12,13 +12,26 @@ public class ValueChangedEventTests {
     public void getNewValueReturnsNewValue() {
         // Arrange
         final int newValue = 123;
-        final ValueChangedEvent<Integer> event = new ValueChangedEvent<>(newValue);
+        final ValueChangedEvent<Integer> event = new ValueChangedEvent<>(0, newValue);
 
         // Act
         final int actualValue = event.getNewValue();
 
         // Assert
         assertThat(actualValue).isEqualTo(newValue);
+    }
+
+    @Test
+    public void getOldValueReturnsOldValue() {
+        // Arrange
+        final int oldValue = 123;
+        final ValueChangedEvent<Integer> event = new ValueChangedEvent<>(oldValue, 0);
+
+        // Act
+        final int actualValue = event.getOldValue();
+
+        // Assert
+        assertThat(actualValue).isEqualTo(oldValue);
     }
 
 }
