@@ -1,11 +1,13 @@
 package com.thebois.listeners;
 
+import com.thebois.listeners.events.IEvent;
+
 /**
  * Represents a source of events that can be listened to.
  *
  * @param <TEvent> The type of the events generated
  */
-public interface IEventSource<TEvent extends AbstractEvent> {
+public interface IEventSource<TEvent extends IEvent> {
 
     /**
      * Registers a new listener that will be notified about new events.

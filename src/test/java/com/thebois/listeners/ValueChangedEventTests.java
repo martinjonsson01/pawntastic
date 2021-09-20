@@ -2,6 +2,8 @@ package com.thebois.listeners;
 
 import org.junit.jupiter.api.Test;
 
+import com.thebois.listeners.events.ValueChangedEvent;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class ValueChangedEventTests {

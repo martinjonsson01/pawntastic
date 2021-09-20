@@ -7,6 +7,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import com.thebois.listeners.events.IEvent;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -79,7 +81,7 @@ public class EventSourceTests {
         verify(listenerToRemove, times(0)).onEvent(any());
     }
 
-    private static class TestEvent extends AbstractEvent {
+    private static class TestEvent implements IEvent {
 
         private final int testData;
 

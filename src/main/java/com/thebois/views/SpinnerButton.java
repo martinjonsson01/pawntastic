@@ -1,5 +1,8 @@
 package com.thebois.views;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -8,10 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
+import com.thebois.listeners.IEventListener;
+import com.thebois.listeners.IEventSource;
+import com.thebois.listeners.events.ValueChangedEvent;
+
 /**
  * A widget for changing an amount in discrete steps using two buttons.
  */
-public class SpinnerButton extends Table {
+public class SpinnerButton extends Table implements IEventSource<ValueChangedEvent<Integer>> {
 
     private static final float PAD_Y = 5f;
     private static final float PAD_X = 15f;
@@ -22,6 +29,9 @@ public class SpinnerButton extends Table {
     private final int max;
     private final TextButton addButton;
     private final TextButton removeButton;
+    private final Collection<IEventListener<ValueChangedEvent<Integer>>>
+        valueChangedListeners =
+        new ArrayList<>();
     private int value = 0;
 
     /**
@@ -85,6 +95,19 @@ public class SpinnerButton extends Table {
         countLabel.setText(value);
 
         updateButtonDisabledState();
+    }
+
+    @Override
+    public void addListener(final IEventListener<ValueChangedEvent<Integer>> listener) {
+        valueChangedListeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(final IEventListener<ValueChangedEvent<Integer>> listener) {
+        if (!valueChangedListeners.contains(listener)) {
+            throw new IllegalArgumentException("Can not remove listener that is not listening");
+        }
+        valueChangedListeners.remove(listener);
     }
 
 }

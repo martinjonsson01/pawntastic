@@ -5,7 +5,7 @@ package com.thebois.listeners.events;
  *
  * @param <TValue> The type of the value
  */
-public class ValueChangedEvent<TValue> extends AbstractEvent {
+public class ValueChangedEvent<TValue> implements IEvent {
 
     private final TValue newValue;
 

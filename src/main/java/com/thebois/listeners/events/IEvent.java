@@ -3,6 +3,6 @@ package com.thebois.listeners.events;
 /**
  * Represents an event and data about it.
  */
-public abstract class AbstractEvent {
+public interface IEvent {
 
 }
