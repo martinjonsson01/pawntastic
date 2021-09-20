@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * A two-dimensional location.
  */
-public final class Position {
+public final class Position implements IDeepClonable<Position> {
 
     private float posX;
     private float posY;
@@ -59,6 +59,10 @@ public final class Position {
     @Override
     public int hashCode() {
         return Objects.hash(posX, posY);
+    }
+
+    public Position deepClone() {
+        return new Position(this.posX, this.posY);
     }
 
 }
