@@ -272,7 +272,7 @@
         <module name="LeftCurly" />
         <module name="NeedBraces">
             <property name="allowSingleLineStatement" value="true" />
-            <property name="tokens" value="LAMBDA, LITERAL_IF, LITERAL_WHILE, LITERAL_DO, LITERAL_FOR" />
+            <property name="tokens" value="LITERAL_IF, LITERAL_WHILE, LITERAL_DO, LITERAL_FOR" />
         </module>
         <module name="RightCurly">
             <property name="tokens" value="METHOD_DEF" />
