@@ -1,30 +1,26 @@
 package com.thebois.models.beings;
 
-import java.util.Random;
-
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
 
 import com.thebois.models.Position;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class PawnTests {
 
     @Test
     public void arriveAtDestinationTest() {
         // Arrange
-        Position startPosition = new Position(0, 0);
-        Position endPosition = new Position(2, 2);
+        final Position startPosition = new Position(0, 0);
+        final Position endPosition = new Position(3, 4);
 
-        Pawn pawn = new Pawn(startPosition, endPosition);
+        final Pawn pawn = new Pawn(startPosition, endPosition);
 
         // Act
-        final int steps = 2;
+        final int steps = 5;
         for (int i = 0; i < steps; i++) {
             pawn.update();
+            System.out.println(pawn.getPosition().getPosX() + " " + pawn.getPosition().getPosY());
         }
 
         // Assert
@@ -34,13 +30,13 @@ public class PawnTests {
     @Test
     public void arriveAtDestinationNegativeTest() {
         // Arrange
-        Position startPosition = new Position(0, 0);
-        Position endPosition = new Position(-10, -10);
+        final Position startPosition = new Position(0, 0);
+        final Position endPosition = new Position(3, -4);
 
-        Pawn pawn = new Pawn(startPosition, endPosition);
+        final Pawn pawn = new Pawn(startPosition, endPosition);
 
         // Act
-        final int steps = 10;
+        final int steps = 5;
         for (int i = 0; i < steps; i++) {
             pawn.update();
         }

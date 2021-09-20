@@ -5,11 +5,21 @@ package com.thebois.models.beings;
  */
 public class Colony extends AbstractBeingGroup {
 
+    /**
+     * Creates an instance of Colony with two pawns.
+     */
     public Colony() {
-        super();
+        this.addBeing(new Pawn());
+        this.addBeing(new Pawn());
     }
 
+    /**
+     * Creates an instance of Colony with n number of pawns.
+     *
+     * @param numberOfPawns number of pawns to instantiate.
+     */
     public Colony(int numberOfPawns) {
         super(numberOfPawns);
     }
+
 }

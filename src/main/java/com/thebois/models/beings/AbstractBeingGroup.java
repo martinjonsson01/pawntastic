@@ -3,11 +3,29 @@ package com.thebois.models.beings;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.thebois.models.Position;
+/**
+ * An abstract implementation of IBeingGroup.
+ */
+public abstract class AbstractBeingGroup implements IBeingGroup {
 
-public class AbstractBeingGroup implements IBeingGroup {
+    private final Collection<IBeing> beings = new ArrayList<>();
 
-    protected final Collection<IBeing> beings = new ArrayList<>();
+    /**
+     * Creates a BeingGroup containing 5 Beings.
+     */
+    public AbstractBeingGroup() {
+        final int numberOfBeings = 5;
+        createBeing(numberOfBeings);
+    }
+
+    /**
+     * Creates an AbstractBeingGroup containing n IBeings.
+     *
+     * @param numberOfBeings the number of IBeings to create.
+     */
+    public AbstractBeingGroup(int numberOfBeings) {
+        createBeing(numberOfBeings);
+    }
 
     @Override
     public Collection<IBeing> getBeings() {
@@ -22,24 +40,17 @@ public class AbstractBeingGroup implements IBeingGroup {
     }
 
     /**
-     * Creates a BeingGroup containing 5 Beings.
-     */
-    public AbstractBeingGroup() {
-        createBeing(5);
-    }
-
-    /**
-     * Creates an AbstractBeingGroup containing n IBeings.
+     * Adds a being to the internal collection of beings.
      *
-     * @param numberOfBeings the number of IBeings to create.
+     * @param being IBeing to be added.
      */
-    public AbstractBeingGroup(int numberOfBeings) {
-        createBeing(numberOfBeings);
+    protected void addBeing(IBeing being) {
+        beings.add(being);
     }
 
     private void createBeing(int numberOfBeings) {
         for (int i = 0; i < numberOfBeings; i++) {
-            beings.add(new Pawn());
+            addBeing(new Pawn());
         }
     }
 

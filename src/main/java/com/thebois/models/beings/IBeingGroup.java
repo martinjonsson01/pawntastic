@@ -2,8 +2,6 @@ package com.thebois.models.beings;
 
 import java.util.Collection;
 
-import com.thebois.models.Position;
-
 /**
  * Represents a collection of entities that cooperate and metadata about the group.
  */
@@ -16,6 +14,8 @@ public interface IBeingGroup {
 
     /**
      * Returns a collection of IBeings that belong to the IBeingGroup.
+     *
+     * @return The internal collection of IBeings.
      */
     Collection<IBeing> getBeings();
 
