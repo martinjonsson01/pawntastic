@@ -1,5 +1,7 @@
 package com.thebois.models.beings;
 
+import java.util.Random;
+
 import com.thebois.models.Position;
 
 /**
@@ -11,11 +13,18 @@ public abstract class AbstractBeing implements IBeing {
     private Position currentPosition;
     // The position the AbstractBeing wants to reach.
     private Position destination;
+    // The max speed of the AbstractBeing
+    private final float maxWalkingDistance = 5;
+    // temporary: n*n world size
+    private final int worldSize = 500;
+    private Random random = new Random();
 
     /**
      * Creates an instance of AbstractBeing.
      */
     public AbstractBeing() {
+        this.destination = new Position();
+        this.currentPosition = new Position();
     }
 
     /**
@@ -33,7 +42,6 @@ public abstract class AbstractBeing implements IBeing {
      * Calculates and sets new position.
      */
     protected void move() {
-        final float maxWalkingDistance = 1;
 
         // Calculate delta of distance between current position and the destination
         final float deltaX = this.destination.getPosX() - this.currentPosition.getPosX();
@@ -49,13 +57,20 @@ public abstract class AbstractBeing implements IBeing {
         final float normDeltaX = deltaX / totalDistance;
         final float normDeltaY = deltaY / totalDistance;
 
-        // Calculate new position
-        final float newPosX = this.currentPosition.getPosX() + normDeltaX * updatedWalkingDistance;
-        final float newPosY = this.currentPosition.getPosY() + normDeltaY * updatedWalkingDistance;
+        if (!(Float.isNaN(normDeltaX) || Float.isNaN(normDeltaY))) {
 
-        // Apply new position to current position
-        this.currentPosition.setPosX(newPosX);
-        this.currentPosition.setPosY(newPosY);
+            // Calculate new position
+            final float
+                newPosX =
+                this.currentPosition.getPosX() + normDeltaX * updatedWalkingDistance;
+            final float
+                newPosY =
+                this.currentPosition.getPosY() + normDeltaY * updatedWalkingDistance;
+
+            // Apply new position to current position
+            this.currentPosition.setPosX(newPosX);
+            this.currentPosition.setPosY(newPosY);
+        }
     }
 
     @Override
@@ -66,6 +81,9 @@ public abstract class AbstractBeing implements IBeing {
     @Override
     public void update() {
         move();
+        if (currentPosition.equals(destination)) {
+            this.destination = new Position(random.nextInt(worldSize), random.nextInt(worldSize));
+        }
     }
 
 }

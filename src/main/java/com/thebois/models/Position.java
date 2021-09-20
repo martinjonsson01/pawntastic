@@ -61,6 +61,11 @@ public final class Position implements IDeepClonable<Position> {
         return Objects.hash(posX, posY);
     }
 
+    /**
+     * Makes a deep copy of the position and returns it.
+     *
+     * @return a new Position object with the same coordinates.
+     */
     public Position deepClone() {
         return new Position(this.posX, this.posY);
     }

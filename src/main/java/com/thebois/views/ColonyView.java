@@ -1,39 +1,42 @@
 package com.thebois.views;
 
-import java.util.Collection;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import com.thebois.models.beings.IBeing;
+import com.thebois.models.beings.IBeingGroup;
 
 /**
  * Used to display all pawns.
  */
-public class ColonyView {
+public class ColonyView implements IView {
+
+    private IBeingGroup colony;
 
     /**
-     * Draws all pawns.
+     * Updates the views with current beings.
      *
-     * @param listOfPawns list of pawns to draw.
-     * @param batch       used to draw.
+     * @param beingGroup list of beings to draw.
      */
-    public void drawAllPawns(ShapeRenderer batch, Collection<IBeing> listOfPawns) {
+    public void update(IBeingGroup beingGroup) {
+        this.colony = beingGroup;
+    }
 
+    @Override
+    public void draw(final ShapeRenderer batch) {
         float posX;
         float posY;
         final float radius = 5;
 
-        batch.begin(ShapeRenderer.ShapeType.Filled);
+        if (colony != null) {
+            for (IBeing pawn : colony.getBeings()) {
+                posX = pawn.getPosition().getPosX();
+                posY = pawn.getPosition().getPosY();
 
-        for (IBeing pawn : listOfPawns) {
-            posX = pawn.getPosition().getPosX();
-            posY = pawn.getPosition().getPosY();
-
-            batch.setColor(Color.WHITE);
-            batch.circle(posX, posY, radius);
+                batch.setColor(Color.WHITE);
+                batch.circle(posX, posY, radius);
+            }
         }
-        batch.end();
     }
 
 }

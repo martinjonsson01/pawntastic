@@ -6,8 +6,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import com.thebois.controllers.ColonyController;
 import com.thebois.controllers.TerrainController;
 import com.thebois.models.world.World;
+import com.thebois.views.ColonyView;
 import com.thebois.views.GameScreen;
 import com.thebois.views.IView;
 import com.thebois.views.WorldView;
@@ -26,12 +28,13 @@ class ColonyManagement extends Game {
     private World world;
     // Views
     private WorldView worldView;
+    private ColonyView colonyView;
     // Screens
     private GameScreen gameScreen;
     private TerrainController terrainController;
     private float tileSize;
-
     // Controllers
+    private ColonyController colonyController;
 
     @Override
     public void create() {
@@ -47,14 +50,17 @@ class ColonyManagement extends Game {
 
         // Views
         worldView = new WorldView(tileSize);
+        colonyView = new ColonyView();
         final ArrayList<IView> views = new ArrayList<>();
         views.add(worldView);
-
-        // Screens
-        gameScreen = new GameScreen(batch, viewportHeight, viewportWidth, views);
+        views.add(colonyView);
 
         // Controllers
         this.terrainController = new TerrainController(world, worldView);
+        this.colonyController = new ColonyController(world, colonyView);
+
+        // Screens
+        gameScreen = new GameScreen(batch, viewportHeight, viewportWidth, views);
 
         this.setScreen(gameScreen);
     }
@@ -63,6 +69,7 @@ class ColonyManagement extends Game {
     public void render() {
         super.render();
         terrainController.update();
+        colonyController.update();
     }
 
     @Override

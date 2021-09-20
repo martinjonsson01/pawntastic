@@ -26,6 +26,7 @@ public class TerrainController {
      * Updates the view with data from the world.
      */
     public void update() {
+        world.update();
         worldView.update(world.getTerrainTiles());
     }
 

@@ -3,6 +3,8 @@ package com.thebois.models.world;
 import java.util.ArrayList;
 
 import com.thebois.models.IFinder;
+import com.thebois.models.beings.Colony;
+import com.thebois.models.beings.IBeingGroup;
 
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
@@ -10,6 +12,7 @@ import com.thebois.models.IFinder;
 public class World implements IFinder {
 
     private ITerrain[][] terrainMatrix;
+    private IBeingGroup colony;
 
     /**
      * Initiates the world with the given size.
@@ -24,6 +27,8 @@ public class World implements IFinder {
                 terrainMatrix[y][x] = new Grass(x, y);
             }
         }
+
+        initColony();
     }
 
     /**
@@ -48,6 +53,27 @@ public class World implements IFinder {
             }
         }
         return copy;
+    }
+
+    /**
+     * Returns the players' colony.
+     *
+     * @return the colony.
+     */
+    public IBeingGroup getColony() {
+        return this.colony;
+    }
+
+    /**
+     * Updates the state of the world.
+     */
+    public void update() {
+        colony.update();
+    }
+
+    private void initColony() {
+        final int populationSize = 50;
+        colony = new Colony(populationSize);
     }
 
 }
