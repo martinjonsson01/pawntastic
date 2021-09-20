@@ -1,7 +1,5 @@
 package com.thebois.models.beings;
 
-import java.util.Random;
-
 import com.thebois.models.Position;
 
 /**
@@ -9,14 +7,18 @@ import com.thebois.models.Position;
  */
 public class Pawn extends AbstractBeing {
 
+    /**
+     * Creates a Pawn.
+     */
     public Pawn() {
-        super();
     }
 
-    public Pawn(Random random) {
-        super(random);
-    }
-
+    /**
+     * Creates a pawn with a initial position and a destination to travel to.
+     *
+     * @param currentPosition initial position.
+     * @param destination     initial destination to travel to.
+     */
     public Pawn(final Position currentPosition, final Position destination) {
         super(currentPosition, destination);
     }
