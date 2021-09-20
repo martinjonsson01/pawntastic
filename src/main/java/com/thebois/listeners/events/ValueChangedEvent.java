@@ -1,4 +1,4 @@
-package com.thebois.listeners;
+package com.thebois.listeners.events;
 
 /**
  * Contains information about a value that has changed.
