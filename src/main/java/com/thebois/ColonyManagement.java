@@ -36,7 +36,7 @@ class ColonyManagement extends Game {
     /* These two decide the aspect ratio that will be preserved. */
     private static final float VIEWPORT_WIDTH = 1300;
     private static final float VIEWPORT_HEIGHT = 1000;
-    private static final int DEFAULT_FONT_SIZE = 30;
+    private static final int DEFAULT_FONT_SIZE = 26;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas atlas;
@@ -88,7 +88,10 @@ class ColonyManagement extends Game {
         final FreeTypeFontGenerator.FreeTypeFontParameter
             parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.minFilter = Texture.TextureFilter.Nearest;
+        parameter.magFilter = Texture.TextureFilter.MipMapLinearNearest;
         parameter.size = DEFAULT_FONT_SIZE;
+        generator.scaleForPixelHeight(DEFAULT_FONT_SIZE);
         font = generator.generateFont(parameter);
         // To smooth out the text.
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear,

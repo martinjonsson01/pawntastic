@@ -57,10 +57,10 @@ public class RoleView implements IActorView {
     }
 
     private Actor createRoleButton(final AbstractRole role) {
-        final SpinnerButton button = new SpinnerButton(skin);
-        button.pad(BUTTON_PADDING);
+        final SpinnerButton button = new SpinnerButton(skin, 0, 99);
+        button.pad(0f, BUTTON_PADDING, BUTTON_PADDING, BUTTON_PADDING);
 
-        final Label roleLabel = new Label(role.getName(), skin);
+        final Label roleLabel = new Label(role.getName() + "s", skin);
 
         final Group buttonGroup = new VerticalGroup();
         buttonGroup.addActor(roleLabel);
