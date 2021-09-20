@@ -22,6 +22,7 @@ public class StructureController extends AbstractInputProcessor {
      * @param world         The world in which the structures exists.
      * @param structureView A view where the structures will be displayed.
      * @param projector     Projector used for converting screen coordinates to world coordinates.
+     * @param tileSize      The tile size represented on the screen.
      */
     public StructureController(final World world,
                                final StructureView structureView,

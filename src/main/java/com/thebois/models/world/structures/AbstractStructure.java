@@ -7,7 +7,7 @@ import com.thebois.models.Position;
 /**
  * Base structure for the game.
  */
-public class Structure implements IStructure {
+abstract class AbstractStructure implements IStructure {
 
     private Position position;
     private StructureType structureType;
@@ -19,7 +19,7 @@ public class Structure implements IStructure {
      * @param posY          Position in Y-axis
      * @param structureType The type of structure to create.
      */
-    public Structure(float posX, float posY, StructureType structureType) {
+    AbstractStructure(float posX, float posY, StructureType structureType) {
         this.position = new Position(posX, posY);
         this.structureType = structureType;
     }
@@ -30,7 +30,7 @@ public class Structure implements IStructure {
      * @param position      The position the structure have.
      * @param structureType The type of structure to create.
      */
-    public Structure(Position position, StructureType structureType) {
+    AbstractStructure(Position position, StructureType structureType) {
         this(position.getPosX(), position.getPosY(), structureType);
     }
 
@@ -40,7 +40,7 @@ public class Structure implements IStructure {
      * @param posX Position in X-axis
      * @param posY Position in Y-axis
      */
-    public Structure(float posX, float posY) {
+    AbstractStructure(float posX, float posY) {
         this(posX, posY, StructureType.HOUSE);
     }
 
@@ -57,7 +57,7 @@ public class Structure implements IStructure {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Structure structure = (Structure) o;
+        final AbstractStructure structure = (AbstractStructure) o;
         return Objects.equals(position, structure.position);
     }
 
@@ -69,11 +69,6 @@ public class Structure implements IStructure {
     @Override
     public StructureType getType() {
         return structureType;
-    }
-
-    @Override
-    public Structure deepClone() {
-        return new Structure(position.deepClone(), getType());
     }
 
 }
