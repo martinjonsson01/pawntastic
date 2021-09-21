@@ -19,7 +19,6 @@ public class RoleAllocator implements IRoleAllocator {
      * @param beings Already initialized beings
      */
     public RoleAllocator(final Collection<IBeing> beings) {
-
         this.beings = beings;
     }
 
