@@ -15,6 +15,10 @@ public class Pawn extends AbstractBeing {
      * Creates a Pawn.
      */
     public Pawn() {
+        setRandomDestination();
+    }
+
+    private void setRandomDestination() {
         final Position randomPosition = new Position(random.nextInt(50), random.nextInt(50));
         setDestination(randomPosition);
     }
@@ -27,6 +31,13 @@ public class Pawn extends AbstractBeing {
      */
     public Pawn(final Position currentPosition, final Position destination) {
         super(currentPosition, destination);
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
+        if (getPosition().equals(getDestination())) setRandomDestination();
     }
 
     @Override
