@@ -20,7 +20,6 @@ public class PawnTests {
         final int steps = 5;
         for (int i = 0; i < steps; i++) {
             pawn.update();
-            System.out.println(pawn.getPosition().getPosX() + " " + pawn.getPosition().getPosY());
         }
 
         // Assert
