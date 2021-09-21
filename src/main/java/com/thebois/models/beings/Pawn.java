@@ -9,7 +9,7 @@ import com.thebois.models.Position;
  */
 public class Pawn extends AbstractBeing {
 
-    /* Temporary hard-coded world size. Should be removed. */
+    /* Temporary hard-coded world size. Should be removed when pathfinding is implemented. */
     private static final int WORLD_SIZE = 50;
     private final Random random = new Random();
 
