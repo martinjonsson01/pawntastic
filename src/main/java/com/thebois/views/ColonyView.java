@@ -26,6 +26,7 @@ public class ColonyView implements IView {
      */
     private static final int TEXTURE_SUPER_SAMPLING_FACTOR = 8;
     private static final int RADIUS = 8;
+
     static {
         ROLE_COLORS = new HashMap<>();
         ROLE_COLORS.put(RoleType.BUILDER, Color.LIGHT_GRAY);
@@ -35,6 +36,7 @@ public class ColonyView implements IView {
         ROLE_COLORS.put(RoleType.LUMBERJACK, Color.BROWN);
         ROLE_COLORS.put(RoleType.MINER, Color.GRAY);
     }
+
     private final Color beingColor = Color.WHITE;
     private final float tileSize;
     private IBeingGroup colony;
