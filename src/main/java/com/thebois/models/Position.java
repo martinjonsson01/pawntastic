@@ -11,13 +11,6 @@ public final class Position implements IDeepClonable<Position> {
     private float posY;
 
     /**
-     * Creates position at 0,0.
-     */
-    public Position() {
-        this(0, 0);
-    }
-
-    /**
      * Creates position at specified coordinates.
      *
      * @param posX The x-coordinate

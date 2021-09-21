@@ -90,22 +90,6 @@ public class WorldTests {
         assertThat(structures.size()).isEqualTo(1);
     }
 
-    @Test
-    public void createStructureTest() {
-        // Arrange
-        final World world = new World(25);
-
-        // Act
-        final Boolean isEmpty = world.getStructures().isEmpty();
-        final Boolean isStructureBuilt = world.createStructure(new Position(0, 0));
-        final int numberOfStructures = world.getStructures().size();
-
-        // Assert
-        assertThat(isEmpty).isTrue();
-        assertThat(isStructureBuilt).isTrue();
-        assertThat(numberOfStructures).isEqualTo(1);
-    }
-
     private boolean matrixEquals(ITile[][] worldMatrix1, ITile[][] worldMatrix2) {
         for (int y = 0; y < worldMatrix2.length; y++) {
             final ITile[] row = worldMatrix2[y];

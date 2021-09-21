@@ -19,7 +19,7 @@ abstract class AbstractStructure implements IStructure {
      * @param posY          Position in Y-axis
      * @param structureType The type of structure to create.
      */
-    AbstractStructure(float posX, float posY, StructureType structureType) {
+    AbstractStructure(int posX, int posY, StructureType structureType) {
         this.position = new Position(posX, posY);
         this.structureType = structureType;
     }
@@ -31,17 +31,7 @@ abstract class AbstractStructure implements IStructure {
      * @param structureType The type of structure to create.
      */
     AbstractStructure(Position position, StructureType structureType) {
-        this(position.getPosX(), position.getPosY(), structureType);
-    }
-
-    /**
-     * Creates a structure with a position.
-     *
-     * @param posX Position in X-axis
-     * @param posY Position in Y-axis
-     */
-    AbstractStructure(float posX, float posY) {
-        this(posX, posY, StructureType.HOUSE);
+        this((int) position.getPosX(), (int) position.getPosY(), structureType);
     }
 
     @Override
@@ -57,13 +47,13 @@ abstract class AbstractStructure implements IStructure {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final AbstractStructure structure = (AbstractStructure) o;
-        return Objects.equals(position, structure.position);
+        final AbstractStructure that = (AbstractStructure) o;
+        return position.equals(that.position) && structureType == that.structureType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position);
+        return Objects.hash(position, structureType);
     }
 
     @Override

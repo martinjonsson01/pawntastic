@@ -13,7 +13,7 @@ public class House extends AbstractStructure {
      * @param posX Position in X-axis
      * @param posY Position in Y-axis
      */
-    public House(final float posX, final float posY) {
+    public House(final int posX, final int posY) {
         super(posX, posY, StructureType.HOUSE);
     }
 
@@ -23,7 +23,7 @@ public class House extends AbstractStructure {
      * @param position The position of the house
      */
     public House(Position position) {
-        super(position.getPosX(), position.getPosY(), StructureType.HOUSE);
+        super(position, StructureType.HOUSE);
     }
 
     @Override
