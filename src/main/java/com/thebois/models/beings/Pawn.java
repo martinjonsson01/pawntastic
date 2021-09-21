@@ -14,16 +14,9 @@ public class Pawn extends AbstractBeing {
     private final Random random = new Random();
 
     /**
-     * Instantiates at 0,0 with a randomly set destination.
+     * Instantiates at 0,0 with a destination of 0,0.
      */
     public Pawn() {
-        setRandomDestination();
-    }
-
-    private void setRandomDestination() {
-        final Position randomPosition = new Position(random.nextInt(WORLD_SIZE),
-                                                     random.nextInt(WORLD_SIZE));
-        setDestination(randomPosition);
     }
 
     /**
@@ -41,6 +34,12 @@ public class Pawn extends AbstractBeing {
         super.update();
 
         if (getPosition().equals(getDestination())) setRandomDestination();
+    }
+
+    private void setRandomDestination() {
+        final Position randomPosition = new Position(random.nextInt(WORLD_SIZE),
+                                                     random.nextInt(WORLD_SIZE));
+        setDestination(randomPosition);
     }
 
     @Override
