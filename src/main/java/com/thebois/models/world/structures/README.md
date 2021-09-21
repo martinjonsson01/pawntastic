@@ -2,4 +2,4 @@
 
 ## UML Class Diagram
 
-![com.thebois.models.world.structures](./../../../../../../documents/diagrams/com.thebois.models.world.structures.jpg "com.thebois.models.world.structures")
+![com.thebois.models.world.structures](../../../../../../../../documents/diagrams/com.thebois.models.world.structures.jpg "com.thebois.models.world.structures")
