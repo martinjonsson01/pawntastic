@@ -27,12 +27,12 @@ public final class PositionAdapter {
     /**
      * Converts vector to custom position.
      *
-     * @param vector2 The vector to convert from.
+     * @param vector The vector to convert from.
      *
      * @return The same vector in position form.
      */
-    public static Position toPosition(Vector2 vector2) {
-        return new Position(vector2.x, vector2.y);
+    public static Position toPosition(Vector2 vector) {
+        return new Position(vector.x, vector.y);
     }
 
 }

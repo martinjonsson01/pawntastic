@@ -10,11 +10,11 @@ public interface IProjector {
     /**
      * Unprojects screen coordinates to world coordinates.
      *
-     * @param screenCordX X coordinate of a position in screen space.
-     * @param screenCordY Y coordinate of a position in screen space.
+     * @param screenCoordinateX X coordinate of a position in screen space.
+     * @param screenCoordinateY Y coordinate of a position in screen space.
      *
      * @return Returns a Vector2 in the world coordinates.
      */
-    Vector2 unproject(int screenCordX, int screenCordY);
+    Vector2 unproject(int screenCoordinateX, int screenCoordinateY);
 
 }

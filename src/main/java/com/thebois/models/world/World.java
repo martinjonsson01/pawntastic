@@ -30,7 +30,7 @@ public class World implements IFinder {
         }
 
         // Structures
-        structuresMatrix = new House[worldSize][worldSize];
+        structuresMatrix = new IStructure[worldSize][worldSize];
     }
 
     /**

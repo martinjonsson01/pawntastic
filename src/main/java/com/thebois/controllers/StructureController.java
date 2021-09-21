@@ -40,10 +40,10 @@ public class StructureController extends AbstractInputProcessor {
     @Override
     public boolean touchDown(final int x, final int y, final int pointer, final int button) {
         if (button == LEFT_CLICK) {
+
             final Vector2 worldSpaceCords = projector.unproject(x, y);
             final int worldPosX = (int) (worldSpaceCords.x / tileSize);
             final int worldPosY = (int) (worldSpaceCords.y / tileSize);
-
             if (world.createStructure(worldPosX, worldPosY)) {
                 structureView.update(world.getStructures());
                 return true;

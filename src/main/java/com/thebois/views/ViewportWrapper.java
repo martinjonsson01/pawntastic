@@ -20,8 +20,8 @@ class ViewportWrapper implements IProjector {
     }
 
     @Override
-    public Vector2 unproject(final int screenCordX, final int screenCordY) {
-        return viewport.unproject(new Vector2(screenCordX, screenCordY));
+    public Vector2 unproject(final int screenCoordinateX, final int screenCoordinateY) {
+        return viewport.unproject(new Vector2(screenCoordinateX, screenCoordinateY));
     }
 
 }
