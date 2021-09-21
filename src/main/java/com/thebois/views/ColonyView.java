@@ -25,7 +25,6 @@ public class ColonyView implements IView {
      * displayed at. </p>
      */
     private static final int TEXTURE_SUPER_SAMPLING_FACTOR = 8;
-    private static final int RADIUS = 8;
 
     static {
         ROLE_COLORS = new HashMap<>();
@@ -39,6 +38,7 @@ public class ColonyView implements IView {
 
     private final Color beingColor = Color.WHITE;
     private final float tileSize;
+    private final int radius;
     private IBeingGroup colony;
     private Texture beingTexture;
 
@@ -49,12 +49,13 @@ public class ColonyView implements IView {
      */
     public ColonyView(final float tileSize) {
         this.tileSize = tileSize;
+        this.radius = Math.round(tileSize / 2f);
 
         createBeingTexture();
     }
 
     private void createBeingTexture() {
-        final int superSampledRadius = RADIUS * TEXTURE_SUPER_SAMPLING_FACTOR;
+        final int superSampledRadius = radius * TEXTURE_SUPER_SAMPLING_FACTOR;
         final Pixmap pixmap = new Pixmap(superSampledRadius * 2,
                                          superSampledRadius * 2,
                                          Pixmap.Format.RGBA8888);
@@ -71,7 +72,7 @@ public class ColonyView implements IView {
      *
      * @param beingGroup list of beings to draw.
      */
-    public void update(IBeingGroup beingGroup) {
+    public void update(final IBeingGroup beingGroup) {
         this.colony = beingGroup;
     }
 
@@ -81,7 +82,7 @@ public class ColonyView implements IView {
         float posY;
 
         if (colony != null) {
-            for (IBeing pawn : colony.getBeings()) {
+            for (final IBeing pawn : colony.getBeings()) {
                 posX = pawn.getPosition().getPosX() * tileSize;
                 posY = pawn.getPosition().getPosY() * tileSize;
 
@@ -95,8 +96,8 @@ public class ColonyView implements IView {
                 batch.draw(beingTexture,
                            offsetX + posX,
                            offsetY + posY,
-                           RADIUS * 2 + 2,
-                           RADIUS * 2 + 2);
+                           radius * 2,
+                           radius * 2);
             }
         }
     }

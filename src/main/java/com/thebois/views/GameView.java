@@ -28,7 +28,7 @@ public class GameView extends Widget implements Disposable {
 
     @Override
     public void dispose() {
-        for (Disposable view : views) {
+        for (final Disposable view : views) {
             view.dispose();
         }
     }
