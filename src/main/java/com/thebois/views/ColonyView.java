@@ -18,6 +18,14 @@ import com.thebois.models.beings.roles.RoleType;
 public class ColonyView implements IView {
 
     private static final Map<RoleType, Color> ROLE_COLORS;
+    /**
+     * How many times bigger the textures should be relative to their displayed size.
+     *
+     * <p> E.g. a factor of 2 means the textures are created at 2x the resolution they are being
+     * displayed at. </p>
+     */
+    private static final int TEXTURE_SUPER_SAMPLING_FACTOR = 8;
+    private static final int RADIUS = 8;
     static {
         ROLE_COLORS = new HashMap<>();
         ROLE_COLORS.put(RoleType.BUILDER, Color.LIGHT_GRAY);
@@ -27,7 +35,6 @@ public class ColonyView implements IView {
         ROLE_COLORS.put(RoleType.LUMBERJACK, Color.BROWN);
         ROLE_COLORS.put(RoleType.MINER, Color.GRAY);
     }
-    private final int radius = 5;
     private final Color beingColor = Color.WHITE;
     private final float tileSize;
     private IBeingGroup colony;
@@ -45,11 +52,15 @@ public class ColonyView implements IView {
     }
 
     private void createBeingTexture() {
-        final Pixmap pixmap = new Pixmap(radius * 2, radius * 2, Pixmap.Format.RGBA8888);
+        final int superSampledRadius = RADIUS * TEXTURE_SUPER_SAMPLING_FACTOR;
+        final Pixmap pixmap = new Pixmap(superSampledRadius * 2,
+                                         superSampledRadius * 2,
+                                         Pixmap.Format.RGBA8888);
         pixmap.setColor(beingColor);
-        pixmap.fillCircle(radius, radius, radius);
-        beingTexture = new Texture(pixmap);
-        beingTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        pixmap.fillCircle(superSampledRadius, superSampledRadius, superSampledRadius);
+        beingTexture = new Texture(pixmap, true);
+        beingTexture.setFilter(Texture.TextureFilter.MipMapLinearLinear,
+                               Texture.TextureFilter.MipMapLinearLinear);
         pixmap.dispose();
     }
 
@@ -79,7 +90,11 @@ public class ColonyView implements IView {
                     batch.setColor(Color.WHITE);
                 }
 
-                batch.draw(beingTexture, offsetX + posX, offsetY + posY, radius * 2, radius * 2);
+                batch.draw(beingTexture,
+                           offsetX + posX,
+                           offsetY + posY,
+                           RADIUS * 2 + 2,
+                           RADIUS * 2 + 2);
             }
         }
     }

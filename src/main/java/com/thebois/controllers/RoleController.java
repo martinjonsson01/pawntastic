@@ -50,16 +50,8 @@ public class RoleController {
             throw new IllegalCallerException("Can not allocate multiple IBeings at the same time");
         }
         switch (difference) {
-            case 1 -> {
-                if (roleAllocator.tryIncreaseAllocation(role)) {
-                    System.out.println("increased " + role.name());
-                }
-            }
-            case -1 -> {
-                if (roleAllocator.tryDecreaseAllocation(role)) {
-                    System.out.println("decreased " + role.name());
-                }
-            }
+            case 1 -> roleAllocator.tryIncreaseAllocation(role);
+            case -1 -> roleAllocator.tryDecreaseAllocation(role);
             default -> throw new IllegalStateException("Expected a difference but there was none");
         }
 

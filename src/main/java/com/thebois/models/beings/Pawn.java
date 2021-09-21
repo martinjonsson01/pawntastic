@@ -9,22 +9,25 @@ import com.thebois.models.Position;
  */
 public class Pawn extends AbstractBeing {
 
+    /* Temporary hard-coded world size. Should be removed. */
+    private static final int WORLD_SIZE = 50;
     private final Random random = new Random();
 
     /**
-     * Creates a Pawn.
+     * Instantiates at 0,0 with a randomly set destination.
      */
     public Pawn() {
         setRandomDestination();
     }
 
     private void setRandomDestination() {
-        final Position randomPosition = new Position(random.nextInt(50), random.nextInt(50));
+        final Position randomPosition = new Position(random.nextInt(WORLD_SIZE),
+                                                     random.nextInt(WORLD_SIZE));
         setDestination(randomPosition);
     }
 
     /**
-     * Creates a pawn with a initial position and a destination to travel to.
+     * Instantiates with an initial position and a destination to travel to.
      *
      * @param currentPosition initial position.
      * @param destination     initial destination to travel to.
