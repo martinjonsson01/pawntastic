@@ -14,4 +14,9 @@ public interface IBeing {
      */
     Position getPosition();
 
+    /**
+     * Updates the objects internal state.
+     */
+    void update();
+
 }

@@ -1,5 +1,7 @@
 package com.thebois.models;
 
+import java.util.Objects;
+
 /**
  * A two-dimensional location.
  */
@@ -43,6 +45,27 @@ public final class Position implements IDeepClonable<Position> {
     }
 
     @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Position position = (Position) o;
+        return Float.compare(position.posX, posX) == 0 && Float.compare(position.posY, posY) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(posX, posY);
+    }
+
+    /**
+     * Makes a deep copy of the position and returns it.
+     *
+     * @return a new Position object with the same coordinates.
+     */
     public Position deepClone() {
         return new Position(this.posX, this.posY);
     }
