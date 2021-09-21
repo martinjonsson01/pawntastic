@@ -14,12 +14,6 @@ public class Pawn extends AbstractBeing {
     private final Random random = new Random();
 
     /**
-     * Instantiates at 0,0 with a destination of 0,0.
-     */
-    public Pawn() {
-    }
-
-    /**
      * Instantiates with an initial position and a destination to travel to.
      *
      * @param currentPosition initial position.

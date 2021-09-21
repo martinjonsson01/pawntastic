@@ -13,7 +13,7 @@ public class WorldTests {
     public void worldInitiated() {
         // Arrange
         final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = new World(2);
+        final World world = new World(2, 5);
 
         // Act
         final Collection<ITerrain> terrainTiles = world.getTerrainTiles();
@@ -34,7 +34,7 @@ public class WorldTests {
     @Test
     public void worldFind() {
         // Arrange
-        final World world = new World(2);
+        final World world = new World(2, 5);
 
         // Act
         final Object worldObject = world.find();
@@ -43,7 +43,7 @@ public class WorldTests {
         assertThat(worldObject).isEqualTo(null);
     }
 
-    private boolean matrixEquals(ITile[][] worldMatrix1, ITile[][] worldMatrix2) {
+    private boolean matrixEquals(final ITile[][] worldMatrix1, final ITile[][] worldMatrix2) {
         for (int y = 0; y < worldMatrix2.length; y++) {
             final ITile[] row = worldMatrix2[y];
             for (int x = 0; x < row.length; x++) {

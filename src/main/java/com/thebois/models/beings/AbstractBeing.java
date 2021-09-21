@@ -1,13 +1,12 @@
 package com.thebois.models.beings;
 
-import com.thebois.models.IDeepClonable;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 
 /**
  * An abstract implementation of IBeing.
  */
-public abstract class AbstractBeing implements IBeing, IDeepClonable<IBeing> {
+public abstract class AbstractBeing implements IBeing {
 
     // The max speed of the AbstractBeing
     private static final float MAX_WALKING_DISTANCE = 0.1f;
@@ -31,7 +30,7 @@ public abstract class AbstractBeing implements IBeing, IDeepClonable<IBeing> {
      * @param currentPosition the initial position of the AbstractBeing.
      * @param destination     the initial destination of the AbstractBeing.
      */
-    public AbstractBeing(Position currentPosition, Position destination) {
+    public AbstractBeing(final Position currentPosition, final Position destination) {
         this.currentPosition = currentPosition;
         this.destination = destination;
     }

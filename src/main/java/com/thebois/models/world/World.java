@@ -11,16 +11,19 @@ import com.thebois.models.beings.IBeingGroup;
  */
 public class World implements IFinder {
 
-    private ITerrain[][] terrainMatrix;
+    private final ITerrain[][] terrainMatrix;
     private IBeingGroup colony;
+    private final int beingCount;
 
     /**
      * Initiates the world with the given size.
      *
-     * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
+     * @param worldSize  The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
+     * @param beingCount The amount of beings to initialize the players' BeingGroup with
      */
-    public World(int worldSize) {
+    public World(final int worldSize, final int beingCount) {
         terrainMatrix = new ITerrain[worldSize][worldSize];
+        this.beingCount = beingCount;
 
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
@@ -29,6 +32,10 @@ public class World implements IFinder {
         }
 
         initColony();
+    }
+
+    private void initColony() {
+        colony = new Colony(beingCount);
     }
 
     /**
@@ -61,7 +68,7 @@ public class World implements IFinder {
      * @return the colony.
      */
     public IBeingGroup getColony() {
-        return this.colony;
+        return colony.deepClone();
     }
 
     /**
@@ -69,11 +76,6 @@ public class World implements IFinder {
      */
     public void update() {
         colony.update();
-    }
-
-    private void initColony() {
-        final int populationSize = 50;
-        colony = new Colony(populationSize);
     }
 
 }
