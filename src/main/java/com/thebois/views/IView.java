@@ -1,11 +1,12 @@
 package com.thebois.views;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Ensures views can be rendered.
  */
-public interface IView {
+public interface IView extends Disposable {
 
     /**
      * Used for view when rendering.

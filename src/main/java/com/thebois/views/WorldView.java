@@ -22,7 +22,7 @@ public class WorldView implements IView {
     /**
      * Creates the WorldView with a tileSize.
      *
-     * @param tileSize Is used for correct scaling.
+     * @param tileSize The size of a single tile, in pixels.
      */
     public WorldView(final float tileSize) {
         this.tileSize = tileSize;
@@ -57,6 +57,11 @@ public class WorldView implements IView {
                        tileSize,
                        tileSize);
         }
+    }
+
+    @Override
+    public void dispose() {
+        grassTexture.dispose();
     }
 
 }

@@ -1,6 +1,6 @@
 package com.thebois.models.beings.roles;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -11,14 +11,14 @@ import com.thebois.models.beings.IBeing;
  */
 public class RoleAllocator implements IRoleAllocator {
 
-    private final List<IBeing> beings;
+    private final Collection<IBeing> beings;
 
     /**
      * Initializes with already created beings.
      *
      * @param beings Already initialized beings
      */
-    public RoleAllocator(final List<IBeing> beings) {
+    public RoleAllocator(final Collection<IBeing> beings) {
 
         this.beings = beings;
     }

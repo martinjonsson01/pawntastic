@@ -29,4 +29,9 @@ public interface IBeing {
      */
     void setRole(AbstractRole role);
 
+    /**
+     * Updates the objects internal state.
+     */
+    void update();
+
 }

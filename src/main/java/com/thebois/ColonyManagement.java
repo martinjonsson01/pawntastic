@@ -1,6 +1,5 @@
 package com.thebois;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Game;
@@ -11,14 +10,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import org.mockito.Mockito;
-
+import com.thebois.controllers.ColonyController;
 import com.thebois.controllers.RoleController;
 import com.thebois.controllers.TerrainController;
-import com.thebois.models.beings.IBeing;
-import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleAllocator;
 import com.thebois.models.world.World;
+import com.thebois.views.ColonyView;
 import com.thebois.views.GameScreen;
 import com.thebois.views.GameView;
 import com.thebois.views.IActorView;
@@ -46,6 +43,8 @@ class ColonyManagement extends Game {
     // Controllers
     private TerrainController terrainController;
     private RoleController roleController;
+    private ColonyController colonyController;
+    private World world;
 
     @Override
     public void create() {
@@ -60,12 +59,13 @@ class ColonyManagement extends Game {
         skin.load(Gdx.files.internal("uiskin.json"));
 
         // Models
-        final World world = new World(WORLD_SIZE);
-        final RoleAllocator roleAllocator = new RoleAllocator(mockBeings(10));
+        world = new World(WORLD_SIZE);
+        final RoleAllocator roleAllocator = new RoleAllocator(world.getColony().getBeings());
 
         // Game Views
         final WorldView worldView = new WorldView(tileSize);
-        final List<IView> views = List.of(worldView);
+        final ColonyView colonyView = new ColonyView(tileSize);
+        final List<IView> views = List.of(worldView, colonyView);
         final GameView gameView = new GameView(views, WORLD_SIZE, tileSize);
         // Info Views
         final RoleView roleView = new RoleView(skin);
@@ -78,6 +78,7 @@ class ColonyManagement extends Game {
         // Controllers
         this.terrainController = new TerrainController(world, worldView);
         this.roleController = new RoleController(roleAllocator, roleView);
+        this.colonyController = new ColonyController(world, colonyView);
 
         this.setScreen(gameScreen);
     }
@@ -85,8 +86,7 @@ class ColonyManagement extends Game {
     private void generateFont() {
         final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(
             "fonts/arial.ttf"));
-        final FreeTypeFontGenerator.FreeTypeFontParameter
-            parameter =
+        final FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.minFilter = Texture.TextureFilter.Nearest;
         parameter.magFilter = Texture.TextureFilter.MipMapLinearNearest;
@@ -99,27 +99,6 @@ class ColonyManagement extends Game {
         generator.dispose();
     }
 
-    /* temporary until 9-pawns is merged */
-    private List<IBeing> mockBeings(final int beingCount) {
-        final ArrayList<IBeing> beings = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            beings.add(mockBeing());
-        }
-        return beings;
-    }
-
-    /* temporary until 9-pawns is merged */
-    private IBeing mockBeing() {
-        final IBeing being = Mockito.mock(IBeing.class);
-        // Mocks the getter and setter to simulate a real implementation.
-        Mockito.doAnswer(answer -> {
-            return Mockito
-                .when(being.getRole())
-                .thenReturn((AbstractRole) answer.getArguments()[0]);
-        }).when(being).setRole(Mockito.any());
-        return being;
-    }
-
     @Override
     public void dispose() {
         gameScreen.dispose();
@@ -130,7 +109,9 @@ class ColonyManagement extends Game {
     @Override
     public void render() {
         super.render();
+        world.update();
         terrainController.update();
+        colonyController.update();
     }
 
 }

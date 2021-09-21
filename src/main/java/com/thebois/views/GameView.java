@@ -4,11 +4,12 @@ import java.util.Collection;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.utils.Disposable;
 
 /**
  * A view of the game world.
  */
-public class GameView extends Widget {
+public class GameView extends Widget implements Disposable {
 
     private final Collection<IView> views;
     private final float worldScreenSize;
@@ -23,6 +24,13 @@ public class GameView extends Widget {
     public GameView(final Collection<IView> views, final int worldSize, final float tileSize) {
         this.views = views;
         this.worldScreenSize = tileSize * worldSize;
+    }
+
+    @Override
+    public void dispose() {
+        for (Disposable view : views) {
+            view.dispose();
+        }
     }
 
     @Override
