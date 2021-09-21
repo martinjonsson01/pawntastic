@@ -45,10 +45,11 @@ public class ColonyView implements IView {
     }
 
     private void createBeingTexture() {
-        final Pixmap pixmap = new Pixmap(radius, radius, Pixmap.Format.RGBA8888);
+        final Pixmap pixmap = new Pixmap(radius * 2, radius * 2, Pixmap.Format.RGBA8888);
         pixmap.setColor(beingColor);
-        pixmap.fillCircle(0, 0, radius);
+        pixmap.fillCircle(radius, radius, radius);
         beingTexture = new Texture(pixmap);
+        beingTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         pixmap.dispose();
     }
 
@@ -78,7 +79,7 @@ public class ColonyView implements IView {
                     batch.setColor(Color.WHITE);
                 }
 
-                batch.draw(beingTexture, offsetX + posX, offsetY + posY, radius, radius);
+                batch.draw(beingTexture, offsetX + posX, offsetY + posY, radius * 2, radius * 2);
             }
         }
     }
