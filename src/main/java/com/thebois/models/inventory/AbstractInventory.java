@@ -42,6 +42,13 @@ public abstract class AbstractInventory {
         return index;
     }
 
+    /**
+     * Check if an item type is in the current inventory.
+     *
+     * @param itemType The item type to be checked for
+     *
+     * @return A boolean indicating if the item is in the inventory or not
+     */
     public boolean doesItemTypeExist(final ItemType itemType) {
         for (final IItem item : itemHolder) {
             if (item.getType().equals(itemType)) {
