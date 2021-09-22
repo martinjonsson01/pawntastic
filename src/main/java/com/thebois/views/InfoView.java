@@ -31,7 +31,7 @@ public class InfoView {
         infoPaneGroup.expand().fill();
 
         for (final IActorView actorView : widgetViews) {
-            infoPaneGroup.addActor(actorView.getRoot());
+            infoPaneGroup.addActor(actorView.getWidgetContainer());
         }
 
         infoPane = new Container<>(infoPaneGroup).fill();

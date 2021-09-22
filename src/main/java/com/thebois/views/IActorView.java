@@ -8,10 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public interface IActorView {
 
     /**
-     * Gets the root element of the view.
+     * Gets the root element of the view. The widget that contains all UI elements of the view.
      *
      * @return The root element containing all other parts of the view.
      */
-    Actor getRoot();
+    Actor getWidgetContainer();
 
 }

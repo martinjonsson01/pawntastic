@@ -84,7 +84,7 @@ public class RoleView implements IActorView {
     }
 
     @Override
-    public Actor getRoot() {
+    public Actor getWidgetContainer() {
         createRoleButtons();
         return root;
     }
