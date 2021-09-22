@@ -90,6 +90,23 @@ public class WorldTests {
         assertThat(structures.size()).isEqualTo(1);
     }
 
+    @Test
+    public void numberOfStructuresDoesNotChangeIfStructuresPlacedOutsideWorld() {
+        // Arrange
+        final World world = new World(2);
+        final Position position1 = new Position(2, 2);
+        final Position position2 = new Position(-1, -1);
+        final Collection<IStructure> structures;
+
+        // Act
+        world.createStructure(position1);
+        world.createStructure(position2);
+        structures = world.getStructures();
+
+        // Assert
+        assertThat(structures.size()).isEqualTo(0);
+    }
+
     private boolean matrixEquals(ITile[][] worldMatrix1, ITile[][] worldMatrix2) {
         for (int y = 0; y < worldMatrix2.length; y++) {
             final ITile[] row = worldMatrix2[y];
