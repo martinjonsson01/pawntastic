@@ -38,18 +38,36 @@ class ColonyManagement extends Game {
     private BitmapFont font;
     private TextureAtlas skinAtlas;
     private Skin uiSkin;
+    // Model
+    private World world;
+    /* Views - InfoView */
+    private InfoView infoView;
+    private RoleView roleView;
+    /* Views - GameView*/
+    private GameView gameView;
+    private WorldView worldView;
+    private ColonyView colonyView;
     // Screens
     private GameScreen gameScreen;
     // Controllers
     private TerrainController terrainController;
-    private RoleController roleController;
     private ColonyController colonyController;
-    private World world;
 
     @Override
     public void create() {
         final float tileSize = Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH) / WORLD_SIZE;
 
+        setUpUserInterfaceSkin();
+
+        setUpModelViewController(tileSize);
+
+        // Screens
+        gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, uiSkin, gameView, infoView);
+
+        this.setScreen(gameScreen);
+    }
+
+    private void setUpUserInterfaceSkin() {
         // Load LibGDX assets.
         generateFont();
         uiSkin = new Skin();
@@ -57,29 +75,15 @@ class ColonyManagement extends Game {
         skinAtlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
         uiSkin.addRegions(skinAtlas);
         uiSkin.load(Gdx.files.internal("uiskin.json"));
+    }
 
-        // Models
-        world = new World(WORLD_SIZE, PAWN_COUNT);
+    private void setUpModelViewController(final float tileSize) {
+        createModels();
 
-        // Game Views
-        final WorldView worldView = new WorldView(tileSize);
-        final ColonyView colonyView = new ColonyView(tileSize);
-        final List<IView> views = List.of(worldView, colonyView);
-        final GameView gameView = new GameView(views, WORLD_SIZE, tileSize);
-        // Info Views
-        final RoleView roleView = new RoleView(uiSkin);
-        final List<IActorView> widgetViews = List.of(roleView);
-        final InfoView infoView = new InfoView(widgetViews);
+        createGameView(tileSize);
+        createInfoView();
 
-        // Screens
-        gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, uiSkin, gameView, infoView);
-
-        // Controllers
-        this.terrainController = new TerrainController(world, worldView);
-        this.roleController = new RoleController(world.getRoleAllocator(), roleView);
-        this.colonyController = new ColonyController(world, colonyView);
-
-        this.setScreen(gameScreen);
+        createControllers();
     }
 
     private void generateFont() {
@@ -96,6 +100,29 @@ class ColonyManagement extends Game {
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear,
                                                 Texture.TextureFilter.Linear);
         generator.dispose();
+    }
+
+    private void createModels() {
+        world = new World(WORLD_SIZE, PAWN_COUNT);
+    }
+
+    private void createGameView(final float tileSize) {
+        worldView = new WorldView(tileSize);
+        colonyView = new ColonyView(tileSize);
+        final List<IView> views = List.of(worldView, colonyView);
+        gameView = new GameView(views, WORLD_SIZE, tileSize);
+    }
+
+    private void createInfoView() {
+        roleView = new RoleView(uiSkin);
+        final List<IActorView> widgetViews = List.of(roleView);
+        infoView = new InfoView(widgetViews);
+    }
+
+    private void createControllers() {
+        this.terrainController = new TerrainController(world, worldView);
+        this.colonyController = new ColonyController(world, colonyView);
+        new RoleController(world.getRoleAllocator(), roleView);
     }
 
     @Override
