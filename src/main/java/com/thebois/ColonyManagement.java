@@ -36,8 +36,8 @@ class ColonyManagement extends Game {
     private static final int BEING_COUNT = 50;
     // LibGDX assets
     private BitmapFont font;
-    private TextureAtlas atlas;
-    private Skin skin;
+    private TextureAtlas skinAtlas;
+    private Skin uiSkin;
     // Screens
     private GameScreen gameScreen;
     // Controllers
@@ -52,11 +52,11 @@ class ColonyManagement extends Game {
 
         // Load LibGDX assets.
         generateFont();
-        skin = new Skin();
-        skin.add("default-font", font);
-        atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
-        skin.addRegions(atlas);
-        skin.load(Gdx.files.internal("uiskin.json"));
+        uiSkin = new Skin();
+        uiSkin.add("default-font", font);
+        skinAtlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
+        uiSkin.addRegions(skinAtlas);
+        uiSkin.load(Gdx.files.internal("uiskin.json"));
 
         // Models
         world = new World(WORLD_SIZE, BEING_COUNT);
@@ -67,12 +67,12 @@ class ColonyManagement extends Game {
         final List<IView> views = List.of(worldView, colonyView);
         final GameView gameView = new GameView(views, WORLD_SIZE, tileSize);
         // Info Views
-        final RoleView roleView = new RoleView(skin);
+        final RoleView roleView = new RoleView(uiSkin);
         final List<IActorView> widgetViews = List.of(roleView);
         final InfoView infoView = new InfoView(widgetViews);
 
         // Screens
-        gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, skin, gameView, infoView);
+        gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, uiSkin, gameView, infoView);
 
         // Controllers
         this.terrainController = new TerrainController(world, worldView);
@@ -101,8 +101,8 @@ class ColonyManagement extends Game {
     @Override
     public void dispose() {
         gameScreen.dispose();
-        atlas.dispose();
-        skin.dispose();
+        skinAtlas.dispose();
+        uiSkin.dispose();
     }
 
     @Override
