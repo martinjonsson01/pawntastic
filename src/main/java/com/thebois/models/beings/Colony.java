@@ -88,9 +88,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     @Override
     public int countBeingsWithRole(final RoleType roleType) {
         final AbstractRole role = RoleFactory.fromType(roleType);
-        return (int) getBeingsByReference().stream()
-                                           .filter(being -> role.equals(being.getRole()))
-                                           .count();
+        return (int) getBeings().stream().filter(being -> role.equals(being.getRole())).count();
     }
 
     @Override
@@ -115,7 +113,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     }
 
     private Collection<IBeing> findIdleBeings() {
-        final Stream<IBeing> idleBeings = getBeingsByReference().stream().filter(this::isIdle);
+        final Stream<IBeing> idleBeings = getBeings().stream().filter(this::isIdle);
         return idleBeings.collect(Collectors.toList());
     }
 
@@ -124,10 +122,10 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     }
 
     private Collection<IBeing> findBeingsWithRole(final AbstractRole role) {
-        return getBeingsByReference().stream()
-                                     .filter(being -> being.getRole() != null)
-                                     .filter(being -> role.equals(being.getRole()))
-                                     .collect(Collectors.toList());
+        return getBeings().stream()
+                          .filter(being -> being.getRole() != null)
+                          .filter(being -> role.equals(being.getRole()))
+                          .collect(Collectors.toList());
     }
 
 }
