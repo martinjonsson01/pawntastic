@@ -2,6 +2,7 @@ package com.thebois.models.beings;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,8 +33,9 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     }
 
     private void createBeings(final Iterable<Position> vacantPositions) {
+        final Random random = new Random();
         for (final Position vacantPosition : vacantPositions) {
-            addBeing(new Pawn(vacantPosition, vacantPosition));
+            addBeing(new Pawn(vacantPosition, vacantPosition, random));
         }
     }
 

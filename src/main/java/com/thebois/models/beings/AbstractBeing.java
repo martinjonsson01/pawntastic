@@ -19,14 +19,6 @@ public abstract class AbstractBeing implements IBeing {
     private AbstractRole role;
 
     /**
-     * Creates an instance of AbstractBeing.
-     */
-    public AbstractBeing() {
-        this.destination = new Position();
-        this.currentPosition = new Position();
-    }
-
-    /**
      * Creates an AbstractBeing with an initial position.
      *
      * @param currentPosition the initial position of the AbstractBeing.
@@ -35,6 +27,26 @@ public abstract class AbstractBeing implements IBeing {
     public AbstractBeing(final Position currentPosition, final Position destination) {
         this.currentPosition = currentPosition;
         this.destination = destination;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDestination(), getPosition(), getRole());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractBeing)) return false;
+        final AbstractBeing that = (AbstractBeing) o;
+        return Objects.equals(getDestination(), that.getDestination())
+               && Objects.equals(currentPosition,
+                                 that.currentPosition)
+               && Objects.equals(getRole(), that.getRole());
+    }
+
+    protected Position getDestination() {
+        return destination.deepClone();
     }
 
     @Override
@@ -79,7 +91,7 @@ public abstract class AbstractBeing implements IBeing {
         final float normDeltaY = deltaY / totalDistance;
 
         // To avoid the position being set to NaN
-        if (Float.isNaN(normDeltaX) || Float.isNaN(normDeltaY)) {
+        if (totalDistance == 0) {
             this.currentPosition = destination;
         }
         else {
@@ -94,25 +106,6 @@ public abstract class AbstractBeing implements IBeing {
             this.currentPosition.setPosX(newPosX);
             this.currentPosition.setPosY(newPosY);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getDestination(), currentPosition, getRole());
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AbstractBeing)) return false;
-        final AbstractBeing that = (AbstractBeing) o;
-        return Objects.equals(getDestination(), that.getDestination()) && Objects.equals(
-            currentPosition,
-            that.currentPosition) && Objects.equals(getRole(), that.getRole());
-    }
-
-    protected Position getDestination() {
-        return destination.deepClone();
     }
 
     protected void setDestination(final Position destination) {
