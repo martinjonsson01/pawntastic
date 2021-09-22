@@ -33,7 +33,7 @@ class ColonyManagement extends Game {
     private static final float VIEWPORT_WIDTH = 1300;
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
-    private static final int BEING_COUNT = 50;
+    private static final int PAWN_COUNT = 50;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
@@ -59,7 +59,7 @@ class ColonyManagement extends Game {
         uiSkin.load(Gdx.files.internal("uiskin.json"));
 
         // Models
-        world = new World(WORLD_SIZE, BEING_COUNT);
+        world = new World(WORLD_SIZE, PAWN_COUNT);
 
         // Game Views
         final WorldView worldView = new WorldView(tileSize);

@@ -16,18 +16,18 @@ import com.thebois.utils.MatrixUtils;
 public class World implements IFinder {
 
     private final ITerrain[][] terrainMatrix;
-    private final int beingCount;
+    private final int pawnCount;
     private Colony colony;
 
     /**
      * Initiates the world with the given size.
      *
-     * @param worldSize  The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
-     * @param beingCount The amount of beings to initialize the players' BeingGroup with
+     * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
+     * @param pawnCount The amount of beings to initialize the players' BeingGroup with
      */
-    public World(final int worldSize, final int beingCount) {
+    public World(final int worldSize, final int pawnCount) {
         terrainMatrix = new ITerrain[worldSize][worldSize];
-        this.beingCount = beingCount;
+        this.pawnCount = pawnCount;
 
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
@@ -39,7 +39,7 @@ public class World implements IFinder {
     }
 
     private void initColony() {
-        colony = new Colony(findEmptyPositions(beingCount));
+        colony = new Colony(findEmptyPositions(pawnCount));
     }
 
     private Iterable<Position> findEmptyPositions(final int count) {
