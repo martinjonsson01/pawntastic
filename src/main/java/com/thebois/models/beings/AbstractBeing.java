@@ -39,7 +39,7 @@ public abstract class AbstractBeing implements IBeing {
 
     @Override
     public Position getPosition() {
-        return this.currentPosition;
+        return currentPosition.deepClone();
     }
 
     @Override
@@ -112,7 +112,7 @@ public abstract class AbstractBeing implements IBeing {
     }
 
     protected Position getDestination() {
-        return this.destination;
+        return destination.deepClone();
     }
 
     protected void setDestination(final Position destination) {
