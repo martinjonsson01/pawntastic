@@ -32,6 +32,23 @@ public class RoleTests {
                          Arguments.of(new BuilderRole(), null));
     }
 
+    public static Stream<Arguments> getRoleAndNames() {
+        return Stream.of(Arguments.of(new LumberjackRole(), "Lumberjack"),
+                         Arguments.of(new FarmerRole(), "Farmer"),
+                         Arguments.of(new GuardRole(), "Guard"),
+                         Arguments.of(new MinerRole(), "Miner"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRoleAndNames")
+    public void getNameIsExpectedName(final AbstractRole role, final String expectedName) {
+        // Act
+        final String actualName = role.getName();
+
+        // Assert
+        assertThat(actualName).isEqualTo(expectedName);
+    }
+
     @ParameterizedTest
     @MethodSource("getEqualRoles")
     public void equalsReturnsTrueWhenEqual(final AbstractRole first, final AbstractRole second) {

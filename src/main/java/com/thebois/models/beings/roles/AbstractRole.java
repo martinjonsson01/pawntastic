@@ -1,5 +1,7 @@
 package com.thebois.models.beings.roles;
 
+import java.util.Objects;
+
 import com.thebois.models.IDeepClonable;
 
 /**
@@ -9,7 +11,7 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(getType());
     }
 
     @Override
@@ -22,10 +24,17 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
         }
         if (this.getClass().equals(obj.getClass())) {
             final AbstractRole other = (AbstractRole) obj;
-            return this.getName().equals(other.getName()) && this.getType().equals(other.getType());
+            return this.getType().equals(other.getType());
         }
         return false;
     }
+
+    /**
+     * Gets the occupation type.
+     *
+     * @return The occupation type.
+     */
+    public abstract RoleType getType();
 
     /**
      * Gets the title of the role occupation.
@@ -37,13 +46,6 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
         final int roleSuffixLength = 4;
         return className.substring(0, className.length() - roleSuffixLength);
     }
-
-    /**
-     * Gets the occupation type.
-     *
-     * @return The occupation type.
-     */
-    public abstract RoleType getType();
 
     @Override
     public AbstractRole deepClone() {
