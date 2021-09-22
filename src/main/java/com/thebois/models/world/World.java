@@ -1,6 +1,7 @@
 package com.thebois.models.world;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 import com.thebois.models.IFinder;
@@ -64,12 +65,12 @@ public class World implements IFinder {
     }
 
     /**
-     * Returns the structures in an arraylist as the interface IStructures.
+     * Returns the structures in a Collection as the interface IStructures.
      *
      * @return The list to be returned.
      */
-    public ArrayList<IStructure> getStructures() {
-        final ArrayList<IStructure> copy = new ArrayList<>();
+    public Collection<IStructure> getStructures() {
+        final Collection<IStructure> copy = new ArrayList<>();
         for (final Optional<IStructure>[] matrix : structureMatrix) {
             for (final Optional<IStructure> structure : matrix) {
                 structure.ifPresent(iStructure -> copy.add(iStructure.deepClone()));
@@ -109,6 +110,12 @@ public class World implements IFinder {
     private boolean isPositionPlaceable(final Position position) {
         final int posIntX = (int) position.getPosX();
         final int posIntY = (int) position.getPosY();
+        if (posIntY < 0 || posIntY >= structureMatrix.length) {
+            return false;
+        }
+        if (posIntX < 0 || posIntX >= structureMatrix[posIntY].length) {
+            return false;
+        }
         return structureMatrix[posIntY][posIntX].isEmpty();
     }
 

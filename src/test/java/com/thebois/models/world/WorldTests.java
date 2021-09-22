@@ -52,7 +52,7 @@ public class WorldTests {
         final World world = new World(2);
 
         // Act
-        final ArrayList<IStructure> structures = world.getStructures();
+        final Collection<IStructure> structures = world.getStructures();
 
         // Assert
         assertThat(structures.size()).isEqualTo(0);
@@ -63,7 +63,7 @@ public class WorldTests {
         // Arrange
         final World world = new World(2);
         final Position position = new Position(1, 1);
-        final ArrayList<IStructure> structures;
+        final Collection<IStructure> structures;
 
         // Act
         world.createStructure(position);
@@ -78,7 +78,7 @@ public class WorldTests {
         // Arrange
         final World world = new World(2);
         final Position position = new Position(1, 1);
-        final ArrayList<IStructure> structures;
+        final Collection<IStructure> structures;
 
         // Act
         world.createStructure(position);

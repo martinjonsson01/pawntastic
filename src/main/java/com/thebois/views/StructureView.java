@@ -1,7 +1,5 @@
 package com.thebois.views;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -13,7 +11,7 @@ import com.thebois.models.world.structures.IStructure;
 public final class StructureView implements IView {
 
     private final float tileSize;
-    private ArrayList<IStructure> structures = new ArrayList<>();
+    private Iterable<IStructure> structures;
     private final Color houseColor = new Color(0.4f, 0.2f, 0f, 1);
 
     /**
@@ -40,7 +38,7 @@ public final class StructureView implements IView {
      *
      * @param updatedStructures The structures that are to be displayed.
      */
-    public void update(ArrayList<IStructure> updatedStructures) {
+    public void update(Iterable<IStructure> updatedStructures) {
         this.structures = updatedStructures;
     }
 
