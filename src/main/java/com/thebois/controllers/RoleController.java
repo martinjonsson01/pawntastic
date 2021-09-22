@@ -40,7 +40,7 @@ public class RoleController {
             final SpinnerButton button = roleButtons.get(roleType);
             button.registerListener(event -> onRoleButtonClick(roleType, event));
             button.setCanDecrease(roleCount -> roleAllocator.canDecreaseAllocation(roleType));
-            button.setCanIncrease(roleCount -> roleAllocator.canIncreaseAllocation(roleType));
+            button.setCanIncrease(roleCount -> roleAllocator.canIncreaseAllocation());
         }
     }
 

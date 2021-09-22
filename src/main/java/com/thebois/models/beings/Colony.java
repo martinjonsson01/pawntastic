@@ -99,11 +99,18 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     }
 
     @Override
-    public boolean canIncreaseAllocation(final RoleType roleType) {
+    public boolean canDecreaseAllocation(final RoleType roleType, final int amount) {
+        final AbstractRole role = RoleFactory.fromType(roleType);
+        return findBeingsWithRole(role).size() >= amount;
+    }
+
+    @Override
+    public boolean canIncreaseAllocation() {
         return canIncreaseAllocation(1);
     }
 
-    private boolean canIncreaseAllocation(final int amount) {
+    @Override
+    public boolean canIncreaseAllocation(final int amount) {
         return findIdleBeings().size() >= amount;
     }
 
@@ -114,11 +121,6 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
 
     private boolean isIdle(final IBeing being) {
         return being.getRole() == null;
-    }
-
-    private boolean canDecreaseAllocation(final RoleType roleType, final int amount) {
-        final AbstractRole role = RoleFactory.fromType(roleType);
-        return findBeingsWithRole(role).size() >= amount;
     }
 
     private Collection<IBeing> findBeingsWithRole(final AbstractRole role) {

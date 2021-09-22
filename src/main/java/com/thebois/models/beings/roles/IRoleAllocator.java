@@ -62,12 +62,29 @@ public interface IRoleAllocator {
     boolean canDecreaseAllocation(RoleType roleType);
 
     /**
-     * Checks if the allocation of a role can be increased.
+     * Checks if the allocation of a role can be decreased.
      *
      * @param roleType The role to check
+     * @param amount   How many to check if they can be removed
+     *
+     * @return Whether the allocation for the role can be decreased
+     */
+    boolean canDecreaseAllocation(RoleType roleType, int amount);
+
+    /**
+     * Checks if the allocation of any role can be increased.
      *
      * @return Whether the allocation for the role can be increased
      */
-    boolean canIncreaseAllocation(RoleType roleType);
+    boolean canIncreaseAllocation();
+
+    /**
+     * Checks if the allocation of any role can be increased.
+     *
+     * @param amount How many to check if they can be added
+     *
+     * @return Whether the allocation for the role can be increased
+     */
+    boolean canIncreaseAllocation(int amount);
 
 }

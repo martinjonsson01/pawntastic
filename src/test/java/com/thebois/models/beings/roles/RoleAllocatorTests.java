@@ -193,7 +193,7 @@ public class RoleAllocatorTests {
         final Colony cut = new Colony(mockOriginPositions(3));
 
         // Act
-        final boolean canIncrease = cut.canIncreaseAllocation(role);
+        final boolean canIncrease = cut.canIncreaseAllocation();
 
         // Assert
         assertThat(canIncrease).isTrue();
@@ -208,7 +208,7 @@ public class RoleAllocatorTests {
         cut.tryIncreaseAllocation(role, 3);
 
         // Act
-        final boolean canIncrease = cut.canIncreaseAllocation(role);
+        final boolean canIncrease = cut.canIncreaseAllocation();
 
         // Assert
         assertThat(canIncrease).isFalse();
