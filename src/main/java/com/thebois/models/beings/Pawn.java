@@ -36,11 +36,4 @@ public class Pawn extends AbstractBeing {
         setDestination(randomPosition);
     }
 
-    @Override
-    public Pawn deepClone() {
-        final Pawn clone = new Pawn(getPosition().deepClone(), getDestination().deepClone());
-        if (getRole() != null) clone.setRole(getRole().deepClone());
-        return clone;
-    }
-
 }

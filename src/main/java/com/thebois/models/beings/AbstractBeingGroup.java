@@ -29,9 +29,7 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
     @Override
     public Collection<IBeing> getBeings() {
         final Collection<IBeing> clonedBeings = new ArrayList<>(beings.size());
-        for (final IBeing being : beings) {
-            clonedBeings.add(being.deepClone());
-        }
+        clonedBeings.addAll(beings);
         return clonedBeings;
     }
 

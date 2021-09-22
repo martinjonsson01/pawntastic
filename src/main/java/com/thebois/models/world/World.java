@@ -43,8 +43,9 @@ public class World implements IFinder {
     }
 
     private Iterable<Position> findEmptyPositions(final int count) {
-        final List<Position> emptyPositions = new ArrayList<>(count);
+        final List<Position> emptyPositions = new ArrayList<>();
         MatrixUtils.forEachElement(terrainMatrix, terrain -> {
+            if (emptyPositions.size() >= count) return;
             if (terrain.getType().equals(TerrainType.GRASS)) {
                 emptyPositions.add(terrain.getPosition());
             }

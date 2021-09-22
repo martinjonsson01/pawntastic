@@ -11,21 +11,6 @@ import static org.assertj.core.api.Assertions.*;
 public class BeingTests {
 
     @Test
-    public void deepCloneCreatesCloneThatIsEqual() {
-        // Arrange
-        final Position originalPosition = new Position(123, 456);
-        final Position originalDestination = new Position(-444, -777);
-        final IBeing original = new Pawn(originalPosition, originalDestination);
-        original.setRole(RoleFactory.lumberjack());
-
-        // Act
-        final IBeing deepClone = original.deepClone();
-
-        // Assert
-        assertThat(deepClone).isEqualTo(original);
-    }
-
-    @Test
     public void equalsReturnsTrueForSameInstance() {
         // Arrange
         final IBeing being = new Pawn(new Position(0, 0), new Position(1, 1));
