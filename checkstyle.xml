@@ -673,7 +673,9 @@
             <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$" />
         </module>
         <module name="MethodName" />
-        <module name="MethodTypeParameterName" />
+        <module name="MethodTypeParameterName">
+            <property name="format" value="([T][A-Z][a-zA-Z0-9]+$)" />
+        </module>
         <module name="PackageName" />
         <module name="ParameterName">
             <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$" />
