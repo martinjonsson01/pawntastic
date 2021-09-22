@@ -1,6 +1,11 @@
 package com.thebois.models.beings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
+
+import com.thebois.models.Position;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -10,13 +15,17 @@ public class ColonyTests {
     public void constructorTest() {
 
         // Arrange
-        final int numberOfPawns = 25;
+        final int beingCount = 25;
+        final List<Position> positions = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            positions.add(new Position());
+        }
 
         // Act
-        final Colony colony = new Colony(numberOfPawns);
+        final Colony colony = new Colony(positions);
 
         // Assert
-        assertThat(colony.getBeings().size()).isEqualTo(numberOfPawns);
+        assertThat(colony.getBeings().size()).isEqualTo(beingCount);
     }
 
 }

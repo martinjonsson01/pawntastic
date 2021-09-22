@@ -25,16 +25,15 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     /**
      * Creates an instance of Colony with n number of pawns.
      *
-     * @param numberOfPawns number of pawns to instantiate.
+     * @param vacantPositions Positions in the world that a Pawn can be placed on
      */
-    public Colony(final int numberOfPawns) {
-        createBeings(numberOfPawns);
+    public Colony(final Iterable<Position> vacantPositions) {
+        createBeings(vacantPositions);
     }
 
-    private void createBeings(final int numberOfBeings) {
-        for (int i = 0; i < numberOfBeings; i++) {
-            final Position originPosition = new Position(0, 0);
-            addBeing(new Pawn(originPosition, originPosition));
+    private void createBeings(final Iterable<Position> vacantPositions) {
+        for (final Position vacantPosition : vacantPositions) {
+            addBeing(new Pawn(vacantPosition, vacantPosition));
         }
     }
 

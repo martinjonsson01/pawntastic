@@ -1,11 +1,14 @@
 package com.thebois.models.world;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.thebois.models.IFinder;
+import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeingGroup;
 import com.thebois.models.beings.roles.IRoleAllocator;
+import com.thebois.utils.MatrixUtils;
 
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
@@ -36,7 +39,17 @@ public class World implements IFinder {
     }
 
     private void initColony() {
-        colony = new Colony(beingCount);
+        colony = new Colony(findEmptyPositions(beingCount));
+    }
+
+    private Iterable<Position> findEmptyPositions(final int count) {
+        final List<Position> emptyPositions = new ArrayList<>(count);
+        MatrixUtils.forEachElement(terrainMatrix, terrain -> {
+            if (terrain.getType().equals(TerrainType.GRASS)) {
+                emptyPositions.add(terrain.getPosition());
+            }
+        });
+        return emptyPositions;
     }
 
     /**
