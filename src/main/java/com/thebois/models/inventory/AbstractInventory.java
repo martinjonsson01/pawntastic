@@ -23,14 +23,13 @@ public abstract class AbstractInventory {
      * @return The item removed from the inventory
      */
     public IItem takeItem(final ItemType itemType) {
+
+        IItem item = null;
         if (doesItemTypeExist(itemType)) {
             final int firstIndexOfItemType = getFirstIndexOf(itemType);
-            itemHolder.remove(firstIndexOfItemType);
+            item = itemHolder.remove(firstIndexOfItemType);
         }
-        else {
-            // No matching item.
-            return null;
-        }
+        return item;
     }
 
     private int getFirstIndexOf(final ItemType itemType) {
