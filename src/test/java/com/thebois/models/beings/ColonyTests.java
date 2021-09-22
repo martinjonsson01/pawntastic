@@ -12,8 +12,7 @@ import static org.assertj.core.api.Assertions.*;
 public class ColonyTests {
 
     @Test
-    public void constructorTest() {
-
+    public void constructWithPositionsCreatesOneBeingPerPosition() {
         // Arrange
         final int beingCount = 25;
         final List<Position> positions = new ArrayList<>(beingCount);

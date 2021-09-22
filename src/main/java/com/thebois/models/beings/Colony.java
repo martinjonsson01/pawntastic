@@ -18,12 +18,6 @@ import com.thebois.models.beings.roles.RoleType;
 public class Colony extends AbstractBeingGroup implements IRoleAllocator {
 
     /**
-     * Creates an instance of Colony with no pawns.
-     */
-    public Colony() {
-    }
-
-    /**
      * Creates an instance of Colony with n number of pawns.
      *
      * @param vacantPositions Positions in the world that a Pawn can be placed on
@@ -55,7 +49,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     public boolean tryIncreaseAllocation(final RoleType roleType, final int amount) {
         if (!canIncreaseAllocation(amount)) return false;
         for (int i = 0; i < amount; i++) {
-            if (!tryIncreaseAllocation(roleType)) return false;
+            tryIncreaseAllocation(roleType);
         }
         return true;
     }
@@ -75,7 +69,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     public boolean tryDecreaseAllocation(final RoleType roleType, final int amount) {
         if (!canDecreaseAllocation(roleType, amount)) return false;
         for (int i = 0; i < amount; i++) {
-            if (!tryDecreaseAllocation(roleType)) return false;
+            tryDecreaseAllocation(roleType);
         }
         return true;
     }
