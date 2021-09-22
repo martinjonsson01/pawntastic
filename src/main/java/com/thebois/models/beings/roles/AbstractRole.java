@@ -1,9 +1,11 @@
 package com.thebois.models.beings.roles;
 
+import com.thebois.models.IDeepClonable;
+
 /**
  * Represents an assignment to a specific work task.
  */
-public abstract class AbstractRole {
+public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
 
     @Override
     public int hashCode() {
@@ -42,5 +44,10 @@ public abstract class AbstractRole {
      * @return The occupation type.
      */
     public abstract RoleType getType();
+
+    @Override
+    public AbstractRole deepClone() {
+        return RoleFactory.fromType(getType());
+    }
 
 }

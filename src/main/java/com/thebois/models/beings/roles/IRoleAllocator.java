@@ -15,6 +15,16 @@ public interface IRoleAllocator {
     boolean tryIncreaseAllocation(RoleType roleType);
 
     /**
+     * Requests the amount of beings in a role to be increased.
+     *
+     * @param roleType The role to add more of
+     * @param amount   How many to assign to the role
+     *
+     * @return Whether the allocation could be increased
+     */
+    boolean tryIncreaseAllocation(RoleType roleType, int amount);
+
+    /**
      * Requests the amount of beings assigned to a role to be decreased.
      *
      * @param roleType The role to add more of
@@ -22,6 +32,16 @@ public interface IRoleAllocator {
      * @return Whether the allocation could be decreased
      */
     boolean tryDecreaseAllocation(RoleType roleType);
+
+    /**
+     * Requests the amount of beings assigned to a role to be decreased.
+     *
+     * @param roleType The role to add more of
+     * @param amount   How many to assign to the role
+     *
+     * @return Whether the allocation could be decreased
+     */
+    boolean tryDecreaseAllocation(RoleType roleType, int amount);
 
     /**
      * Counts the amount of beings with a role.

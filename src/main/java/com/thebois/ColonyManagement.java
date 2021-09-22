@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.thebois.controllers.ColonyController;
 import com.thebois.controllers.RoleController;
 import com.thebois.controllers.TerrainController;
-import com.thebois.models.beings.roles.RoleAllocator;
 import com.thebois.models.world.World;
 import com.thebois.views.ColonyView;
 import com.thebois.views.GameScreen;
@@ -61,7 +60,6 @@ class ColonyManagement extends Game {
 
         // Models
         world = new World(WORLD_SIZE, BEING_COUNT);
-        final RoleAllocator roleAllocator = new RoleAllocator(world.getColony().getBeings());
 
         // Game Views
         final WorldView worldView = new WorldView(tileSize);
@@ -78,7 +76,7 @@ class ColonyManagement extends Game {
 
         // Controllers
         this.terrainController = new TerrainController(world, worldView);
-        this.roleController = new RoleController(roleAllocator, roleView);
+        this.roleController = new RoleController(world.getRoleAllocator(), roleView);
         this.colonyController = new ColonyController(world, colonyView);
 
         this.setScreen(gameScreen);

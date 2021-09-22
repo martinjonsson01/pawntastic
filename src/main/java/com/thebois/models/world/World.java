@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.thebois.models.IFinder;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeingGroup;
+import com.thebois.models.beings.roles.IRoleAllocator;
 
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
@@ -12,8 +13,8 @@ import com.thebois.models.beings.IBeingGroup;
 public class World implements IFinder {
 
     private final ITerrain[][] terrainMatrix;
-    private IBeingGroup colony;
     private final int beingCount;
+    private Colony colony;
 
     /**
      * Initiates the world with the given size.
@@ -69,6 +70,15 @@ public class World implements IFinder {
      */
     public IBeingGroup getColony() {
         return colony.deepClone();
+    }
+
+    /**
+     * Returns the role allocator for the players' colony.
+     *
+     * @return the role allocator.
+     */
+    public IRoleAllocator getRoleAllocator() {
+        return (IRoleAllocator) colony.deepClone();
     }
 
     /**

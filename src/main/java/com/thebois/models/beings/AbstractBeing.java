@@ -1,5 +1,7 @@
 package com.thebois.models.beings;
 
+import java.util.Objects;
+
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 
@@ -35,14 +37,6 @@ public abstract class AbstractBeing implements IBeing {
         this.destination = destination;
     }
 
-    protected Position getDestination() {
-        return this.destination;
-    }
-
-    protected void setDestination(final Position destination) {
-        this.destination = destination;
-    }
-
     @Override
     public Position getPosition() {
         return this.currentPosition;
@@ -50,7 +44,8 @@ public abstract class AbstractBeing implements IBeing {
 
     @Override
     public AbstractRole getRole() {
-        return role;
+        if (role == null) return null;
+        return role.deepClone();
     }
 
     @Override
@@ -99,6 +94,29 @@ public abstract class AbstractBeing implements IBeing {
             this.currentPosition.setPosX(newPosX);
             this.currentPosition.setPosY(newPosY);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDestination(), currentPosition, getRole());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractBeing)) return false;
+        final AbstractBeing that = (AbstractBeing) o;
+        return Objects.equals(getDestination(), that.getDestination()) && Objects.equals(
+            currentPosition,
+            that.currentPosition) && Objects.equals(getRole(), that.getRole());
+    }
+
+    protected Position getDestination() {
+        return this.destination;
+    }
+
+    protected void setDestination(final Position destination) {
+        this.destination = destination;
     }
 
 }

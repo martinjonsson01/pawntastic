@@ -39,4 +39,8 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
         this.beings = beings;
     }
 
+    protected Collection<IBeing> getBeingsByReference() {
+        return beings;
+    }
+
 }

@@ -2,6 +2,7 @@ package com.thebois.models.beings.roles;
 
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -43,6 +44,18 @@ public class RoleTests {
     public void equalsReturnsFalseWhenUnequal(final AbstractRole first, final AbstractRole second) {
         // Assert
         assertThat(first).isNotEqualTo(second);
+    }
+
+    @Test
+    public void deepCloneCreatesCloneThatIsEqual() {
+        // Arrange
+        final AbstractRole original = RoleFactory.lumberjack();
+
+        // Act
+        final AbstractRole deepClone = original.deepClone();
+
+        // Assert
+        assertThat(deepClone).isEqualTo(original);
     }
 
 }
