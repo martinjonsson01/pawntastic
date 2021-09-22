@@ -13,7 +13,7 @@ abstract class AbstractStructure implements IStructure {
     private StructureType structureType;
 
     /**
-     * Creates a structure with a position.
+     * Creates a structure with a position and structure type.
      *
      * @param posX          Position in X-axis
      * @param posY          Position in Y-axis

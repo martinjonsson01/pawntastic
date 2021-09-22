@@ -1,6 +1,7 @@
 package com.thebois.models.world;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
@@ -12,8 +13,8 @@ import com.thebois.models.world.structures.IStructure;
  */
 public class World implements IFinder {
 
-    private ITerrain[][] terrainMatrix;
-    private IStructure[][] structuresMatrix;
+    private final ITerrain[][] terrainMatrix;
+    private final Optional<IStructure>[][] structureMatrix;
 
     /**
      * Initiates the world with the given size.
@@ -30,7 +31,12 @@ public class World implements IFinder {
         }
 
         // Structures
-        structuresMatrix = new IStructure[worldSize][worldSize];
+        structureMatrix = new Optional[worldSize][worldSize];
+        for (int y = 0; y < structureMatrix.length; y++) {
+            for (int x = 0; x < structureMatrix[y].length; x++) {
+                structureMatrix[y][x] = Optional.empty();
+            }
+        }
     }
 
     /**
@@ -64,11 +70,9 @@ public class World implements IFinder {
      */
     public ArrayList<IStructure> getStructures() {
         final ArrayList<IStructure> copy = new ArrayList<>();
-        for (final IStructure[] matrix : structuresMatrix) {
-            for (final IStructure structure : matrix) {
-                if (structure != null) {
-                    copy.add(structure.deepClone());
-                }
+        for (final Optional<IStructure>[] matrix : structureMatrix) {
+            for (final Optional<IStructure> structure : matrix) {
+                structure.ifPresent(iStructure -> copy.add(iStructure.deepClone()));
             }
         }
         return copy;
@@ -85,7 +89,7 @@ public class World implements IFinder {
     public boolean createStructure(int posX, final int posY) {
         final Position position = new Position(posX, posY);
         if (isPositionPlaceable(position)) {
-            structuresMatrix[posY][posX] = new House(position);
+            structureMatrix[posY][posX] = Optional.of(new House(position));
             return true;
         }
         return false;
@@ -105,7 +109,7 @@ public class World implements IFinder {
     private boolean isPositionPlaceable(final Position position) {
         final int posIntX = (int) position.getPosX();
         final int posIntY = (int) position.getPosY();
-        return structuresMatrix[posIntY][posIntX] == null;
+        return structureMatrix[posIntY][posIntX].isEmpty();
     }
 
 }
