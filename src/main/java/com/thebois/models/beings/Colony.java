@@ -18,6 +18,15 @@ import com.thebois.models.beings.roles.RoleType;
 public class Colony extends AbstractBeingGroup implements IRoleAllocator {
 
     /**
+     * Initializes with already existing beings.
+     *
+     * @param beings The beings that should belong to the colony
+     */
+    public Colony(final Collection<IBeing> beings) {
+        setBeings(beings);
+    }
+
+    /**
      * Creates an instance of Colony with n number of pawns.
      *
      * @param vacantPositions Positions in the world that a Pawn can be placed on
