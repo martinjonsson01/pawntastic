@@ -83,7 +83,7 @@ public class World implements IFinder {
      * @return the colony.
      */
     public IBeingGroup getColony() {
-        return colony.deepClone();
+        return colony;
     }
 
     /**
@@ -92,7 +92,7 @@ public class World implements IFinder {
      * @return the role allocator.
      */
     public IRoleAllocator getRoleAllocator() {
-        return (IRoleAllocator) colony.deepClone();
+        return colony;
     }
 
     /**

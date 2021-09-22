@@ -40,13 +40,6 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     }
 
     @Override
-    public IBeingGroup deepClone() {
-        final Colony clone = new Colony();
-        clone.setBeings(getBeings());
-        return clone;
-    }
-
-    @Override
     public boolean tryIncreaseAllocation(final RoleType roleType) {
         final Optional<IBeing> idleBeing = findIdleBeings().stream().findAny();
         if (idleBeing.isPresent()) {
