@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
+import com.thebois.models.beings.roles.RoleFactory;
 
 /**
  * An abstract implementation of IBeing.
@@ -27,6 +28,7 @@ public abstract class AbstractBeing implements IBeing {
     public AbstractBeing(final Position currentPosition, final Position destination) {
         this.currentPosition = currentPosition;
         this.destination = destination;
+        this.role = RoleFactory.idle();
     }
 
     @Override

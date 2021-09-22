@@ -34,9 +34,9 @@ public class ColonyView implements IView {
         ROLE_COLORS.put(RoleType.GUARD, Color.BLACK);
         ROLE_COLORS.put(RoleType.LUMBERJACK, Color.BROWN);
         ROLE_COLORS.put(RoleType.MINER, Color.GRAY);
+        ROLE_COLORS.put(RoleType.IDLE, Color.WHITE);
     }
 
-    private final Color beingColor = Color.WHITE;
     private final float tileSize;
     private final int radius;
     private IBeingGroup colony;
@@ -59,7 +59,7 @@ public class ColonyView implements IView {
         final Pixmap pixmap = new Pixmap(superSampledRadius * 2,
                                          superSampledRadius * 2,
                                          Pixmap.Format.RGBA8888);
-        pixmap.setColor(beingColor);
+        pixmap.setColor(Color.WHITE);
         pixmap.fillCircle(superSampledRadius, superSampledRadius, superSampledRadius);
         beingTexture = new Texture(pixmap, true);
         beingTexture.setFilter(Texture.TextureFilter.MipMapLinearLinear,
@@ -86,18 +86,9 @@ public class ColonyView implements IView {
                 posX = pawn.getPosition().getPosX() * tileSize;
                 posY = pawn.getPosition().getPosY() * tileSize;
 
-                if (pawn.getRole() != null) {
-                    batch.setColor(ROLE_COLORS.get(pawn.getRole().getType()));
-                }
-                else {
-                    batch.setColor(Color.WHITE);
-                }
+                batch.setColor(ROLE_COLORS.get(pawn.getRole().getType()));
 
-                batch.draw(beingTexture,
-                           offsetX + posX,
-                           offsetY + posY,
-                           radius * 2,
-                           radius * 2);
+                batch.draw(beingTexture, offsetX + posX, offsetY + posY, radius * 2, radius * 2);
             }
         }
     }

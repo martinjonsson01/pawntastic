@@ -49,8 +49,7 @@ public class RoleAllocatorTests {
 
         // Assert
         assertThat(success).isFalse();
-        final Predicate<IBeing> hasNewRole = being -> being.getRole() != null && newRole.equals(
-            being.getRole().getType());
+        final Predicate<IBeing> hasNewRole = being -> newRole.equals(being.getRole().getType());
         assertThat(cut.getBeings()).noneMatch(hasNewRole);
     }
 
@@ -90,8 +89,7 @@ public class RoleAllocatorTests {
 
         // Assert
         assertThat(success).isFalse();
-        assertThat(cut.getBeings()).filteredOn(being -> being.getRole() != null)
-                                   .filteredOn(being -> role.equals(being.getRole().getType()))
+        assertThat(cut.getBeings()).filteredOn(being -> role.equals(being.getRole().getType()))
                                    .hasSize(3);
     }
 
@@ -106,8 +104,7 @@ public class RoleAllocatorTests {
 
         // Assert
         assertThat(success).isFalse();
-        final Predicate<IBeing> hasRole =
-            being -> being.getRole() != null && role.equals(being.getRole().getType());
+        final Predicate<IBeing> hasRole = being -> role.equals(being.getRole().getType());
         assertThat(cut.getBeings()).noneMatch(hasRole);
     }
 
@@ -123,8 +120,7 @@ public class RoleAllocatorTests {
 
         // Assert
         assertThat(success).isFalse();
-        final Predicate<IBeing> hasRole =
-            being -> being.getRole() != null && role.equals(being.getRole().getType());
+        final Predicate<IBeing> hasRole = being -> role.equals(being.getRole().getType());
         assertThat(cut.getBeings()).filteredOn(hasRole).hasSize(1);
     }
 
@@ -133,17 +129,14 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType existingRole = RoleFactory.farmer().getType();
         final Colony cut = new Colony(mockOriginPositions(3));
-        cut.tryIncreaseAllocation(existingRole);
-        cut.tryIncreaseAllocation(existingRole);
-        cut.tryIncreaseAllocation(existingRole);
+        cut.tryIncreaseAllocation(existingRole, 3);
 
         // Act
         final boolean success = cut.tryDecreaseAllocation(existingRole);
 
         // Assert
         assertThat(success).isTrue();
-        final Predicate<IBeing> hasRole = being -> being.getRole() != null && existingRole.equals(
-            being.getRole().getType());
+        final Predicate<IBeing> hasRole = being -> existingRole.equals(being.getRole().getType());
         assertThat(cut.getBeings()).filteredOn(hasRole).hasSize(2);
     }
 
@@ -152,17 +145,14 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType existingRole = RoleFactory.farmer().getType();
         final Colony cut = new Colony(mockOriginPositions(3));
-        cut.tryIncreaseAllocation(existingRole);
-        cut.tryIncreaseAllocation(existingRole);
-        cut.tryIncreaseAllocation(existingRole);
+        cut.tryIncreaseAllocation(existingRole, 3);
 
         // Act
         final boolean success = cut.tryDecreaseAllocation(existingRole, 2);
 
         // Assert
         assertThat(success).isTrue();
-        final Predicate<IBeing> hasRole = being -> being.getRole() != null && existingRole.equals(
-            being.getRole().getType());
+        final Predicate<IBeing> hasRole = being -> existingRole.equals(being.getRole().getType());
         assertThat(cut.getBeings()).filteredOn(hasRole).hasSize(1);
     }
 
@@ -170,7 +160,6 @@ public class RoleAllocatorTests {
     public void tryDecreaseAllocationSucceedsWhenOneHasRole() {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
-
         final Colony cut = new Colony(mockOriginPositions(4));
         cut.tryIncreaseAllocation(role);
 
@@ -179,9 +168,8 @@ public class RoleAllocatorTests {
 
         // Assert
         assertThat(success).isTrue();
-        final Predicate<IBeing> hasRole =
-            being -> being.getRole() != null && role.equals(being.getRole().getType());
-        assertThat(cut.getBeings()).noneMatch(hasRole);
+        final Predicate<IBeing> isIdle = being -> being.getRole().getType().equals(RoleType.IDLE);
+        assertThat(cut.getBeings()).allMatch(isIdle);
     }
 
     @Test
@@ -243,8 +231,6 @@ public class RoleAllocatorTests {
     @Test
     public void canIncreaseAllocationReturnsTrueWhenNoneHaveRole() {
         // Arrange
-        final RoleType role = RoleFactory.lumberjack().getType();
-
         final Colony cut = new Colony(mockOriginPositions(3));
 
         // Act

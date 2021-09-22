@@ -5,6 +5,10 @@ package com.thebois.models.beings.roles;
  */
 public enum RoleType {
     /**
+     * Does nothing.
+     */
+    IDLE,
+    /**
      * Builds structures.
      */
     BUILDER,

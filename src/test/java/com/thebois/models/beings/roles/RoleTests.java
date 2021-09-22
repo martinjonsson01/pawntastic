@@ -13,30 +13,34 @@ public class RoleTests {
 
     public static Stream<Arguments> getEqualRoles() {
         final LumberjackRole sameLumberjack = new LumberjackRole();
-        return Stream.of(Arguments.of(sameLumberjack, sameLumberjack),
-                         Arguments.of(new LumberjackRole(), new LumberjackRole()),
-                         Arguments.of(new FarmerRole(), new FarmerRole()),
-                         Arguments.of(new GuardRole(), new GuardRole()),
-                         Arguments.of(new MinerRole(), new MinerRole()),
-                         Arguments.of(new FisherRole(), new FisherRole()),
-                         Arguments.of(new BuilderRole(), new BuilderRole()));
+        return Stream.of(
+            Arguments.of(sameLumberjack, sameLumberjack),
+            Arguments.of(new LumberjackRole(), new LumberjackRole()),
+            Arguments.of(new FarmerRole(), new FarmerRole()),
+            Arguments.of(new GuardRole(), new GuardRole()),
+            Arguments.of(new MinerRole(), new MinerRole()),
+            Arguments.of(new FisherRole(), new FisherRole()),
+            Arguments.of(new BuilderRole(), new BuilderRole()),
+            Arguments.of(new IdleRole(), new IdleRole()));
     }
 
     public static Stream<Arguments> getUnequalRoles() {
-        return Stream.of(Arguments.of(new LumberjackRole(), new FarmerRole()),
-                         Arguments.of(new FarmerRole(), new LumberjackRole()),
-                         Arguments.of(new GuardRole(), new MinerRole()),
-                         Arguments.of(new MinerRole(), new GuardRole()),
-                         Arguments.of(new FisherRole(), new BuilderRole()),
-                         Arguments.of(new BuilderRole(), new FisherRole()),
-                         Arguments.of(new BuilderRole(), null));
+        return Stream.of(
+            Arguments.of(new LumberjackRole(), new FarmerRole()),
+            Arguments.of(new FarmerRole(), new LumberjackRole()),
+            Arguments.of(new GuardRole(), new MinerRole()),
+            Arguments.of(new MinerRole(), new GuardRole()),
+            Arguments.of(new FisherRole(), new BuilderRole()),
+            Arguments.of(new BuilderRole(), new FisherRole()),
+            Arguments.of(new BuilderRole(), null));
     }
 
     public static Stream<Arguments> getRoleAndNames() {
-        return Stream.of(Arguments.of(new LumberjackRole(), "Lumberjack"),
-                         Arguments.of(new FarmerRole(), "Farmer"),
-                         Arguments.of(new GuardRole(), "Guard"),
-                         Arguments.of(new MinerRole(), "Miner"));
+        return Stream.of(
+            Arguments.of(new LumberjackRole(), "Lumberjack"),
+            Arguments.of(new FarmerRole(), "Farmer"),
+            Arguments.of(new GuardRole(), "Guard"),
+            Arguments.of(new MinerRole(), "Miner"));
     }
 
     @ParameterizedTest

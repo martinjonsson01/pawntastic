@@ -68,7 +68,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         final AbstractRole role = RoleFactory.fromType(roleType);
         final Optional<IBeing> beingWithRole = findBeingsWithRole(role).stream().findFirst();
         if (beingWithRole.isPresent()) {
-            beingWithRole.get().setRole(null);
+            beingWithRole.get().setRole(RoleFactory.idle());
             return true;
         }
         return false;
@@ -116,12 +116,11 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     }
 
     private boolean isIdle(final IBeing being) {
-        return being.getRole() == null;
+        return being.getRole().getType().equals(RoleType.IDLE);
     }
 
     private Collection<IBeing> findBeingsWithRole(final AbstractRole role) {
         return getBeings().stream()
-                          .filter(being -> being.getRole() != null)
                           .filter(being -> role.equals(being.getRole()))
                           .collect(Collectors.toList());
     }

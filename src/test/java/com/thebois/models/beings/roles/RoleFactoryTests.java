@@ -13,10 +13,14 @@ import static org.assertj.core.api.Assertions.*;
 public class RoleFactoryTests {
 
     public static Stream<Arguments> getRoleTypes() {
-        return Stream.of(Arguments.of(RoleType.BUILDER, new BuilderRole()),
-                         Arguments.of(RoleType.FARMER, new FarmerRole()),
-                         Arguments.of(RoleType.FISHER, new FisherRole()),
-                         Arguments.of(RoleType.GUARD, new GuardRole()));
+        return Stream.of(
+            Arguments.of(RoleType.BUILDER, new BuilderRole()),
+            Arguments.of(RoleType.FARMER, new FarmerRole()),
+            Arguments.of(RoleType.FISHER, new FisherRole()),
+            Arguments.of(RoleType.GUARD, new GuardRole()),
+            Arguments.of(RoleType.LUMBERJACK, new LumberjackRole()),
+            Arguments.of(RoleType.MINER, new MinerRole()),
+            Arguments.of(RoleType.IDLE, new IdleRole()));
     }
 
     @Test
@@ -25,12 +29,14 @@ public class RoleFactoryTests {
         final Collection<AbstractRole> roles = RoleFactory.all();
 
         // Assert
-        assertThat(roles).contains(new LumberjackRole(),
-                                   new BuilderRole(),
-                                   new FarmerRole(),
-                                   new FisherRole(),
-                                   new MinerRole(),
-                                   new GuardRole());
+        assertThat(roles).contains(
+            new LumberjackRole(),
+            new BuilderRole(),
+            new FarmerRole(),
+            new FisherRole(),
+            new MinerRole(),
+            new GuardRole(),
+            new IdleRole());
     }
 
     @ParameterizedTest

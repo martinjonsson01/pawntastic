@@ -21,11 +21,10 @@ public final class RoleFactory {
      * @throws java.util.NoSuchElementException If there is no such role
      */
     public static AbstractRole fromType(final RoleType roleType) {
-        return all()
-            .stream()
-            .filter(role -> role.getType().equals(roleType))
-            .findFirst()
-            .orElseThrow();
+        return all().stream()
+                    .filter(role -> role.getType().equals(roleType))
+                    .findFirst()
+                    .orElseThrow();
     }
 
     /**
@@ -41,6 +40,7 @@ public final class RoleFactory {
         roles.add(miner());
         roles.add(fisher());
         roles.add(builder());
+        roles.add(idle());
         return roles;
     }
 
@@ -96,6 +96,15 @@ public final class RoleFactory {
      */
     public static AbstractRole builder() {
         return new BuilderRole();
+    }
+
+    /**
+     * Creates a new idle role.
+     *
+     * @return A new idle role
+     */
+    public static AbstractRole idle() {
+        return new IdleRole();
     }
 
 }
