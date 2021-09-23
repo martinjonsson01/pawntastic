@@ -2,6 +2,9 @@ package com.thebois.models.inventory;
 
 import java.util.ArrayList;
 
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
+
 /**
  * Base implementation for all inventories.
  */

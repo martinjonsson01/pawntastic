@@ -1,4 +1,6 @@
-package com.thebois.models.inventory;
+package com.thebois.models.inventory.items;
+
+import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Items are obejcts that can be stored in inventories.

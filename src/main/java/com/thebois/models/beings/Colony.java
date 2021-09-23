@@ -12,8 +12,8 @@ import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.inventory.ColonyInventory;
-import com.thebois.models.inventory.IItem;
-import com.thebois.models.inventory.ItemType;
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
 
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
