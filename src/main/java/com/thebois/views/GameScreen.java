@@ -1,6 +1,6 @@
 package com.thebois.views;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -53,7 +53,6 @@ public class GameScreen implements Screen {
     private void createStage() {
         spriteBatch = new SpriteBatch();
         stage = new Stage(viewport, spriteBatch);
-        Gdx.input.setInputProcessor(stage);
 
         final Table infoAndWorldGroup = new Table();
         infoAndWorldGroup.setFillParent(true);
@@ -63,6 +62,24 @@ public class GameScreen implements Screen {
 
         infoAndWorldGroup.add(infoView.getPane()).expand().fill();
         infoAndWorldGroup.add(gameView);
+    }
+
+    /**
+     * Gets a projector which is a wrapped viewport.
+     *
+     * @return The wrapped viewport as a Projector.
+     */
+    public IProjector getProjector() {
+        return new ViewportWrapper(viewport);
+    }
+
+    /**
+     * Gets a input processor for UI.
+     *
+     * @return The input processor.
+     */
+    public InputProcessor getInputProcessor() {
+        return stage;
     }
 
     @Override

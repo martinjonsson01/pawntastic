@@ -1,5 +1,5 @@
 /**
- * The Controllers are responsible for updating the world and views.
+ * Contains controllers that are responsible for managing the game and updating the views.
  */
 
 package com.thebois.controllers;
