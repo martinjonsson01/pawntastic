@@ -3,7 +3,6 @@ package com.thebois.models.beings.pathfinding;
 import java.util.Collection;
 
 import com.thebois.models.Position;
-import com.thebois.models.world.ITile;
 
 /**
  * Represents a way of finding paths from one location to another.
@@ -18,6 +17,6 @@ public interface IPathFinder {
      *
      * @return The points that represent the path to take to get to the destination
      */
-    Collection<Position> path(ITile from, ITile destination);
+    Collection<Position> path(Position from, Position destination);
 
 }

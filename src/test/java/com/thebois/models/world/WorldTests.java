@@ -79,23 +79,19 @@ public class WorldTests {
         assertThat(actualNeighbours).containsExactlyInAnyOrderElementsOf(expectedNeighbours);
     }
 
-    private boolean matrixEquals(final ITile[][] worldMatrix1, final ITile[][] worldMatrix2) {
-        for (int y = 0; y < worldMatrix2.length; y++) {
-            final ITile[] row = worldMatrix2[y];
-            for (int x = 0; x < row.length; x++) {
-                if (worldMatrix1[y][x] != null) {
-                    if (!worldMatrix1[y][x].equals(worldMatrix2[y][x])) {
-                        return false;
-                    }
-                }
-                else {
-                    if (worldMatrix2[y][x] != null) {
-                        return false;
-                    }
-                }
-            }
+    @Test
+    public void getTileAtReturnsTileAtGivenPosition() {
+        // Arrange
+        final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
+        final World world = new World(2, 5);
+
+        for (final ITile tile : expectedTerrainTiles) {
+            // Act
+            final ITile tileAtPosition = world.getTileAt(tile.getPosition());
+
+            // Assert
+            assertThat(tileAtPosition).isEqualTo(tile);
         }
-        return true;
     }
 
 }

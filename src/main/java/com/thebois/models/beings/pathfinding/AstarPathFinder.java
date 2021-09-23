@@ -43,22 +43,25 @@ public class AstarPathFinder implements IPathFinder {
     }
 
     @Override
-    public Collection<Position> path(final ITile start, final ITile destination) {
+    public Collection<Position> path(final Position start, final Position destination) {
+
+        final ITile startTile = world.getTileAt(start);
+        final ITile destinationTile = world.getTileAt(destination);
 
         this.cameFrom = new HashMap<>();
         final TileCostCalculator costCalculator = new TileCostCalculator();
         final Comparator<ITile> costComparator = new TileCostComparator(costCalculator,
-                                                                        destination);
+                                                                        destinationTile);
         // The priority queue automatically sorts elements according to the comparator.
         this.openSet = new PriorityQueue<>(costComparator);
 
-        openSet.add(start);
-        costCalculator.setCostFromStartTo(start, 0f);
+        openSet.add(startTile);
+        costCalculator.setCostFromStartTo(startTile, 0f);
 
         while (openSet.peek() != null) {
             final ITile current = openSet.peek();
 
-            if (current.equals(destination)) return reconstructPath(current);
+            if (current.equals(destinationTile)) return reconstructPath(current);
 
             // Only remove if not at destination yet.
             openSet.remove();

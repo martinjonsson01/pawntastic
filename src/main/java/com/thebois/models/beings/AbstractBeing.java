@@ -1,8 +1,13 @@
 package com.thebois.models.beings;
 
+import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Queue;
 
 import com.thebois.models.Position;
+import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 
@@ -13,27 +18,30 @@ public abstract class AbstractBeing implements IBeing {
 
     // The max speed of the AbstractBeing
     private static final float MAX_WALKING_DISTANCE = 0.1f;
-    // The position the AbstractBeing wants to reach.
-    private Position destination;
-    // The current position held by the AbstractBeing.
-    private Position currentPosition;
+    private final IPathFinder pathFinder;
+    private Queue<Position> path;
+    private Position position;
     private AbstractRole role;
 
     /**
      * Creates an AbstractBeing with an initial position.
      *
-     * @param currentPosition the initial position of the AbstractBeing.
-     * @param destination     the initial destination of the AbstractBeing.
+     * @param startPosition the initial position of the AbstractBeing.
+     * @param destination   the initial destination of the AbstractBeing.
+     * @param pathFinder    The generator of paths to positions in the world.
      */
-    public AbstractBeing(final Position currentPosition, final Position destination) {
-        this.currentPosition = currentPosition;
-        this.destination = destination;
+    public AbstractBeing(final Position startPosition,
+                         final Position destination,
+                         final IPathFinder pathFinder) {
+        this.position = startPosition;
         this.role = RoleFactory.idle();
+        this.pathFinder = pathFinder;
+        this.path = new ArrayDeque<>(pathFinder.path(startPosition, destination));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDestination(), getPosition(), getRole());
+        return Objects.hash(getPosition(), getRole());
     }
 
     @Override
@@ -41,19 +49,13 @@ public abstract class AbstractBeing implements IBeing {
         if (this == o) return true;
         if (!(o instanceof AbstractBeing)) return false;
         final AbstractBeing that = (AbstractBeing) o;
-        return Objects.equals(getDestination(), that.getDestination())
-               && Objects.equals(currentPosition,
-                                 that.currentPosition)
-               && Objects.equals(getRole(), that.getRole());
-    }
-
-    protected Position getDestination() {
-        return destination.deepClone();
+        return Objects.equals(getPosition(), that.getPosition()) && Objects.equals(getRole(),
+                                                                                   that.getRole());
     }
 
     @Override
     public Position getPosition() {
-        return currentPosition.deepClone();
+        return position.deepClone();
     }
 
     @Override
@@ -79,9 +81,13 @@ public abstract class AbstractBeing implements IBeing {
      */
     protected void move() {
 
+        final Position destination = path.peek();
+
+        if (destination == null) return;
+
         // Calculate delta of distance between current position and the destination
-        final float deltaX = this.destination.getPosX() - this.currentPosition.getPosX();
-        final float deltaY = this.destination.getPosY() - this.currentPosition.getPosY();
+        final float deltaX = destination.getPosX() - this.position.getPosX();
+        final float deltaY = destination.getPosY() - this.position.getPosY();
 
         // Pythagorean theorem
         final float totalDistance = (float) Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
@@ -96,24 +102,33 @@ public abstract class AbstractBeing implements IBeing {
 
         // To avoid the position being set to NaN
         if (totalDistance == 0) {
-            this.currentPosition = destination;
+            this.position = destination;
+            path.remove();
         }
         else {
 
             // Calculate new position
-            final float newPosX =
-                this.currentPosition.getPosX() + normDeltaX * updatedWalkingDistance;
-            final float newPosY =
-                this.currentPosition.getPosY() + normDeltaY * updatedWalkingDistance;
+            final float newPosX = this.position.getPosX() + normDeltaX * updatedWalkingDistance;
+            final float newPosY = this.position.getPosY() + normDeltaY * updatedWalkingDistance;
 
             // Apply new position to current position
-            this.currentPosition.setPosX(newPosX);
-            this.currentPosition.setPosY(newPosY);
+            this.position.setPosX(newPosX);
+            this.position.setPosY(newPosY);
         }
     }
 
-    protected void setDestination(final Position destination) {
-        this.destination = destination;
+    protected void setPath(final Collection<Position> path) {
+        this.path = new ArrayDeque<>(path);
+    }
+
+    protected Optional<Position> getDestination() {
+        final Position destination = path.peek();
+        if (destination == null) return Optional.empty();
+        return Optional.of(destination.deepClone());
+    }
+
+    protected IPathFinder getPathFinder() {
+        return pathFinder;
     }
 
 }

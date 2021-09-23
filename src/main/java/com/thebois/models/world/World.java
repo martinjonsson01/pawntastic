@@ -41,7 +41,7 @@ public class World implements IWorld, IFinder {
     }
 
     private void initColony() {
-        colony = new Colony(findEmptyPositions(pawnCount));
+        colony = new Colony(findEmptyPositions(pawnCount), this);
     }
 
     private Iterable<Position> findEmptyPositions(final int count) {
@@ -126,6 +126,19 @@ public class World implements IWorld, IFinder {
         }
 
         return tiles;
+    }
+
+    @Override
+    public ITile getTileAt(final Position position) {
+        return getTileAt((int) position.getPosX(), (int) position.getPosY());
+    }
+
+    @Override
+    public ITile getTileAt(final int posX, final int posY) {
+        if (posX < 0 || posY < 0 || posX >= worldSize || posY >= worldSize) {
+            throw new IndexOutOfBoundsException("Given position is outside of the world.");
+        }
+        return terrainMatrix[posY][posX];
     }
 
     private boolean isDiagonalTo(final ITile tile, final ITile neighbour) {
