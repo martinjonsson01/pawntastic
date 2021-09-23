@@ -52,7 +52,7 @@ public abstract class AbstractInventory {
      *
      * @return A boolean indicating if the item is in the inventory or not
      */
-    public boolean doesItemTypeExist(final ItemType itemType) {
+    private boolean doesItemTypeExist(final ItemType itemType) {
         for (final IItem item : itemHolder) {
             if (item.getType().equals(itemType)) {
                 return true;
