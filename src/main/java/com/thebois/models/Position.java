@@ -95,4 +95,21 @@ public final class Position implements IDeepClonable<Position> {
         return new Position(this.posX, this.posY);
     }
 
+    /**
+     * Calculates the Manhattan distance to the destination.
+     *
+     * <p>
+     * Manhattan distance is distance calculated through a grid. Doesn't allow diagonal movements.
+     * </p>
+     *
+     * @param destination The position to check the distance to
+     *
+     * @return The manhattan distance to the destination
+     */
+    public int manhattanDistanceTo(final Position destination) {
+        final float distanceX = Math.abs(getPosX() - destination.getPosX());
+        final float distanceY = Math.abs(getPosY() - destination.getPosY());
+        return (int) (distanceX + distanceY);
+    }
+
 }
