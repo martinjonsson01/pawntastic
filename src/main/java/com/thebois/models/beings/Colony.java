@@ -11,11 +11,16 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.inventory.ColonyInventory;
+import com.thebois.models.inventory.IItem;
+import com.thebois.models.inventory.ItemType;
 
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
  */
 public class Colony extends AbstractBeingGroup implements IRoleAllocator {
+
+    private final ColonyInventory colonyInventory = new ColonyInventory();
 
     /**
      * Initializes with already existing beings.
@@ -40,6 +45,18 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         for (final Position vacantPosition : vacantPositions) {
             addBeing(new Pawn(vacantPosition, vacantPosition, random));
         }
+    }
+
+    public void addItemToColonyInventory(IItem item) {
+        colonyInventory.addItem(item);
+    }
+
+    public IItem takeItemFromColonyInventory(ItemType itemType) {
+        colonyInventory.takeItem(itemType);
+    }
+
+    public boolean doesColonyInventoryContainItem(ItemType itemType) {
+        colonyInventory.doesItemTypeExist(itemType);
     }
 
     @Override
