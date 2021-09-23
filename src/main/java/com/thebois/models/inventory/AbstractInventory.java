@@ -2,6 +2,9 @@ package com.thebois.models.inventory;
 
 import java.util.ArrayList;
 
+/**
+ * Base implementation for all inventories.
+ */
 public abstract class AbstractInventory {
 
     private final ArrayList<IItem> itemHolder = new ArrayList<>();
