@@ -3,7 +3,9 @@ package com.thebois.views;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 import com.thebois.models.world.ITerrain;
 
@@ -13,16 +15,28 @@ import com.thebois.models.world.ITerrain;
 public class WorldView implements IView {
 
     private final Color grassColor = new Color(0.005f, 0.196f, 0.107f, 1);
-    private ArrayList<ITerrain> terrainTiles = new ArrayList<>();
     private final float tileSize;
+    private ArrayList<ITerrain> terrainTiles = new ArrayList<>();
+    private Texture grassTexture;
 
     /**
      * Creates the WorldView with a tileSize.
      *
-     * @param tileSize Is used for correct scaling.
+     * @param tileSize The size of a single tile, in pixels.
      */
     public WorldView(final float tileSize) {
         this.tileSize = tileSize;
+
+        createGrassTexture();
+    }
+
+    private void createGrassTexture() {
+        final int roundedTileSize = (int) this.tileSize;
+        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
+        pixmap.setColor(grassColor);
+        pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);
+        grassTexture = new Texture(pixmap);
+        pixmap.dispose();
     }
 
     /**
@@ -34,20 +48,20 @@ public class WorldView implements IView {
         this.terrainTiles = updatedTerrainTiles;
     }
 
-    /**
-     * Renders the world on the screen.
-     *
-     * @param batch Used for rendering.
-     */
     @Override
-    public void draw(final ShapeRenderer batch) {
-        for (ITerrain terrain : terrainTiles) {
-            batch.setColor(grassColor);
-            batch.rect(terrain.getPosition().getPosX() * tileSize,
-                       terrain.getPosition().getPosY() * tileSize,
+    public void draw(final Batch batch, final float offsetX, final float offsetY) {
+        for (final ITerrain terrain : terrainTiles) {
+            batch.draw(grassTexture,
+                       offsetX + terrain.getPosition().getPosX() * tileSize,
+                       offsetY + terrain.getPosition().getPosY() * tileSize,
                        tileSize,
                        tileSize);
         }
+    }
+
+    @Override
+    public void dispose() {
+        grassTexture.dispose();
     }
 
 }

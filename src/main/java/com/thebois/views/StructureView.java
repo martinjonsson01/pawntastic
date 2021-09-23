@@ -1,7 +1,9 @@
 package com.thebois.views;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 import com.thebois.models.world.structures.IStructure;
 
@@ -13,6 +15,7 @@ public final class StructureView implements IView {
     private final float tileSize;
     private Iterable<IStructure> structures;
     private final Color houseColor = new Color(0.4f, 0.2f, 0f, 1);
+    private Texture houseTexture;
 
     /**
      * Creates an instance of a Structure view.
@@ -21,16 +24,30 @@ public final class StructureView implements IView {
      */
     public StructureView(final float tileSize) {
         this.tileSize = tileSize;
+
+        createHouseTexture();
     }
 
     @Override
-    public void draw(ShapeRenderer batch) {
-        for (IStructure structure : structures) {
-            batch.setColor(houseColor);
-            final int posX = (int) ((structure.getPosition().getPosX()) * tileSize);
-            final int poxY = (int) ((structure.getPosition().getPosY()) * tileSize);
-            batch.rect(posX, poxY, tileSize, tileSize);
+    public void draw(final Batch batch, final float offsetX, final float offsetY) {
+        batch.setColor(houseColor);
+        for (final IStructure structure : structures) {
+            batch.draw(
+                houseTexture,
+                offsetX + structure.getPosition().getPosX() * tileSize,
+                offsetY + structure.getPosition().getPosY() * tileSize,
+                tileSize,
+                tileSize);
         }
+    }
+
+    private void createHouseTexture() {
+        final int roundedTileSize = (int) this.tileSize;
+        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);
+        houseTexture = new Texture(pixmap);
+        pixmap.dispose();
     }
 
     /**
@@ -40,6 +57,11 @@ public final class StructureView implements IView {
      */
     public void update(Iterable<IStructure> updatedStructures) {
         this.structures = updatedStructures;
+    }
+
+    @Override
+    public void dispose() {
+        houseTexture.dispose();
     }
 
 }
