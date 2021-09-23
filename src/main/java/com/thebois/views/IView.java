@@ -12,7 +12,7 @@ public interface IView extends Disposable {
      * Used for view when rendering.
      *
      * @param batch   Render all shapes in the provided batch.
-     * @param offsetX The offsetX-coordinate that the view is offset by
+     * @param offsetX The x-coordinate that the view is offset by
      * @param offsetY The y-coordinate that the view if offset by
      */
     void draw(Batch batch, float offsetX, float offsetY);

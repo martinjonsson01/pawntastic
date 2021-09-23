@@ -1,5 +1,6 @@
 package com.thebois;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Game;
@@ -22,6 +23,7 @@ import com.thebois.views.IView;
 import com.thebois.views.InfoView;
 import com.thebois.views.RoleView;
 import com.thebois.views.WorldView;
+import com.thebois.views.debug.BeingPathDebugView;
 
 /**
  * The main representation of the game.
@@ -34,6 +36,8 @@ class ColonyManagement extends Game {
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int PAWN_COUNT = 50;
+    /* Toggles debug-mode. */
+    private static final boolean DEBUG = true;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
@@ -47,19 +51,21 @@ class ColonyManagement extends Game {
     private GameView gameView;
     private WorldView worldView;
     private ColonyView colonyView;
+    private BeingPathDebugView beingPathDebugView;
     // Screens
     private GameScreen gameScreen;
     // Controllers
     private TerrainController terrainController;
     private ColonyController colonyController;
+    private float tileSize;
 
     @Override
     public void create() {
-        final float tileSize = Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH) / WORLD_SIZE;
+        tileSize = Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH) / WORLD_SIZE;
 
         setUpUserInterfaceSkin();
 
-        setUpModelViewController(tileSize);
+        setUpModelViewController();
 
         // Screens
         gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, uiSkin, gameView, infoView);
@@ -77,10 +83,11 @@ class ColonyManagement extends Game {
         uiSkin.load(Gdx.files.internal("uiskin.json"));
     }
 
-    private void setUpModelViewController(final float tileSize) {
+    private void setUpModelViewController() {
         createModels();
 
-        createGameView(tileSize);
+        if (DEBUG) createDebugView();
+        createGameView();
         createInfoView();
 
         createControllers();
@@ -106,10 +113,19 @@ class ColonyManagement extends Game {
         world = new World(WORLD_SIZE, PAWN_COUNT);
     }
 
-    private void createGameView(final float tileSize) {
+    private void createDebugView() {
+        beingPathDebugView = new BeingPathDebugView(world.getColony(), tileSize);
+    }
+
+    private void createGameView() {
         worldView = new WorldView(tileSize);
         colonyView = new ColonyView(tileSize);
-        final List<IView> views = List.of(worldView, colonyView);
+        final List<IView> views = new ArrayList<>();
+        views.add(worldView);
+        views.add(colonyView);
+        if (DEBUG) {
+            views.add(beingPathDebugView);
+        }
         gameView = new GameView(views, WORLD_SIZE, tileSize);
     }
 
