@@ -51,11 +51,12 @@ public class WorldView implements IView {
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         for (final ITerrain terrain : terrainTiles) {
-            batch.draw(grassTexture,
-                       offsetX + terrain.getPosition().getPosX() * tileSize,
-                       offsetY + terrain.getPosition().getPosY() * tileSize,
-                       tileSize,
-                       tileSize);
+            batch.draw(
+                grassTexture,
+                offsetX + terrain.getPosition().getPosX() * tileSize,
+                offsetY + terrain.getPosition().getPosY() * tileSize,
+                tileSize,
+                tileSize);
         }
     }
 
