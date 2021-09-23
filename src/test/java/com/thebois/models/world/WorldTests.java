@@ -2,18 +2,37 @@ package com.thebois.models.world;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
+
+import com.thebois.models.Position;
+import com.thebois.models.beings.Colony;
+import com.thebois.models.world.structures.IStructure;
 
 import static org.assertj.core.api.Assertions.*;
 
 public class WorldTests {
 
+    public static Stream<Arguments> getPositionOutSideOfWorld() {
+        return Stream.of(
+            Arguments.of(new Position(-1, 0)),
+            Arguments.of(new Position(0, -1)),
+            Arguments.of(new Position(-1, -1)),
+            Arguments.of(new Position(-1000, -1000)),
+            Arguments.of(new Position(10000, 0)),
+            Arguments.of(new Position(0, 10000)));
+    }
+
     @Test
     public void worldInitiated() {
         // Arrange
         final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = new World(2);
+        final World world = new World(2, 5);
 
         // Act
         final Collection<ITerrain> terrainTiles = world.getTerrainTiles();
@@ -34,7 +53,7 @@ public class WorldTests {
     @Test
     public void worldFind() {
         // Arrange
-        final World world = new World(2);
+        final World world = new World(2, 5);
 
         // Act
         final Object worldObject = world.find();
@@ -43,7 +62,103 @@ public class WorldTests {
         assertThat(worldObject).isEqualTo(null);
     }
 
-    private boolean matrixEquals(ITile[][] worldMatrix1, ITile[][] worldMatrix2) {
+    @Test
+    public void createWorldWithNoStructures() {
+        // Arrange
+        final World world = new World(2, 0);
+
+        // Act
+        final Collection<IStructure> structures = world.getStructures();
+
+        // Assert
+        assertThat(structures.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void numberOfStructuresIncreasesIfStructureSuccessfullyPlaced() {
+        // Arrange
+        final World world = new World(2, 0);
+        final Position position = new Position(1, 1);
+        final Collection<IStructure> structures;
+        final boolean isBuilt;
+        // Act
+        isBuilt = world.createStructure(position);
+        structures = world.getStructures();
+
+        // Assert
+        assertThat(isBuilt).isTrue();
+        assertThat(structures.size()).isEqualTo(1);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionOutSideOfWorld")
+    public void structureFailedToBePlaced(final Position placementPosition) {
+        // Arrange
+        final World world = new World(2, 0);
+        final Collection<IStructure> structures;
+        final boolean isBuilt;
+
+        // Act
+        isBuilt = world.createStructure(placementPosition);
+        structures = world.getStructures();
+
+        // Assert
+        assertThat(isBuilt).isFalse();
+        assertThat(structures.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void numberOfStructuresDoesNotChangeIfStructuresPlacedOutsideWorld() {
+        // Arrange
+        final World world = new World(2, 0);
+        final Position position1 = new Position(2, 2);
+        final Position position2 = new Position(-1, -1);
+        final Collection<IStructure> structures;
+
+        // Act
+        world.createStructure(position1);
+        world.createStructure(position2);
+        structures = world.getStructures();
+
+        // Assert
+        assertThat(structures.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void getColonyReturnsSameColony() {
+        // Arrange
+        final Colony colony = Mockito.mock(Colony.class);
+        final World world = new World(2, colony);
+
+        // Assert
+        assertThat(world.getColony()).isEqualTo(colony);
+    }
+
+    @Test
+    public void getRoleAllocatorReturnsRoleAllocator() {
+        // Arrange
+        final Colony colony = Mockito.mock(Colony.class);
+        final World world = new World(2, colony);
+
+        // Assert
+        assertThat(world.getRoleAllocator()).isEqualTo(colony);
+    }
+
+    @Test
+    public void testsIfColonyGetsUpdate() {
+        // Arrange
+        final Colony colony = Mockito.mock(Colony.class);
+        final World world = new World(2, colony);
+
+        // Act
+        world.update();
+
+        // Arrange
+        Mockito.verify(colony, Mockito.atLeastOnce()).update();
+        assertThat(world.getColony()).isEqualTo(colony);
+    }
+
+    private boolean matrixEquals(final ITile[][] worldMatrix1, final ITile[][] worldMatrix2) {
         for (int y = 0; y < worldMatrix2.length; y++) {
             final ITile[] row = worldMatrix2[y];
             for (int x = 0; x < row.length; x++) {

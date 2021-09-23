@@ -1,5 +1,7 @@
 package com.thebois.models.beings;
 
+import java.util.Random;
+
 import com.thebois.models.Position;
 
 /**
@@ -7,25 +9,33 @@ import com.thebois.models.Position;
  */
 public class Pawn extends AbstractBeing {
 
-    /**
-     * Creates a Pawn.
-     */
-    public Pawn() {
-    }
+    /* Temporary hard-coded world size. Should be removed when pathfinding is implemented. */
+    private static final int WORLD_SIZE = 50;
+    private final Random random;
 
     /**
-     * Creates a pawn with a initial position and a destination to travel to.
+     * Instantiates with an initial position and a destination to travel to.
      *
      * @param currentPosition initial position.
      * @param destination     initial destination to travel to.
+     * @param random          the generator of random numbers.
      */
-    public Pawn(final Position currentPosition, final Position destination) {
+    public Pawn(final Position currentPosition, final Position destination, final Random random) {
         super(currentPosition, destination);
+        this.random = random;
     }
 
     @Override
-    public IBeing deepClone() {
-        return new Pawn(this.getPosition(), this.getDestination());
+    public void update() {
+        super.update();
+
+        if (getPosition().equals(getDestination())) setRandomDestination();
+    }
+
+    private void setRandomDestination() {
+        final Position randomPosition = new Position(random.nextInt(WORLD_SIZE),
+                                                     random.nextInt(WORLD_SIZE));
+        setDestination(randomPosition);
     }
 
 }

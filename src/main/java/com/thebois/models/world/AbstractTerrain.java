@@ -1,5 +1,7 @@
 package com.thebois.models.world;
 
+import java.util.Objects;
+
 import com.thebois.models.Position;
 
 /**
@@ -9,11 +11,11 @@ public abstract class AbstractTerrain implements ITerrain {
 
     private final Position position;
 
-    protected AbstractTerrain(Position position) {
+    protected AbstractTerrain(final Position position) {
         this.position = position;
     }
 
-    protected AbstractTerrain(float posX, float posY) {
+    protected AbstractTerrain(final float posX, final float posY) {
         this.position = new Position(posX, posY);
     }
 
@@ -23,25 +25,16 @@ public abstract class AbstractTerrain implements ITerrain {
     }
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final AbstractTerrain terrain = (AbstractTerrain) o;
+        return Objects.equals(position, terrain.position);
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (this.getClass().equals(obj.getClass())) {
-            final Grass other = (Grass) obj;
-            return getType().equals(other.getType())
-                   && getPosition().getPosX() == other.getPosition().getPosX()
-                   && getPosition().getPosY() == other.getPosition().getPosY();
-        }
-        return false;
+    public int hashCode() {
+        return Objects.hash(position);
     }
 
 }
