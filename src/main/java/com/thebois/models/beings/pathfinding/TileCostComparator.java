@@ -10,15 +10,17 @@ import com.thebois.models.world.ITile;
 class TileCostComparator implements Comparator<ITile> {
 
     private final TileCostCalculator costCalculator;
+    private final ITile destination;
 
-    TileCostComparator(final TileCostCalculator costCalculator) {
+    TileCostComparator(final TileCostCalculator costCalculator, final ITile destination) {
         this.costCalculator = costCalculator;
+        this.destination = destination;
     }
 
     @Override
     public int compare(final ITile first, final ITile second) {
-        final float firstCost = costCalculator.costOf(first);
-        final float secondCost = costCalculator.costOf(second);
+        final float firstCost = costCalculator.costOf(first, destination);
+        final float secondCost = costCalculator.costOf(second, destination);
         return Float.compare(firstCost, secondCost);
     }
 

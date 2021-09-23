@@ -41,11 +41,11 @@ public class TileCostCalculatorTests {
         final Map<ITile, Float> costFromStart = new HashMap<>();
         costFromStart.put(greater, 0f);
         costFromStart.put(lesser, 0f);
-        final TileCostCalculator cut = new TileCostCalculator(costFromStart, destination);
+        final TileCostCalculator cut = new TileCostCalculator(costFromStart);
 
         // Act
-        final float greaterCost = cut.costOf(greater);
-        final float lesserCost = cut.costOf(lesser);
+        final float greaterCost = cut.costOf(greater, destination);
+        final float lesserCost = cut.costOf(lesser, destination);
 
         // Assert
         assertThat(greaterCost).isGreaterThan(lesserCost);

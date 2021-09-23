@@ -9,18 +9,15 @@ import com.thebois.models.world.ITile;
  */
 class TileCostCalculator {
 
-    private final ITile destination;
     private final Map<ITile, Float> costFromStart;
 
     /**
      * Initializes with the positions to use when calculating the cost.
      *
      * @param costFromStart Contains the cost from start to a position
-     * @param destination   The position to find a path to
      */
-    TileCostCalculator(final Map<ITile, Float> costFromStart, final ITile destination) {
+    TileCostCalculator(final Map<ITile, Float> costFromStart) {
         this.costFromStart = costFromStart;
-        this.destination = destination;
     }
 
     /**
@@ -31,12 +28,13 @@ class TileCostCalculator {
      * Usually described as f(n) = g(n) + h(n) in the A* algorithm.
      * </p>
      *
-     * @param tile The position (node n) to calculate the cost of
+     * @param tile        The position (node n) to calculate the cost of
+     * @param destination The position to find a path to
      *
      * @return The cost of the position
      */
-    public float costOf(final ITile tile) {
-        return getCostFromStart(tile) + costToDestination(tile);
+    public float costOf(final ITile tile, final ITile destination) {
+        return getCostFromStart(tile) + costToDestination(tile, destination);
     }
 
     /**
@@ -64,11 +62,12 @@ class TileCostCalculator {
      * Usually described as h(n) in the A* algorithm.
      * </p>
      *
-     * @param tile The position to calculate the cost of moving from
+     * @param tile        The position to calculate the cost of moving from
+     * @param destination The position to find a path to
      *
      * @return The cost of moving from the provided position to the destination
      */
-    private float costToDestination(final ITile tile) {
+    private float costToDestination(final ITile tile, final ITile destination) {
         return tile.getPosition().manhattanDistanceTo(destination.getPosition());
     }
 
