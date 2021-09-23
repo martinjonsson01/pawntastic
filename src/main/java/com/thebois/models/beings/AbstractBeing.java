@@ -1,32 +1,23 @@
 package com.thebois.models.beings;
 
-import java.util.Random;
+import java.util.Objects;
 
-import com.thebois.models.IDeepClonable;
 import com.thebois.models.Position;
+import com.thebois.models.beings.roles.AbstractRole;
+import com.thebois.models.beings.roles.RoleFactory;
 
 /**
  * An abstract implementation of IBeing.
  */
-public abstract class AbstractBeing implements IBeing, IDeepClonable<IBeing> {
+public abstract class AbstractBeing implements IBeing {
 
-    // The current position held by the AbstractBeing.
-    private Position currentPosition;
+    // The max speed of the AbstractBeing
+    private static final float MAX_WALKING_DISTANCE = 0.1f;
     // The position the AbstractBeing wants to reach.
     private Position destination;
-    // The max speed of the AbstractBeing
-    private final float maxWalkingDistance = 5;
-    // temporary: n*n world size
-    private final int worldSize = 500;
-    private Random random = new Random();
-
-    /**
-     * Creates an instance of AbstractBeing.
-     */
-    public AbstractBeing() {
-        this.destination = new Position();
-        this.currentPosition = new Position();
-    }
+    // The current position held by the AbstractBeing.
+    private Position currentPosition;
+    private AbstractRole role;
 
     /**
      * Creates an AbstractBeing with an initial position.
@@ -34,9 +25,53 @@ public abstract class AbstractBeing implements IBeing, IDeepClonable<IBeing> {
      * @param currentPosition the initial position of the AbstractBeing.
      * @param destination     the initial destination of the AbstractBeing.
      */
-    public AbstractBeing(Position currentPosition, Position destination) {
+    public AbstractBeing(final Position currentPosition, final Position destination) {
         this.currentPosition = currentPosition;
         this.destination = destination;
+        this.role = RoleFactory.idle();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDestination(), getPosition(), getRole());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractBeing)) return false;
+        final AbstractBeing that = (AbstractBeing) o;
+        return Objects.equals(getDestination(), that.getDestination())
+               && Objects.equals(currentPosition,
+                                 that.currentPosition)
+               && Objects.equals(getRole(), that.getRole());
+    }
+
+    protected Position getDestination() {
+        return destination.deepClone();
+    }
+
+    @Override
+    public Position getPosition() {
+        return currentPosition.deepClone();
+    }
+
+    @Override
+    public AbstractRole getRole() {
+        return role.deepClone();
+    }
+
+    @Override
+    public void setRole(final AbstractRole role) {
+        if (role == null) {
+            throw new IllegalArgumentException("Role can not be null. Use IdleRole instead.");
+        }
+        this.role = role;
+    }
+
+    @Override
+    public void update() {
+        move();
     }
 
     /**
@@ -52,24 +87,23 @@ public abstract class AbstractBeing implements IBeing, IDeepClonable<IBeing> {
         final float totalDistance = (float) Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
         // Calculate walking distance based on distance to destination
-        final float updatedWalkingDistance = Math.min(maxWalkingDistance, Math.abs(totalDistance));
+        final float updatedWalkingDistance = Math.min(MAX_WALKING_DISTANCE,
+                                                      Math.abs(totalDistance));
 
         // Calculate norm of distance vector
         final float normDeltaX = deltaX / totalDistance;
         final float normDeltaY = deltaY / totalDistance;
 
         // To avoid the position being set to NaN
-        if (Float.isNaN(normDeltaX) || Float.isNaN(normDeltaY)) {
+        if (totalDistance == 0) {
             this.currentPosition = destination;
         }
         else {
 
             // Calculate new position
-            final float
-                newPosX =
+            final float newPosX =
                 this.currentPosition.getPosX() + normDeltaX * updatedWalkingDistance;
-            final float
-                newPosY =
+            final float newPosY =
                 this.currentPosition.getPosY() + normDeltaY * updatedWalkingDistance;
 
             // Apply new position to current position
@@ -78,18 +112,8 @@ public abstract class AbstractBeing implements IBeing, IDeepClonable<IBeing> {
         }
     }
 
-    protected Position getDestination() {
-        return this.destination;
-    }
-
-    @Override
-    public Position getPosition() {
-        return this.currentPosition;
-    }
-
-    @Override
-    public void update() {
-        move();
+    protected void setDestination(final Position destination) {
+        this.destination = destination;
     }
 
 }
