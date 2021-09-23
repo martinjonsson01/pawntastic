@@ -1,6 +1,7 @@
 package com.thebois.models.beings;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
@@ -115,6 +116,15 @@ public abstract class AbstractBeing implements IBeing {
             this.position.setPosX(newPosX);
             this.position.setPosY(newPosY);
         }
+    }
+
+    @Override
+    public Iterable<Position> getPath() {
+        final ArrayList<Position> positions = new ArrayList<>(path.size());
+        for (final Position pathPosition : path) {
+            positions.add(pathPosition.deepClone());
+        }
+        return positions;
     }
 
     protected void setPath(final Collection<Position> path) {

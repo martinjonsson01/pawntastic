@@ -100,6 +100,23 @@ public class BeingTests {
     }
 
     @Test
+    public void getPathReturnsEqualPositionsToPathFinder() {
+        // Arrange
+        final Random mockRandom = Mockito.mock(Random.class);
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        final Position endPosition = new Position(123, 456);
+        final List<Position> actualPath = List.of(endPosition);
+        when(pathFinder.path(any(), any())).thenReturn(actualPath);
+        final AbstractBeing being = new Pawn(new Position(), endPosition, mockRandom, pathFinder);
+
+        // Act
+        final Iterable<Position> pathPositions = being.getPath();
+
+        // Assert
+        assertThat(pathPositions).containsExactlyInAnyOrderElementsOf(actualPath);
+    }
+
+    @Test
     public void hashCodeReturnsSameIfEqual() {
         // Arrange
         final Position currentPosition = new Position(0, 0);
