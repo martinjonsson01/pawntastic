@@ -58,12 +58,14 @@ public abstract class AbstractBeing implements IBeing {
 
     @Override
     public AbstractRole getRole() {
-        if (role == null) return null;
         return role.deepClone();
     }
 
     @Override
     public void setRole(final AbstractRole role) {
+        if (role == null) {
+            throw new IllegalArgumentException("Role can not be null. Use IdleRole instead.");
+        }
         this.role = role;
     }
 
