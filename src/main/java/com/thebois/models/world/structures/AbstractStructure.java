@@ -16,7 +16,6 @@ abstract class AbstractStructure implements IStructure {
     private StructureType structureType;
     private Collection<IItem> collectionOfAllNeededItems;
     private Collection<IItem> collectionOfDeliveredItems;
-    private float builtRatio;
 
     /**
      * Creates a structure with a position and structure type.
@@ -90,7 +89,9 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public float builtStatus() {
-        return this.builtRatio;
+        final float totalDelivered = this.collectionOfDeliveredItems.size();
+        final float totalNeeded = this.collectionOfAllNeededItems.size();
+        return totalDelivered / totalNeeded;
     }
 
     @Override
@@ -102,12 +103,6 @@ abstract class AbstractStructure implements IStructure {
         else {
             return false;
         }
-    }
-
-    protected void updateBuiltStatus() {
-        final float totalDelivered = this.collectionOfDeliveredItems.size();
-        final float totalNeeded = this.collectionOfAllNeededItems.size();
-        this.builtRatio = totalDelivered / totalNeeded;
     }
 
     protected void setAllNeededItems(final Collection<IItem> allNeededItems) {
