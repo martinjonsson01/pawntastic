@@ -6,7 +6,7 @@ import com.thebois.models.world.ITile;
 /**
  * Represents a Structure. E.g. a house.
  */
-public interface IStructure extends ITile, IDeepClonable<IStructure> {
+public interface IStructure extends ITile, IBuildable, IDeepClonable<IStructure> {
 
     /**
      * Returns the specific type of terrain.

@@ -1,8 +1,11 @@
 package com.thebois.models.world.structures;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 import com.thebois.models.Position;
+import com.thebois.models.world.inventory.IItem;
 
 /**
  * Base structure for the game.
@@ -11,6 +14,9 @@ abstract class AbstractStructure implements IStructure {
 
     private Position position;
     private StructureType structureType;
+    private Collection<IItem> collectionOfAllNeededItems;
+    private Collection<IItem> collectionOfDeliveredItems;
+    private float builtRatio;
 
     /**
      * Creates a structure with a position and structure type.
@@ -59,6 +65,53 @@ abstract class AbstractStructure implements IStructure {
     @Override
     public StructureType getType() {
         return structureType;
+    }
+
+    @Override
+    public Collection<IItem> neededItems() {
+        // Make a copy of all IItems in collectionOfAllNeededItems
+        final Collection<IItem> itemDifference = new ArrayList<>(collectionOfAllNeededItems);
+        // Remove IItems that have been delivered
+        collectionOfDeliveredItems.forEach(itemDifference::remove);
+        // Return difference of the two collections
+        return itemDifference;
+    }
+
+    @Override
+    public boolean deliverItem(final IItem deliveredItem) {
+        if (collectionOfAllNeededItems.contains(deliveredItem)) {
+            collectionOfDeliveredItems.add(deliveredItem);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
+    public float builtStatus() {
+        return this.builtRatio;
+    }
+
+    @Override
+    public boolean dismantle(final IItem retrieving) {
+        if (collectionOfDeliveredItems.contains(retrieving)) {
+            collectionOfDeliveredItems.remove(retrieving);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    protected void updateBuiltStatus() {
+        final float totalDelivered = this.collectionOfDeliveredItems.size();
+        final float totalNeeded = this.collectionOfAllNeededItems.size();
+        this.builtRatio = totalDelivered / totalNeeded;
+    }
+
+    protected void setAllNeededItems(final Collection<IItem> allNeededItems) {
+        this.collectionOfAllNeededItems = allNeededItems;
     }
 
 }
