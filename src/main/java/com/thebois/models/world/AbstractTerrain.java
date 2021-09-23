@@ -9,17 +9,12 @@ public abstract class AbstractTerrain implements ITerrain {
 
     private final Position position;
 
-    protected AbstractTerrain(Position position) {
+    protected AbstractTerrain(final Position position) {
         this.position = position;
     }
 
-    protected AbstractTerrain(float posX, float posY) {
+    protected AbstractTerrain(final float posX, final float posY) {
         this.position = new Position(posX, posY);
-    }
-
-    @Override
-    public Position getPosition() {
-        return position.deepClone();
     }
 
     @Override
@@ -42,6 +37,16 @@ public abstract class AbstractTerrain implements ITerrain {
                    && getPosition().getPosY() == other.getPosition().getPosY();
         }
         return false;
+    }
+
+    @Override
+    public Position getPosition() {
+        return position.deepClone();
+    }
+
+    @Override
+    public float getCost() {
+        return 0;
     }
 
 }
