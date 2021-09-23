@@ -1,17 +1,23 @@
 package com.thebois.models.beings.pathfinding;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 
 import com.thebois.models.Position;
+import com.thebois.models.world.Grass;
+import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.World;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class AstarPathFinderTests {
 
@@ -26,6 +32,25 @@ public class AstarPathFinderTests {
 
     private static Position mockPosition(final int positionX, final int positionY) {
         return new Position(positionX, positionY);
+    }
+
+    @Test
+    public void pathReturnsEmptyIfNotAbleToReachDestination() {
+        // Arrange
+        final Position from = new Position();
+        final Position destination = new Position(2, 2);
+        final IWorld world = Mockito.mock(IWorld.class);
+        final ITile fromTile = new Grass(from);
+        when(world.getTileAt(from)).thenReturn(fromTile);
+        when(world.getTileAt(destination)).thenReturn(new Grass(destination));
+        when(world.getNeighboursOf(fromTile)).thenReturn(List.of());
+        final IPathFinder cut = new AstarPathFinder(world);
+
+        // Act
+        final Collection<Position> path = cut.path(from, destination);
+
+        // Assert
+        assertThat(path).isEmpty();
     }
 
     @ParameterizedTest
