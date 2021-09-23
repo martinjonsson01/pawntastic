@@ -86,6 +86,11 @@ public final class Position implements IDeepClonable<Position> {
         return Float.compare(position.posX, posX) == 0 && Float.compare(position.posY, posY) == 0;
     }
 
+    @Override
+    public String toString() {
+        return "{" + "x=" + posX + ", y=" + posY + '}';
+    }
+
     /**
      * Makes a deep copy of the position and returns it.
      *

@@ -49,4 +49,9 @@ public abstract class AbstractTerrain implements ITerrain {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "AbstractTerrain{" + "position=" + position + '}';
+    }
+
 }
