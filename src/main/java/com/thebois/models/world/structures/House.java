@@ -22,7 +22,7 @@ public class House extends AbstractStructure {
      *
      * @param position The position of the house
      */
-    public House(Position position) {
+    public House(final Position position) {
         super(position, StructureType.HOUSE);
     }
 

@@ -49,6 +49,30 @@ public class World implements IFinder {
         initColony();
     }
 
+    /**
+     * Initiates the world with the given size.
+     *
+     * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
+     * @param colony    The Colony that should be added to the world.
+     */
+    public World(final int worldSize, final Colony colony) {
+        pawnCount = colony.getBeings().size();
+        terrainMatrix = new ITerrain[worldSize][worldSize];
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
+                terrainMatrix[y][x] = new Grass(x, y);
+            }
+        }
+        // Structures
+        structureMatrix = new Optional[worldSize][worldSize];
+        for (int y = 0; y < structureMatrix.length; y++) {
+            for (int x = 0; x < structureMatrix[y].length; x++) {
+                structureMatrix[y][x] = Optional.empty();
+            }
+        }
+        this.colony = colony;
+    }
+
     private void initColony() {
         colony = new Colony(findEmptyPositions(pawnCount));
     }
@@ -113,7 +137,7 @@ public class World implements IFinder {
      *
      * @return Whether or not the structure was built.
      */
-    public boolean createStructure(int posX, final int posY) {
+    public boolean createStructure(final int posX, final int posY) {
         final Position position = new Position(posX, posY);
         if (isPositionPlaceable(position)) {
             structureMatrix[posY][posX] = Optional.of(new House(position));
@@ -130,7 +154,7 @@ public class World implements IFinder {
      *
      * @return Whether or not the structure was built.
      */
-    public boolean createStructure(Position position) {
+    public boolean createStructure(final Position position) {
         return createStructure((int) position.getPosX(), (int) position.getPosY());
     }
 

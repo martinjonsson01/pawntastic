@@ -2,15 +2,31 @@ package com.thebois.models.world;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 
 import com.thebois.models.Position;
+import com.thebois.models.beings.Colony;
 import com.thebois.models.world.structures.IStructure;
 
 import static org.assertj.core.api.Assertions.*;
 
 public class WorldTests {
+
+    public static Stream<Arguments> getPositionOutSideOfWorld() {
+        return Stream.of(
+            Arguments.of(new Position(-1, 0)),
+            Arguments.of(new Position(0, -1)),
+            Arguments.of(new Position(-1, -1)),
+            Arguments.of(new Position(-1000, -1000)),
+            Arguments.of(new Position(10000, 0)),
+            Arguments.of(new Position(0, 10000)));
+    }
 
     @Test
     public void worldInitiated() {
@@ -64,30 +80,31 @@ public class WorldTests {
         final World world = new World(2, 0);
         final Position position = new Position(1, 1);
         final Collection<IStructure> structures;
-
+        final boolean isBuilt;
         // Act
-        world.createStructure(position);
+        isBuilt = world.createStructure(position);
         structures = world.getStructures();
 
         // Assert
+        assertThat(isBuilt).isTrue();
         assertThat(structures.size()).isEqualTo(1);
     }
 
-    @Test
-    public void numberOfStructuresDoesNotChangeIfStructuresUnsuccessfullyPlaced() {
+    @ParameterizedTest
+    @MethodSource("getPositionOutSideOfWorld")
+    public void structureFailedToBePlaced(final Position placementPosition) {
         // Arrange
         final World world = new World(2, 0);
-        final Position position = new Position(1, 1);
         final Collection<IStructure> structures;
+        final boolean isBuilt;
 
         // Act
-        world.createStructure(position);
-        world.createStructure(position);
-        world.createStructure(position);
+        isBuilt = world.createStructure(placementPosition);
         structures = world.getStructures();
 
         // Assert
-        assertThat(structures.size()).isEqualTo(1);
+        assertThat(isBuilt).isFalse();
+        assertThat(structures.size()).isEqualTo(0);
     }
 
     @Test
@@ -105,6 +122,40 @@ public class WorldTests {
 
         // Assert
         assertThat(structures.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void getColonyReturnsSameColony() {
+        // Arrange
+        final Colony colony = Mockito.mock(Colony.class);
+        final World world = new World(2, colony);
+
+        // Assert
+        assertThat(world.getColony()).isEqualTo(colony);
+    }
+
+    @Test
+    public void getRoleAllocatorReturnsRoleAllocator() {
+        // Arrange
+        final Colony colony = Mockito.mock(Colony.class);
+        final World world = new World(2, colony);
+
+        // Assert
+        assertThat(world.getRoleAllocator()).isEqualTo(colony);
+    }
+
+    @Test
+    public void testsIfColonyGetsUpdate() {
+        // Arrange
+        final Colony colony = Mockito.mock(Colony.class);
+        final World world = new World(2, colony);
+
+        // Act
+        world.update();
+
+        // Arrange
+        Mockito.verify(colony, Mockito.atLeastOnce()).update();
+        assertThat(world.getColony()).isEqualTo(colony);
     }
 
     private boolean matrixEquals(final ITile[][] worldMatrix1, final ITile[][] worldMatrix2) {
