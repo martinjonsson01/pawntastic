@@ -1,7 +1,6 @@
 package com.thebois.views.debug;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
@@ -9,6 +8,7 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.IBeing;
 import com.thebois.models.beings.IBeingGroup;
 import com.thebois.views.IView;
+import com.thebois.views.TextureUtils;
 
 /**
  * Displays the paths of all beings.
@@ -29,17 +29,7 @@ public class BeingPathDebugView implements IView {
     public BeingPathDebugView(final IBeingGroup beingGroup, final float tileSize) {
         this.beingGroup = beingGroup;
         this.tileSize = tileSize;
-        createCircleTexture();
-    }
-
-    private void createCircleTexture() {
-        final Pixmap pixmap = new Pixmap(RADIUS * 2, RADIUS * 2, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fillCircle(RADIUS, RADIUS, RADIUS);
-        circleTexture = new Texture(pixmap, true);
-        circleTexture.setFilter(Texture.TextureFilter.MipMapLinearLinear,
-                                Texture.TextureFilter.MipMapLinearLinear);
-        pixmap.dispose();
+        this.circleTexture = TextureUtils.createCircleTexture(RADIUS);
     }
 
     @Override
@@ -52,9 +42,10 @@ public class BeingPathDebugView implements IView {
         for (final IBeing being : beingGroup.getBeings()) {
             batch.setColor(Color.RED);
             for (final Position position : being.getPath()) {
-                batch.draw(circleTexture,
-                           position.getPosX() * tileSize + offsetX + tileSize / 2,
-                           position.getPosY() * tileSize + offsetY + tileSize / 2);
+                batch.draw(
+                    circleTexture,
+                    position.getPosX() * tileSize + offsetX + tileSize / 2,
+                    position.getPosY() * tileSize + offsetY + tileSize / 2);
             }
         }
     }
