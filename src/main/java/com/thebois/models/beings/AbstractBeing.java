@@ -1,11 +1,10 @@
 package com.thebois.models.beings;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Queue;
+import java.util.Stack;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -20,7 +19,7 @@ public abstract class AbstractBeing implements IBeing {
     // The max speed of the AbstractBeing
     private static final float MAX_WALKING_DISTANCE = 0.1f;
     private final IPathFinder pathFinder;
-    private Queue<Position> path;
+    private Stack<Position> path;
     private Position position;
     private AbstractRole role;
 
@@ -37,7 +36,7 @@ public abstract class AbstractBeing implements IBeing {
         this.position = startPosition;
         this.role = RoleFactory.idle();
         this.pathFinder = pathFinder;
-        this.path = new ArrayDeque<>(pathFinder.path(startPosition, destination));
+        setPath(pathFinder.path(startPosition, destination));
     }
 
     @Override
@@ -104,7 +103,7 @@ public abstract class AbstractBeing implements IBeing {
         // To avoid the position being set to NaN
         if (totalDistance == 0) {
             this.position = destination;
-            path.remove();
+            path.pop();
         }
         else {
 
@@ -128,13 +127,13 @@ public abstract class AbstractBeing implements IBeing {
     }
 
     protected void setPath(final Collection<Position> path) {
-        this.path = new ArrayDeque<>(path);
+        this.path = new Stack<>();
+        this.path.addAll(path);
     }
 
     protected Optional<Position> getDestination() {
-        final Position destination = path.peek();
-        if (destination == null) return Optional.empty();
-        return Optional.of(destination.deepClone());
+        if (path.isEmpty()) return Optional.empty();
+        return Optional.of(path.peek().deepClone());
     }
 
     protected IPathFinder getPathFinder() {
