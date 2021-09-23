@@ -1,5 +1,6 @@
 package com.thebois.models.beings.pathfinding;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.thebois.models.world.ITile;
@@ -9,15 +10,32 @@ import com.thebois.models.world.ITile;
  */
 class TileCostCalculator {
 
+    /**
+     * For a ITile, costFromStart[ITile] is the cost of the cheapest path from start to the ITile
+     * currently known.
+     */
     private final Map<ITile, Float> costFromStart;
 
     /**
      * Initializes with the positions to use when calculating the cost.
-     *
-     * @param costFromStart Contains the cost from start to a position
      */
-    TileCostCalculator(final Map<ITile, Float> costFromStart) {
-        this.costFromStart = costFromStart;
+    TileCostCalculator() {
+        this.costFromStart = new HashMap<>();
+    }
+
+    /**
+     * Sets the currently cheapest cost from the start tile to the provided tile.
+     *
+     * @param tile The tile destination to which the cost is calculated from the start tile.
+     * @param cost The cost of moving from start to the provided tile.
+     */
+    public void setCostFromStartTo(final ITile tile, final float cost) {
+        if (costFromStart.containsKey(tile)) {
+            costFromStart.replace(tile, cost);
+        }
+        else {
+            costFromStart.put(tile, cost);
+        }
     }
 
     /**
@@ -48,7 +66,7 @@ class TileCostCalculator {
      *
      * @return The cost of moving from the start to the provided position
      */
-    private float getCostFromStart(final ITile tile) {
+    public float getCostFromStart(final ITile tile) {
         if (costFromStart.containsKey(tile)) return costFromStart.get(tile);
         // Default cost is infinity.
         return Float.MAX_VALUE;

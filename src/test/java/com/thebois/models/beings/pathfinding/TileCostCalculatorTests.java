@@ -1,7 +1,5 @@
 package com.thebois.models.beings.pathfinding;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,10 +36,9 @@ public class TileCostCalculatorTests {
                                                                            final ITile greater,
                                                                            final ITile lesser) {
         // Arrange
-        final Map<ITile, Float> costFromStart = new HashMap<>();
-        costFromStart.put(greater, 0f);
-        costFromStart.put(lesser, 0f);
-        final TileCostCalculator cut = new TileCostCalculator(costFromStart);
+        final TileCostCalculator cut = new TileCostCalculator();
+        cut.setCostFromStartTo(greater, 0f);
+        cut.setCostFromStartTo(lesser, 0f);
 
         // Act
         final float greaterCost = cut.costOf(greater, destination);
