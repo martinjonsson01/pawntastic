@@ -2,16 +2,16 @@ package com.thebois.models.world;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
-import com.thebois.models.world.structures.House;
-import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeingGroup;
 import com.thebois.models.beings.roles.IRoleAllocator;
+import com.thebois.models.world.structures.House;
+import com.thebois.models.world.structures.IStructure;
 import com.thebois.utils.MatrixUtils;
 
 /**
@@ -25,7 +25,7 @@ public class World implements IFinder {
     private Colony colony;
 
     /**
-     * Initiates the world with the given size.
+     * Initiates the world with the given size and the amount of pawns in the colony.
      *
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
      * @param pawnCount The amount of beings to initialize the players' BeingGroup with
@@ -50,7 +50,7 @@ public class World implements IFinder {
     }
 
     /**
-     * Initiates the world with the given size.
+     * Initiates the world with the given size and colony.
      *
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
      * @param colony    The Colony that should be added to the world.

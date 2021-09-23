@@ -11,20 +11,19 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import com.thebois.controllers.StructureController;
 import com.thebois.controllers.ColonyController;
 import com.thebois.controllers.RoleController;
+import com.thebois.controllers.StructureController;
 import com.thebois.controllers.TerrainController;
 import com.thebois.models.world.World;
 import com.thebois.views.ColonyView;
 import com.thebois.views.GameScreen;
-import com.thebois.views.IProjector;
-import com.thebois.views.IView;
-import com.thebois.views.StructureView;
 import com.thebois.views.GameView;
 import com.thebois.views.IActorView;
+import com.thebois.views.IView;
 import com.thebois.views.InfoView;
 import com.thebois.views.RoleView;
+import com.thebois.views.StructureView;
 import com.thebois.views.WorldView;
 
 /**
@@ -52,7 +51,6 @@ class ColonyManagement extends Game {
     private WorldView worldView;
     private StructureView structureView;
     private ColonyView colonyView;
-    private IProjector projector;
     // Screens
     private GameScreen gameScreen;
     // Controllers
@@ -73,12 +71,10 @@ class ColonyManagement extends Game {
         createInfoView();
         // Screens
         gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, uiSkin, gameView, infoView);
-        projector = gameScreen.getProjector();
         this.setScreen(gameScreen);
         // Controllers
         createControllers(tileSize);
         initInputProcessors();
-
     }
 
     private void setUpUserInterfaceSkin() {
@@ -131,8 +127,9 @@ class ColonyManagement extends Game {
         this.terrainController = new TerrainController(world, worldView);
         this.structureController = new StructureController(world,
                                                            structureView,
-                                                           projector,
-                                                           tileSize, gameView);
+                                                           gameScreen.getProjector(),
+                                                           tileSize,
+                                                           gameView);
         this.colonyController = new ColonyController(world, colonyView);
         new RoleController(world.getRoleAllocator(), roleView);
     }
