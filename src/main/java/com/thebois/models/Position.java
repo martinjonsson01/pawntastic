@@ -28,6 +28,31 @@ public final class Position implements IDeepClonable<Position> {
         this.posY = posY;
     }
 
+    /**
+     * Calculates the euclidean distance between two positions.
+     *
+     * @param other The position to compare distance to
+     *
+     * @return The distance between the points
+     */
+    public float distanceTo(final Position other) {
+        return distanceTo(other.getPosX(), other.getPosY());
+    }
+
+    /**
+     * Calculates the euclidean distance between two positions.
+     *
+     * @param otherPosX The x-coordinate to compare distance to
+     * @param otherPosY The y-coordinate to compare distance to
+     *
+     * @return The distance between the points
+     */
+    public float distanceTo(final float otherPosX, final float otherPosY) {
+        final float distanceX = Math.abs(getPosX() - otherPosX);
+        final float distanceY = Math.abs(getPosY() - otherPosY);
+        return (float) Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+    }
+
     public float getPosX() {
         return posX;
     }
@@ -45,6 +70,11 @@ public final class Position implements IDeepClonable<Position> {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(posX, posY);
+    }
+
+    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
@@ -54,11 +84,6 @@ public final class Position implements IDeepClonable<Position> {
         }
         final Position position = (Position) o;
         return Float.compare(position.posX, posX) == 0 && Float.compare(position.posY, posY) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(posX, posY);
     }
 
     /**

@@ -12,7 +12,8 @@
     -->
 
     <metadata name="org.checkstyle.principle" value="Practice What You Preach" />
-    <metadata name="org.checkstyle.principle.description" value="In our config we should use all Checks that Checkstyle has" />
+    <metadata name="org.checkstyle.principle.description"
+        value="In our config we should use all Checks that Checkstyle has" />
 
     <property name="severity" value="error" />
 
@@ -136,7 +137,8 @@
         <property name="id" value="noRelativeLinks" />
         <property name="format" value="href=&quot;(?!\/|https?:\/\/).*?\.dtd&quot;" />
         <property name="fileExtensions" value="xml, vm" />
-        <property name="message" value="Relative links to DTD files are prohibited. Please use absolute path or uri instead." />
+        <property name="message"
+            value="Relative links to DTD files are prohibited. Please use absolute path or uri instead." />
     </module>
     <module name="RegexpSingleline">
         <property name="id" value="noSourceforgeNetLinks" />
@@ -162,14 +164,16 @@
         <property name="folderPattern" value="[\\/]src[\\/]\w+[\\/]java[\\/]" />
         <property name="fileNamePattern" value="\.java$" />
         <property name="match" value="false" />
-        <message key="regexp.filepath.mismatch" value="Only java files should be located in the ''src/*/java'' folders." />
+        <message key="regexp.filepath.mismatch"
+            value="Only java files should be located in the ''src/*/java'' folders." />
     </module>
     <module name="RegexpOnFilename">
         <property name="id" value="xmlFileLocation" />
         <property name="folderPattern" value="[\\/]src[\\/]xdocs[\\/]" />
         <property name="fileNamePattern" value="\.(xml)|(vm)$" />
         <property name="match" value="false" />
-        <message key="regexp.filepath.mismatch" value="All files in the ''src/xdocs'' folder should have the ''xml'' or ''vm'' extension." />
+        <message key="regexp.filepath.mismatch"
+            value="All files in the ''src/xdocs'' folder should have the ''xml'' or ''vm'' extension." />
     </module>
     <module name="RegexpOnFilename">
         <property name="id" value="testFileLocation" />
@@ -267,8 +271,8 @@
         <module name="EmptyCatchBlock" />
         <module name="LeftCurly" />
         <module name="NeedBraces">
-            <property name="allowSingleLineStatement" value="true"/>
-            <property name="tokens" value="LAMBDA, LITERAL_IF, LITERAL_WHILE, LITERAL_DO, LITERAL_FOR"/>
+            <property name="allowSingleLineStatement" value="true" />
+            <property name="tokens" value="LITERAL_IF, LITERAL_WHILE, LITERAL_DO, LITERAL_FOR" />
         </module>
         <module name="RightCurly">
             <property name="tokens" value="METHOD_DEF" />
@@ -368,7 +372,8 @@
             <message key="matchxpath.match" value="Avoid using 'printStackTrace'." />
         </module>
         <module name="MatchXpath">
-            <property name="query" value="//METHOD_DEF/MODIFIERS// ANNOTATION[./IDENT[@text='Test']]/ANNOTATION_MEMBER_VALUE_PAIR [./IDENT[@text='expected']]" />
+            <property name="query"
+                value="//METHOD_DEF/MODIFIERS// ANNOTATION[./IDENT[@text='Test']]/ANNOTATION_MEMBER_VALUE_PAIR [./IDENT[@text='expected']]" />
             <message key="matchxpath.match" value="Avoid using 'expected' attribute in Test annotation." />
         </module>
         <module name="MatchXpath">
@@ -500,12 +505,14 @@
 
         <!-- Imports -->
         <module name="AvoidStarImport">
-            <property name="excludes" value="java.io,java.net,java.lang.Math,org.assertj.core.api.Assertions,org.mockito.Mockito.*,org.mockito.ArgumentMatchers.*" />
+            <property name="excludes"
+                value="java.io,java.net,java.lang.Math,org.assertj.core.api.Assertions,org.mockito.Mockito.*,org.mockito.ArgumentMatchers.*" />
         </module>
         <module name="AvoidStaticImport" />
         <module name="CustomImportOrder">
-            <property name="customImportOrderRules" value="STANDARD_JAVA_PACKAGE###THIRD_PARTY_PACKAGE###SAME_PACKAGE(2)###STATIC"/>
-            <property name="standardPackageRegExp" value="^(java|javax)\."/>
+            <property name="customImportOrderRules"
+                value="STANDARD_JAVA_PACKAGE###THIRD_PARTY_PACKAGE###SAME_PACKAGE(2)###STATIC" />
+            <property name="standardPackageRegExp" value="^(java|javax)\." />
         </module>
         <module name="IllegalImport" />
         <module name="RedundantImport" />
@@ -538,7 +545,7 @@
             <property name="allowUnknownTags" value="true" />
         </module>
         <module name="JavadocVariable">
-            <property name="scope" value="public"/>
+            <property name="scope" value="public" />
         </module>
         <module name="MissingJavadocMethod">
             <property name="allowMissingPropertyJavadoc" value="true" />
@@ -646,11 +653,17 @@
             <property name="allowedAbbreviations" value="AST,I" />
         </module>
         <module name="AbstractClassName" />
-        <module name="ClassTypeParameterName" />
-        <module name="RecordTypeParameterName" />
+        <module name="ClassTypeParameterName">
+            <property name="format" value="([T][A-Z][a-zA-Z0-9]+$)" />
+        </module>
+        <module name="RecordTypeParameterName">
+            <property name="format" value="([T][A-Z][a-zA-Z0-9]+$)" />
+        </module>
         <module name="RecordComponentName" />
         <module name="ConstantName" />
-        <module name="InterfaceTypeParameterName" />
+        <module name="InterfaceTypeParameterName">
+            <property name="format" value="([T][A-Z][a-zA-Z0-9]+$)" />
+        </module>
         <module name="LocalFinalVariableName" />
         <module name="LocalVariableName">
             <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$" />
@@ -660,7 +673,9 @@
             <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$" />
         </module>
         <module name="MethodName" />
-        <module name="MethodTypeParameterName" />
+        <module name="MethodTypeParameterName">
+            <property name="format" value="([T][A-Z][a-zA-Z0-9]+$)" />
+        </module>
         <module name="PackageName" />
         <module name="ParameterName">
             <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$" />
@@ -676,6 +691,10 @@
             <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$" />
         </module>
         <module name="TypeName" />
+        <module name="TypeName">
+            <property name="format" value="^I[A-Z]+[a-zA-Z]*$" />
+            <property name="tokens" value="INTERFACE_DEF" />
+        </module>
         <module name="PatternVariableName" />
         <module name="IllegalIdentifierName" />
 

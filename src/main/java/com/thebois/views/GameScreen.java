@@ -1,11 +1,13 @@
 package com.thebois.views;
 
-import java.util.Collection;
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -14,37 +16,53 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
  */
 public class GameScreen implements Screen {
 
-    private final ShapeRenderer batch;
     private final OrthographicCamera camera;
     private final FitViewport viewport;
-    private final float viewportWidth;
-    private final float viewportHeight;
     private final Color backgroundColor = new Color(0, 0, 0.2f, 1);
-    private final Collection<IView> views;
+    private final Skin skin;
+    private final GameView gameView;
+    private final InfoView infoView;
+    private Stage stage;
+    private SpriteBatch spriteBatch;
 
     /**
      * Creates an instance of GameScreen.
      *
-     * @param batch          The batch to use when rendering
      * @param viewportHeight The height used for viewport
      * @param viewportWidth  The width used for viewport
-     * @param views          Views to draw
+     * @param skin           The skin with styles to apply to all widgets
+     * @param gameView       The view of the game world to render
+     * @param infoView       The view displaying info about the colony
      */
-    public GameScreen(final ShapeRenderer batch,
-                      final float viewportHeight,
+    public GameScreen(final float viewportHeight,
                       final float viewportWidth,
-                      Collection<IView> views) {
-        this.batch = batch;
+                      final Skin skin,
+                      final GameView gameView,
+                      final InfoView infoView) {
+        this.skin = skin;
+        this.gameView = gameView;
+        this.infoView = infoView;
 
-        this.viewportHeight = viewportHeight;
-        this.viewportWidth = viewportWidth;
-
-        // create the camera and the SpriteBatch
         camera = new OrthographicCamera();
-        viewport = new FitViewport(this.viewportWidth, this.viewportHeight, camera);
-        camera.translate(this.viewportWidth / 2, this.viewportHeight / 2);
+        viewport = new FitViewport(viewportWidth, viewportHeight, camera);
+        camera.translate(viewportWidth / 2, viewportHeight / 2);
 
-        this.views = views;
+        createStage();
+    }
+
+    private void createStage() {
+        spriteBatch = new SpriteBatch();
+        stage = new Stage(viewport, spriteBatch);
+        Gdx.input.setInputProcessor(stage);
+
+        final Table infoAndWorldGroup = new Table();
+        infoAndWorldGroup.setFillParent(true);
+        stage.addActor(infoAndWorldGroup);
+
+        infoAndWorldGroup.left();
+
+        infoAndWorldGroup.add(infoView.getPane()).expand().fill();
+        infoAndWorldGroup.add(gameView);
     }
 
     @Override
@@ -52,21 +70,18 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void render(float delta) {
+    public void render(final float delta) {
         ScreenUtils.clear(backgroundColor);
         camera.update();
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin(ShapeRenderer.ShapeType.Filled);
+        spriteBatch.setProjectionMatrix(camera.combined);
 
-        // render views
-        for (IView view : views) {
-            view.draw(batch);
-        }
-        batch.end();
+        // Render UI stage
+        stage.act();
+        stage.draw();
     }
 
     @Override
-    public void resize(int width, int height) {
+    public void resize(final int width, final int height) {
         viewport.update(width, height);
     }
 
@@ -84,6 +99,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        stage.dispose();
     }
 
 }
