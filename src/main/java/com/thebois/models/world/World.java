@@ -13,10 +13,11 @@ import com.thebois.utils.MatrixUtils;
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
-public class World implements IFinder {
+public class World implements IWorld, IFinder {
 
     private final ITerrain[][] terrainMatrix;
     private final int pawnCount;
+    private final int worldSize;
     private Colony colony;
 
     /**
@@ -26,7 +27,8 @@ public class World implements IFinder {
      * @param pawnCount The amount of beings to initialize the players' BeingGroup with
      */
     public World(final int worldSize, final int pawnCount) {
-        terrainMatrix = new ITerrain[worldSize][worldSize];
+        this.worldSize = worldSize;
+        this.terrainMatrix = new ITerrain[worldSize][worldSize];
         this.pawnCount = pawnCount;
 
         for (int y = 0; y < worldSize; y++) {
@@ -100,6 +102,40 @@ public class World implements IFinder {
      */
     public void update() {
         colony.update();
+    }
+
+    @Override
+    public Iterable<ITile> getNeighboursOf(final ITile tile) {
+        final ArrayList<ITile> tiles = new ArrayList<>(8);
+        final Position position = tile.getPosition();
+        final int posY = (int) position.getPosY();
+        final int posX = (int) position.getPosX();
+
+        final int startY = Math.max(0, posY - 1);
+        final int endY = Math.min(worldSize - 1, posY + 1);
+        final int startX = Math.max(0, posX - 1);
+        final int endX = Math.min(worldSize - 1, posX + 1);
+
+        for (int neighbourY = startY; neighbourY <= endY; neighbourY++) {
+            for (int neighbourX = startX; neighbourX <= endX; neighbourX++) {
+                final ITile neighbour = terrainMatrix[neighbourY][neighbourX];
+                if (tile.equals(neighbour)) continue;
+                if (isDiagonalTo(tile, neighbour)) continue;
+                tiles.add(neighbour);
+            }
+        }
+
+        return tiles;
+    }
+
+    private boolean isDiagonalTo(final ITile tile, final ITile neighbour) {
+        final int tileX = (int) tile.getPosition().getPosX();
+        final int tileY = (int) tile.getPosition().getPosY();
+        final int neighbourX = (int) neighbour.getPosition().getPosX();
+        final int neighbourY = (int) neighbour.getPosition().getPosY();
+        final int deltaX = Math.abs(tileX - neighbourX);
+        final int deltaY = Math.abs(tileY - neighbourY);
+        return deltaX == 1 && deltaY == 1;
     }
 
 }
