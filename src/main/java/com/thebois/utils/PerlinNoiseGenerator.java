@@ -8,7 +8,7 @@ public class PerlinNoiseGenerator {
     private int octaves = 1;
     private int currentOctave;
     private double amplitude;
-    private double frequency;
+    private double frequencyOffSet;
     private double persistence;
     private int seed;
     private final int variable1 = 57;
@@ -49,7 +49,7 @@ public class PerlinNoiseGenerator {
                                 final int seed) {
         setOctaves(octaves);
         this.amplitude = amplitude;
-        this.frequency = frequency;
+        this.frequencyOffSet = frequency;
         this.persistence = persistence;
         setSeed(seed);
     }
@@ -61,16 +61,25 @@ public class PerlinNoiseGenerator {
         this(1, 1, 1, 1, 1);
     }
 
+    /**
+     * Generates a float value with Perlin Noise algorithm given a position.
+     *
+     * @param coordinateX X coordinate for the position.
+     * @param coordinateY Y coordinate for the position.
+     *
+     * @return The Perlin Noise value.
+     */
     public float perlinNoise(final float coordinateX, final float coordinateY) {
         double total = 0;
 
         for (int i = 0; i < octaves; i++) {
             currentOctave = i;
-            final double ampli = Math.pow(persistence, i);
-            final double frequency = this.frequency * Math.pow(2, i);
+            final double octaveAmplification = Math.pow(persistence, i);
+            final double frequency = this.frequencyOffSet * Math.pow(2, i);
 
             total = total + interpolateNoise(coordinateX * frequency + seed,
-                                             coordinateY * frequency + seed) * ampli;
+                                             coordinateY * frequency + seed)
+                            * octaveAmplification;
         }
         return (float) (total * this.amplitude);
     }
@@ -146,9 +155,9 @@ public class PerlinNoiseGenerator {
         int temporaryValue2;
         final int resetValue = primeNumberArray.length / 3;
 
-        final int primeNumber1 = primeNumberArray[1 + currentOctave % resetValue];
-        final int primeNumber2 = primeNumberArray[2 + currentOctave % resetValue];
-        final int primeNumber3 = primeNumberArray[3 + currentOctave % resetValue];
+        final int primeNumber1 = primeNumberArray[currentOctave % resetValue];
+        final int primeNumber2 = primeNumberArray[1 + currentOctave % resetValue];
+        final int primeNumber3 = primeNumberArray[2 + currentOctave % resetValue];
 
         temporaryValue1 = coordinateX + coordinateY * variable1;
         temporaryValue1 = (temporaryValue1 << variable2) ^ temporaryValue1;
@@ -194,18 +203,18 @@ public class PerlinNoiseGenerator {
         this.amplitude = amplitude;
     }
 
-    public double getFrequency() {
-        return frequency;
+    public double getFrequencyOffSet() {
+        return frequencyOffSet;
     }
 
     /**
      * Sets the frequency value to given float value.
      *
-     * @param frequency The frequency value is used to decide how one value can change from another.
-     *                  This value should be between 0 and 1.
+     * @param frequencyOffSet The frequency value is used to decide how one value can change from
+     *                        another. This value should be between 0 and 1.
      */
-    public void setFrequency(final double frequency) {
-        this.frequency = frequency;
+    public void setFrequencyOffSet(final double frequencyOffSet) {
+        this.frequencyOffSet = frequencyOffSet;
     }
 
     public double getPersistence() {
