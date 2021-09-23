@@ -30,8 +30,9 @@ public final class StructureView implements IView {
 
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
-        batch.setColor(houseColor);
         for (final IStructure structure : structures) {
+            // Generate color based on structure completeness
+            batch.setColor(getHouseColor(structure));
             batch.draw(
                 houseTexture,
                 offsetX + structure.getPosition().getPosX() * tileSize,
@@ -48,6 +49,10 @@ public final class StructureView implements IView {
         pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);
         houseTexture = new Texture(pixmap);
         pixmap.dispose();
+    }
+
+    private Color getHouseColor(final IStructure structure) {
+        return new Color(0f, structure.builtStatus(), 1f, 1.0f);
     }
 
     /**
