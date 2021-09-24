@@ -25,7 +25,7 @@ import com.thebois.views.infoviews.InfoView;
 import com.thebois.views.infoviews.RoleView;
 import com.thebois.views.gameviews.StructureView;
 import com.thebois.views.gameviews.WorldView;
-import com.thebois.views.infoviews.InventoryView;
+import com.thebois.views.infoviews.ColonyInventoryView;
 
 /**
  * The main representation of the game.
@@ -47,7 +47,7 @@ class ColonyManagement extends Game {
     /* Views - InfoView */
     private InfoView infoView;
     private RoleView roleView;
-    private InventoryView inventoryView;
+    private ColonyInventoryView colonyInventoryView;
     /* Views - GameView*/
     private GameView gameView;
     private WorldView worldView;

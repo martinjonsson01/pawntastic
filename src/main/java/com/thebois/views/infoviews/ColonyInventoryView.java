@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 
 import com.thebois.models.inventory.items.IItem;
 
-public class InventoryView {
+public class ColonyInventoryView {
 
     private final Skin skin;
     private final VerticalGroup root;
@@ -16,7 +16,7 @@ public class InventoryView {
      *
      * @param skin The skin to style widgets with
      */
-    public InventoryView(final Skin skin) {
+    public ColonyInventoryView(final Skin skin) {
         this.skin = skin;
 
         root = new VerticalGroup();
