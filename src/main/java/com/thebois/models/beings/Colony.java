@@ -67,6 +67,10 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         return colonyInventory.takeItem(itemType);
     }
 
+    public Integer getItemCount(ItemType itemType){
+        return colonyInventory.countItem(itemType);
+    }
+
     @Override
     public boolean tryIncreaseAllocation(final RoleType roleType) {
         final Optional<IBeing> idleBeing = findIdleBeings().stream().findAny();

@@ -64,4 +64,14 @@ public abstract class AbstractInventory {
         return false;
     }
 
+    public Integer countItem(final ItemType itemType) {
+        Integer count = 0;
+        for (final IItem item : itemHolder) {
+            if (item.getType().equals(itemType)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 }
