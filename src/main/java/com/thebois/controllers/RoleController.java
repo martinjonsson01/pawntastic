@@ -33,6 +33,7 @@ public class RoleController {
         roleView.updateRoles(RoleFactory.all()
                                         .stream()
                                         .map(AbstractRole::getType)
+                                        .filter(type -> !type.equals(RoleType.IDLE))
                                         .collect(Collectors.toList()));
 
         roleButtons = roleView.getRoleButtons();
