@@ -66,14 +66,8 @@ public class World implements IFinder {
     }
 
     private ITerrain[][] setUpTerrain(final int worldSize) {
-        final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
-                terrainMatrix[y][x] = new Grass(x, y);
-            }
-        }
-
-        return terrainMatrix;
+        final TerrainGenerator terrainGenerator = new TerrainGenerator();
+        return terrainGenerator.generateTerrainMatrix(worldSize);
     }
 
     private Optional<IResource>[][] setUpResources(final int worldSize) {

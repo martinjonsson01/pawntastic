@@ -7,6 +7,9 @@ public enum TerrainType {
     /**
      * The default ground terrain.
      */
-    GRASS
-
+    GRASS,
+    /**
+     * Terrain of type dirt.
+     */
+    DIRT
 }
