@@ -30,6 +30,7 @@ public class ColonyInventoryController {
      * Updates the world with up to date information about the inventory.
      */
     public void update() {
+        // e compare maps
         final Map<ItemType, Integer> inventoryInfo = createInventoryInfoMap();
         colonyInventoryView.update(inventoryInfo);
     }

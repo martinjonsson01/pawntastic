@@ -8,7 +8,6 @@ import java.util.Optional;
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
-import com.thebois.models.beings.IBeingGroup;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
