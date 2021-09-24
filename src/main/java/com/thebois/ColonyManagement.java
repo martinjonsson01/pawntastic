@@ -74,6 +74,7 @@ class ColonyManagement extends Game {
         createModels();
 
         // Views
+        if (DEBUG) createDebugView();
         createGameView();
         createInfoView();
 
