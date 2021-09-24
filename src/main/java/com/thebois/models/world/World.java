@@ -10,8 +10,12 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeingGroup;
 import com.thebois.models.beings.roles.IRoleAllocator;
+import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.terrains.Grass;
+import com.thebois.models.world.terrains.ITerrain;
+import com.thebois.models.world.terrains.TerrainType;
 import com.thebois.utils.MatrixUtils;
 
 /**
@@ -21,7 +25,7 @@ public class World implements IFinder {
 
     private final ITerrain[][] terrainMatrix;
     private final Optional<IStructure>[][] structureMatrix;
-    private final int pawnCount;
+    private final Optional<IResource>[][] resourceMatrix;
     private Colony colony;
 
     /**
@@ -31,22 +35,8 @@ public class World implements IFinder {
      * @param pawnCount The amount of beings to initialize the players' BeingGroup with
      */
     public World(final int worldSize, final int pawnCount) {
-        this.pawnCount = pawnCount;
-
-        terrainMatrix = new ITerrain[worldSize][worldSize];
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
-                terrainMatrix[y][x] = new Grass(x, y);
-            }
-        }
-        // Structures
-        structureMatrix = new Optional[worldSize][worldSize];
-        for (int y = 0; y < structureMatrix.length; y++) {
-            for (int x = 0; x < structureMatrix[y].length; x++) {
-                structureMatrix[y][x] = Optional.empty();
-            }
-        }
-        initColony();
+        this(worldSize, null);
+        initColony(pawnCount);
     }
 
     /**
@@ -56,24 +46,44 @@ public class World implements IFinder {
      * @param colony    The Colony that should be added to the world.
      */
     public World(final int worldSize, final Colony colony) {
-        pawnCount = colony.getBeings().size();
-        terrainMatrix = new ITerrain[worldSize][worldSize];
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
-                terrainMatrix[y][x] = new Grass(x, y);
-            }
-        }
-        // Structures
+        terrainMatrix = setUpTerrain(worldSize);
+
+        structureMatrix = setUpStructures(worldSize);
+        resourceMatrix = setUpResources(worldSize);
+
+        this.colony = colony;
+    }
+
+    private Optional<IStructure>[][] setUpStructures(final int worldSize) {
+        final Optional<IStructure>[][] structureMatrix;
         structureMatrix = new Optional[worldSize][worldSize];
         for (int y = 0; y < structureMatrix.length; y++) {
             for (int x = 0; x < structureMatrix[y].length; x++) {
                 structureMatrix[y][x] = Optional.empty();
             }
         }
-        this.colony = colony;
+        return structureMatrix;
     }
 
-    private void initColony() {
+    private ITerrain[][] setUpTerrain(final int worldSize) {
+        final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
+                terrainMatrix[y][x] = new Grass(x, y);
+            }
+        }
+
+        return terrainMatrix;
+    }
+
+    private Optional<IResource>[][] setUpResources(final int worldSize) {
+        final Optional<IResource>[][] resourceMatrix;
+        resourceMatrix = new Optional[worldSize][worldSize];
+
+        return resourceMatrix;
+    }
+
+    private void initColony(final int pawnCount) {
         colony = new Colony(findEmptyPositions(pawnCount));
     }
 
@@ -135,7 +145,7 @@ public class World implements IFinder {
      * @param posX The X coordinate where the structure should be built.
      * @param posY The Y coordinate where the structure should be built.
      *
-     * @return Whether or not the structure was built.
+     * @return Whether the structure was built.
      */
     public boolean createStructure(final int posX, final int posY) {
         final Position position = new Position(posX, posY);
@@ -152,7 +162,7 @@ public class World implements IFinder {
      *
      * @param position The position where the structure should be built.
      *
-     * @return Whether or not the structure was built.
+     * @return Whether the structure was built.
      */
     public boolean createStructure(final Position position) {
         return createStructure((int) position.getPosX(), (int) position.getPosY());

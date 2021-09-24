@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
-import com.thebois.models.world.ITerrain;
+import com.thebois.models.world.terrains.ITerrain;
 
 /**
  * World view handles all the drawing of the world itself and its information on how to draw it.

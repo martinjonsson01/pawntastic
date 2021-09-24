@@ -1,4 +1,4 @@
-package com.thebois.models.world;
+package com.thebois.models.world.terrains;
 
 /**
  * All the different types of terrain in the game.

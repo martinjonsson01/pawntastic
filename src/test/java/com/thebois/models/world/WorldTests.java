@@ -13,6 +13,8 @@ import org.mockito.Mockito;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.terrains.Grass;
+import com.thebois.models.world.terrains.ITerrain;
 
 import static org.assertj.core.api.Assertions.*;
 

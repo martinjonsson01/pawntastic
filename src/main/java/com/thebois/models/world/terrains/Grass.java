@@ -1,4 +1,4 @@
-package com.thebois.models.world;
+package com.thebois.models.world.terrains;
 
 import com.thebois.models.Position;
 

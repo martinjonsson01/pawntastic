@@ -11,10 +11,6 @@ public class PerlinNoiseGenerator {
     private double frequencyOffSet;
     private double persistence;
     private int seed;
-    private final int variable1 = 57;
-    private final int variable2 = 13;
-    private final int variable3 = 0x7fffffff;
-    private final int variable4 = 1073741824;
     private final int[] primeNumberArray = {
         15731,
         789221,
@@ -34,11 +30,11 @@ public class PerlinNoiseGenerator {
     /**
      * Instantiate a Perlin Noise Generator with given arguments.
      *
-     * @param octaves     A number equals or greater than 1, used for deciding how many times the
-     *                    noise should be added to it self.
+     * @param octaves     A number of equals or greater than 1, used for deciding how many times the
+     *                    noise should be added to itself.
      * @param amplitude   The amplitude used to amplify the resulting noise.
      * @param frequency   Used to decide how big the square should be.
-     * @param persistence Used to decided much the noise should change per addition. A number over 1
+     * @param persistence Used to decide much the noise should change per addition. A number over 1
      *                    would increase the change per addition and under 1 would decrease.
      * @param seed        A number used to generate the random table.
      */
@@ -84,6 +80,16 @@ public class PerlinNoiseGenerator {
         return (float) (total * this.amplitude);
     }
 
+    /**
+     * Create a perlin noise by interpolating noise using Perlin noise algorithm.
+     *
+     * @param coordinateX X coordinate for the noise map, should not be integer as that will return
+     *                    same perlin noise.
+     * @param coordinateY Y coordinate for the noise map, should not be integer as that will return
+     *                    same perlin noise.
+     *
+     * @return The Perlin noise
+     */
     private double interpolateNoise(final double coordinateX, final double coordinateY) {
         // Convert to integer
         final int integerX = (int) coordinateX;
@@ -153,6 +159,11 @@ public class PerlinNoiseGenerator {
     private double noise(final int coordinateX, final int coordinateY) {
         int temporaryValue1;
         int temporaryValue2;
+
+        int variable1 = 57;
+        int variable2 = 13;
+        int variable3 = 0x7fffffff;
+        int variable4 = 1073741824;
         final int resetValue = primeNumberArray.length / 3;
 
         final int primeNumber1 = primeNumberArray[currentOctave % resetValue];
@@ -165,7 +176,6 @@ public class PerlinNoiseGenerator {
         temporaryValue2 = temporaryValue1 * temporaryValue2 + primeNumber3;
 
         temporaryValue1 = temporaryValue2 & variable3;
-        // Result = 1 - T1 * V7
         final double result = 1.0f - temporaryValue1 / (double) variable4;
 
         return result;
@@ -180,8 +190,8 @@ public class PerlinNoiseGenerator {
     /**
      * Sets the Octaves setting to given int if int is equals or lager than 1.
      *
-     * @param octaves A number equals or greater than 1, used for deciding how many times the *
-     *                noise should be added to it self.
+     * @param octaves A number of equals or greater than 1, used for deciding how many times the *
+     *                noise should be added to itself.
      */
     public void setOctaves(final int octaves) {
         if (octaves >= 1) {
@@ -235,6 +245,11 @@ public class PerlinNoiseGenerator {
         return seed;
     }
 
+    /**
+     * Sets the seed to the given integer value.
+     *
+     * @param seed The seed value used to generate a random noise map.
+     */
     public void setSeed(final int seed) {
         this.seed = 2 * seed * seed;
     }
