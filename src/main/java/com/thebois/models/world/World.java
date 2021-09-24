@@ -175,7 +175,7 @@ public class World implements IFinder {
      *
      * @return the colony.
      */
-    public IBeingGroup getColony() {
+    public Colony getColony() {
         return colony;
     }
 

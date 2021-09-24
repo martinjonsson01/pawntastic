@@ -39,6 +39,7 @@ public class ColonyInventoryController {
         for (ItemType itemType : ItemType.values()) {
             inventoryInfo.put(itemType, colony.getItemCount(itemType));
         }
+        return inventoryInfo;
     }
 
 }

@@ -60,6 +60,7 @@ class ColonyManagement extends Game {
     private TerrainController terrainController;
     private StructureController structureController;
     private ColonyController colonyController;
+    private ColonyInventoryController colonyInventoryController;
 
     @Override
     public void create() {
@@ -135,9 +136,8 @@ class ColonyManagement extends Game {
                                                            tileSize,
                                                            gameView);
         this.colonyController = new ColonyController(world, colonyView);
-        this.ColonyInventoryController = new ColonyInventoryController(
-            colonyInventoryView,
-            world.getColony());
+        this.colonyInventoryController = new ColonyInventoryController(colonyInventoryView,
+                                                                       world.getColony());
         new RoleController(world.getRoleAllocator(), roleView);
     }
 
