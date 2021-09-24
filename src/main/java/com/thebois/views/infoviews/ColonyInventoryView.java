@@ -16,18 +16,19 @@ import com.thebois.utils.StringUtils;
  */
 public class ColonyInventoryView implements IActorView {
 
+    private static final float PADDING = 20f;
     private final Skin skin;
     private final VerticalGroup root;
 
     /**
      * Instantiates the view that renders inventory info.
      *
-     * @param skin The skin to style widgets with
+     * @param skin The skin to style widgets with.
      */
     public ColonyInventoryView(final Skin skin) {
         this.skin = skin;
 
-        root = new VerticalGroup();
+        root = new VerticalGroup().pad(PADDING);
         root.expand().fill();
     }
 
@@ -51,8 +52,9 @@ public class ColonyInventoryView implements IActorView {
         root.addActor(defaultInventoryLabel);
         for (var entry : inventoryInfo.entrySet()) {
             final String labelName = entry.getKey().name().toLowerCase(Locale.ROOT);
-            final String labelText =
-                StringUtils.capitalizeFirst(labelName + "s") + ": " + entry.getValue();
+            final String labelText = StringUtils.capitalizeFirst(labelName + "s")
+                                     + ": "
+                                     + entry.getValue();
             final Label inventoryInformationLabel = new Label(labelText, skin);
             root.addActor(inventoryInformationLabel);
         }
