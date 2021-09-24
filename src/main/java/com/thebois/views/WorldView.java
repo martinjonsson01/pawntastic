@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
-import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.world.terrains.ITerrain;
 import com.thebois.models.world.terrains.TerrainType;
 
@@ -22,14 +21,12 @@ public class WorldView implements IView {
     private final float tileSize;
     private ArrayList<ITerrain> terrainTiles = new ArrayList<>();
     private final Texture tileTexture;
-
     private static final Map<TerrainType, Color> TERRAIN_COLOR;
 
     static {
         TERRAIN_COLOR = new HashMap<>();
         TERRAIN_COLOR.put(TerrainType.GRASS, grassColor);
         TERRAIN_COLOR.put(TerrainType.DIRT, dirtColor);
-
     }
 
     /**
@@ -42,8 +39,6 @@ public class WorldView implements IView {
 
         tileTexture = TextureUtils.createSquareTexture(tileSize);
     }
-
-
 
     /**
      * Creates the world grid for the view.

@@ -33,14 +33,19 @@ public class WorldTests {
     @Test
     public void worldInitiated() {
         // Arrange
-        final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = new World(2, 5);
+        final int expectedWorldSize = 2;
+        final int expectedPawnCount = 4;
+        final World world = new World(expectedWorldSize, expectedPawnCount);
+        final int actualWorldSize;
+        final int actualPawnCount;
 
         // Act
-        final Collection<ITerrain> terrainTiles = world.getTerrainTiles();
+        actualWorldSize = (int) Math.sqrt(world.getTerrainTiles().size());
+        actualPawnCount = world.getColony().getBeings().size();
 
         // Assert
-        assertThat(terrainTiles).containsAll(expectedTerrainTiles);
+        assertThat(actualPawnCount).as("Pawn count").isEqualTo(expectedPawnCount);
+        assertThat(actualWorldSize).as("World size").isEqualTo(expectedWorldSize);
     }
 
     private Collection<ITerrain> mockTerrainTiles() {
