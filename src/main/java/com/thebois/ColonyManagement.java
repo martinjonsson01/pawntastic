@@ -155,6 +155,7 @@ class ColonyManagement extends Game {
         terrainController.update();
         colonyController.update();
         structureController.update();
+        colonyInventoryController.update();
     }
 
     private void initInputProcessors() {
