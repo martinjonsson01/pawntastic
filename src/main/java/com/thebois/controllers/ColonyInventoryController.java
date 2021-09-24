@@ -14,6 +14,7 @@ public class ColonyInventoryController {
 
     private final ColonyInventoryView colonyInventoryView;
     private final Colony colony;
+    private Map<ItemType, Integer> inventoryInfo;
 
     /**
      * Instantiates the controller with the view and a colony reference.
@@ -24,19 +25,22 @@ public class ColonyInventoryController {
     public ColonyInventoryController(ColonyInventoryView colonyInventoryView, Colony colony) {
         this.colonyInventoryView = colonyInventoryView;
         this.colony = colony;
+        inventoryInfo = createInventoryInfoMap();
     }
 
     /**
      * Updates the world with up to date information about the inventory.
      */
     public void update() {
-        // e compare maps
-        final Map<ItemType, Integer> inventoryInfo = createInventoryInfoMap();
-        colonyInventoryView.update(inventoryInfo);
+        final Map<ItemType, Integer> newInventoryInfo = createInventoryInfoMap();
+        if (!inventoryInfo.equals(newInventoryInfo)) {
+            inventoryInfo = newInventoryInfo;
+            colonyInventoryView.update(inventoryInfo);
+        }
     }
 
     private Map<ItemType, Integer> createInventoryInfoMap() {
-        final Map<ItemType, Integer> inventoryInfo = new HashMap<ItemType, Integer>();
+        final Map<ItemType, Integer> newInventoryInfo = new HashMap<ItemType, Integer>();
         for (ItemType itemType : ItemType.values()) {
             inventoryInfo.put(itemType, colony.getItemCount(itemType));
         }
