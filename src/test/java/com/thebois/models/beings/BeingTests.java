@@ -100,6 +100,20 @@ public class BeingTests {
     }
 
     @Test
+    public void setRoleWithNullThrowsException() {
+        // Arrange
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        final IBeing being = new Pawn(
+            new Position(0, 0),
+            new Position(1, 1),
+            new Random(),
+            pathFinder);
+
+        // Assert
+        assertThatThrownBy(() -> being.setRole(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     public void getPathReturnsEqualPositionsToPathFinder() {
         // Arrange
         final Random mockRandom = Mockito.mock(Random.class);
