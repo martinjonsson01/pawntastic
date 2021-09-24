@@ -11,13 +11,6 @@ public final class Position implements IDeepClonable<Position> {
     private float posY;
 
     /**
-     * Creates position at 0,0.
-     */
-    public Position() {
-        this(0, 0);
-    }
-
-    /**
      * Creates position at specified coordinates.
      *
      * @param posX The x-coordinate
@@ -26,6 +19,13 @@ public final class Position implements IDeepClonable<Position> {
     public Position(final float posX, final float posY) {
         this.posX = posX;
         this.posY = posY;
+    }
+
+    /**
+     * Creates position at 0,0.
+     */
+    public Position() {
+        this(0, 0);
     }
 
     /**
@@ -96,6 +96,7 @@ public final class Position implements IDeepClonable<Position> {
      *
      * @return a new Position object with the same coordinates.
      */
+    @Override
     public Position deepClone() {
         return new Position(this.posX, this.posY);
     }
