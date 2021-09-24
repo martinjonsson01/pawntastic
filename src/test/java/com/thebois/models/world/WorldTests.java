@@ -211,6 +211,46 @@ public class WorldTests {
     }
 
     @Test
+    public void instantiateWithPawnCountCreatesCorrectNumberOfBeings() {
+        // Arrange
+        final int pawnCount = 5;
+
+        // Act
+        final World world = new World(3, pawnCount);
+
+        // Assert
+        assertThat(world.getColony().getBeings()).size().isEqualTo(pawnCount);
+    }
+
+    @Test
+    public void instantiateWithPawnCountCreatesOnlyAsManyBeingsAsFitInTheWorld() {
+        // Arrange
+        final int pawnCount = 5;
+        final int pawnFitCount = 4;
+
+        // Act
+        final World world = new World(2, pawnCount);
+
+        // Assert
+        assertThat(world.getColony().getBeings()).size().isEqualTo(pawnFitCount);
+    }
+
+    /*@Test
+    public void instantiateWithPawnCountPlacesNoBeingsOnStructures() {
+        // Arrange
+        final int pawnCount = 3;
+        final Position structurePosition = new Position(0, 0);
+        final IStructure structure = Mockito.mock(IStructure.class);
+
+        // Act
+        final World world = new World(2, pawnCount);
+
+        // Assert
+        assertThat(world.getColony().getBeings()).allMatch(being -> !being.getPosition()
+                                                                          .equals(structurePosition));
+    }*/
+
+    @Test
     public void testsIfColonyGetsUpdate() {
         // Arrange
         final Colony colony = Mockito.mock(Colony.class);

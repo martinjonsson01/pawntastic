@@ -67,13 +67,47 @@ public class World implements IWorld, IFinder {
 
     private Iterable<Position> findEmptyPositions(final int count) {
         final List<Position> emptyPositions = new ArrayList<>();
-        MatrixUtils.forEachElement(terrainMatrix, terrain -> {
+        MatrixUtils.forEachElement(getCanonicalMatrix(), tile -> {
             if (emptyPositions.size() >= count) return;
-            if (terrain.getType().equals(TerrainType.GRASS)) {
-                emptyPositions.add(terrain.getPosition());
+            if (isWalkable(tile.getPosition())) {
+                emptyPositions.add(tile.getPosition());
             }
         });
         return emptyPositions;
+    }
+
+    /**
+     * The canonical matrix is a mash-up of all the different layers of the world. It replaces less
+     * important tiles like grass with a structure if it is located at the same coordinates.
+     *
+     * @return The canonical matrix
+     */
+    private ITile[][] getCanonicalMatrix() {
+        final ITile[][] canonicalMatrix = new ITile[worldSize][worldSize];
+        // Fill with terrain.
+        MatrixUtils.forEachElement(terrainMatrix, tile -> {
+            final Position position = tile.getPosition();
+            final int posY = (int) position.getPosY();
+            final int posX = (int) position.getPosX();
+            canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
+        });
+        // Replace terrain with any possible structure.
+        MatrixUtils.forEachElement(
+            structureMatrix,
+            maybeStructure -> maybeStructure.ifPresent(structure -> {
+                final Position position = structure.getPosition();
+                final int posY = (int) position.getPosY();
+                final int posX = (int) position.getPosX();
+                canonicalMatrix[posY][posX] = structure.deepClone();
+            }));
+        return canonicalMatrix;
+    }
+
+    private boolean isWalkable(final Position position) {
+        final int posY = (int) position.getPosY();
+        final int posX = (int) position.getPosX();
+        final boolean isStructure = getCanonicalMatrix()[posY][posX] instanceof IStructure;
+        return !isStructure;
     }
 
     /**
