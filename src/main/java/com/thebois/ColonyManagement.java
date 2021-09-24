@@ -16,15 +16,16 @@ import com.thebois.controllers.RoleController;
 import com.thebois.controllers.StructureController;
 import com.thebois.controllers.TerrainController;
 import com.thebois.models.world.World;
-import com.thebois.views.ColonyView;
+import com.thebois.views.gameviews.ColonyView;
 import com.thebois.views.GameScreen;
-import com.thebois.views.GameView;
-import com.thebois.views.IActorView;
+import com.thebois.views.gameviews.GameView;
+import com.thebois.views.infoviews.IActorView;
 import com.thebois.views.IView;
-import com.thebois.views.InfoView;
-import com.thebois.views.RoleView;
-import com.thebois.views.StructureView;
-import com.thebois.views.WorldView;
+import com.thebois.views.infoviews.InfoView;
+import com.thebois.views.infoviews.RoleView;
+import com.thebois.views.gameviews.StructureView;
+import com.thebois.views.gameviews.WorldView;
+import com.thebois.views.infoviews.InventoryView;
 
 /**
  * The main representation of the game.
@@ -46,6 +47,7 @@ class ColonyManagement extends Game {
     /* Views - InfoView */
     private InfoView infoView;
     private RoleView roleView;
+    private InventoryView inventoryView;
     /* Views - GameView*/
     private GameView gameView;
     private WorldView worldView;
