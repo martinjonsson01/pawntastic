@@ -21,7 +21,6 @@ public class World implements IWorld, IFinder {
 
     private final ITerrain[][] terrainMatrix;
     private final Optional<IStructure>[][] structureMatrix;
-    private final int pawnCount;
     private final int worldSize;
     private Colony colony;
 
@@ -32,23 +31,8 @@ public class World implements IWorld, IFinder {
      * @param pawnCount The amount of beings to initialize the players' BeingGroup with
      */
     public World(final int worldSize, final int pawnCount) {
-        this.worldSize = worldSize;
-        this.pawnCount = pawnCount;
-
-        terrainMatrix = new ITerrain[worldSize][worldSize];
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
-                terrainMatrix[y][x] = new Grass(x, y);
-            }
-        }
-        // Structures
-        structureMatrix = new Optional[worldSize][worldSize];
-        for (int y = 0; y < structureMatrix.length; y++) {
-            for (int x = 0; x < structureMatrix[y].length; x++) {
-                structureMatrix[y][x] = Optional.empty();
-            }
-        }
-        initColony();
+        this(worldSize, null);
+        this.colony = initColony(pawnCount);
     }
 
     /**
@@ -58,7 +42,8 @@ public class World implements IWorld, IFinder {
      * @param colony    The Colony that should be added to the world.
      */
     public World(final int worldSize, final Colony colony) {
-        pawnCount = colony.getBeings().size();
+        this.worldSize = worldSize;
+
         terrainMatrix = new ITerrain[worldSize][worldSize];
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
@@ -66,6 +51,7 @@ public class World implements IWorld, IFinder {
             }
         }
         // Structures
+        // noinspection unchecked
         structureMatrix = new Optional[worldSize][worldSize];
         for (int y = 0; y < structureMatrix.length; y++) {
             for (int x = 0; x < structureMatrix[y].length; x++) {
@@ -75,8 +61,8 @@ public class World implements IWorld, IFinder {
         this.colony = colony;
     }
 
-    private void initColony() {
-        colony = new Colony(findEmptyPositions(pawnCount), this);
+    private Colony initColony(final int pawnCount) {
+        return new Colony(findEmptyPositions(pawnCount), this);
     }
 
     private Iterable<Position> findEmptyPositions(final int count) {
@@ -132,6 +118,17 @@ public class World implements IWorld, IFinder {
     /**
      * Builds a structure at a given position if possible.
      *
+     * @param position The position where the structure should be built.
+     *
+     * @return Whether or not the structure was built.
+     */
+    public boolean createStructure(final Position position) {
+        return createStructure((int) position.getPosX(), (int) position.getPosY());
+    }
+
+    /**
+     * Builds a structure at a given position if possible.
+     *
      * @param posX The X coordinate where the structure should be built.
      * @param posY The Y coordinate where the structure should be built.
      *
@@ -145,17 +142,6 @@ public class World implements IWorld, IFinder {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Builds a structure at a given position if possible.
-     *
-     * @param position The position where the structure should be built.
-     *
-     * @return Whether or not the structure was built.
-     */
-    public boolean createStructure(final Position position) {
-        return createStructure((int) position.getPosX(), (int) position.getPosY());
     }
 
     private boolean isPositionPlaceable(final Position position) {

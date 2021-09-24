@@ -37,13 +37,21 @@ public class WorldTests {
     }
 
     public static Stream<Arguments> getPositionOutSideOfWorld() {
-        return Stream.of(
-            Arguments.of(new Position(-1, 0)),
-            Arguments.of(new Position(0, -1)),
-            Arguments.of(new Position(-1, -1)),
-            Arguments.of(new Position(-1000, -1000)),
-            Arguments.of(new Position(10000, 0)),
-            Arguments.of(new Position(0, 10000)));
+        return Stream.of(Arguments.of(new Position(-1, 0)),
+                         Arguments.of(new Position(0, -1)),
+                         Arguments.of(new Position(-1, -1)),
+                         Arguments.of(new Position(-1000, -1000)),
+                         Arguments.of(new Position(10000, 0)),
+                         Arguments.of(new Position(0, 10000)));
+    }
+
+    /* For a 2x2 world */
+    public static Stream<Arguments> getOutOfBoundsPositions() {
+        return Stream.of(Arguments.of(new Position(-1, 0)),
+                         Arguments.of(new Position(3, 0)),
+                         Arguments.of(new Position(0, -1)),
+                         Arguments.of(new Position(0, 3)),
+                         Arguments.of(new Position(-1, 3)));
     }
 
     @Test
@@ -98,7 +106,7 @@ public class WorldTests {
     public void getTileAtReturnsTileAtGivenPosition() {
         // Arrange
         final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = new World(2, 5);
+        final World world = new World(2, 0);
 
         for (final ITile tile : expectedTerrainTiles) {
             // Act
@@ -107,6 +115,17 @@ public class WorldTests {
             // Assert
             assertThat(tileAtPosition).isEqualTo(tile);
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getOutOfBoundsPositions")
+    public void getTileAtThrowsWhenOutOfBounds(final Position outOfBounds) {
+        // Arrange
+        final World world = new World(2, 0);
+
+        // Assert
+        assertThatThrownBy(() -> world.getTileAt(outOfBounds)).isInstanceOf(
+            IndexOutOfBoundsException.class);
     }
 
     @Test
