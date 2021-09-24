@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import com.thebois.controllers.ColonyController;
+import com.thebois.controllers.ColonyInventoryController;
 import com.thebois.controllers.RoleController;
 import com.thebois.controllers.StructureController;
 import com.thebois.controllers.TerrainController;
@@ -121,7 +122,8 @@ class ColonyManagement extends Game {
 
     private void createInfoView() {
         roleView = new RoleView(uiSkin);
-        final List<IActorView> widgetViews = List.of(roleView);
+        colonyInventoryView = new ColonyInventoryView(uiSkin);
+        final List<IActorView> widgetViews = List.of(roleView, colonyInventoryView);
         infoView = new InfoView(widgetViews);
     }
 
@@ -133,6 +135,9 @@ class ColonyManagement extends Game {
                                                            tileSize,
                                                            gameView);
         this.colonyController = new ColonyController(world, colonyView);
+        this.ColonyInventoryController = new ColonyInventoryController(
+            colonyInventoryView,
+            world.getColony());
         new RoleController(world.getRoleAllocator(), roleView);
     }
 

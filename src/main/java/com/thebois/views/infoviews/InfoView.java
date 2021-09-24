@@ -12,8 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-import com.thebois.views.infoviews.IActorView;
-
 /**
  * Displays info about the Colony to the player and allows them to interact with it.
  */

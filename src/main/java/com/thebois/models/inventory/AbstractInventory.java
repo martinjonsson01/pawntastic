@@ -64,6 +64,13 @@ public abstract class AbstractInventory {
         return false;
     }
 
+    /**
+     * Counts how many items are in the current inventory of the specified type.
+     *
+     * @param itemType The type to be counted
+     *
+     * @return The counter
+     */
     public Integer countItem(final ItemType itemType) {
         Integer count = 0;
         for (final IItem item : itemHolder) {

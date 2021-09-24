@@ -67,7 +67,14 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         return colonyInventory.takeItem(itemType);
     }
 
-    public Integer getItemCount(ItemType itemType){
+    /**
+     * Counts items of the specified the type in the colony inventory.
+     *
+     * @param itemType The type to be counted
+     *
+     * @return Number of the speceifed type in the inventory
+     */
+    public Integer getItemCount(ItemType itemType) {
         return colonyInventory.countItem(itemType);
     }
 
