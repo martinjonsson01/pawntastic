@@ -4,10 +4,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 
-import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.utils.StringUtils;
 
@@ -18,7 +18,6 @@ public class ColonyInventoryView implements IActorView {
 
     private final Skin skin;
     private final VerticalGroup root;
-    private Iterable<IItem> items;
 
     /**
      * Instantiates the view that renders inventory info.
@@ -40,7 +39,7 @@ public class ColonyInventoryView implements IActorView {
     /**
      * When new information is received the view is will update the information it is rendering.
      *
-     * @param inventoryInfo The infomation of the colony inventory.
+     * @param inventoryInfo The information of the colony inventory.
      */
     public void update(final Map<ItemType, Integer> inventoryInfo) {
         createLabels(inventoryInfo);
@@ -52,6 +51,8 @@ public class ColonyInventoryView implements IActorView {
             final String labelName = entry.getKey().name().toLowerCase(Locale.ROOT);
             final String labelText =
                 StringUtils.capitalizeFirst(labelName) + ": " + entry.getValue();
+            final Label inventoryInformationLabel = new Label(labelText, skin);
+            root.addActor(inventoryInformationLabel);
         }
     }
 
