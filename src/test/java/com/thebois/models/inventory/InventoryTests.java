@@ -45,4 +45,46 @@ public class InventoryTests {
         assertThat(item.getType()).isEqualTo(ItemType.LOG);
     }
 
+    @Test
+    public void testCountEmptyInventory() {
+        // Arrange
+        final AbstractInventory inventory = new ColonyInventory();
+
+        // Act
+        final int count = inventory.countItem(ItemType.ROCK);
+
+        // Assert
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Test
+    public void testCountIsNotZeroWhenInventoryGotSpecifiedItemTypeInIt() {
+        // Arrange
+        final AbstractInventory inventory = new ColonyInventory();
+
+        // Act
+        inventory.addItem(new Log());
+        inventory.addItem(new Log());
+
+        final int count = inventory.countItem(ItemType.LOG);
+
+        // Assert
+        assertThat(count).isEqualTo(2);
+    }
+
+    @Test
+    public void testCountIsZeroWhenInventoryNotGotSpecifiedItemType(){
+        // Arrange
+        final AbstractInventory inventory = new ColonyInventory();
+
+        // Act
+        inventory.addItem(new Log());
+        inventory.addItem(new Log());
+
+        final int count = inventory.countItem(ItemType.ROCK);
+
+        // Assert
+        assertThat(count).isEqualTo(0);
+    }
+
 }
