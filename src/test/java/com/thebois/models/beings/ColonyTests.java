@@ -12,6 +12,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import com.thebois.models.Position;
+import com.thebois.models.inventory.AbstractInventory;
+import com.thebois.models.inventory.ColonyInventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.Log;
@@ -94,6 +96,63 @@ public class ColonyTests {
 
         // Assert
         assertThat(item.getType()).isEqualTo(ItemType.LOG);
+    }
+
+    @Test
+    public void testCountEmptyInventory() {
+        // Arrange
+        final int beingCount = 1;
+        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(Mockito.mock(IBeing.class));
+        }
+        final Colony colony = new Colony(pawns);
+
+        // Act
+        final int count = colony.getItemCount(ItemType.ROCK);
+
+        // Assert
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Test
+    public void testCountIsNotZeroWhenInventoryGotSpecifiedItemTypeInIt() {
+        // Arrange
+        final int beingCount = 1;
+        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(Mockito.mock(IBeing.class));
+        }
+        final Colony colony = new Colony(pawns);
+
+        // Act
+        colony.addItemToColonyInventory(new Log());
+        colony.addItemToColonyInventory(new Log());
+
+        final int count = colony.getItemCount(ItemType.LOG);
+
+        // Assert
+        assertThat(count).isEqualTo(2);
+    }
+
+    @Test
+    public void testCountIsZeroWhenInventoryNotGotSpecifiedItemType(){
+        // Arrange
+        final int beingCount = 1;
+        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(Mockito.mock(IBeing.class));
+        }
+        final Colony colony = new Colony(pawns);
+
+        // Act
+        colony.addItemToColonyInventory(new Log());
+        colony.addItemToColonyInventory(new Log());
+
+        final int count = colony.getItemCount(ItemType.ROCK);
+
+        // Assert
+        assertThat(count).isEqualTo(0);
     }
 
 }

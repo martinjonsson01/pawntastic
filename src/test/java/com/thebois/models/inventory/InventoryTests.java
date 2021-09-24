@@ -33,6 +33,20 @@ public class InventoryTests {
     }
 
     @Test
+    public void getsNoItemWhenSpecifiedTypeDoesNotExistEvenIfInventoryIsNotEmpty(){
+        // Arrange
+        final AbstractInventory inventory = new ColonyInventory();
+
+        // Act
+        inventory.addItem(new Log());
+        inventory.addItem(new Log());
+        final IItem result = inventory.takeItem(ItemType.ROCK);
+
+        // Assert
+        assertThat(result).isEqualTo(null);
+    }
+
+    @Test
     public void canAddAndTakeItemToInventory() {
         // Arrange
         final AbstractInventory inventory = new ColonyInventory();
