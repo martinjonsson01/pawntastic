@@ -160,10 +160,10 @@ public class PerlinNoiseGenerator {
         int temporaryValue1;
         int temporaryValue2;
 
-        int variable1 = 57;
-        int variable2 = 13;
-        int variable3 = 0x7fffffff;
-        int variable4 = 1073741824;
+        final int variable1 = 57;
+        final int variable2 = 13;
+        final int variable3 = 0x7fffffff;
+        final int variable4 = 1073741824;
         final int resetValue = primeNumberArray.length / 3;
 
         final int primeNumber1 = primeNumberArray[currentOctave % resetValue];

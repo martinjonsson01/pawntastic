@@ -1,23 +1,36 @@
 package com.thebois.views;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.world.terrains.ITerrain;
+import com.thebois.models.world.terrains.TerrainType;
 
 /**
  * World view handles all the drawing of the world itself and its information on how to draw it.
  */
 public class WorldView implements IView {
 
-    private final Color grassColor = new Color(0.005f, 0.196f, 0.107f, 1);
+    private static final Color grassColor = new Color(0.005f, 0.196f, 0.107f, 1);
+    private static final Color dirtColor = Color.valueOf("#bbc200");
     private final float tileSize;
     private ArrayList<ITerrain> terrainTiles = new ArrayList<>();
-    private Texture grassTexture;
+    private final Texture tileTexture;
+
+    private static final Map<TerrainType, Color> TERRAIN_COLOR;
+
+    static {
+        TERRAIN_COLOR = new HashMap<>();
+        TERRAIN_COLOR.put(TerrainType.GRASS, grassColor);
+        TERRAIN_COLOR.put(TerrainType.DIRT, dirtColor);
+
+    }
 
     /**
      * Creates the WorldView with a tileSize.
@@ -27,17 +40,10 @@ public class WorldView implements IView {
     public WorldView(final float tileSize) {
         this.tileSize = tileSize;
 
-        createGrassTexture();
+        tileTexture = TextureUtils.createSquareTexture(tileSize);
     }
 
-    private void createGrassTexture() {
-        final int roundedTileSize = (int) this.tileSize;
-        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
-        pixmap.setColor(grassColor);
-        pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);
-        grassTexture = new Texture(pixmap);
-        pixmap.dispose();
-    }
+
 
     /**
      * Creates the world grid for the view.
@@ -51,9 +57,9 @@ public class WorldView implements IView {
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         for (final ITerrain terrain : terrainTiles) {
-
+            batch.setColor(TERRAIN_COLOR.get(terrain.getType()));
             batch.draw(
-                grassTexture,
+                tileTexture,
                 offsetX + terrain.getPosition().getPosX() * tileSize,
                 offsetY + terrain.getPosition().getPosY() * tileSize,
                 tileSize,
@@ -63,7 +69,7 @@ public class WorldView implements IView {
 
     @Override
     public void dispose() {
-        grassTexture.dispose();
+        tileTexture.dispose();
     }
 
 }

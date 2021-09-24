@@ -1,5 +1,7 @@
 package com.thebois.models.world;
 
+import java.util.Random;
+
 import com.thebois.models.world.terrains.AbstractTerrain;
 import com.thebois.models.world.terrains.Dirt;
 import com.thebois.models.world.terrains.Grass;
@@ -11,14 +13,15 @@ public class TerrainGenerator {
     PerlinNoiseGenerator terrainGenerator;
 
     TerrainGenerator() {
-        terrainGenerator = new PerlinNoiseGenerator(1, 1, 1, 1, 1);
+        final Random random = new Random();
+        terrainGenerator = new PerlinNoiseGenerator(4, 4, 0.05, 1, random.nextInt(Integer.MAX_VALUE));
     }
 
     public ITerrain[][] generateTerrainMatrix(final int worldSize) {
         final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
-                float height = terrainGenerator.perlinNoise(x,y);
+                final float height = terrainGenerator.perlinNoise(x, y);
                 if(height > 0.5){
                     terrainMatrix[y][x] = new Dirt(x,y);
                 }else{
