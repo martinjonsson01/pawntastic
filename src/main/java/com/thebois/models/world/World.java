@@ -83,7 +83,8 @@ public class World implements IFinder {
             if (emptyPositions.size() >= count) {
                 return;
             }
-            if (terrain.getType().equals(TerrainType.GRASS)) {
+            if (terrain.getType().equals(TerrainType.GRASS) || terrain.getType()
+                                                                      .equals(TerrainType.DIRT)) {
                 emptyPositions.add(terrain.getPosition());
             }
         });

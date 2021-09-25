@@ -21,21 +21,26 @@ import static org.assertj.core.api.Assertions.*;
 public class WorldTests {
 
     public static Stream<Arguments> getPositionOutSideOfWorld() {
-        return Stream.of(
-            Arguments.of(new Position(-1, 0)),
-            Arguments.of(new Position(0, -1)),
-            Arguments.of(new Position(-1, -1)),
-            Arguments.of(new Position(-1000, -1000)),
-            Arguments.of(new Position(10000, 0)),
-            Arguments.of(new Position(0, 10000)));
+        return Stream.of(Arguments.of(new Position(-1, 0)),
+                         Arguments.of(new Position(0, -1)),
+                         Arguments.of(new Position(-1, -1)),
+                         Arguments.of(new Position(-1000, -1000)),
+                         Arguments.of(new Position(10000, 0)),
+                         Arguments.of(new Position(0, 10000)));
     }
 
-    @Test
-    public void worldInitiated() {
+    public static Stream<Arguments> getWorldSizeAndPawnCount() {
+        return Stream.of(Arguments.of(2, 4),
+                         Arguments.of(100, 40),
+                         Arguments.of(25, 5),
+                         Arguments.of(10, 100));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getWorldSizeAndPawnCount")
+    public void worldInitiated(final int worldSize, final int pawnCount) {
         // Arrange
-        final int expectedWorldSize = 2;
-        final int expectedPawnCount = 4;
-        final World world = new World(expectedWorldSize, expectedPawnCount);
+        final World world = new World(worldSize, pawnCount);
         final int actualWorldSize;
         final int actualPawnCount;
 
@@ -44,8 +49,8 @@ public class WorldTests {
         actualPawnCount = world.getColony().getBeings().size();
 
         // Assert
-        assertThat(actualPawnCount).as("Pawn count").isEqualTo(expectedPawnCount);
-        assertThat(actualWorldSize).as("World size").isEqualTo(expectedWorldSize);
+        assertThat(actualPawnCount).as("Pawn count").isEqualTo(pawnCount);
+        assertThat(actualWorldSize).as("World size").isEqualTo(worldSize);
     }
 
     private Collection<ITerrain> mockTerrainTiles() {
