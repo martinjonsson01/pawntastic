@@ -2,6 +2,7 @@ package com.thebois.utils;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -17,11 +18,28 @@ import static org.mockito.Mockito.*;
 public class MatrixUtilsTests {
 
     public static Stream<Arguments> getMatricesAndTheirElements() {
-        return Stream.of(Arguments.of(new Integer[][] { { 1 }, { 2 } }, List.of(1, 2)),
-                         Arguments.of(new Integer[][] { { 1, 2 }, { 3, 4 } }, List.of(1, 2, 3, 4)),
-                         Arguments.of(new Integer[][] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } },
-                                      List.of(1, 2, 3, 4, 5, 6, 7, 8, 9)),
-                         Arguments.of(new Integer[][] { { -1 } }, List.of(-1)));
+        return Stream.of(
+            Arguments.of(new Integer[][] { { 1 }, { 2 } }, List.of(1, 2)),
+            Arguments.of(new Integer[][] { { 1, 2 }, { 3, 4 } }, List.of(1, 2, 3, 4)),
+            Arguments.of(
+                new Integer[][] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } },
+                List.of(1, 2, 3, 4, 5, 6, 7, 8, 9)),
+            Arguments.of(new Integer[][] { { -1 } }, List.of(-1)));
+    }
+
+    public static Stream<Arguments> getMatricesToTest() {
+        return Stream.of(
+            Arguments.of(new Optional[][] {
+                { Optional.of("1"), Optional.empty(), Optional.of("3") },
+                { Optional.empty(), Optional.empty(), Optional.of("6") },
+                { Optional.of("7"), Optional.of("8"), Optional.of("9") },
+                }, List.of("1", "3", "6", "7", "8", "9")),
+
+            Arguments.of(new Optional[][] {
+                { Optional.of("1"), Optional.of("1") },
+                { Optional.of("1"), Optional.of("1") },
+                { Optional.of("7"), Optional.of("8") },
+                }, List.of("1", "1", "1", "1", "7", "8")));
     }
 
     @SuppressWarnings("unchecked")
@@ -42,6 +60,19 @@ public class MatrixUtilsTests {
                .accept(elementCaptor.capture());
         final List<Integer> actualElements = elementCaptor.getAllValues();
         assertThat(actualElements).containsExactlyElementsOf(expectedElements);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getMatricesToTest")
+    public void matrixToCollectionTest(final Optional<String>[][] matrix,
+                                       final Collection<String> expectedElements) {
+        // Arrange
+
+        // Act
+        final Collection<String> stringCollection = MatrixUtils.matrixToCollection(matrix);
+
+        // Assert
+        assertThat(stringCollection).isEqualTo(expectedElements);
     }
 
 }

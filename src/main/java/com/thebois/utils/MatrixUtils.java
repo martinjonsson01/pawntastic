@@ -1,5 +1,8 @@
 package com.thebois.utils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -9,6 +12,21 @@ public final class MatrixUtils {
 
     private MatrixUtils() {
 
+    }
+
+    /**
+     * Turns a matrix into a Collection of type TElement.
+     *
+     * @param matrix     Matrix to be transformed
+     * @param <TElement> Type of matrix element
+     *
+     * @return Returns the matrix in collection form
+     */
+    public static <TElement> Collection<TElement> matrixToCollection(
+        final Optional<TElement>[][] matrix) {
+        final Collection<TElement> matrixCollection = new ArrayList<>();
+        MatrixUtils.forEachElement(matrix, elem -> elem.ifPresent(matrixCollection::add));
+        return matrixCollection;
     }
 
     /**
