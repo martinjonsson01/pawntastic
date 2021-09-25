@@ -177,9 +177,8 @@ public class PerlinNoiseGenerator {
         temporaryValue2 = temporaryValue1 * temporaryValue2 + primeNumber3;
 
         temporaryValue1 = temporaryValue2 & variable3;
-        final float result = 1.0f - temporaryValue1 / (float) variable4;
 
-        return result;
+        return 1.0f - temporaryValue1 / (float) variable4;
     }
 
     // Getters and Setters
