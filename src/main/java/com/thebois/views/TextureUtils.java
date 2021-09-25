@@ -31,8 +31,15 @@ public final class TextureUtils {
         return circleTexture;
     }
 
-    public static Texture createSquareTexture(final float tileSize) {
-        final int roundedTileSize = (int) tileSize;
+    /**
+     * Creates a new instance of a square shaped texture with the side length.
+     *
+     * @param sideLength The size of the square texture, in pixels.
+     *
+     * @return The square texture.
+     */
+    public static Texture createSquareTexture(final float sideLength) {
+        final int roundedTileSize = (int) sideLength;
         final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);

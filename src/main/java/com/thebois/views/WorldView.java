@@ -16,18 +16,19 @@ import com.thebois.models.world.terrains.TerrainType;
  */
 public class WorldView implements IView {
 
-    private static final Color grassColor = new Color(0.005f, 0.196f, 0.107f, 1);
-    private static final Color dirtColor = Color.valueOf("#bbc200");
-    private final float tileSize;
-    private ArrayList<ITerrain> terrainTiles = new ArrayList<>();
-    private final Texture tileTexture;
+    private static final Color GRASS_COLOR = new Color(0.005f, 0.196f, 0.107f, 1);
+    private static final Color DIRT_COLOR = Color.valueOf("#bbc200");
     private static final Map<TerrainType, Color> TERRAIN_COLOR;
 
     static {
         TERRAIN_COLOR = new HashMap<>();
-        TERRAIN_COLOR.put(TerrainType.GRASS, grassColor);
-        TERRAIN_COLOR.put(TerrainType.DIRT, dirtColor);
+        TERRAIN_COLOR.put(TerrainType.GRASS, GRASS_COLOR);
+        TERRAIN_COLOR.put(TerrainType.DIRT, DIRT_COLOR);
     }
+
+    private final float tileSize;
+    private ArrayList<ITerrain> terrainTiles = new ArrayList<>();
+    private final Texture tileTexture;
 
     /**
      * Creates the WorldView with a tileSize.

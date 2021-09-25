@@ -13,8 +13,8 @@ import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
-import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
+import com.thebois.models.world.terrains.TerrainGenerator;
 import com.thebois.models.world.terrains.TerrainType;
 import com.thebois.utils.MatrixUtils;
 
@@ -47,7 +47,6 @@ public class World implements IFinder {
      */
     public World(final int worldSize, final Colony colony) {
         terrainMatrix = setUpTerrain(worldSize);
-
         structureMatrix = setUpStructures(worldSize);
         resourceMatrix = setUpResources(worldSize);
 
@@ -55,14 +54,14 @@ public class World implements IFinder {
     }
 
     private Optional<IStructure>[][] setUpStructures(final int worldSize) {
-        final Optional<IStructure>[][] structureMatrix;
-        structureMatrix = new Optional[worldSize][worldSize];
-        for (int y = 0; y < structureMatrix.length; y++) {
-            for (int x = 0; x < structureMatrix[y].length; x++) {
-                structureMatrix[y][x] = Optional.empty();
+        final Optional<IStructure>[][] structuresMatrix;
+        structuresMatrix = new Optional[worldSize][worldSize];
+        for (int y = 0; y < structuresMatrix.length; y++) {
+            for (int x = 0; x < structuresMatrix[y].length; x++) {
+                structuresMatrix[y][x] = Optional.empty();
             }
         }
-        return structureMatrix;
+        return structuresMatrix;
     }
 
     private ITerrain[][] setUpTerrain(final int worldSize) {
@@ -71,10 +70,7 @@ public class World implements IFinder {
     }
 
     private Optional<IResource>[][] setUpResources(final int worldSize) {
-        final Optional<IResource>[][] resourceMatrix;
-        resourceMatrix = new Optional[worldSize][worldSize];
-
-        return resourceMatrix;
+        return new Optional[worldSize][worldSize];
     }
 
     private void initColony(final int pawnCount) {
@@ -126,8 +122,8 @@ public class World implements IFinder {
     public Collection<IStructure> getStructures() {
         final Collection<IStructure> copy = new ArrayList<>();
         for (final Optional<IStructure>[] matrix : structureMatrix) {
-            for (final Optional<IStructure> structure : matrix) {
-                structure.ifPresent(iStructure -> copy.add(iStructure.deepClone()));
+            for (final Optional<IStructure> maybeStructure : matrix) {
+                maybeStructure.ifPresent(structure -> copy.add(structure.deepClone()));
             }
         }
         return copy;
