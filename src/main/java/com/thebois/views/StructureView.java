@@ -33,12 +33,11 @@ public final class StructureView implements IView {
         for (final IStructure structure : structures) {
             // Generate color based on structure completeness
             batch.setColor(getHouseColor(structure));
-            batch.draw(
-                houseTexture,
-                offsetX + structure.getPosition().getPosX() * tileSize,
-                offsetY + structure.getPosition().getPosY() * tileSize,
-                tileSize,
-                tileSize);
+            batch.draw(houseTexture,
+                       offsetX + structure.getPosition().getPosX() * tileSize,
+                       offsetY + structure.getPosition().getPosY() * tileSize,
+                       tileSize,
+                       tileSize);
         }
     }
 
@@ -51,8 +50,9 @@ public final class StructureView implements IView {
         pixmap.dispose();
     }
 
+    // Houses get different colors based on built status
     private Color getHouseColor(final IStructure structure) {
-        return new Color(0f, structure.builtStatus(), 1f, 1.0f);
+        return new Color(structure.builtStatus() / 2 + 0.5f, 0f, 0f, 1.0f);
     }
 
     /**
@@ -60,7 +60,7 @@ public final class StructureView implements IView {
      *
      * @param updatedStructures The structures that are to be displayed.
      */
-    public void update(Iterable<IStructure> updatedStructures) {
+    public void update(final Iterable<IStructure> updatedStructures) {
         this.structures = updatedStructures;
     }
 

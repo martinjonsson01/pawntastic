@@ -51,7 +51,7 @@ public class StructureController extends AbstractInputProcessor {
             final int worldPosX = (int) ((worldSpaceCoordinates.x - offSetX) / tileSize);
             final int worldPosY = (int) ((worldSpaceCoordinates.y - offSetY) / tileSize);
             if (world.createStructure(worldPosX, worldPosY)) {
-                structureView.update(world.getStructures());
+                structureView.update(world.getStructureCollection());
                 return true;
             }
         }
@@ -62,6 +62,7 @@ public class StructureController extends AbstractInputProcessor {
      * Updates the view with data from the world.
      */
     public void update() {
+        structureView.update(world.getStructureCollection());
     }
 
 }

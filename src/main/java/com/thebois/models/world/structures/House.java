@@ -1,11 +1,14 @@
 package com.thebois.models.world.structures;
 
 import com.thebois.models.Position;
+import com.thebois.models.world.inventory.IItem;
 
 /**
  * A structure of type House.
  */
 public class House extends AbstractStructure {
+
+    private float builtRatio = 0;
 
     /**
      * Creates a house structure at a given position in the world.
@@ -24,6 +27,17 @@ public class House extends AbstractStructure {
      */
     public House(final Position position) {
         super(position, StructureType.HOUSE);
+    }
+
+    @Override
+    public boolean deliverItem(final IItem deliveredItem) {
+        builtRatio = (builtRatio + 0.01f) % 1f;
+        return true;
+    }
+
+    @Override
+    public float builtStatus() {
+        return builtRatio;
     }
 
     @Override
