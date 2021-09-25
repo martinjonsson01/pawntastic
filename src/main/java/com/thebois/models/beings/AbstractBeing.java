@@ -1,10 +1,14 @@
 package com.thebois.models.beings;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.world.inventory.IItem;
+import com.thebois.models.world.structures.IStructure;
 
 /**
  * An abstract implementation of IBeing.
@@ -72,6 +76,37 @@ public abstract class AbstractBeing implements IBeing {
     @Override
     public void update() {
         move();
+    }
+
+    @Override
+    public void updateKnownStructures(final Collection<IStructure> structures) {
+        final Optional<IStructure> closestStructure = findClosetStructure(structures);
+        if (closestStructure.isPresent()) {
+            closestStructure.get().deliverItem(new IItem() {
+            });
+        }
+    }
+
+    private Optional<IStructure> findClosetStructure(final Collection<IStructure> structures) {
+        IStructure closestStructure = null;
+
+        float shortestDistance = 0;
+        float currentDistance;
+
+        boolean firstSearch = true;
+
+        for (final IStructure structure : structures) {
+            currentDistance = structure.getPosition().distanceTo(this.currentPosition);
+            if (firstSearch) {
+                shortestDistance = currentDistance;
+                firstSearch = false;
+            }
+
+            if (currentDistance < shortestDistance) {
+                closestStructure = structure;
+            }
+        }
+        return Optional.ofNullable(closestStructure);
     }
 
     /**

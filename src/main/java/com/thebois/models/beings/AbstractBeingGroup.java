@@ -3,12 +3,15 @@ package com.thebois.models.beings;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.thebois.models.world.structures.IStructure;
+
 /**
  * An abstract implementation of IBeingGroup.
  */
 public abstract class AbstractBeingGroup implements IBeingGroup {
 
     private Collection<IBeing> beings = new ArrayList<>();
+    private Collection<IStructure> knownStructures;
 
     /**
      * Adds a being to the internal collection of beings.
@@ -22,6 +25,7 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
     @Override
     public void update() {
         for (final IBeing being : this.beings) {
+            being.updateKnownStructures(this.knownStructures);
             being.update();
         }
     }
@@ -35,6 +39,11 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
 
     protected void setBeings(final Collection<IBeing> beings) {
         this.beings = beings;
+    }
+
+    @Override
+    public void updateKnownStructures(final Collection<IStructure> structures) {
+        this.knownStructures = structures;
     }
 
 }

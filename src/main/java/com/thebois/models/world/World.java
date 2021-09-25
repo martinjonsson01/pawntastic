@@ -189,9 +189,19 @@ public class World implements IFinder {
     }
 
     /**
+     * Returns the IStructureMatrix as a collection of IStructure.
+     *
+     * @return IStructure collection
+     */
+    public Collection<IStructure> getStructureCollection() {
+        return MatrixUtils.matrixToCollection(this.structureMatrix);
+    }
+
+    /**
      * Updates the state of the world.
      */
     public void update() {
+        colony.updateKnownStructures(getStructureCollection());
         colony.update();
     }
 
