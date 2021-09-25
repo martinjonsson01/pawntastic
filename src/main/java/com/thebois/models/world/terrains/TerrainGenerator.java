@@ -18,9 +18,9 @@ public class TerrainGenerator {
     public TerrainGenerator() {
         final Random random = new Random();
         final int octaves = 4;
-        final double amplitude = 4;
-        final double frequency = 0.05;
-        final double persistence = 1.0;
+        final float amplitude = 4f;
+        final float frequency = 0.05f;
+        final float persistence = 1.0f;
         final int seed = random.nextInt(Integer.MAX_VALUE);
         terrainGenerator = new PerlinNoiseGenerator(octaves,
                                                     amplitude,

@@ -7,8 +7,8 @@ public class PerlinNoiseGenerator {
 
     private int octaves = 1;
     private int currentOctave;
-    private double amplitude;
-    private double frequencyOffSet;
+    private float amplitude;
+    private double frequency;
     private double persistence;
     private int seed;
     private final int[] primeNumberArray = {
@@ -30,22 +30,23 @@ public class PerlinNoiseGenerator {
     /**
      * Instantiate a Perlin Noise Generator with given arguments.
      *
-     * @param octaves     A number of equals or greater than 1, used for deciding how many times the
-     *                    noise should be added to itself.
+     * @param octaves     Number of octaves used for generating perlin noise, A number equal or
+     *                    greater than 1.
      * @param amplitude   The amplitude used to amplify the resulting noise.
      * @param frequency   Used to decide how big the square should be.
-     * @param persistence Used to decide much the noise should change per addition. A number over 1
-     *                    would increase the change per addition and under 1 would decrease.
+     * @param persistence Used to decide much the noise should change per addition.
      * @param seed        A number used to generate the random table.
+     *
+     * @throws IllegalArgumentException If octaves is less than 1.
      */
     public PerlinNoiseGenerator(final int octaves,
-                                final double amplitude,
+                                final float amplitude,
                                 final double frequency,
                                 final double persistence,
                                 final int seed) {
         setOctaves(octaves);
         this.amplitude = amplitude;
-        this.frequencyOffSet = frequency;
+        this.frequency = frequency;
         this.persistence = persistence;
         setSeed(seed);
     }
@@ -71,10 +72,10 @@ public class PerlinNoiseGenerator {
         for (int i = 0; i < octaves; i++) {
             currentOctave = i;
             final double octaveAmplification = Math.pow(persistence, i);
-            final double frequency = this.frequencyOffSet * Math.pow(2, i);
+            final double frequencyOffSet = this.frequency * Math.pow(2, i);
 
-            total = total + interpolateNoise(coordinateX * frequency + seed,
-                                             coordinateY * frequency + seed)
+            total = total + interpolateNoise(coordinateX * frequencyOffSet + seed,
+                                             coordinateY * frequencyOffSet + seed)
                             * octaveAmplification;
         }
         return (float) (total * this.amplitude);
@@ -91,21 +92,21 @@ public class PerlinNoiseGenerator {
      * @return The Perlin noise
      */
     private double interpolateNoise(final double coordinateX, final double coordinateY) {
-        // Convert to integer
+        // Convert to integers
         final int integerX = (int) coordinateX;
         final int integerY = (int) coordinateY;
 
-        // Get fractal
+        // Get fractals
         final double fractalX = coordinateX - integerX;
         final double fractalY = coordinateY - integerY;
 
-        // Get gradient Vectors
+        // Get gradients
         final double vector1 = smoothNoise(integerX, integerY);
         final double vector2 = smoothNoise(integerX + 1, integerY);
         final double vector3 = smoothNoise(integerX, integerY + 1);
         final double vector4 = smoothNoise(integerX + 1, integerY + 1);
 
-        // Interpolate Vectors
+        // Interpolate gradients
         final double interpolation1 = interpolate(vector1, vector2, fractalX);
         final double interpolation2 = interpolate(vector3, vector4, fractalX);
 
@@ -127,23 +128,23 @@ public class PerlinNoiseGenerator {
 
     private double smoothNoise(final int coordinateX, final int coordinateY) {
         // Corners
-        final double corner1 = noise(coordinateX - 1, coordinateY - 1);
-        final double corner2 = noise(coordinateX - 1, coordinateY + 1);
-        final double corner3 = noise(coordinateX + 1, coordinateY - 1);
-        final double corner4 = noise(coordinateX + 1, coordinateY + 1);
+        final float corner1 = noise(coordinateX - 1, coordinateY - 1);
+        final float corner2 = noise(coordinateX - 1, coordinateY + 1);
+        final float corner3 = noise(coordinateX + 1, coordinateY - 1);
+        final float corner4 = noise(coordinateX + 1, coordinateY + 1);
 
         final double corners = (corner1 + corner2 + corner3 + corner4) / 16;
 
         // Sides
-        final double side1 = noise(coordinateX - 1, coordinateY);
-        final double side2 = noise(coordinateX + 1, coordinateY);
-        final double side3 = noise(coordinateX, coordinateY - 1);
-        final double side4 = noise(coordinateX, coordinateY + 1);
+        final float side1 = noise(coordinateX - 1, coordinateY);
+        final float side2 = noise(coordinateX + 1, coordinateY);
+        final float side3 = noise(coordinateX, coordinateY - 1);
+        final float side4 = noise(coordinateX, coordinateY + 1);
 
-        final double sides = (side1 + side2 + side3 + side4) / 8;
+        final float sides = (side1 + side2 + side3 + side4) / 8;
 
         // Center
-        final double center = noise(coordinateX, coordinateY) / 4;
+        final float center = noise(coordinateX, coordinateY) / 4;
 
         return center + sides + corners;
     }
@@ -156,7 +157,7 @@ public class PerlinNoiseGenerator {
      *
      * @return The generated noise.
      */
-    private double noise(final int coordinateX, final int coordinateY) {
+    private float noise(final int coordinateX, final int coordinateY) {
         int temporaryValue1;
         int temporaryValue2;
 
@@ -176,7 +177,7 @@ public class PerlinNoiseGenerator {
         temporaryValue2 = temporaryValue1 * temporaryValue2 + primeNumber3;
 
         temporaryValue1 = temporaryValue2 & variable3;
-        final double result = 1.0f - temporaryValue1 / (double) variable4;
+        final float result = 1.0f - temporaryValue1 / (float) variable4;
 
         return result;
     }
@@ -190,16 +191,19 @@ public class PerlinNoiseGenerator {
     /**
      * Sets the Octaves setting to given int if int is equals or lager than 1.
      *
-     * @param octaves A number of equals or greater than 1, used for deciding how many times the *
-     *                noise should be added to itself.
+     * @param octaves Number of octaves used for generating perlin noise, A number equal or greater
+     *                than 1.
+     *
+     * @throws IllegalArgumentException if octaves is less than 1.
      */
     public void setOctaves(final int octaves) {
-        if (octaves >= 1) {
-            this.octaves = octaves;
+        if (octaves < 1) {
+            throw new IllegalArgumentException("Octaves must be equals or greater than 1");
         }
+        this.octaves = octaves;
     }
 
-    public double getAmplitude() {
+    public float getAmplitude() {
         return amplitude;
     }
 
@@ -209,22 +213,22 @@ public class PerlinNoiseGenerator {
      * @param amplitude The amplitude used to amplify the resulting noise. This value should not be
      *                  0.
      */
-    public void setAmplitude(final double amplitude) {
+    public void setAmplitude(final float amplitude) {
         this.amplitude = amplitude;
     }
 
-    public double getFrequencyOffSet() {
-        return frequencyOffSet;
+    public double getFrequency() {
+        return frequency;
     }
 
     /**
      * Sets the frequency value to given float value.
      *
-     * @param frequencyOffSet The frequency value is used to decide how one value can change from
-     *                        another. This value should be between 0 and 1.
+     * @param frequency The frequency value is used to decide how one value can change from another.
+     *                  This value should be between 0 and 1.
      */
-    public void setFrequencyOffSet(final double frequencyOffSet) {
-        this.frequencyOffSet = frequencyOffSet;
+    public void setFrequency(final double frequency) {
+        this.frequency = frequency;
     }
 
     public double getPersistence() {
@@ -251,7 +255,7 @@ public class PerlinNoiseGenerator {
      * @param seed The seed value used to generate a random noise map.
      */
     public void setSeed(final int seed) {
-        this.seed = 2 * seed * seed;
+        this.seed = seed;
     }
 
 }
