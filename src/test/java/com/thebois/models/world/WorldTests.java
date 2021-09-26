@@ -90,8 +90,8 @@ public class WorldTests {
 
     @ParameterizedTest
     @MethodSource("getTileAndNeighbours")
-    public void getNeighboursOfReturnsExpectedNeighbours(final ITile tile,
-                                                         final Iterable<ITile> expectedNeighbours) {
+    public void getNeighboursOfReturnsExpectedNeighbours(
+        final ITile tile, final Iterable<ITile> expectedNeighbours) {
         // Arrange
         final IWorld world = new World(3, 0);
 

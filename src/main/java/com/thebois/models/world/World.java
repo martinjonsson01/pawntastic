@@ -79,10 +79,8 @@ public class World implements IWorld, IFinder {
      * <p>
      * Warning: expensive method, do not call every frame!
      * </p>
-     *
-     * @return The canonical matrix
      */
-    private ITile[][] repopulateCanonicalMatrix() {
+    private void repopulateCanonicalMatrix() {
         // Fill with terrain.
         MatrixUtils.forEachElement(terrainMatrix, tile -> {
             final Position position = tile.getPosition();
@@ -91,32 +89,23 @@ public class World implements IWorld, IFinder {
             canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
         });
         // Replace terrain with any possible structure.
-        MatrixUtils.forEachElement(structureMatrix,
-                                   maybeStructure -> maybeStructure.ifPresent(structure -> {
-                                       final Position position = structure.getPosition();
-                                       final int posY = (int) position.getPosY();
-                                       final int posX = (int) position.getPosX();
-                                       canonicalMatrix[posY][posX] = structure.deepClone();
-                                   }));
-        return canonicalMatrix;
+        MatrixUtils.forEachElement(
+            structureMatrix,
+            maybeStructure -> maybeStructure.ifPresent(structure -> {
+                final Position position = structure.getPosition();
+                final int posY = (int) position.getPosY();
+                final int posX = (int) position.getPosX();
+                canonicalMatrix[posY][posX] = structure.deepClone();
+            }));
     }
 
     private Iterable<Position> findEmptyPositions(final int count) {
         final List<Position> emptyPositions = new ArrayList<>();
         MatrixUtils.forEachElement(canonicalMatrix, tile -> {
             if (emptyPositions.size() >= count) return;
-            if (isWalkable(tile.getPosition())) {
-                emptyPositions.add(tile.getPosition());
-            }
+            emptyPositions.add(tile.getPosition());
         });
         return emptyPositions;
-    }
-
-    private boolean isWalkable(final Position position) {
-        final int posY = (int) position.getPosY();
-        final int posX = (int) position.getPosX();
-        final boolean isStructure = canonicalMatrix[posY][posX] instanceof IStructure;
-        return !isStructure;
     }
 
     /**
