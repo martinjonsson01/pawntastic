@@ -12,6 +12,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import com.thebois.models.Position;
+import com.thebois.models.world.World;
+import com.thebois.models.world.structures.IStructure;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -73,6 +77,38 @@ public class MatrixUtilsTests {
 
         // Assert
         assertThat(stringCollection).isEqualTo(expectedElements);
+    }
+
+    private static Stream<Arguments> getCorrectCoordinatesToTest() {
+        final Optional<String>[][] stringOptionalMatrix = new Optional[][] {
+            { Optional.of("1"), Optional.empty(), Optional.of("3") },
+            { Optional.empty(), Optional.empty(), Optional.of("6") },
+            { Optional.of("7"), Optional.of("8"), Optional.of("9") },
+            };
+
+        return Stream.of(Arguments.of(stringOptionalMatrix, 0, 0, "1"),
+                         Arguments.of(stringOptionalMatrix, 2, 2, "9")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("getCorrectCoordinatesToTest")
+    public void testMatrixSpiralSearch(final Optional<String>[][] stringMatrix, final int startX,
+                                         final int startY,
+                                         final String expectedString) {
+
+        // Arrange
+
+        // Act
+        final Optional<String> foundStructure = MatrixUtils.matrixSpiralSearch(stringMatrix, startX, startY, 3);
+
+        // Assert
+        if (foundStructure.isPresent()) {
+            assertThat(foundStructure.get()).isEqualTo(expectedString);
+        }
+        else {
+            assertThat(foundStructure.isEmpty()).isEqualTo(false);
+        }
     }
 
 }

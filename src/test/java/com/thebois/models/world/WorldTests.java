@@ -191,7 +191,12 @@ public class WorldTests {
             startY));
 
         // Assert
-        assertThat(foundStructure.get().getPosition()).isEqualTo(new Position(endX, endY));
+        if (foundStructure.isPresent()) {
+            assertThat(foundStructure.get().getPosition()).isEqualTo(new Position(endX, endY));
+        }
+        else {
+            assertThat(foundStructure.isEmpty()).isEqualTo(false);
+        }
     }
 
     private static Stream<Arguments> getInCorrectCoordinatesToTest() {
@@ -217,13 +222,6 @@ public class WorldTests {
         // Act
         final Optional<IStructure> foundStructure = world.findNearestStructure(new Position(
             startX, startY));
-
-        // Assert
-        //        assertThat(() -> {
-        //            if (foundStructure.isPresent()) {
-        //                return foundStructure.get().getPosition();
-        //            } else
-        //        }).isNotEqualTo(new Position(endX, endY));
 
         if (foundStructure.isPresent()) {
             assertThat(foundStructure.get().getPosition()).isNotEqualTo(new Position(endX, endY));
