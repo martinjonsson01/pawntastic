@@ -46,7 +46,7 @@ public class ColonyManagement extends Game {
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int PAWN_COUNT = 50;
     /* Toggles debug-mode. */
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
