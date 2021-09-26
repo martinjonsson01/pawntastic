@@ -76,7 +76,7 @@ public class World implements IFinder {
     }
 
     private void initColony() {
-        colony = new Colony(findEmptyPositions(pawnCount));
+        colony = new Colony(findEmptyPositions(pawnCount), this);
     }
 
     private Iterable<Position> findEmptyPositions(final int count) {
@@ -194,7 +194,6 @@ public class World implements IFinder {
      * Updates the state of the world.
      */
     public void update() {
-        colony.updateKnownStructures(getStructureCollection());
         colony.update();
     }
 

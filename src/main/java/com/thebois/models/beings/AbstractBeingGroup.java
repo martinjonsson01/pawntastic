@@ -27,7 +27,6 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
     @Override
     public void update() {
         for (final IBeing being : this.beings) {
-            being.updateKnownStructures(this.knownStructures);
             being.update();
         }
     }

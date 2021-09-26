@@ -44,8 +44,8 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      * @param finder finder used to locate things in the world
      */
     public Colony(final Iterable<Position> vacantPositions, final IFinder finder) {
-        createBeings(vacantPositions);
         setFinder(finder);
+        createBeings(vacantPositions);
     }
 
     private void createBeings(final Iterable<Position> vacantPositions) {

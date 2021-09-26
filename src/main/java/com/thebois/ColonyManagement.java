@@ -144,10 +144,12 @@ class ColonyManagement extends Game {
     @Override
     public void render() {
         super.render();
-        world.update();
-        terrainController.update();
-        colonyController.update();
-        structureController.update();
+        if (world != null) {
+            world.update();
+            terrainController.update();
+            colonyController.update();
+            structureController.update();
+        }
     }
 
     private void initInputProcessors() {

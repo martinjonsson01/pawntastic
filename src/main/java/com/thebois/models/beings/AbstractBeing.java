@@ -78,6 +78,18 @@ public abstract class AbstractBeing implements IBeing {
     @Override
     public void update() {
         move();
+        deliverItemToNearestStructure();
+    }
+
+    protected void pickNearestStructureAsDestination() {
+        final Optional<IStructure> structure = finder.findNearestStructure(this.getPosition());
+        structure.ifPresent(iStructure -> setDestination(iStructure.getPosition()));
+    }
+
+    protected void deliverItemToNearestStructure() {
+        final Optional<IStructure> structure = finder.findNearestStructure(this.getPosition());
+        structure.ifPresent(iStructure -> iStructure.deliverItem(new IItem() {
+        }));
     }
 
     @Override
