@@ -235,21 +235,6 @@ public class WorldTests {
         assertThat(world.getColony().getBeings()).size().isEqualTo(pawnFitCount);
     }
 
-    /*@Test
-    public void instantiateWithPawnCountPlacesNoBeingsOnStructures() {
-        // Arrange
-        final int pawnCount = 3;
-        final Position structurePosition = new Position(0, 0);
-        final IStructure structure = Mockito.mock(IStructure.class);
-
-        // Act
-        final World world = new World(2, pawnCount);
-
-        // Assert
-        assertThat(world.getColony().getBeings()).allMatch(being -> !being.getPosition()
-                                                                          .equals(structurePosition));
-    }*/
-
     @Test
     public void testsIfColonyGetsUpdate() {
         // Arrange

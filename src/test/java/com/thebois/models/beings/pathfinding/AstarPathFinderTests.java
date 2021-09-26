@@ -34,6 +34,57 @@ public class AstarPathFinderTests {
         return new Position(positionX, positionY);
     }
 
+    /**
+     * Mocks a 3x3 world with obstacles.
+     * <p>
+     * The tiles are laid out like this, with G being grass and X being obstacle:
+     * </p>
+     * <p>
+     * G G G
+     * </p>
+     * <p>
+     * G X G
+     * </p>
+     * <p>
+     * G X G
+     * </p>
+     *
+     * @return The mocked world.
+     */
+    private IWorld mock3x3WorldWithObstacles() {
+        final World world = new World(3, 0);
+
+        world.createStructure(1, 0);
+        world.createStructure(1, 1);
+
+        return world;
+    }
+
+    private ITile mockObstacle(final int positionX, final int positionY) {
+        final ITile mockTile = Mockito.mock(ITile.class);
+        when(mockTile.getPosition()).thenReturn(new Position(positionX, positionY));
+        when(mockTile.getCost()).thenReturn(100f);
+        return mockTile;
+    }
+
+    @Test
+    public void pathAvoidsTilesWithHighCost() {
+        // Arrange
+        final IWorld world = mock3x3WorldWithObstacles();
+        final IPathFinder cut = new AstarPathFinder(world);
+        final Position start = new Position(0, 0);
+        final Position destination = new Position(2, 2);
+        final Position obstacle1Position = new Position(1, 0);
+        final Position obstacle2Position = new Position(1, 1);
+
+        // Act
+        final Collection<Position> path = cut.path(start, destination);
+
+        // Assert
+        assertThat(path).isNotEmpty();
+        assertThat(path).doesNotContain(obstacle1Position, obstacle2Position);
+    }
+
     @Test
     public void pathReturnsEmptyIfNotAbleToReachDestination() {
         // Arrange

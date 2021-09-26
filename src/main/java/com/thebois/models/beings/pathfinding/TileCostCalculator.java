@@ -86,7 +86,7 @@ class TileCostCalculator {
      * @return The cost of moving from the provided position to the destination
      */
     private float costToDestination(final ITile tile, final ITile destination) {
-        return tile.getPosition().manhattanDistanceTo(destination.getPosition());
+        return tile.getPosition().manhattanDistanceTo(destination.getPosition()) + tile.getCost();
     }
 
 }
