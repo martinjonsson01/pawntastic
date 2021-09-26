@@ -22,6 +22,7 @@ public class World implements IWorld, IFinder {
     private final ITerrain[][] terrainMatrix;
     private final Optional<IStructure>[][] structureMatrix;
     private final int worldSize;
+    private final ITile[][] canonicalMatrix;
     private Colony colony;
 
     /**
@@ -58,6 +59,10 @@ public class World implements IWorld, IFinder {
                 structureMatrix[y][x] = Optional.empty();
             }
         }
+
+        canonicalMatrix = new ITile[worldSize][worldSize];
+        repopulateCanonicalMatrix();
+
         this.colony = colony;
     }
 
@@ -65,25 +70,17 @@ public class World implements IWorld, IFinder {
         return new Colony(findEmptyPositions(pawnCount), this);
     }
 
-    private Iterable<Position> findEmptyPositions(final int count) {
-        final List<Position> emptyPositions = new ArrayList<>();
-        MatrixUtils.forEachElement(getCanonicalMatrix(), tile -> {
-            if (emptyPositions.size() >= count) return;
-            if (isWalkable(tile.getPosition())) {
-                emptyPositions.add(tile.getPosition());
-            }
-        });
-        return emptyPositions;
-    }
-
     /**
      * The canonical matrix is a mash-up of all the different layers of the world. It replaces less
      * important tiles like grass with a structure if it is located at the same coordinates.
      *
+     * <p>
+     * Warning: expensive method, do not call every frame!
+     * </p>
+     *
      * @return The canonical matrix
      */
-    private ITile[][] getCanonicalMatrix() {
-        final ITile[][] canonicalMatrix = new ITile[worldSize][worldSize];
+    private ITile[][] repopulateCanonicalMatrix() {
         // Fill with terrain.
         MatrixUtils.forEachElement(terrainMatrix, tile -> {
             final Position position = tile.getPosition();
@@ -92,20 +89,32 @@ public class World implements IWorld, IFinder {
             canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
         });
         // Replace terrain with any possible structure.
-        MatrixUtils.forEachElement(structureMatrix,
-                                   maybeStructure -> maybeStructure.ifPresent(structure -> {
-                                       final Position position = structure.getPosition();
-                                       final int posY = (int) position.getPosY();
-                                       final int posX = (int) position.getPosX();
-                                       canonicalMatrix[posY][posX] = structure.deepClone();
-                                   }));
+        MatrixUtils.forEachElement(
+            structureMatrix,
+            maybeStructure -> maybeStructure.ifPresent(structure -> {
+                final Position position = structure.getPosition();
+                final int posY = (int) position.getPosY();
+                final int posX = (int) position.getPosX();
+                canonicalMatrix[posY][posX] = structure.deepClone();
+            }));
         return canonicalMatrix;
+    }
+
+    private Iterable<Position> findEmptyPositions(final int count) {
+        final List<Position> emptyPositions = new ArrayList<>();
+        MatrixUtils.forEachElement(canonicalMatrix, tile -> {
+            if (emptyPositions.size() >= count) return;
+            if (isWalkable(tile.getPosition())) {
+                emptyPositions.add(tile.getPosition());
+            }
+        });
+        return emptyPositions;
     }
 
     private boolean isWalkable(final Position position) {
         final int posY = (int) position.getPosY();
         final int posX = (int) position.getPosX();
-        final boolean isStructure = getCanonicalMatrix()[posY][posX] instanceof IStructure;
+        final boolean isStructure = canonicalMatrix[posY][posX] instanceof IStructure;
         return !isStructure;
     }
 
@@ -172,6 +181,7 @@ public class World implements IWorld, IFinder {
         if (isPositionPlaceable(position)) {
             structureMatrix[posY][posX] = Optional.of(new House(position));
 
+            repopulateCanonicalMatrix();
             return true;
         }
         return false;
@@ -225,8 +235,6 @@ public class World implements IWorld, IFinder {
         final int endY = Math.min(worldSize - 1, posY + 1);
         final int startX = Math.max(0, posX - 1);
         final int endX = Math.min(worldSize - 1, posX + 1);
-
-        final ITile[][] canonicalMatrix = getCanonicalMatrix();
 
         for (int neighbourY = startY; neighbourY <= endY; neighbourY++) {
             for (int neighbourX = startX; neighbourX <= endX; neighbourX++) {
