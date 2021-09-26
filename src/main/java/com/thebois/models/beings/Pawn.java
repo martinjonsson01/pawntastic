@@ -2,6 +2,7 @@ package com.thebois.models.beings;
 
 import java.util.Random;
 
+import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 
 /**
@@ -19,10 +20,15 @@ public class Pawn extends AbstractBeing {
      * @param currentPosition initial position.
      * @param destination     initial destination to travel to.
      * @param random          the generator of random numbers.
+     * @param finder          Finder used to locate things in the world
      */
-    public Pawn(final Position currentPosition, final Position destination, final Random random) {
+    public Pawn(final Position currentPosition,
+                final Position destination,
+                final Random random,
+                final IFinder finder) {
         super(currentPosition, destination);
         this.random = random;
+        setFinder(finder);
     }
 
     @Override

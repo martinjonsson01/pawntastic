@@ -3,6 +3,7 @@ package com.thebois.models.beings;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.thebois.models.IFinder;
 import com.thebois.models.world.structures.IStructure;
 
 /**
@@ -12,6 +13,7 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
 
     private Collection<IBeing> beings = new ArrayList<>();
     private Collection<IStructure> knownStructures;
+    private IFinder finder;
 
     /**
      * Adds a being to the internal collection of beings.
@@ -44,6 +46,14 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
     @Override
     public void updateKnownStructures(final Collection<IStructure> structures) {
         this.knownStructures = structures;
+    }
+
+    protected IFinder getFinder() {
+        return this.finder;
+    }
+
+    protected void setFinder(final IFinder finder) {
+        this.finder = finder;
     }
 
 }

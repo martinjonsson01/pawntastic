@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
@@ -22,6 +23,7 @@ public abstract class AbstractBeing implements IBeing {
     // The current position held by the AbstractBeing.
     private Position currentPosition;
     private AbstractRole role;
+    private IFinder finder;
 
     /**
      * Creates an AbstractBeing with an initial position.
@@ -149,6 +151,14 @@ public abstract class AbstractBeing implements IBeing {
 
     protected void setDestination(final Position destination) {
         this.destination = destination;
+    }
+
+    protected IFinder getFinder() {
+        return this.finder;
+    }
+
+    protected void setFinder(final IFinder finder) {
+        this.finder = finder;
     }
 
 }

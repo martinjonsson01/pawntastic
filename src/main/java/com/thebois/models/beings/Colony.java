@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
@@ -35,10 +36,22 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         createBeings(vacantPositions);
     }
 
+    /**
+     * Creates an instance of Colony with n number of pawns.
+     *
+     * @param vacantPositions Positions in the world that a Pawn can be placed on
+     *
+     * @param finder finder used to locate things in the world
+     */
+    public Colony(final Iterable<Position> vacantPositions, final IFinder finder) {
+        createBeings(vacantPositions);
+        setFinder(finder);
+    }
+
     private void createBeings(final Iterable<Position> vacantPositions) {
         final Random random = new Random();
         for (final Position vacantPosition : vacantPositions) {
-            addBeing(new Pawn(vacantPosition, vacantPosition, random));
+            addBeing(new Pawn(vacantPosition, vacantPosition, random, getFinder()));
         }
     }
 

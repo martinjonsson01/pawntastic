@@ -13,6 +13,7 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.world.World;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -59,7 +60,7 @@ public class BeingTests {
         final AbstractRole role = RoleFactory.fromType(roleType);
         final AbstractBeing being = new Pawn(currentPosition.deepClone(),
                                              destination.deepClone(),
-                                             new Random());
+                                             new Random(), new World(10, 0));
         being.setRole(role);
         return being;
     }
@@ -82,7 +83,7 @@ public class BeingTests {
         final float distanceToDestination = startPosition.distanceTo(endPosition);
         final Random mockRandom = Mockito.mock(Random.class);
         when(mockRandom.nextInt(anyInt())).thenReturn(0);
-        final AbstractBeing being = new Pawn(startPosition, endPosition, mockRandom);
+        final AbstractBeing being = new Pawn(startPosition, endPosition, mockRandom, new World(10, 0));
 
         // Act
         being.update();
@@ -100,11 +101,11 @@ public class BeingTests {
         final AbstractRole role = RoleFactory.farmer();
         final IBeing first = new Pawn(currentPosition.deepClone(),
                                       destination.deepClone(),
-                                      new Random());
+                                      new Random(), new World(10, 0));
         first.setRole(role);
         final IBeing second = new Pawn(currentPosition.deepClone(),
                                        destination.deepClone(),
-                                       new Random());
+                                       new Random(), new World(10, 0));
         second.setRole(role);
 
         // Act
@@ -119,11 +120,11 @@ public class BeingTests {
     public void hashCodeReturnDifferentIfNotEqual() {
         // Arrange
         final AbstractRole role = RoleFactory.farmer();
-        final IBeing first = new Pawn(new Position(0, 0), new Position(1, 1), new Random());
+        final IBeing first = new Pawn(new Position(0, 0), new Position(1, 1), new Random(), new World(10, 0));
         first.setRole(role);
         final IBeing second = new Pawn(new Position(123, 123),
                                        new Position(983, 1235),
-                                       new Random());
+                                       new Random(), new World(10, 0));
 
         // Act
         final int firstHashCode = first.hashCode();
@@ -136,7 +137,7 @@ public class BeingTests {
     @Test
     public void equalsReturnsFalseForOtherType() {
         // Arrange
-        final IBeing being = new Pawn(new Position(0, 0), new Position(1, 1), new Random());
+        final IBeing being = new Pawn(new Position(0, 0), new Position(1, 1), new Random(), new World(10, 0));
         being.setRole(RoleFactory.farmer());
 
         // Assert

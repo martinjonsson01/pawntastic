@@ -213,7 +213,9 @@ public class World implements IFinder {
 
     @Override
     public Optional<IStructure> getStructureAt(final Position position) {
-        return Optional.empty();
+        final int row = Math.round(position.getPosX());
+        final int col = Math.round(position.getPosY());
+        return this.structureMatrix[row][col];
     }
 
 }
