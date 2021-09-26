@@ -2,6 +2,7 @@ package com.thebois.models.beings.pathfinding;
 
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -32,9 +33,8 @@ public class TileCostCalculatorTests {
 
     @ParameterizedTest
     @MethodSource("getOrderedTiles")
-    public void costOfReturnsGreaterCostWhenTileFurtherAwayFromDestination(final ITile destination,
-                                                                           final ITile greater,
-                                                                           final ITile lesser) {
+    public void costOfReturnsGreaterCostWhenTileFurtherAwayFromDestination(
+        final ITile destination, final ITile greater, final ITile lesser) {
         // Arrange
         final TileCostCalculator cut = new TileCostCalculator();
         cut.setCostFromStartTo(greater, 0f);
@@ -46,6 +46,23 @@ public class TileCostCalculatorTests {
 
         // Assert
         assertThat(greaterCost).isGreaterThan(lesserCost);
+    }
+
+    @Test
+    public void costOfRetainsLatestSetCostFromStart() {
+        // Arrange
+        final TileCostCalculator cut = new TileCostCalculator();
+        final ITile tile = mockTile(0, 0);
+        final float lastSetCost = 123.4f;
+
+        // Act
+        cut.setCostFromStartTo(tile, -23123.654f);
+        cut.setCostFromStartTo(tile, 43431.1f);
+        cut.setCostFromStartTo(tile, lastSetCost);
+
+        // Assert
+        final float cost = cut.costOf(tile, tile);
+        assertThat(cost).isEqualTo(lastSetCost);
     }
 
 }
