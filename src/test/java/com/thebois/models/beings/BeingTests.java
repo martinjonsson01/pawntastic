@@ -204,6 +204,21 @@ public class BeingTests {
     }
 
     @Test
+    public void updateDoesNothingWhenPathIsEmpty() {
+        // Arrange
+        final Position startPosition = new Position();
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        when(pathFinder.path(any(), any())).thenReturn(List.of());
+        final IBeing being = new Pawn(startPosition, startPosition, new Random(), pathFinder);
+
+        // Act
+        being.update();
+
+        // Assert
+        assertThat(being.getPosition()).isEqualTo(startPosition);
+    }
+
+    @Test
     public void equalsReturnsFalseForOtherType() {
         // Arrange
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);

@@ -102,8 +102,6 @@ public abstract class AbstractBeing implements IBeing {
 
         final Position destination = path.peek();
 
-        if (destination == null) return;
-
         // Calculate delta of distance between current position and the destination
         final float deltaX = destination.getPosX() - this.position.getPosX();
         final float deltaY = destination.getPosY() - this.position.getPosY();
