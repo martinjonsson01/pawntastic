@@ -1,17 +1,30 @@
 package com.thebois.models;
 
+import java.util.Optional;
+
+import com.thebois.models.world.structures.IStructure;
+
 /**
  * Allows for locating of specific types of objects.
- *
- * @param <TFindable> The type to locate.
  */
-public interface IFinder<TFindable> {
+public interface IFinder {
 
     /**
-     * Finds and returns an object of the requested type.
+     * Finds and returns the closest IStructure to the passed position.
      *
-     * @return The found object.
+     * @param position The position to find a structure closest to
+     *
+     * @return The found IStructure.
      */
-    TFindable find();
+    Optional<IStructure> findNearestStructure(Position position);
+
+    /**
+     * Returns the IStructure at position.
+     *
+     * @param position The position to check
+     *
+     * @return The found IStructure else null.
+     */
+    Optional<IStructure> getStructureAt(Position position);
 
 }

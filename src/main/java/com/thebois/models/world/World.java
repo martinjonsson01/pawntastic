@@ -91,15 +91,6 @@ public class World implements IFinder {
     }
 
     /**
-     * Locates an object in the world and returns it.
-     *
-     * @return Object.
-     */
-    public Object find() {
-        return null;
-    }
-
-    /**
      * Returns the matrix of the world.
      *
      * @return ITile[][]
@@ -205,5 +196,44 @@ public class World implements IFinder {
         colony.update();
     }
 
+    @Override
+    public Optional<IStructure> findNearestStructure(final Position position) {
+        // Spiral search pattern
+        final int[][] searchPattern = {
+                {0, 0}, {0, 1}, {1, 1},
+                {1, 0}, {1, -1}, {0, -1},
+                {-1, -1}, {-1, 0}, {-1, 1},
+        };
+
+        final int maxSearchRadius = 10;
+
+        for (int searchRadius = 1; searchRadius <= maxSearchRadius; searchRadius++) {
+            for (final int[] ints : searchPattern) {
+
+                try {
+                    final int searchRow = Math.round(position.getPosX()) + ints[0] * searchRadius;
+                    final int searchCol = Math.round(position.getPosY()) + ints[1] * searchRadius;
+
+                    final Optional<IStructure> currentStructure =
+                        this.structureMatrix[searchRow][searchCol];
+
+                    if (currentStructure.isPresent()) {
+                        return this.structureMatrix[searchRow][searchCol];
+                    }
+                }
+                catch (final ArrayIndexOutOfBoundsException exception) {
+                    // Since there is a search limit, we can let the method loop outside of matrix
+                }
+            }
+        }
+
+        // If no structure was found
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<IStructure> getStructureAt(final Position position) {
+        return Optional.empty();
+    }
 }
 

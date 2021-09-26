@@ -2,6 +2,7 @@ package com.thebois.models.world;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -19,13 +20,12 @@ import static org.assertj.core.api.Assertions.*;
 public class WorldTests {
 
     public static Stream<Arguments> getPositionOutSideOfWorld() {
-        return Stream.of(
-            Arguments.of(new Position(-1, 0)),
-            Arguments.of(new Position(0, -1)),
-            Arguments.of(new Position(-1, -1)),
-            Arguments.of(new Position(-1000, -1000)),
-            Arguments.of(new Position(10000, 0)),
-            Arguments.of(new Position(0, 10000)));
+        return Stream.of(Arguments.of(new Position(-1, 0)),
+                         Arguments.of(new Position(0, -1)),
+                         Arguments.of(new Position(-1, -1)),
+                         Arguments.of(new Position(-1000, -1000)),
+                         Arguments.of(new Position(10000, 0)),
+                         Arguments.of(new Position(0, 10000)));
     }
 
     @Test
@@ -48,18 +48,6 @@ public class WorldTests {
         terrainTiles.add(new Grass(1, 0));
         terrainTiles.add(new Grass(1, 1));
         return terrainTiles;
-    }
-
-    @Test
-    public void worldFind() {
-        // Arrange
-        final World world = new World(2, 5);
-
-        // Act
-        final Object worldObject = world.find();
-
-        // Assert
-        assertThat(worldObject).isEqualTo(null);
     }
 
     @Test
@@ -175,6 +163,35 @@ public class WorldTests {
             }
         }
         return true;
+    }
+
+    private static Stream<Arguments> getCoordinatesToTest() {
+        return Stream.of(Arguments.of(0, 0, 2, 2),
+                         Arguments.of(5, 5, 10, 10),
+                         Arguments.of(0, 0, 0, 0),
+                         Arguments.of(20, 20, 11, 11),
+                         Arguments.of(49, 49, 40, 40)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("getCoordinatesToTest")
+    public void testFindNearestStructure(final int startX,
+                                         final int startY,
+                                         final int endX,
+                                         final int endY) {
+
+        // Arrange
+        final World world = new World(50, 10);
+        world.createStructure(endX, endY);
+
+        // Act
+        final Optional<IStructure> foundStructure = world.findNearestStructure(new Position(
+            startX,
+            startY));
+
+        // Assert
+        assertThat(foundStructure.get().getPosition()).isEqualTo(new Position(endX, endY));
     }
 
 }
