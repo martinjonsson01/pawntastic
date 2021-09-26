@@ -6,6 +6,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Stack;
 
+import com.google.common.eventbus.Subscribe;
+
+import com.thebois.ColonyManagement;
+import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
@@ -31,13 +35,25 @@ public abstract class AbstractBeing implements IBeing {
      * @param pathFinder    The generator of paths to positions in the world.
      */
     public AbstractBeing(
-        final Position startPosition,
-        final Position destination,
-        final IPathFinder pathFinder) {
+        final Position startPosition, final Position destination, final IPathFinder pathFinder) {
         this.position = startPosition;
         this.role = RoleFactory.idle();
         this.pathFinder = pathFinder;
         setPath(pathFinder.path(startPosition, destination));
+        ColonyManagement.BUS.register(this);
+    }
+
+    /**
+     * Listens to the ObstaclePlacedEvent in order to update pathfinding.
+     *
+     * @param event The published event.
+     */
+    @Subscribe
+    public void onObstaclePlaced(final ObstaclePlacedEvent event) {
+        if (path.contains(event.getPosition())) {
+            // Find new path to current goal.
+            setPath(pathFinder.path(position, path.firstElement()));
+        }
     }
 
     @Override

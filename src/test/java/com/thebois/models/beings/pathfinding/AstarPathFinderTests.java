@@ -34,6 +34,31 @@ public class AstarPathFinderTests {
         return new Position(positionX, positionY);
     }
 
+    private ITile mockObstacle(final int positionX, final int positionY) {
+        final ITile mockTile = Mockito.mock(ITile.class);
+        when(mockTile.getPosition()).thenReturn(new Position(positionX, positionY));
+        when(mockTile.getCost()).thenReturn(100f);
+        return mockTile;
+    }
+
+    @Test
+    public void pathAvoidsTilesWithHighCost() {
+        // Arrange
+        final IWorld world = mock3x3WorldWithObstacles();
+        final IPathFinder cut = new AstarPathFinder(world);
+        final Position start = new Position(0, 0);
+        final Position destination = new Position(2, 2);
+        final Position obstacle1Position = new Position(1, 0);
+        final Position obstacle2Position = new Position(1, 1);
+
+        // Act
+        final Collection<Position> path = cut.path(start, destination);
+
+        // Assert
+        assertThat(path).isNotEmpty();
+        assertThat(path).doesNotContain(obstacle1Position, obstacle2Position);
+    }
+
     /**
      * Mocks a 3x3 world with obstacles.
      * <p>
@@ -60,31 +85,6 @@ public class AstarPathFinderTests {
         return world;
     }
 
-    private ITile mockObstacle(final int positionX, final int positionY) {
-        final ITile mockTile = Mockito.mock(ITile.class);
-        when(mockTile.getPosition()).thenReturn(new Position(positionX, positionY));
-        when(mockTile.getCost()).thenReturn(100f);
-        return mockTile;
-    }
-
-    @Test
-    public void pathAvoidsTilesWithHighCost() {
-        // Arrange
-        final IWorld world = mock3x3WorldWithObstacles();
-        final IPathFinder cut = new AstarPathFinder(world);
-        final Position start = new Position(0, 0);
-        final Position destination = new Position(2, 2);
-        final Position obstacle1Position = new Position(1, 0);
-        final Position obstacle2Position = new Position(1, 1);
-
-        // Act
-        final Collection<Position> path = cut.path(start, destination);
-
-        // Assert
-        assertThat(path).isNotEmpty();
-        assertThat(path).doesNotContain(obstacle1Position, obstacle2Position);
-    }
-
     @Test
     public void pathReturnsEmptyIfNotAbleToReachDestination() {
         // Arrange
@@ -106,8 +106,8 @@ public class AstarPathFinderTests {
 
     @ParameterizedTest
     @MethodSource("getPositionsAndDestinations")
-    public void pathReturnsPositionsThatLeadToDestination(final Position from,
-                                                          final Position destination) {
+    public void pathReturnsPositionsThatLeadToDestination(
+        final Position from, final Position destination) {
         // Arrange
         final IWorld world = new World(30, 0);
         final IPathFinder cut = new AstarPathFinder(world);
@@ -121,8 +121,8 @@ public class AstarPathFinderTests {
 
     @ParameterizedTest
     @MethodSource("getPositionsAndDestinations")
-    public void pathReturnsEnoughPositionsToCoverDistance(final Position from,
-                                                          final Position destination) {
+    public void pathReturnsEnoughPositionsToCoverDistance(
+        final Position from, final Position destination) {
         // Arrange
         final IWorld world = new World(30, 0);
         final IPathFinder cut = new AstarPathFinder(world);

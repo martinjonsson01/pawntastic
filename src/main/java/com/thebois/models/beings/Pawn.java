@@ -1,5 +1,6 @@
 package com.thebois.models.beings;
 
+import java.util.Collection;
 import java.util.Random;
 
 import com.thebois.models.Position;
@@ -22,10 +23,11 @@ public class Pawn extends AbstractBeing {
      * @param random        the generator of random numbers.
      * @param pathFinder    The generator of paths to positions in the world.
      */
-    public Pawn(final Position startPosition,
-                final Position destination,
-                final Random random,
-                final IPathFinder pathFinder) {
+    public Pawn(
+        final Position startPosition,
+        final Position destination,
+        final Random random,
+        final IPathFinder pathFinder) {
         super(startPosition, destination, pathFinder);
         this.random = random;
     }
@@ -42,7 +44,8 @@ public class Pawn extends AbstractBeing {
         final int randomY = random.nextInt(WORLD_SIZE);
         final Position destination = new Position(randomX, randomY);
 
-        setPath(getPathFinder().path(getPosition(), destination));
+        final Collection<Position> newPath = getPathFinder().path(getPosition(), destination);
+        setPath(newPath);
     }
 
 }

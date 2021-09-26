@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import com.thebois.ColonyManagement;
+import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
@@ -89,14 +91,13 @@ public class World implements IWorld, IFinder {
             canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
         });
         // Replace terrain with any possible structure.
-        MatrixUtils.forEachElement(
-            structureMatrix,
-            maybeStructure -> maybeStructure.ifPresent(structure -> {
-                final Position position = structure.getPosition();
-                final int posY = (int) position.getPosY();
-                final int posX = (int) position.getPosX();
-                canonicalMatrix[posY][posX] = structure.deepClone();
-            }));
+        MatrixUtils.forEachElement(structureMatrix,
+                                   maybeStructure -> maybeStructure.ifPresent(structure -> {
+                                       final Position position = structure.getPosition();
+                                       final int posY = (int) position.getPosY();
+                                       final int posX = (int) position.getPosX();
+                                       canonicalMatrix[posY][posX] = structure.deepClone();
+                                   }));
         return canonicalMatrix;
     }
 
@@ -182,6 +183,7 @@ public class World implements IWorld, IFinder {
             structureMatrix[posY][posX] = Optional.of(new House(position));
 
             repopulateCanonicalMatrix();
+            postObstacleEvent(posX, posY);
             return true;
         }
         return false;
@@ -197,6 +199,11 @@ public class World implements IWorld, IFinder {
             return false;
         }
         return structureMatrix[posIntY][posIntX].isEmpty();
+    }
+
+    private void postObstacleEvent(final int posX, final int posY) {
+        final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(posX, posY);
+        ColonyManagement.BUS.post(obstacleEvent);
     }
 
     /**

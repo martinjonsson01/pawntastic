@@ -12,10 +12,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import com.thebois.models.Position;
+import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.world.World;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -52,11 +54,12 @@ public class BeingTests {
             Arguments.of(beingA, beingC));
     }
 
-    private static AbstractBeing createBeing(final float startX,
-                                             final float startY,
-                                             final float destinationX,
-                                             final float destinationY,
-                                             final RoleType roleType) {
+    private static AbstractBeing createBeing(
+        final float startX,
+        final float startY,
+        final float destinationX,
+        final float destinationY,
+        final RoleType roleType) {
         final Position currentPosition = new Position(startX, startY);
         final Position destination = new Position(destinationX, destinationY);
         final AbstractRole role = RoleFactory.fromType(roleType);
@@ -79,8 +82,8 @@ public class BeingTests {
 
     @ParameterizedTest
     @MethodSource("getPositionsAndDestinations")
-    public void updateMovesTowardsDestination(final Position startPosition,
-                                              final Position endPosition) {
+    public void updateMovesTowardsDestination(
+        final Position startPosition, final Position endPosition) {
         // Arrange
         final float distanceToDestination = startPosition.distanceTo(endPosition);
         final Random mockRandom = Mockito.mock(Random.class);
@@ -103,11 +106,10 @@ public class BeingTests {
     public void setRoleWithNullThrowsException() {
         // Arrange
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IBeing being = new Pawn(
-            new Position(0, 0),
-            new Position(1, 1),
-            new Random(),
-            pathFinder);
+        final IBeing being = new Pawn(new Position(0, 0),
+                                      new Position(1, 1),
+                                      new Random(),
+                                      pathFinder);
 
         // Assert
         assertThatThrownBy(() -> being.setRole(null)).isInstanceOf(IllegalArgumentException.class);
@@ -180,6 +182,28 @@ public class BeingTests {
     }
 
     @Test
+    public void pathIsRecalculatedAfterStructureIsPlacedInWay() {
+        // Arrange
+        final Position from = new Position();
+        final Position destination = new Position(2, 2);
+        final Position obstaclePosition = new Position(1, 1);
+        final World world = new World(3, 0);
+        final IPathFinder pathFinder = new AstarPathFinder(world);
+        final IBeing being = new Pawn(from, destination, new Random(), pathFinder);
+
+        // Assert
+        final Iterable<Position> oldPath = being.getPath();
+        assertThat(oldPath).contains(obstaclePosition);
+
+        // Act
+        world.createStructure(obstaclePosition);
+
+        // Assert
+        final Iterable<Position> newPath = being.getPath();
+        assertThat(newPath).doesNotContain(obstaclePosition);
+    }
+
+    @Test
     public void equalsReturnsFalseForOtherType() {
         // Arrange
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
@@ -196,16 +220,16 @@ public class BeingTests {
 
     @ParameterizedTest
     @MethodSource("getEqualBeings")
-    public void equalsReturnsTrueForEqualBeings(final AbstractBeing first,
-                                                final AbstractBeing second) {
+    public void equalsReturnsTrueForEqualBeings(
+        final AbstractBeing first, final AbstractBeing second) {
         // Assert
         assertThat(first).isEqualTo(second);
     }
 
     @ParameterizedTest
     @MethodSource("getNotEqualBeings")
-    public void equalsReturnsFalseForNotEqualBeings(final AbstractBeing first,
-                                                    final AbstractBeing second) {
+    public void equalsReturnsFalseForNotEqualBeings(
+        final AbstractBeing first, final AbstractBeing second) {
         // Assert
         assertThat(first).isNotEqualTo(second);
     }
