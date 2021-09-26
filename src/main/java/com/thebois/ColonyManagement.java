@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.google.common.eventbus.EventBus;
 
 import com.thebois.controllers.ColonyController;
 import com.thebois.controllers.RoleController;
@@ -32,8 +33,12 @@ import com.thebois.views.debug.FrameCounterView;
 /**
  * The main representation of the game.
  */
-class ColonyManagement extends Game {
+public class ColonyManagement extends Game {
 
+    /**
+     * The global event bus that most events pass through.
+     */
+    public static final EventBus BUS = new EventBus();
     private static final int WORLD_SIZE = 50;
     /* These two decide the aspect ratio that will be preserved. */
     private static final float VIEWPORT_WIDTH = 1300;
