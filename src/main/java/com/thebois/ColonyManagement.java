@@ -27,6 +27,7 @@ import com.thebois.views.RoleView;
 import com.thebois.views.StructureView;
 import com.thebois.views.WorldView;
 import com.thebois.views.debug.BeingPathDebugView;
+import com.thebois.views.debug.FrameCounterView;
 
 /**
  * The main representation of the game.
@@ -55,7 +56,9 @@ class ColonyManagement extends Game {
     private WorldView worldView;
     private StructureView structureView;
     private ColonyView colonyView;
+    /* Views - GameView DEBUG */
     private BeingPathDebugView beingPathDebugView;
+    private FrameCounterView frameCounterView;
     // Screens
     private GameScreen gameScreen;
     // Controllers
@@ -98,28 +101,13 @@ class ColonyManagement extends Game {
         uiSkin.load(Gdx.files.internal("uiskin.json"));
     }
 
-    private void generateFont() {
-        final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(
-            "fonts/arial.ttf"));
-        final FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-            new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.minFilter = Texture.TextureFilter.Nearest;
-        parameter.magFilter = Texture.TextureFilter.MipMapLinearNearest;
-        parameter.size = DEFAULT_FONT_SIZE;
-        generator.scaleForPixelHeight(DEFAULT_FONT_SIZE);
-        font = generator.generateFont(parameter);
-        // To smooth out the text.
-        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear,
-                                                Texture.TextureFilter.Linear);
-        generator.dispose();
-    }
-
     private void createModels() {
         world = new World(WORLD_SIZE, PAWN_COUNT);
     }
 
     private void createDebugView() {
         beingPathDebugView = new BeingPathDebugView(world.getColony(), tileSize);
+        frameCounterView = new FrameCounterView(font);
     }
 
     private void createGameView() {
@@ -134,6 +122,7 @@ class ColonyManagement extends Game {
         views.add(structureView);
         if (DEBUG) {
             views.add(beingPathDebugView);
+            views.add(frameCounterView);
         }
         gameView = new GameView(views, WORLD_SIZE, tileSize);
     }
@@ -155,6 +144,29 @@ class ColonyManagement extends Game {
         new RoleController(world.getRoleAllocator(), roleView);
     }
 
+    private void initInputProcessors() {
+        final InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(gameScreen.getInputProcessor());
+        multiplexer.addProcessor(structureController);
+        Gdx.input.setInputProcessor(multiplexer);
+    }
+
+    private void generateFont() {
+        final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(
+            "fonts/arial.ttf"));
+        final FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+            new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.minFilter = Texture.TextureFilter.Nearest;
+        parameter.magFilter = Texture.TextureFilter.MipMapLinearNearest;
+        parameter.size = DEFAULT_FONT_SIZE;
+        generator.scaleForPixelHeight(DEFAULT_FONT_SIZE);
+        font = generator.generateFont(parameter);
+        // To smooth out the text.
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear,
+                                                Texture.TextureFilter.Linear);
+        generator.dispose();
+    }
+
     @Override
     public void dispose() {
         gameScreen.dispose();
@@ -169,13 +181,6 @@ class ColonyManagement extends Game {
         terrainController.update();
         colonyController.update();
         structureController.update();
-    }
-
-    private void initInputProcessors() {
-        final InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(gameScreen.getInputProcessor());
-        multiplexer.addProcessor(structureController);
-        Gdx.input.setInputProcessor(multiplexer);
     }
 
 }
