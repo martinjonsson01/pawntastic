@@ -23,6 +23,7 @@ public class World implements IFinder {
     private final Optional<IStructure>[][] structureMatrix;
     private final int pawnCount;
     private Colony colony;
+    private int worldSize;
 
     /**
      * Initiates the world with the given size and the amount of pawns in the colony.
@@ -32,6 +33,7 @@ public class World implements IFinder {
      */
     public World(final int worldSize, final int pawnCount) {
         this.pawnCount = pawnCount;
+        this.worldSize = worldSize;
 
         terrainMatrix = new ITerrain[worldSize][worldSize];
         for (int y = 0; y < worldSize; y++) {
@@ -198,27 +200,36 @@ public class World implements IFinder {
 
     @Override
     public Optional<IStructure> findNearestStructure(final Position position) {
+        final int searchRow = Math.round(position.getPosX());
+        final int searchCol = Math.round(position.getPosY());
+
+        final int maxSearchRadius = this.worldSize / 2;
+        return matrixSpiralSearch(this.structureMatrix, searchRow, searchCol, maxSearchRadius);
+    }
+
+    private <TType> Optional<TType> matrixSpiralSearch(final Optional<TType>[][] matrix,
+                                             final int startRow,
+                                             final int startCol,
+                                             final int maxSearchRadius) {
         // Spiral search pattern
         final int[][] searchPattern = {
-                {0, 0}, {0, 1}, {1, 1},
-                {1, 0}, {1, -1}, {0, -1},
-                {-1, -1}, {-1, 0}, {-1, 1},
-        };
-
-        final int maxSearchRadius = 10;
+            {0, 0}, {0, 1}, {1, 1},
+            {1, 0}, {1, -1}, {0, -1},
+            {-1, -1}, {-1, 0}, {-1, 1},
+            };
 
         for (int searchRadius = 1; searchRadius <= maxSearchRadius; searchRadius++) {
             for (final int[] ints : searchPattern) {
 
                 try {
-                    final int searchRow = Math.round(position.getPosX()) + ints[0] * searchRadius;
-                    final int searchCol = Math.round(position.getPosY()) + ints[1] * searchRadius;
+                    final int searchRow = startRow + ints[0] * searchRadius;
+                    final int searchCol = startCol + ints[1] * searchRadius;
 
-                    final Optional<IStructure> currentStructure =
-                        this.structureMatrix[searchRow][searchCol];
+                    final Optional<TType> currentElem =
+                        matrix[searchRow][searchCol];
 
-                    if (currentStructure.isPresent()) {
-                        return this.structureMatrix[searchRow][searchCol];
+                    if (currentElem.isPresent()) {
+                        return matrix[searchRow][searchCol];
                     }
                 }
                 catch (final ArrayIndexOutOfBoundsException exception) {

@@ -165,7 +165,7 @@ public class WorldTests {
         return true;
     }
 
-    private static Stream<Arguments> getCoordinatesToTest() {
+    private static Stream<Arguments> getCorrectCoordinatesToTest() {
         return Stream.of(Arguments.of(0, 0, 2, 2),
                          Arguments.of(5, 5, 10, 10),
                          Arguments.of(0, 0, 0, 0),
@@ -175,7 +175,7 @@ public class WorldTests {
     }
 
     @ParameterizedTest
-    @MethodSource("getCoordinatesToTest")
+    @MethodSource("getCorrectCoordinatesToTest")
     public void testFindNearestStructure(final int startX,
                                          final int startY,
                                          final int endX,
@@ -192,6 +192,45 @@ public class WorldTests {
 
         // Assert
         assertThat(foundStructure.get().getPosition()).isEqualTo(new Position(endX, endY));
+    }
+
+    private static Stream<Arguments> getInCorrectCoordinatesToTest() {
+        return Stream.of(Arguments.of(0, 0, 60, 60),
+                         Arguments.of(5, 5, 100, 100),
+                         Arguments.of(0, 0, 49, 26),
+                         Arguments.of(20, 10, 49, 49),
+                         Arguments.of(40, 0, 40, 40)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("getInCorrectCoordinatesToTest")
+    public void testNotEqualsFindNearestStructure(final int startX,
+                                         final int startY,
+                                         final int endX,
+                                         final int endY) {
+
+        // Arrange
+        final World world = new World(50, 10);
+        world.createStructure(endX, endY);
+
+        // Act
+        final Optional<IStructure> foundStructure = world.findNearestStructure(new Position(
+            startX, startY));
+
+        // Assert
+        //        assertThat(() -> {
+        //            if (foundStructure.isPresent()) {
+        //                return foundStructure.get().getPosition();
+        //            } else
+        //        }).isNotEqualTo(new Position(endX, endY));
+
+        if (foundStructure.isPresent()) {
+            assertThat(foundStructure.get().getPosition()).isNotEqualTo(new Position(endX, endY));
+        }
+        else {
+            assertThat(foundStructure.isEmpty()).isEqualTo(true);
+        }
     }
 
 }
