@@ -30,9 +30,10 @@ public abstract class AbstractBeing implements IBeing {
      * @param destination   the initial destination of the AbstractBeing.
      * @param pathFinder    The generator of paths to positions in the world.
      */
-    public AbstractBeing(final Position startPosition,
-                         final Position destination,
-                         final IPathFinder pathFinder) {
+    public AbstractBeing(
+        final Position startPosition,
+        final Position destination,
+        final IPathFinder pathFinder) {
         this.position = startPosition;
         this.role = RoleFactory.idle();
         this.pathFinder = pathFinder;
@@ -80,6 +81,8 @@ public abstract class AbstractBeing implements IBeing {
      * Calculates and sets new position.
      */
     protected void move() {
+
+        if (path.isEmpty()) return;
 
         final Position destination = path.peek();
 
