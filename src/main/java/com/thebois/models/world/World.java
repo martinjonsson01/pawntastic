@@ -92,14 +92,13 @@ public class World implements IWorld, IFinder {
             canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
         });
         // Replace terrain with any possible structure.
-        MatrixUtils.forEachElement(
-            structureMatrix,
-            maybeStructure -> maybeStructure.ifPresent(structure -> {
-                final Position position = structure.getPosition();
-                final int posY = (int) position.getPosY();
-                final int posX = (int) position.getPosX();
-                canonicalMatrix[posY][posX] = structure.deepClone();
-            }));
+        MatrixUtils.forEachElement(structureMatrix,
+                                   maybeStructure -> maybeStructure.ifPresent(structure -> {
+                                       final Position position = structure.getPosition();
+                                       final int posY = (int) position.getPosY();
+                                       final int posX = (int) position.getPosX();
+                                       canonicalMatrix[posY][posX] = structure.deepClone();
+                                   }));
         return canonicalMatrix;
     }
 
@@ -227,9 +226,11 @@ public class World implements IWorld, IFinder {
         final int startX = Math.max(0, posX - 1);
         final int endX = Math.min(worldSize - 1, posX + 1);
 
+        final ITile[][] canonicalMatrix = getCanonicalMatrix();
+
         for (int neighbourY = startY; neighbourY <= endY; neighbourY++) {
             for (int neighbourX = startX; neighbourX <= endX; neighbourX++) {
-                final ITile neighbour = terrainMatrix[neighbourY][neighbourX];
+                final ITile neighbour = canonicalMatrix[neighbourY][neighbourX];
                 if (tile.equals(neighbour)) continue;
                 if (isDiagonalTo(tile, neighbour)) continue;
                 tiles.add(neighbour);
