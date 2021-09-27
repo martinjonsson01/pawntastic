@@ -14,8 +14,8 @@ abstract class AbstractStructure implements IStructure {
 
     private Position position;
     private StructureType structureType;
-    private Collection<IItem> collectionOfAllNeededItems = new ArrayList<>();
-    private Collection<IItem> collectionOfDeliveredItems = new ArrayList<>();
+    private Collection<IItem> allNeededItems = new ArrayList<>();
+    private Collection<IItem> deliveredItems = new ArrayList<>();
 
     /**
      * Creates a structure with a position and structure type.
@@ -69,17 +69,17 @@ abstract class AbstractStructure implements IStructure {
     @Override
     public Collection<IItem> neededItems() {
         // Make a copy of all IItems in collectionOfAllNeededItems
-        final Collection<IItem> itemDifference = new ArrayList<>(collectionOfAllNeededItems);
+        final Collection<IItem> itemDifference = new ArrayList<>(allNeededItems);
         // Remove IItems that have been delivered
-        collectionOfDeliveredItems.forEach(itemDifference::remove);
+        deliveredItems.forEach(itemDifference::remove);
         // Return difference of the two collections
         return itemDifference;
     }
 
     @Override
     public boolean deliverItem(final IItem deliveredItem) {
-        if (collectionOfAllNeededItems.contains(deliveredItem)) {
-            collectionOfDeliveredItems.add(deliveredItem);
+        if (allNeededItems.contains(deliveredItem)) {
+            deliveredItems.add(deliveredItem);
             return true;
         }
         else {
@@ -89,8 +89,8 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public float builtStatus() {
-        final float totalDelivered = this.collectionOfDeliveredItems.size();
-        final float totalNeeded = this.collectionOfAllNeededItems.size();
+        final float totalDelivered = this.deliveredItems.size();
+        final float totalNeeded = this.allNeededItems.size();
         final float ratio = totalDelivered / totalNeeded;
         if (Float.isNaN(ratio)) return 0;
 
@@ -99,8 +99,8 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public boolean dismantle(final IItem retrieving) {
-        if (collectionOfDeliveredItems.contains(retrieving)) {
-            collectionOfDeliveredItems.remove(retrieving);
+        if (deliveredItems.contains(retrieving)) {
+            deliveredItems.remove(retrieving);
             return true;
         }
         else {
@@ -109,7 +109,7 @@ abstract class AbstractStructure implements IStructure {
     }
 
     protected void setAllNeededItems(final Collection<IItem> allNeededItems) {
-        this.collectionOfAllNeededItems = allNeededItems;
+        this.allNeededItems = allNeededItems;
     }
 
 }

@@ -6,16 +6,11 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-
-import com.thebois.models.Position;
-import com.thebois.models.world.World;
-import com.thebois.models.world.structures.IStructure;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -101,7 +96,11 @@ public class MatrixUtilsTests {
         // Arrange
 
         // Act
-        final Optional<String> foundStructure = MatrixUtils.matrixSpiralSearch(stringMatrix, startX, startY, 3);
+        final Optional<String> foundStructure = MatrixUtils.matrixSpiralSearch(
+            stringMatrix,
+            startX,
+            startY,
+            3);
 
         // Assert
         if (foundStructure.isPresent()) {

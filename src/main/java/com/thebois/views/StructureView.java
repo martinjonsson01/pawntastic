@@ -52,7 +52,7 @@ public final class StructureView implements IView {
 
     // Houses get different colors based on built status
     private Color getHouseColor(final IStructure structure) {
-        return new Color(structure.builtStatus() / 2 + 0.5f, 0f, 0f, 1.0f);
+        return new Color(structure.builtStatus() / 2 + 1f / 2f, 0f, 0f, 1.0f);
     }
 
     /**
