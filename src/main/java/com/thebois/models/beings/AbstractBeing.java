@@ -81,7 +81,7 @@ public abstract class AbstractBeing implements IBeing {
         // pickNearestStructureAsDestination();
     }
 
-    protected void pickNearestStructureAsDestination() {
+    protected void pickNearestIncompleteStructureAsDestination() {
         final Optional<IStructure> structure = finder.findNearestStructure(this.getPosition());
         structure.ifPresent(iStructure -> setDestination(iStructure.getPosition()));
     }

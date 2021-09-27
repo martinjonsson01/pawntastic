@@ -2,8 +2,6 @@ package com.thebois.models.world.structures;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 

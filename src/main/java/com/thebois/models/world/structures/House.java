@@ -34,7 +34,8 @@ public class House extends AbstractStructure {
         // Temporary variable to show update of buildings
         final float buildFrequency = 0.01f;
 
-        builtRatio = (builtRatio + buildFrequency) % 1f;
+        // builtRatio = (builtRatio + buildFrequency) % 1f;
+        builtRatio = Math.min(builtRatio + buildFrequency, 1);
         return true;
     }
 
