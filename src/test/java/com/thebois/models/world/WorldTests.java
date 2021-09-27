@@ -223,12 +223,38 @@ public class WorldTests {
         final Optional<IStructure> foundStructure = world.findNearestStructure(new Position(
             startX, startY));
 
+        // Assert
         if (foundStructure.isPresent()) {
             assertThat(foundStructure.get().getPosition()).isNotEqualTo(new Position(endX, endY));
         }
         else {
             assertThat(foundStructure.isEmpty()).isEqualTo(true);
         }
+    }
+
+    private static Stream<Arguments> getCoordinatesToTest() {
+        return Stream.of(Arguments.of(0, 0),
+                         Arguments.of(5, 5),
+                         Arguments.of(0, 25),
+                         Arguments.of(20, 10),
+                         Arguments.of(40, 0)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("getCoordinatesToTest")
+    public void getStructureAtTest(final int posX, final int posY) {
+        // Arrange
+        final World world = new World(50, 0);
+        world.createStructure(posX, posY);
+        final Position position = new Position(posX, posY);
+
+        // Act
+        final Optional<IStructure> structure = world.getStructureAt(position);
+
+        // Assert
+        assertThat(structure.isPresent()).isTrue();
+        assertThat(structure.get().getPosition()).isEqualTo(position);
     }
 
 }

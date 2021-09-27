@@ -112,4 +112,8 @@ abstract class AbstractStructure implements IStructure {
         this.allNeededItems = allNeededItems;
     }
 
+    protected void setDeliveredItems(final Collection<IItem> deliveredItems) {
+        this.deliveredItems = deliveredItems;
+    }
+
 }
