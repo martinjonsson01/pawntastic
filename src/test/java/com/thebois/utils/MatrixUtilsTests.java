@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -109,6 +110,34 @@ public class MatrixUtilsTests {
         else {
             assertThat(foundStructure.isEmpty()).isEqualTo(false);
         }
+    }
+
+    @Test
+    public void testGetSubMatrix() {
+        // Arrange
+        final Optional<Integer>[][] integerMatrix = new Optional[][] {
+            { Optional.of(1), Optional.of(2), Optional.of(3), Optional.of(4), Optional.of(5) },
+            { Optional.of(6), Optional.of(7), Optional.of(8), Optional.of(9), Optional.of(10) },
+            { Optional.of(11), Optional.of(12), Optional.of(13), Optional.of(14), Optional.of(15) },
+            };
+
+        final Optional<Integer>[][] expectedMatrix = new Optional[][] {
+            { Optional.of(1), Optional.of(2), Optional.of(3) },
+            { Optional.of(6), Optional.of(7), Optional.of(8) },
+            { Optional.of(11), Optional.of(12), Optional.of(13) },
+            };
+
+        // Act
+        final Optional<Integer>[][] resultingMatrix = MatrixUtils.getSubMatrix(
+            integerMatrix,
+            0,
+            0,
+            2,
+            2);
+
+        // Assert
+
+        assertThat(resultingMatrix).isEqualTo(expectedMatrix);
     }
 
 }

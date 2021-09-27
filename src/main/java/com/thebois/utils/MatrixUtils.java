@@ -113,8 +113,8 @@ public final class MatrixUtils {
                                                            final int endRow,
                                                            final int endCol) {
 
-        final int rowSize = Math.abs(startRow - endRow);
-        final int colSize = Math.abs(startCol - endCol);
+        final int rowSize = Math.abs(startRow - endRow) + 1;
+        final int colSize = Math.abs(startCol - endCol) + 1;
 
         final Optional<TType>[][] subMatrix = new Optional[rowSize][colSize];
 
