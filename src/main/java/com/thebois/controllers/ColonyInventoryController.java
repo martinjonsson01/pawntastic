@@ -25,7 +25,7 @@ public class ColonyInventoryController {
     public ColonyInventoryController(ColonyInventoryView colonyInventoryView, Colony colony) {
         this.colonyInventoryView = colonyInventoryView;
         this.colony = colony;
-        inventoryInfo = createInventoryInfoMap();
+        inventoryInfo = new HashMap<ItemType, Integer>();
     }
 
     /**
@@ -41,10 +41,10 @@ public class ColonyInventoryController {
 
     private Map<ItemType, Integer> createInventoryInfoMap() {
         final Map<ItemType, Integer> newInventoryInfo = new HashMap<ItemType, Integer>();
-        for (ItemType itemType : ItemType.values()) {
-            inventoryInfo.put(itemType, colony.getItemCount(itemType));
+        for (final ItemType itemType : ItemType.values()) {
+            newInventoryInfo.put(itemType, colony.getItemCount(itemType));
         }
-        return inventoryInfo;
+        return newInventoryInfo;
     }
 
 }

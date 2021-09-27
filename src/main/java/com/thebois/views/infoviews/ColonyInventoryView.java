@@ -50,7 +50,7 @@ public class ColonyInventoryView implements IActorView {
         root.clearChildren();
         final Label defaultInventoryLabel = new Label("Inventory", skin);
         root.addActor(defaultInventoryLabel);
-        for (var entry : inventoryInfo.entrySet()) {
+        for (final var entry : inventoryInfo.entrySet()) {
             final String labelName = entry.getKey().name().toLowerCase(Locale.ROOT);
             final String labelText = StringUtils.capitalizeFirst(labelName + "s")
                                      + ": "
