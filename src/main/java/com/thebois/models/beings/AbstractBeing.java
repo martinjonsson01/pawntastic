@@ -93,28 +93,6 @@ public abstract class AbstractBeing implements IBeing {
         }));
     }
 
-    private Optional<IStructure> findClosetStructure(final Collection<IStructure> structures) {
-        IStructure closestStructure = null;
-
-        float shortestDistance = 0;
-        float currentDistance;
-
-        boolean firstSearch = true;
-
-        for (final IStructure structure : structures) {
-            currentDistance = structure.getPosition().distanceTo(this.currentPosition);
-            if (firstSearch) {
-                shortestDistance = currentDistance;
-                firstSearch = false;
-            }
-
-            if (currentDistance < shortestDistance) {
-                closestStructure = structure;
-            }
-        }
-        return Optional.ofNullable(closestStructure);
-    }
-
     /**
      * Calculates and sets new position.
      */
