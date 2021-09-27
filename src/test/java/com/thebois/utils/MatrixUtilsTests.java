@@ -112,31 +112,46 @@ public class MatrixUtilsTests {
         }
     }
 
-    @Test
-    public void testGetSubMatrix() {
-        // Arrange
+    private static Stream<Arguments> getMatricesAndSubMatricesToTest() {
         final Optional<Integer>[][] integerMatrix = new Optional[][] {
             { Optional.of(1), Optional.of(2), Optional.of(3), Optional.of(4), Optional.of(5) },
             { Optional.of(6), Optional.of(7), Optional.of(8), Optional.of(9), Optional.of(10) },
             { Optional.of(11), Optional.of(12), Optional.of(13), Optional.of(14), Optional.of(15) },
             };
 
-        final Optional<Integer>[][] expectedMatrix = new Optional[][] {
-            { Optional.of(1), Optional.of(2), Optional.of(3) },
-            { Optional.of(6), Optional.of(7), Optional.of(8) },
-            { Optional.of(11), Optional.of(12), Optional.of(13) },
-            };
+        return Stream.of(
+
+            Arguments.of(integerMatrix, new Optional[][] {
+                { Optional.of(1), Optional.of(2), Optional.of(3) },
+                { Optional.of(6), Optional.of(7), Optional.of(8) },
+                { Optional.of(11), Optional.of(12), Optional.of(13) },
+                }, 0, 0, 2, 2),
+
+            Arguments.of(integerMatrix, new Optional[][] {
+                { Optional.of(9), Optional.of(10), Optional.empty()},
+                { Optional.of(14), Optional.of(15), Optional.empty() },
+                { Optional.empty(), Optional.empty(), Optional.empty() },
+                }, 1, 3, 3, 5));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getMatricesAndSubMatricesToTest")
+    public void testGetSubMatrix(final Optional<Integer>[][] matrix,
+                                 final Optional<Integer>[][] expectedMatrix,
+                                 final int startRow,
+                                 final int startCol,
+                                 final int endRow,
+                                 final int endCol) {
+        // Arrange
 
         // Act
-        final Optional<Integer>[][] resultingMatrix = MatrixUtils.getSubMatrix(
-            integerMatrix,
-            0,
-            0,
-            2,
-            2);
+        final Optional<Integer>[][] resultingMatrix = MatrixUtils.getSubMatrix(matrix,
+                                                                               startRow,
+                                                                               startCol,
+                                                                               endRow,
+                                                                               endCol);
 
         // Assert
-
         assertThat(resultingMatrix).isEqualTo(expectedMatrix);
     }
 
