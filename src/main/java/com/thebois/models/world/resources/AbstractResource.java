@@ -1,5 +1,7 @@
 package com.thebois.models.world.resources;
 
+import java.util.Objects;
+
 import com.thebois.models.Position;
 
 /**
@@ -31,6 +33,19 @@ public abstract class AbstractResource implements IResource {
     @Override
     public Position getPosition() {
         return position.deepClone();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final AbstractResource that = (AbstractResource) o;
+        return Objects.equals(position, that.position) && Objects.equals(getType(), that.getType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(position, getType());
     }
 
 }
