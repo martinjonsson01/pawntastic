@@ -95,4 +95,36 @@ public final class MatrixUtils {
         return Optional.empty();
     }
 
+    /**
+     * Returns a sub matrix of the given matrix.
+     *
+     * @param matrix The matrix to be used to create a sub matrix
+     * @param startRow Row to start making the sub matrix from
+     * @param startCol Col to start making the sub matrix from
+     * @param endRow Row to end making the sub matrix to
+     * @param endCol Col to end making the sub matrix to
+     * @param <TType> The generic type of the Optional matrix
+     *
+     * @return The generated sub matrix
+     */
+    public static <TType> Optional<TType>[][] getSubMatrix(final Optional<TType>[][] matrix,
+                                                           final int startRow,
+                                                           final int startCol,
+                                                           final int endRow,
+                                                           final int endCol) {
+
+        final int rowSize = Math.abs(startRow - endRow);
+        final int colSize = Math.abs(startCol - endCol);
+
+        final Optional<TType>[][] subMatrix = new Optional[rowSize][colSize];
+
+        for (int row = 0; row < rowSize; row++) {
+            for (int col = 0; col < colSize; col++) {
+                subMatrix[row][col] = matrix[startRow + row][startCol + col];
+            }
+        }
+
+        return subMatrix;
+    }
+
 }

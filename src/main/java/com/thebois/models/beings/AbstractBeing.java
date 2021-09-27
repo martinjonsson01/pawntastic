@@ -79,6 +79,7 @@ public abstract class AbstractBeing implements IBeing {
     public void update() {
         move();
         deliverItemToNearestStructure();
+        // pickNearestStructureAsDestination();
     }
 
     protected void pickNearestStructureAsDestination() {
