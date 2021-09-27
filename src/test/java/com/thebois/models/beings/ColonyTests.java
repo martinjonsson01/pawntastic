@@ -3,6 +3,7 @@ package com.thebois.models.beings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -74,10 +75,10 @@ public class ColonyTests {
         final Colony colony = new Colony(pawns);
 
         // Act
-        final IItem result = colony.takeItemFromColonyInventory(itemType);
+        final Optional<IItem> result = colony.takeItemFromColonyInventory(itemType);
 
         // Assert
-        assertThat(result).isEqualTo(null);
+        assertThat(result.isEmpty()).isTrue();
     }
 
     @Test
@@ -92,10 +93,11 @@ public class ColonyTests {
 
         // Act
         colony.addItemToColonyInventory(new Log());
-        final IItem item = colony.takeItemFromColonyInventory(ItemType.LOG);
+        final Optional<IItem> item = colony.takeItemFromColonyInventory(ItemType.LOG);
 
         // Assert
-        assertThat(item.getType()).isEqualTo(ItemType.LOG);
+        assertThat(item.isPresent()).isTrue();
+        assertThat(item.get().getType()).isEqualTo(ItemType.LOG);
     }
 
     @Test
@@ -136,7 +138,7 @@ public class ColonyTests {
     }
 
     @Test
-    public void testCountIsZeroWhenInventoryNotGotSpecifiedItemType(){
+    public void testCountIsZeroWhenInventoryNotGotSpecifiedItemType() {
         // Arrange
         final int beingCount = 1;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);

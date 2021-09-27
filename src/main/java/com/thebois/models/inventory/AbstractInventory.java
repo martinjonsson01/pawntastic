@@ -1,6 +1,7 @@
 package com.thebois.models.inventory;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
@@ -28,12 +29,12 @@ public abstract class AbstractInventory {
      *
      * @return The item removed from the inventory
      */
-    public IItem takeItem(final ItemType itemType) {
+    public Optional<IItem> takeItem(final ItemType itemType) {
 
-        IItem item = null;
+        Optional<IItem> item = Optional.empty();
         if (doesItemTypeExist(itemType)) {
             final int firstIndexOfItemType = getFirstIndexOf(itemType);
-            item = itemHolder.remove(firstIndexOfItemType);
+            item = Optional.ofNullable(itemHolder.remove(firstIndexOfItemType));
         }
         return item;
     }

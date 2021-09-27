@@ -1,5 +1,6 @@
 package com.thebois.models.inventory;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -26,24 +27,24 @@ public class InventoryTests {
         final AbstractInventory inventory = new ColonyInventory();
 
         // Act
-        final IItem result = inventory.takeItem(itemType);
+        final Optional<IItem> result = inventory.takeItem(itemType);
 
         // Assert
-        assertThat(result).isEqualTo(null);
+        assertThat(result.isEmpty()).isTrue();
     }
 
     @Test
-    public void getsNoItemWhenSpecifiedTypeDoesNotExistEvenIfInventoryIsNotEmpty(){
+    public void getsNoItemWhenSpecifiedTypeDoesNotExistEvenIfInventoryIsNotEmpty() {
         // Arrange
         final AbstractInventory inventory = new ColonyInventory();
 
         // Act
         inventory.addItem(new Log());
         inventory.addItem(new Log());
-        final IItem result = inventory.takeItem(ItemType.ROCK);
+        final Optional<IItem> result = inventory.takeItem(ItemType.ROCK);
 
         // Assert
-        assertThat(result).isEqualTo(null);
+        assertThat(result.isEmpty()).isTrue();
     }
 
     @Test
@@ -53,10 +54,11 @@ public class InventoryTests {
 
         // Act
         inventory.addItem(new Log());
-        final IItem item = inventory.takeItem(ItemType.LOG);
+        final Optional<IItem> item = inventory.takeItem(ItemType.LOG);
 
         // Assert
-        assertThat(item.getType()).isEqualTo(ItemType.LOG);
+        assertThat(item.isPresent()).isTrue();
+        assertThat(item.get().getType()).isEqualTo(ItemType.LOG);
     }
 
     @Test
@@ -87,7 +89,7 @@ public class InventoryTests {
     }
 
     @Test
-    public void testCountIsZeroWhenInventoryNotGotSpecifiedItemType(){
+    public void testCountIsZeroWhenInventoryNotGotSpecifiedItemType() {
         // Arrange
         final AbstractInventory inventory = new ColonyInventory();
 

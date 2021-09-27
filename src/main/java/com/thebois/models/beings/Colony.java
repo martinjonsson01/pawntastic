@@ -63,7 +63,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      *
      * @return An item from the inventory of the requested type if it exists.
      */
-    public IItem takeItemFromColonyInventory(ItemType itemType) {
+    public Optional<IItem> takeItemFromColonyInventory(ItemType itemType) {
         return colonyInventory.takeItem(itemType);
     }
 
