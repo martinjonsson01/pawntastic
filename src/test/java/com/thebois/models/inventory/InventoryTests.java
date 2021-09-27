@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.Log;
+import com.thebois.models.inventory.items.Rock;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -53,6 +54,7 @@ public class InventoryTests {
         final AbstractInventory inventory = new ColonyInventory();
 
         // Act
+        inventory.addItem(new Rock());
         inventory.addItem(new Log());
         final Optional<IItem> item = inventory.takeItem(ItemType.LOG);
 
