@@ -31,7 +31,10 @@ public class House extends AbstractStructure {
 
     @Override
     public boolean deliverItem(final IItem deliveredItem) {
-        builtRatio = (builtRatio + 0.01f) % 1f;
+        // Temporary variable to show update of buildings
+        final float buildFrequency = 0.01f;
+
+        builtRatio = (builtRatio + buildFrequency) % 1f;
         return true;
     }
 

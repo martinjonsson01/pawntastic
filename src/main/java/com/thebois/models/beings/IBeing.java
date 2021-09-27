@@ -1,10 +1,7 @@
 package com.thebois.models.beings;
 
-import java.util.Collection;
-
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
-import com.thebois.models.world.structures.IStructure;
 
 /**
  * An entity.
@@ -36,12 +33,5 @@ public interface IBeing {
      * Updates the objects internal state.
      */
     void update();
-
-    /**
-     * Updates collection of known IStructures.
-     *
-     * @param structures New collection of IStructures.
-     */
-    void updateKnownStructures(Collection<IStructure> structures);
 
 }

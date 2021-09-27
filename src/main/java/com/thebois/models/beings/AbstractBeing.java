@@ -93,15 +93,6 @@ public abstract class AbstractBeing implements IBeing {
         }));
     }
 
-    @Override
-    public void updateKnownStructures(final Collection<IStructure> structures) {
-        final Optional<IStructure> closestStructure = findClosetStructure(structures);
-        if (closestStructure.isPresent()) {
-            closestStructure.get().deliverItem(new IItem() {
-            });
-        }
-    }
-
     private Optional<IStructure> findClosetStructure(final Collection<IStructure> structures) {
         IStructure closestStructure = null;
 

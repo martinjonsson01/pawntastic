@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.thebois.models.IFinder;
-import com.thebois.models.world.structures.IStructure;
 
 /**
  * An abstract implementation of IBeingGroup.
@@ -12,7 +11,6 @@ import com.thebois.models.world.structures.IStructure;
 public abstract class AbstractBeingGroup implements IBeingGroup {
 
     private Collection<IBeing> beings = new ArrayList<>();
-    private Collection<IStructure> knownStructures;
     private IFinder finder;
 
     /**
@@ -40,11 +38,6 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
 
     protected void setBeings(final Collection<IBeing> beings) {
         this.beings = beings;
-    }
-
-    @Override
-    public void updateKnownStructures(final Collection<IStructure> structures) {
-        this.knownStructures = structures;
     }
 
     protected IFinder getFinder() {
