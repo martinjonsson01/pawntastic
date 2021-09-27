@@ -11,6 +11,7 @@ import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeingGroup;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.world.resources.IResource;
+import com.thebois.models.world.resources.ResourceGenerator;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.terrains.ITerrain;
@@ -70,7 +71,8 @@ public class World implements IFinder {
     }
 
     private Optional<IResource>[][] setUpResources(final int worldSize) {
-        return new Optional[worldSize][worldSize];
+        final ResourceGenerator resourceGenerator = new ResourceGenerator();
+        return resourceGenerator.generateResourceMatrix(worldSize);
     }
 
     private void initColony(final int pawnCount) {
@@ -116,7 +118,7 @@ public class World implements IFinder {
     }
 
     /**
-     * Returns the structures in a Collection as the interface IStructures.
+     * Returns the structures in a Collection as the interface IStructure.
      *
      * @return The list to be returned.
      */
@@ -125,6 +127,21 @@ public class World implements IFinder {
         for (final Optional<IStructure>[] matrix : structureMatrix) {
             for (final Optional<IStructure> maybeStructure : matrix) {
                 maybeStructure.ifPresent(structure -> copy.add(structure.deepClone()));
+            }
+        }
+        return copy;
+    }
+
+    /**
+     * Returns the resources in a Collection as the interface IResource.
+     *
+     * @return The list to be returned.
+     */
+    public Collection<IResource> getResources() {
+        final Collection<IResource> copy = new ArrayList<>();
+        for (final Optional<IResource>[] matrix : resourceMatrix) {
+            for (final Optional<IResource> maybeResource : matrix) {
+                maybeResource.ifPresent(resource -> copy.add(resource.deepClone()));
             }
         }
         return copy;

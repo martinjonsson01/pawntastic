@@ -1,10 +1,8 @@
-package com.thebois.models.world;
+package com.thebois.models.world.terrains;
 
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
-import com.thebois.models.world.terrains.Grass;
-import com.thebois.models.world.terrains.TerrainType;
 
 import static org.assertj.core.api.Assertions.*;
 

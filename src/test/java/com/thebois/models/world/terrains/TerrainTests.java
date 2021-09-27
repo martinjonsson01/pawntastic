@@ -1,10 +1,8 @@
-package com.thebois.models.world;
+package com.thebois.models.world.terrains;
 
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
-import com.thebois.models.world.terrains.AbstractTerrain;
-import com.thebois.models.world.terrains.Grass;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -71,6 +69,19 @@ public class TerrainTests {
     }
 
     // Equal Tests
+
+    @Test
+    public void terrainIsEqualToItSelf() {
+        // Arrange
+        final AbstractTerrain terrain = new Grass(1, 1);
+        final boolean isEqual;
+
+        // Act
+        isEqual = terrain.equals(terrain);
+
+        // Assert
+        assertThat(isEqual).isTrue();
+    }
 
     @Test
     public void terrainIsNotEqualToNull() {
