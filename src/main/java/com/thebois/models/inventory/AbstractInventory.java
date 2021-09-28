@@ -14,7 +14,7 @@ public abstract class AbstractInventory {
     private final ArrayList<IItem> items = new ArrayList<>();
 
     /**
-     * Items can be put into the inventory.
+     * Inputs an item to the inventory.
      *
      * @param item The item to be added to the inventory.
      */
