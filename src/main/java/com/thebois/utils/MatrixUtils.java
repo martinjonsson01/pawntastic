@@ -46,7 +46,8 @@ public final class MatrixUtils {
     }
 
     /**
-     * Traverses the given Optional matrix using a spiral pattern to find first present element.
+     * Traverses the given Optional matrix using a spiral pattern to find present element
+     * within the search radius.
      *
      * @param matrix Matrix to be searched
      *
@@ -60,16 +61,17 @@ public final class MatrixUtils {
      *
      * @return First found present Optional element of type TType
      */
-    public static <TType> Optional<TType> matrixSpiralSearch(final Optional<TType>[][] matrix,
-                                                       final int startRow,
-                                                       final int startCol,
-                                                       final int maxSearchRadius) {
+    public static <TType> Collection<Optional<TType>> matrixSpiralSearch(final Optional<TType>[][] matrix,
+                                                                         final int startRow,
+                                                                         final int startCol,
+                                                                         final int maxSearchRadius) {
         // Spiral search pattern
         final int[][] searchPattern = {
             {0, 0}, {0, 1}, {1, 1},
             {1, 0}, {1, -1}, {0, -1},
             {-1, -1}, {-1, 0}, {-1, 1},
             };
+        final Collection<Optional<TType>> foundElements = new ArrayList<>();
 
         for (int searchRadius = 1; searchRadius <= maxSearchRadius; searchRadius++) {
             for (final int[] ints : searchPattern) {
@@ -82,7 +84,7 @@ public final class MatrixUtils {
                         matrix[searchRow][searchCol];
 
                     if (currentElem.isPresent()) {
-                        return matrix[searchRow][searchCol];
+                        foundElements.add(matrix[searchRow][searchCol]);
                     }
                 }
                 catch (final ArrayIndexOutOfBoundsException exception) {
@@ -92,7 +94,10 @@ public final class MatrixUtils {
         }
 
         // If no structure was found
-        return Optional.empty();
+        if (foundElements.isEmpty()) {
+            foundElements.add(Optional.empty());
+        }
+        return foundElements;
     }
 
     /**

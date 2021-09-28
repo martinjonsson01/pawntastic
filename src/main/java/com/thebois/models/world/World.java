@@ -203,8 +203,31 @@ public class World implements IFinder {
         final int searchCol = Math.round(position.getPosX());
 
         final int maxSearchRadius = this.worldSize / 2;
-        return MatrixUtils.matrixSpiralSearch(
+
+        final Collection<Optional<IStructure>> foundStructures = MatrixUtils.matrixSpiralSearch(
             this.structureMatrix,
+            searchRow,
+            searchCol,
+            maxSearchRadius);
+
+        if (foundStructures.iterator().hasNext()) {
+            return foundStructures.iterator().next();
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Collection<Optional<IStructure>> findNearestStructure(final Position position,
+                                                                 final int count) {
+
+        final int searchRow = Math.round(position.getPosY());
+        final int searchCol = Math.round(position.getPosX());
+        final int maxSearchRadius = this.worldSize / 2;
+
+        return MatrixUtils.matrixSpiralSearch(
+            structureMatrix,
             searchRow,
             searchCol,
             maxSearchRadius);

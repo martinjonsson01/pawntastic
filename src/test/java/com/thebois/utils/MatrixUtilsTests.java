@@ -100,7 +100,7 @@ public class MatrixUtilsTests {
             stringMatrix,
             startX,
             startY,
-            3);
+            3).iterator().next();
 
         // Assert
         if (foundStructure.isPresent()) {
