@@ -43,10 +43,6 @@ public class InventoryView implements IActorView {
      * @param inventoryItemCount The count of each item in the inventory.
      */
     public void update(final Map<ItemType, Integer> inventoryItemCount) {
-        createLabels(inventoryItemCount);
-    }
-
-    private void createLabels(final Map<ItemType, Integer> inventoryItemCount) {
         root.clearChildren();
         final Label defaultInventoryLabel = new Label("Inventory", skin);
         root.addActor(defaultInventoryLabel);
