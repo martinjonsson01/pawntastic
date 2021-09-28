@@ -46,10 +46,10 @@ class TileCostCalculator {
      * Usually described as f(n) = g(n) + h(n) in the A* algorithm.
      * </p>
      *
-     * @param tile        The position (node n) to calculate the cost of
-     * @param destination The position to find a path to
+     * @param tile        The position (node n) to calculate the cost of.
+     * @param destination The position to find a path to.
      *
-     * @return The cost of the position
+     * @return The cost of the position.
      */
     public float costOf(final ITile tile, final ITile destination) {
         return getCostFromStart(tile) + costToDestination(tile, destination);
@@ -62,9 +62,9 @@ class TileCostCalculator {
      * Usually described as g(n) in the A* algorithm.
      * </p>
      *
-     * @param tile The position to calculate the cost of moving to
+     * @param tile The position to calculate the cost of moving to.
      *
-     * @return The cost of moving from the start to the provided position
+     * @return The cost of moving from the start to the provided position.
      */
     public float getCostFromStart(final ITile tile) {
         if (costFromStart.containsKey(tile)) return costFromStart.get(tile);
@@ -80,10 +80,10 @@ class TileCostCalculator {
      * Usually described as h(n) in the A* algorithm.
      * </p>
      *
-     * @param tile        The position to calculate the cost of moving from
-     * @param destination The position to find a path to
+     * @param tile        The position to calculate the cost of moving from.
+     * @param destination The position to find a path to.
      *
-     * @return The cost of moving from the provided position to the destination
+     * @return The cost of moving from the provided position to the destination.
      */
     private float costToDestination(final ITile tile, final ITile destination) {
         return tile.getPosition().manhattanDistanceTo(destination.getPosition()) + tile.getCost();
