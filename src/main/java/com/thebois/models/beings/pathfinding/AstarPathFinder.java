@@ -19,7 +19,15 @@ public class AstarPathFinder implements IPathFinder {
 
     private final IWorld world;
     /**
-     * For a ITile, cameFrom[ITile] is the ITile preceding it on the path from the start.
+     * For a given key ITile, the value, cameFrom[ITile], is the ITile preceding it on the path from
+     * the start. It describes from which ITile the pathfinder came to reach the given tile.
+     *
+     * <p>
+     * If you get the value cameFrom[lastTileInPath] then that is the tile immediately before the
+     * destination tile that is also in the path. Once the destination has been reached, to
+     * reconstruct the final path, you use this over and over again to eventually reach the starting
+     * tile. Then you have the complete path. See reconstructPath.
+     * </p>
      */
     private Map<ITile, ITile> cameFrom;
     /**
