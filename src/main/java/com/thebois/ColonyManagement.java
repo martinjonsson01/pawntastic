@@ -26,7 +26,7 @@ import com.thebois.views.infoviews.InfoView;
 import com.thebois.views.infoviews.RoleView;
 import com.thebois.views.gameviews.StructureView;
 import com.thebois.views.gameviews.WorldView;
-import com.thebois.views.infoviews.ColonyInventoryView;
+import com.thebois.views.infoviews.InventoryView;
 
 /**
  * The main representation of the game.
@@ -48,7 +48,7 @@ class ColonyManagement extends Game {
     /* Views - InfoView */
     private InfoView infoView;
     private RoleView roleView;
-    private ColonyInventoryView colonyInventoryView;
+    private InventoryView inventoryView;
     /* Views - GameView*/
     private GameView gameView;
     private WorldView worldView;
@@ -123,8 +123,8 @@ class ColonyManagement extends Game {
 
     private void createInfoView() {
         roleView = new RoleView(uiSkin);
-        colonyInventoryView = new ColonyInventoryView(uiSkin);
-        final List<IActorView> widgetViews = List.of(roleView, colonyInventoryView);
+        inventoryView = new InventoryView(uiSkin);
+        final List<IActorView> widgetViews = List.of(roleView, inventoryView);
         infoView = new InfoView(widgetViews);
     }
 
@@ -136,8 +136,9 @@ class ColonyManagement extends Game {
                                                            tileSize,
                                                            gameView);
         this.colonyController = new ColonyController(world, colonyView);
-        this.colonyInventoryController = new ColonyInventoryController(colonyInventoryView,
-                                                                       world.getColony());
+        this.colonyInventoryController = new ColonyInventoryController(
+            inventoryView,
+            world.getColony());
         new RoleController(world.getRoleAllocator(), roleView);
     }
 

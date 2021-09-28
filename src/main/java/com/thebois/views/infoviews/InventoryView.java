@@ -14,7 +14,7 @@ import com.thebois.utils.StringUtils;
 /**
  * Information view for the colony inventory.
  */
-public class ColonyInventoryView implements IActorView {
+public class InventoryView implements IActorView {
 
     private static final float PADDING = 20f;
     private final Skin skin;
@@ -25,7 +25,7 @@ public class ColonyInventoryView implements IActorView {
      *
      * @param skin The skin to style widgets with.
      */
-    public ColonyInventoryView(final Skin skin) {
+    public InventoryView(final Skin skin) {
         this.skin = skin;
 
         root = new VerticalGroup().pad(PADDING);
