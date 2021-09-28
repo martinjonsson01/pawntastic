@@ -72,8 +72,8 @@ public abstract class AbstractInventory {
      *
      * @return The counter.
      */
-    public Integer countItem(final ItemType itemType) {
-        Integer count = 0;
+    public int countItem(final ItemType itemType) {
+        int count = 0;
         for (final IItem item : items) {
             if (item.getType().equals(itemType)) {
                 count++;
