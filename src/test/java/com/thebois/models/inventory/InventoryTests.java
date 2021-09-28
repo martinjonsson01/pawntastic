@@ -35,7 +35,7 @@ public class InventoryTests {
     }
 
     @Test
-    public void getsNoItemWhenSpecifiedTypeDoesNotExistEvenIfInventoryIsNotEmpty() {
+    public void takeItemReturnsEmptyWhenOnlyOtherItemsInInventory() {
         // Arrange
         final AbstractInventory inventory = new ColonyInventory();
 
@@ -64,7 +64,7 @@ public class InventoryTests {
     }
 
     @Test
-    public void testCountEmptyInventory() {
+    public void countEmptyInventory() {
         // Arrange
         final AbstractInventory inventory = new ColonyInventory();
 
@@ -76,7 +76,7 @@ public class InventoryTests {
     }
 
     @Test
-    public void testCountIsNotZeroWhenInventoryGotSpecifiedItemTypeInIt() {
+    public void countIsCorrectValueWhenInventoryGotSpecifiedItemType() {
         // Arrange
         final AbstractInventory inventory = new ColonyInventory();
 
@@ -91,7 +91,7 @@ public class InventoryTests {
     }
 
     @Test
-    public void testCountIsZeroWhenInventoryNotGotSpecifiedItemType() {
+    public void countIsCorrectValueWhenInventoryDoesNotHaveSpecifiedType() {
         // Arrange
         final AbstractInventory inventory = new ColonyInventory();
 
