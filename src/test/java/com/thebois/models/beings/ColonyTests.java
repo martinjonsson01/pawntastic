@@ -73,7 +73,7 @@ public class ColonyTests {
         final Colony colony = new Colony(pawns);
 
         // Act
-        final Optional<IItem> result = colony.takeItemFromColonyInventory(itemType);
+        final Optional<IItem> result = colony.takeItem(itemType);
 
         // Assert
         assertThat(result.isEmpty()).isTrue();
@@ -90,8 +90,8 @@ public class ColonyTests {
         final Colony colony = new Colony(pawns);
 
         // Act
-        colony.addItemToColonyInventory(new Log());
-        final Optional<IItem> item = colony.takeItemFromColonyInventory(ItemType.LOG);
+        colony.addItem(new Log());
+        final Optional<IItem> item = colony.takeItem(ItemType.LOG);
 
         // Assert
         assertThat(item.isPresent()).isTrue();
@@ -126,8 +126,8 @@ public class ColonyTests {
         final Colony colony = new Colony(pawns);
 
         // Act
-        colony.addItemToColonyInventory(new Log());
-        colony.addItemToColonyInventory(new Log());
+        colony.addItem(new Log());
+        colony.addItem(new Log());
 
         final int count = colony.getItemCount(ItemType.LOG);
 
@@ -146,8 +146,8 @@ public class ColonyTests {
         final Colony colony = new Colony(pawns);
 
         // Act
-        colony.addItemToColonyInventory(new Log());
-        colony.addItemToColonyInventory(new Log());
+        colony.addItem(new Log());
+        colony.addItem(new Log());
 
         final int count = colony.getItemCount(ItemType.ROCK);
 
