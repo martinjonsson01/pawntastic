@@ -2,8 +2,10 @@ package com.thebois.models.world.structures;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import com.thebois.models.Position;
 import com.thebois.models.world.inventory.IItem;
@@ -62,6 +64,48 @@ public class HouseTests {
 
         // Assert
         assertThat(house.builtStatus()).isEqualTo(0.01f);
+    }
+
+    @Test
+    public void neededItemsEqualTest() {
+        // Arrange
+        final House house = new House(new Position());
+        final IItem mockItem1 = Mockito.mock(IItem.class);
+        final IItem mockItem2 = Mockito.mock(IItem.class);
+        final IItem mockItem3 = Mockito.mock(IItem.class);
+
+        final Collection<IItem> neededItems = List.of(mockItem1, mockItem2, mockItem3);
+        final Collection<IItem> delivered = List.of(mockItem1);
+        final Collection<IItem> expectedNeededItems = List.of(mockItem2, mockItem3);
+
+        house.setAllNeededItems(neededItems);
+        house.setDeliveredItems(delivered);
+
+        // Act
+
+        // Assert
+        assertThat(house.neededItems()).isEqualTo(expectedNeededItems);
+    }
+
+    @Test
+    public void neededItemsNotEqualTest() {
+        // Arrange
+        final House house = new House(new Position());
+        final IItem mockItem1 = Mockito.mock(IItem.class);
+        final IItem mockItem2 = Mockito.mock(IItem.class);
+        final IItem mockItem3 = Mockito.mock(IItem.class);
+
+        final Collection<IItem> neededItems = List.of(mockItem1, mockItem2, mockItem3);
+        final Collection<IItem> delivered = List.of(mockItem1);
+        final Collection<IItem> expectedNeededItems = List.of(mockItem1);
+
+        house.setAllNeededItems(neededItems);
+        house.setDeliveredItems(delivered);
+
+        // Act
+
+        // Assert
+        assertThat(house.neededItems()).isNotEqualTo(expectedNeededItems);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.thebois.models.beings;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -9,11 +10,14 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.world.World;
+import com.thebois.models.world.structures.House;
+import com.thebois.models.world.structures.IStructure;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -161,4 +165,43 @@ public class BeingTests {
         assertThat(first).isNotEqualTo(second);
     }
 
+    @Test
+    public void pawnBuildsHouses() {
+        // Arrange
+
+        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final Position position = new Position();
+        final IStructure structure = new House(position);
+        when(mockFinder.findNearestStructure(any())).thenReturn(Optional.of(structure));
+        final Pawn pawn = new Pawn(position, position, Mockito.mock(Random.class), mockFinder);
+
+        // Act
+        final float initialBuildStatus = structure.builtStatus();
+        pawn.update();
+        final float finalBuildStatus = structure.builtStatus();
+
+        // Assert
+
+        assertThat(initialBuildStatus).isLessThan(finalBuildStatus);
+    }
+
+    @Test
+    public void pawnDoNotBuildsHouses() {
+        // Arrange
+        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final Position position = new Position(0, 0);
+        final Position farAway = new Position(50, 50);
+        final IStructure structure = new House(farAway);
+        when(mockFinder.findNearestStructure(any())).thenReturn(Optional.of(structure));
+        final Pawn pawn = new Pawn(position, position, Mockito.mock(Random.class), mockFinder);
+
+        // Act
+        final float initialBuildStatus = structure.builtStatus();
+        pawn.update();
+        final float finalBuildStatus = structure.builtStatus();
+
+        // Assert
+        // Value did not change because Pawn was not close enough
+        assertThat(initialBuildStatus).isEqualTo(finalBuildStatus);
+    }
 }
