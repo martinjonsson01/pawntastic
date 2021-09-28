@@ -9,7 +9,7 @@ import com.thebois.models.beings.roles.RoleFactory;
 /**
  * An abstract implementation of IBeing.
  */
-public abstract class AbstractBeing implements IBeing {
+public abstract class AbstractBeing implements IBeing, ITaskPerformer {
 
     // The max speed of the AbstractBeing
     private static final float MAX_WALKING_DISTANCE = 0.1f;
