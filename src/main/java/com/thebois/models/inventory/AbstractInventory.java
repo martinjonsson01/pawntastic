@@ -18,7 +18,7 @@ public abstract class AbstractInventory {
      *
      * @param item The item to be added to the inventory.
      */
-    public void addItem(final IItem item) {
+    public void add(final IItem item) {
         items.add(item);
     }
 
@@ -29,7 +29,7 @@ public abstract class AbstractInventory {
      *
      * @return The item removed from the inventory.
      */
-    public Optional<IItem> takeItem(final ItemType itemType) {
+    public Optional<IItem> take(final ItemType itemType) {
 
         Optional<IItem> item = Optional.empty();
         if (doesItemTypeExist(itemType)) {

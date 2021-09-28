@@ -28,7 +28,7 @@ public class InventoryTests {
         final AbstractInventory inventory = new ColonyInventory();
 
         // Act
-        final Optional<IItem> result = inventory.takeItem(itemType);
+        final Optional<IItem> result = inventory.take(itemType);
 
         // Assert
         assertThat(result.isEmpty()).isTrue();
@@ -40,9 +40,9 @@ public class InventoryTests {
         final AbstractInventory inventory = new ColonyInventory();
 
         // Act
-        inventory.addItem(new Log());
-        inventory.addItem(new Log());
-        final Optional<IItem> result = inventory.takeItem(ItemType.ROCK);
+        inventory.add(new Log());
+        inventory.add(new Log());
+        final Optional<IItem> result = inventory.take(ItemType.ROCK);
 
         // Assert
         assertThat(result.isEmpty()).isTrue();
@@ -54,9 +54,9 @@ public class InventoryTests {
         final AbstractInventory inventory = new ColonyInventory();
 
         // Act
-        inventory.addItem(new Rock());
-        inventory.addItem(new Log());
-        final Optional<IItem> item = inventory.takeItem(ItemType.LOG);
+        inventory.add(new Rock());
+        inventory.add(new Log());
+        final Optional<IItem> item = inventory.take(ItemType.LOG);
 
         // Assert
         assertThat(item.isPresent()).isTrue();
@@ -81,8 +81,8 @@ public class InventoryTests {
         final AbstractInventory inventory = new ColonyInventory();
 
         // Act
-        inventory.addItem(new Log());
-        inventory.addItem(new Log());
+        inventory.add(new Log());
+        inventory.add(new Log());
 
         final int count = inventory.countItem(ItemType.LOG);
 
@@ -96,8 +96,8 @@ public class InventoryTests {
         final AbstractInventory inventory = new ColonyInventory();
 
         // Act
-        inventory.addItem(new Log());
-        inventory.addItem(new Log());
+        inventory.add(new Log());
+        inventory.add(new Log());
 
         final int count = inventory.countItem(ItemType.ROCK);
 
