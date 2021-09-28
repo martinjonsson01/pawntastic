@@ -14,7 +14,7 @@ public class ColonyInventoryController {
 
     private final ColonyInventoryView colonyInventoryView;
     private final Colony colony;
-    private Map<ItemType, Integer> inventoryInfo;
+    private Map<ItemType, Integer> itemCounts;
 
     /**
      * Instantiates the controller with the view and a colony reference.
@@ -22,29 +22,30 @@ public class ColonyInventoryController {
      * @param colonyInventoryView The view to be updated.
      * @param colony              The colony to get information from, regarding the inventory.
      */
-    public ColonyInventoryController(ColonyInventoryView colonyInventoryView, Colony colony) {
+    public ColonyInventoryController(final ColonyInventoryView colonyInventoryView,
+                                     final Colony colony) {
         this.colonyInventoryView = colonyInventoryView;
         this.colony = colony;
-        inventoryInfo = new HashMap<ItemType, Integer>();
+        itemCounts = new HashMap<ItemType, Integer>();
     }
 
     /**
-     * Updates the world with up to date information about the inventory.
+     * Updates the world with up-to-date information about the inventory.
      */
     public void update() {
-        final Map<ItemType, Integer> newInventoryInfo = createInventoryInfoMap();
-        if (!inventoryInfo.equals(newInventoryInfo)) {
-            inventoryInfo = newInventoryInfo;
-            colonyInventoryView.update(inventoryInfo);
+        final Map<ItemType, Integer> newItemCounts = createItemCounts();
+        if (!itemCounts.equals(newItemCounts)) {
+            itemCounts = newItemCounts;
+            colonyInventoryView.update(itemCounts);
         }
     }
 
-    private Map<ItemType, Integer> createInventoryInfoMap() {
-        final Map<ItemType, Integer> newInventoryInfo = new HashMap<ItemType, Integer>();
+    private Map<ItemType, Integer> createItemCounts() {
+        final Map<ItemType, Integer> newItemCounts = new HashMap<ItemType, Integer>();
         for (final ItemType itemType : ItemType.values()) {
-            newInventoryInfo.put(itemType, colony.getItemCount(itemType));
+            newItemCounts.put(itemType, colony.getItemCount(itemType));
         }
-        return newInventoryInfo;
+        return newItemCounts;
     }
 
 }
