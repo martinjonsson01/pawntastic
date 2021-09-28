@@ -12,7 +12,7 @@ import com.thebois.models.inventory.items.ItemType;
 import com.thebois.utils.StringUtils;
 
 /**
- * Information view for the colony inventory.
+ * Information view for an inventory.
  */
 public class InventoryView implements IActorView {
 
