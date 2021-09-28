@@ -1,15 +1,11 @@
 package com.thebois.models.beings;
 
-import java.util.Collection;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
-import com.thebois.models.world.inventory.IItem;
-import com.thebois.models.world.structures.IStructure;
 
 /**
  * An abstract implementation of IBeing.
@@ -78,33 +74,6 @@ public abstract class AbstractBeing implements IBeing {
     @Override
     public void update() {
         move();
-        deliverItemToNearestStructure();
-        pickNearestIncompleteStructureAsDestination();
-    }
-
-    protected void pickNearestIncompleteStructureAsDestination() {
-        final Collection<Optional<IStructure>> structures =
-            finder.findNearestStructure(this.getPosition(), 10);
-        final Boolean[] found = {false};
-        for (final Optional<IStructure> structure : structures) {
-            structure.ifPresent(iStructure -> {
-                if (structure.get().builtStatus() < 1f) {
-                    setDestination(iStructure.getPosition());
-                    found[0] = true;
-                }
-            });
-            if (found[0]) return;
-        }
-    }
-
-    protected void deliverItemToNearestStructure() {
-        final Optional<IStructure> structure = finder.findNearestStructure(this.getPosition());
-        structure.ifPresent(iStructure -> {
-            if (iStructure.getPosition().distanceTo(getPosition()) < 2f) {
-                iStructure.deliverItem(new IItem() {
-                });
-            }
-        });
     }
 
     /**
