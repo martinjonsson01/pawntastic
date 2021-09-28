@@ -32,7 +32,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     /**
      * Creates an instance of Colony with a number of pawns.
      *
-     * @param vacantPositions Positions in the world that a Pawn can be placed on
+     * @param vacantPositions Positions in the world that a Pawn can be placed on.
      * @param world           The world the pawns move around in.
      */
     public Colony(final Iterable<Position> vacantPositions, final IWorld world) {
@@ -125,9 +125,10 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     }
 
     private Collection<IBeing> findBeingsWithRole(final AbstractRole role) {
-        return getBeings().stream()
-                          .filter(being -> role.equals(being.getRole()))
-                          .collect(Collectors.toList());
+        return getBeings()
+            .stream()
+            .filter(being -> role.equals(being.getRole()))
+            .collect(Collectors.toList());
     }
 
 }

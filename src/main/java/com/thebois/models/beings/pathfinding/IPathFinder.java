@@ -12,10 +12,10 @@ public interface IPathFinder {
     /**
      * Calculates a path from a position to a destination.
      *
-     * @param from        The starting location
-     * @param destination The location to find a path to
+     * @param from        The starting location.
+     * @param destination The location to find a path to.
      *
-     * @return The points that represent the path to take to get to the destination
+     * @return The points that represent the path to take to get to the destination.
      */
     Collection<Position> path(Position from, Position destination);
 
