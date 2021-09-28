@@ -20,6 +20,11 @@ public abstract class AbstractTerrain implements ITerrain {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(position);
+    }
+
+    @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -28,23 +33,13 @@ public abstract class AbstractTerrain implements ITerrain {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(position);
+    public String toString() {
+        return "AbstractTerrain{" + "position=" + position + '}';
     }
 
     @Override
     public Position getPosition() {
         return position.deepClone();
-    }
-
-    @Override
-    public float getCost() {
-        return 0;
-    }
-
-    @Override
-    public String toString() {
-        return "AbstractTerrain{" + "position=" + position + '}';
     }
 
 }
