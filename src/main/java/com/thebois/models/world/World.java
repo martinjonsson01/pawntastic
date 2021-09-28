@@ -208,7 +208,8 @@ public class World implements IFinder {
             this.structureMatrix,
             searchRow,
             searchCol,
-            maxSearchRadius);
+            maxSearchRadius,
+            1);
 
         if (foundStructures.iterator().hasNext()) {
             return foundStructures.iterator().next();
@@ -230,7 +231,8 @@ public class World implements IFinder {
             structureMatrix,
             searchRow,
             searchCol,
-            maxSearchRadius);
+            maxSearchRadius,
+            count);
     }
 
     @Override

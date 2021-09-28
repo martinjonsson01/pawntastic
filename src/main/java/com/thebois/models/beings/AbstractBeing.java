@@ -1,5 +1,6 @@
 package com.thebois.models.beings;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -78,18 +79,32 @@ public abstract class AbstractBeing implements IBeing {
     public void update() {
         move();
         deliverItemToNearestStructure();
-        // pickNearestStructureAsDestination();
+        pickNearestIncompleteStructureAsDestination();
     }
 
     protected void pickNearestIncompleteStructureAsDestination() {
-        final Optional<IStructure> structure = finder.findNearestStructure(this.getPosition());
-        structure.ifPresent(iStructure -> setDestination(iStructure.getPosition()));
+        final Collection<Optional<IStructure>> structures =
+            finder.findNearestStructure(this.getPosition(), 10);
+        final Boolean[] found = {false};
+        for (final Optional<IStructure> structure : structures) {
+            structure.ifPresent(iStructure -> {
+                if (structure.get().builtStatus() < 1f) {
+                    setDestination(iStructure.getPosition());
+                    found[0] = true;
+                }
+            });
+            if (found[0]) return;
+        }
     }
 
     protected void deliverItemToNearestStructure() {
         final Optional<IStructure> structure = finder.findNearestStructure(this.getPosition());
-        structure.ifPresent(iStructure -> iStructure.deliverItem(new IItem() {
-        }));
+        structure.ifPresent(iStructure -> {
+            if (iStructure.getPosition().distanceTo(getPosition()) < 2f) {
+                iStructure.deliverItem(new IItem() {
+                });
+            }
+        });
     }
 
     /**

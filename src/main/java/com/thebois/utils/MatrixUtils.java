@@ -49,22 +49,25 @@ public final class MatrixUtils {
      * Traverses the given Optional matrix using a spiral pattern to find present element
      * within the search radius.
      *
-     * @param matrix Matrix to be searched
+     * @param matrix Matrix to be searched.
      *
-     * @param startRow Row to start search from
+     * @param startRow Row to start search from.
      *
-     * @param startCol Column to start search from
+     * @param startCol Column to start search from.
      *
-     * @param maxSearchRadius Maximum search radius
+     * @param maxSearchRadius Maximum search radius.
      *
-     * @param <TType> Generic type of Optional matrix
+     * @param maxFoundElements Maximum needed elements to be found.
      *
-     * @return First found present Optional element of type TType
+     * @param <TType> Generic type of Optional matrix.
+     *
+     * @return First found present Optional element of type TType.
      */
     public static <TType> Collection<Optional<TType>> matrixSpiralSearch(final Optional<TType>[][] matrix,
                                                                          final int startRow,
                                                                          final int startCol,
-                                                                         final int maxSearchRadius) {
+                                                                         final int maxSearchRadius,
+                                                                         final int maxFoundElements) {
         // Spiral search pattern
         final int[][] searchPattern = {
             {0, 0}, {0, 1}, {1, 1},
@@ -75,7 +78,6 @@ public final class MatrixUtils {
 
         for (int searchRadius = 1; searchRadius <= maxSearchRadius; searchRadius++) {
             for (final int[] ints : searchPattern) {
-
                 try {
                     final int searchRow = startRow + ints[0] * searchRadius;
                     final int searchCol = startCol + ints[1] * searchRadius;
@@ -90,6 +92,9 @@ public final class MatrixUtils {
                 catch (final ArrayIndexOutOfBoundsException exception) {
                     // Since there is a search limit, we can let the method loop outside of matrix
                 }
+            }
+            if (foundElements.size() >= maxFoundElements) {
+                break;
             }
         }
 
