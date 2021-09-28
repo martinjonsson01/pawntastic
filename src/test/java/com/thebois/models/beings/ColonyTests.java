@@ -65,12 +65,7 @@ public class ColonyTests {
     @MethodSource("getItemTypes")
     public void emptyColonyInventoryIsEmpty(final ItemType itemType) {
         // Arrange
-        final int beingCount = 1;
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
-        final Colony colony = new Colony(pawns);
+        final Colony colony = mockColony();
 
         // Act
         final Optional<IItem> result = colony.takeItem(itemType);
@@ -82,12 +77,7 @@ public class ColonyTests {
     @Test
     public void canAddAndTakeItemToInventory() {
         // Arrange
-        final int beingCount = 1;
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
-        final Colony colony = new Colony(pawns);
+        final Colony colony = mockColony();
 
         // Act
         colony.addItem(new Log());
@@ -101,12 +91,7 @@ public class ColonyTests {
     @Test
     public void testCountEmptyInventory() {
         // Arrange
-        final int beingCount = 1;
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
-        final Colony colony = new Colony(pawns);
+        final Colony colony = mockColony();
 
         // Act
         final int count = colony.getItemCount(ItemType.ROCK);
@@ -118,12 +103,7 @@ public class ColonyTests {
     @Test
     public void testCountIsNotZeroWhenInventoryGotSpecifiedItemTypeInIt() {
         // Arrange
-        final int beingCount = 1;
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
-        final Colony colony = new Colony(pawns);
+        final Colony colony = mockColony();
 
         // Act
         colony.addItem(new Log());
@@ -138,12 +118,7 @@ public class ColonyTests {
     @Test
     public void testCountIsZeroWhenInventoryNotGotSpecifiedItemType() {
         // Arrange
-        final int beingCount = 1;
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
-        final Colony colony = new Colony(pawns);
+        final Colony colony = mockColony();
 
         // Act
         colony.addItem(new Log());
@@ -153,6 +128,11 @@ public class ColonyTests {
 
         // Assert
         assertThat(count).isEqualTo(0);
+    }
+
+    private Colony mockColony() {
+        final Collection<IBeing> pawns = new ArrayList<>(0);
+        return new Colony(pawns);
     }
 
 }
