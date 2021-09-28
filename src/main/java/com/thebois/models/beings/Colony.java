@@ -20,7 +20,7 @@ import com.thebois.models.inventory.items.ItemType;
  */
 public class Colony extends AbstractBeingGroup implements IRoleAllocator {
 
-    private final ColonyInventory colonyInventory = new ColonyInventory();
+    private final ColonyInventory inventory = new ColonyInventory();
 
     /**
      * Initializes with already existing beings.
@@ -53,7 +53,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      * @param item The item to be stored
      */
     public void addItemToColonyInventory(IItem item) {
-        colonyInventory.addItem(item);
+        inventory.addItem(item);
     }
 
     /**
@@ -64,7 +64,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      * @return An item from the inventory of the requested type if it exists.
      */
     public Optional<IItem> takeItemFromColonyInventory(ItemType itemType) {
-        return colonyInventory.takeItem(itemType);
+        return inventory.takeItem(itemType);
     }
 
     /**
@@ -75,7 +75,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      * @return Number of the speceifed type in the inventory
      */
     public Integer getItemCount(ItemType itemType) {
-        return colonyInventory.countItem(itemType);
+        return inventory.countItem(itemType);
     }
 
     @Override
