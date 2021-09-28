@@ -11,39 +11,39 @@ import com.thebois.models.inventory.items.ItemType;
  */
 public abstract class AbstractInventory {
 
-    private final ArrayList<IItem> itemHolder = new ArrayList<>();
+    private final ArrayList<IItem> items = new ArrayList<>();
 
     /**
      * Items can be put into the inventory.
      *
-     * @param item The item to be added to the inventory
+     * @param item The item to be added to the inventory.
      */
     public void addItem(final IItem item) {
-        itemHolder.add(item);
+        items.add(item);
     }
 
     /**
      * Removes and returns the first item of the specified type.
      *
-     * @param itemType The item type to be taken
+     * @param itemType The item type to be taken.
      *
-     * @return The item removed from the inventory
+     * @return The item removed from the inventory.
      */
     public Optional<IItem> takeItem(final ItemType itemType) {
 
         Optional<IItem> item = Optional.empty();
         if (doesItemTypeExist(itemType)) {
             final int firstIndexOfItemType = getFirstIndexOf(itemType);
-            item = Optional.ofNullable(itemHolder.remove(firstIndexOfItemType));
+            item = Optional.ofNullable(items.remove(firstIndexOfItemType));
         }
         return item;
     }
 
     private int getFirstIndexOf(final ItemType itemType) {
         int index = -1;
-        for (final IItem item : itemHolder) {
+        for (final IItem item : items) {
             if (item.getType().equals(itemType)) {
-                index = itemHolder.indexOf(item);
+                index = items.indexOf(item);
             }
         }
         return index;
@@ -52,12 +52,12 @@ public abstract class AbstractInventory {
     /**
      * Check if an item type is in the current inventory.
      *
-     * @param itemType The item type to be checked for
+     * @param itemType The item type to be checked for.
      *
-     * @return A boolean indicating if the item is in the inventory or not
+     * @return A boolean indicating if the item is in the inventory or not.
      */
     private boolean doesItemTypeExist(final ItemType itemType) {
-        for (final IItem item : itemHolder) {
+        for (final IItem item : items) {
             if (item.getType().equals(itemType)) {
                 return true;
             }
@@ -68,13 +68,13 @@ public abstract class AbstractInventory {
     /**
      * Counts how many items are in the current inventory of the specified type.
      *
-     * @param itemType The type to be counted
+     * @param itemType The type to be counted.
      *
-     * @return The counter
+     * @return The counter.
      */
     public Integer countItem(final ItemType itemType) {
         Integer count = 0;
-        for (final IItem item : itemHolder) {
+        for (final IItem item : items) {
             if (item.getType().equals(itemType)) {
                 count++;
             }
