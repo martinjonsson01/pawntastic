@@ -101,7 +101,7 @@ public class ColonyTests {
     }
 
     @Test
-    public void countIsNotZeroWhenInventoryGotSpecifiedItemTypeInIt() {
+    public void countIsCorrectCountWhenInventoryGotSpecifiedItemTypeInIt() {
         // Arrange
         final Colony colony = mockColony();
 
