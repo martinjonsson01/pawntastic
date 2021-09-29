@@ -115,7 +115,7 @@ public final class Position implements IDeepClonable<Position> {
     public int manhattanDistanceTo(final Position destination) {
         final float distanceX = Math.abs(getPosX() - destination.getPosX());
         final float distanceY = Math.abs(getPosY() - destination.getPosY());
-        return (int) (distanceX + distanceY);
+        return Math.round(distanceX + distanceY);
     }
 
 }
