@@ -28,7 +28,7 @@ public class Inventory {
      *
      * @param stack The items to be added to the inventory.
      */
-    public void addStack(final List<IItem> stack) {
+    public void addMultiple(final List<IItem> stack) {
         for (final IItem item : stack) {
             add(item);
         }
@@ -40,15 +40,41 @@ public class Inventory {
      * @param itemType The item type to be taken.
      *
      * @return The item removed from the inventory.
+     *
+     * @throws IllegalArgumentException If the item type is not in the inventory.
      */
-    public Optional<IItem> take(final ItemType itemType) {
+    public IItem take(final ItemType itemType) {
 
-        Optional<IItem> item = Optional.empty();
         if (hasItem(itemType)) {
             final int firstIndexOfItemType = getFirstIndexOf(itemType);
-            item = Optional.ofNullable(items.remove(firstIndexOfItemType));
+            return items.remove(firstIndexOfItemType);
         }
-        return item;
+        else {
+            throw new IllegalArgumentException("Specified ItemType not in inventory");
+        }
+    }
+
+    /**
+     * @param itemType The item type to be taken.
+     * @param amount   The amount of items to be taken.
+     *
+     * @return The list of items removed from the inventory.
+     *
+     * @throws IllegalArgumentException If the amount given is greater that the items of the
+     *                                  speceifed item type in the inventory.
+     */
+    public ArrayList<IItem> takeAmount(final ItemType itemType, final int amount) {
+        final ArrayList<IItem> taken = new ArrayList<>(amount);
+        for (int i = 0; i <= amount; i++) {
+            try {
+                taken.add(take(itemType));
+            }
+            catch (final IllegalArgumentException exception) {
+                throw new IllegalArgumentException(
+                    "Not enough of the specified ItemType in the inventory");
+            }
+        }
+        return taken;
     }
 
     private int getFirstIndexOf(final ItemType itemType) {
@@ -68,13 +94,30 @@ public class Inventory {
      *
      * @return A boolean indicating if the item is in the inventory or not.
      */
-    private boolean hasItem(final ItemType itemType) {
+    public boolean hasItem(final ItemType itemType) {
         for (final IItem item : items) {
             if (item.getType().equals(itemType)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Check if a given amount of an item type is in the current inventory.
+     *
+     * @param itemType The item type to be checked for.
+     * @param amount   The amount of to be checked for.
+     *
+     * @return A boolean indicating it the amount of the specified item is in the inventory or not.
+     */
+    public boolean hasItem(final ItemType itemType, final int amount) {
+        for (int i = 0; i <= amount; i++) {
+            if (!hasItem(itemType)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
