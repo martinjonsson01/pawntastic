@@ -9,7 +9,7 @@ import com.thebois.models.inventory.items.ItemType;
 /**
  * Base implementation for all inventories.
  */
-public abstract class AbstractInventory {
+public class Inventory {
 
     private final ArrayList<IItem> items = new ArrayList<>();
 

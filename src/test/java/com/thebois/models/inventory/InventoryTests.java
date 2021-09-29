@@ -25,7 +25,7 @@ public class InventoryTests {
     @MethodSource("getItemTypes")
     public void emptyInventoryIsEmpty(final ItemType itemType) {
         // Arrange
-        final AbstractInventory inventory = new ColonyInventory();
+        final Inventory inventory = new Inventory();
 
         // Act
         final Optional<IItem> result = inventory.take(itemType);
@@ -37,7 +37,7 @@ public class InventoryTests {
     @Test
     public void takeItemReturnsEmptyWhenOnlyOtherItemsInInventory() {
         // Arrange
-        final AbstractInventory inventory = new ColonyInventory();
+        final Inventory inventory = new Inventory();
 
         // Act
         inventory.add(new Log());
@@ -51,7 +51,7 @@ public class InventoryTests {
     @Test
     public void canAddAndTakeItemToInventory() {
         // Arrange
-        final AbstractInventory inventory = new ColonyInventory();
+        final Inventory inventory = new Inventory();
 
         // Act
         inventory.add(new Rock());
@@ -66,7 +66,7 @@ public class InventoryTests {
     @Test
     public void countEmptyInventory() {
         // Arrange
-        final AbstractInventory inventory = new ColonyInventory();
+        final Inventory inventory = new Inventory();
 
         // Act
         final int count = inventory.countItem(ItemType.ROCK);
@@ -78,7 +78,7 @@ public class InventoryTests {
     @Test
     public void countIsCorrectValueWhenInventoryGotSpecifiedItemType() {
         // Arrange
-        final AbstractInventory inventory = new ColonyInventory();
+        final Inventory inventory = new Inventory();
 
         // Act
         inventory.add(new Log());
@@ -93,7 +93,7 @@ public class InventoryTests {
     @Test
     public void countIsCorrectValueWhenInventoryDoesNotHaveSpecifiedType() {
         // Arrange
-        final AbstractInventory inventory = new ColonyInventory();
+        final Inventory inventory = new Inventory();
 
         // Act
         inventory.add(new Log());
