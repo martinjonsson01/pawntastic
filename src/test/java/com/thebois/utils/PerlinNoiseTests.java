@@ -99,6 +99,7 @@ public class PerlinNoiseTests {
                                                               final float posY2) {
         // Arrange
         final PerlinNoiseGenerator perlinNoiseGenerator = new PerlinNoiseGenerator();
+        perlinNoiseGenerator.setSeed(0);
         final float heightValue1;
         final float heightValue2;
 
