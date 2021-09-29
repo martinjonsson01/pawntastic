@@ -32,7 +32,7 @@ public class Inventory {
     public Optional<IItem> take(final ItemType itemType) {
 
         Optional<IItem> item = Optional.empty();
-        if (doesItemTypeExist(itemType)) {
+        if (hasItem(itemType)) {
             final int firstIndexOfItemType = getFirstIndexOf(itemType);
             item = Optional.ofNullable(items.remove(firstIndexOfItemType));
         }
@@ -56,7 +56,7 @@ public class Inventory {
      *
      * @return A boolean indicating if the item is in the inventory or not.
      */
-    private boolean doesItemTypeExist(final ItemType itemType) {
+    private boolean hasItem(final ItemType itemType) {
         for (final IItem item : items) {
             if (item.getType().equals(itemType)) {
                 return true;
