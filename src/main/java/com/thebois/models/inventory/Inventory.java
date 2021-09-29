@@ -1,6 +1,7 @@
 package com.thebois.models.inventory;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.thebois.models.inventory.items.IItem;
@@ -20,6 +21,17 @@ public class Inventory {
      */
     public void add(final IItem item) {
         items.add(item);
+    }
+
+    /**
+     * Inputs more than just one item into the inventory.
+     *
+     * @param stack The items to be added to the inventory.
+     */
+    public void addStack(final List<IItem> stack) {
+        for (final IItem item : stack) {
+            add(item);
+        }
     }
 
     /**
