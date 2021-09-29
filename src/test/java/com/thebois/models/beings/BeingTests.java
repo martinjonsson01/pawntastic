@@ -1,5 +1,8 @@
 package com.thebois.models.beings;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -64,7 +67,8 @@ public class BeingTests {
         final AbstractRole role = RoleFactory.fromType(roleType);
         final AbstractBeing being = new Pawn(currentPosition.deepClone(),
                                              destination.deepClone(),
-                                             new Random(), new World(10, 0));
+                                             new Random(),
+                                             new World(10, 0));
         being.setRole(role);
         return being;
     }
@@ -87,7 +91,11 @@ public class BeingTests {
         final float distanceToDestination = startPosition.distanceTo(endPosition);
         final Random mockRandom = Mockito.mock(Random.class);
         when(mockRandom.nextInt(anyInt())).thenReturn(0);
-        final AbstractBeing being = new Pawn(startPosition, endPosition, mockRandom, new World(10, 0));
+        final AbstractBeing being = new Pawn(
+            startPosition,
+            endPosition,
+            mockRandom,
+            new World(10, 0));
 
         // Act
         being.update();
@@ -105,11 +113,13 @@ public class BeingTests {
         final AbstractRole role = RoleFactory.farmer();
         final IBeing first = new Pawn(currentPosition.deepClone(),
                                       destination.deepClone(),
-                                      new Random(), new World(10, 0));
+                                      new Random(),
+                                      new World(10, 0));
         first.setRole(role);
         final IBeing second = new Pawn(currentPosition.deepClone(),
                                        destination.deepClone(),
-                                       new Random(), new World(10, 0));
+                                       new Random(),
+                                       new World(10, 0));
         second.setRole(role);
 
         // Act
@@ -124,11 +134,16 @@ public class BeingTests {
     public void hashCodeReturnDifferentIfNotEqual() {
         // Arrange
         final AbstractRole role = RoleFactory.farmer();
-        final IBeing first = new Pawn(new Position(0, 0), new Position(1, 1), new Random(), new World(10, 0));
+        final IBeing first = new Pawn(
+            new Position(0, 0),
+            new Position(1, 1),
+            new Random(),
+            new World(10, 0));
         first.setRole(role);
         final IBeing second = new Pawn(new Position(123, 123),
                                        new Position(983, 1235),
-                                       new Random(), new World(10, 0));
+                                       new Random(),
+                                       new World(10, 0));
 
         // Act
         final int firstHashCode = first.hashCode();
@@ -141,7 +156,11 @@ public class BeingTests {
     @Test
     public void equalsReturnsFalseForOtherType() {
         // Arrange
-        final IBeing being = new Pawn(new Position(0, 0), new Position(1, 1), new Random(), new World(10, 0));
+        final IBeing being = new Pawn(
+            new Position(0, 0),
+            new Position(1, 1),
+            new Random(),
+            new World(10, 0));
         being.setRole(RoleFactory.farmer());
 
         // Assert
@@ -204,4 +223,40 @@ public class BeingTests {
         // Value did not change because Pawn was not close enough
         assertThat(initialBuildStatus).isEqualTo(finalBuildStatus);
     }
+
+    @Test
+    public void doesPawnWalkToNearestUnBuiltBuilding() {
+        // Arrange
+        final Position positionA = new Position(1, 0);
+        final Position positionB = new Position(2, 0);
+        final Position positionC = new Position(3, 0);
+
+        final IStructure unBuiltStructure = Mockito.mock(IStructure.class);
+        final IStructure builtStructure = Mockito.mock(IStructure.class);
+
+        when(unBuiltStructure.getPosition()).thenReturn(positionA);
+        when(builtStructure.getPosition()).thenReturn(positionC);
+        when(unBuiltStructure.builtStatus()).thenReturn(0f);
+        when(builtStructure.builtStatus()).thenReturn(1f);
+
+        final Collection<Optional<IStructure>> structures = new ArrayList<>();
+        structures.add(Optional.of(builtStructure));
+        structures.add(Optional.of(unBuiltStructure));
+
+        final IFinder mockFinder = Mockito.mock(IFinder.class);
+
+        when(mockFinder.findNearestStructure(any(), anyInt())).thenReturn(structures);
+        // builtStructure would be found first by the current finder
+        when(mockFinder.findNearestStructure(any())).thenReturn(Optional.of(builtStructure));
+
+        final Pawn pawn = new Pawn(positionB, positionB, Mockito.mock(Random.class), mockFinder);
+
+        // Act
+        pawn.update();
+
+        // Assert
+        // Value did not change because Pawn was not close enough
+        assertThat(pawn.getDestination()).isEqualTo(positionA);
+    }
+
 }
