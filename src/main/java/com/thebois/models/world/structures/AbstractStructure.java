@@ -20,8 +20,8 @@ abstract class AbstractStructure implements IStructure {
     /**
      * Creates a structure with a position and structure type.
      *
-     * @param posX          Position in X-axis
-     * @param posY          Position in Y-axis
+     * @param posX          Position in X-axis.
+     * @param posY          Position in Y-axis.
      * @param structureType The type of structure to create.
      */
     AbstractStructure(int posX, int posY, StructureType structureType) {
@@ -92,7 +92,9 @@ abstract class AbstractStructure implements IStructure {
         final float totalDelivered = this.deliveredItems.size();
         final float totalNeeded = this.allNeededItems.size();
         final float ratio = totalDelivered / totalNeeded;
-        if (Float.isNaN(ratio)) return 0;
+        // builtStatus is NaN only if there is no Needed Items,
+        // That means the building is complete, hence return 1.
+        if (Float.isNaN(ratio)) return 1;
 
         return totalDelivered / totalNeeded;
     }

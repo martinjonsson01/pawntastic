@@ -21,7 +21,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     /**
      * Initializes with already existing beings.
      *
-     * @param beings The beings that should belong to the colony
+     * @param beings The beings that should belong to the colony.
      */
     public Colony(final Collection<IBeing> beings) {
         setBeings(beings);
@@ -30,7 +30,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     /**
      * Creates an instance of Colony with n number of pawns.
      *
-     * @param vacantPositions Positions in the world that a Pawn can be placed on
+     * @param vacantPositions Positions in the world that a Pawn can be placed on.
      */
     public Colony(final Iterable<Position> vacantPositions) {
         createBeings(vacantPositions);
@@ -39,9 +39,9 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     /**
      * Creates an instance of Colony with n number of pawns.
      *
-     * @param vacantPositions Positions in the world that a Pawn can be placed on
+     * @param vacantPositions Positions in the world that a Pawn can be placed on.
      *
-     * @param finder finder used to locate things in the world
+     * @param finder finder used to locate things in the world.
      */
     public Colony(final Iterable<Position> vacantPositions, final IFinder finder) {
         setFinder(finder);
