@@ -72,7 +72,7 @@ public class Inventory {
      *
      * @return The counter.
      */
-    public int countItem(final ItemType itemType) {
+    public int numberOf(final ItemType itemType) {
         int count = 0;
         for (final IItem item : items) {
             if (item.getType().equals(itemType)) {

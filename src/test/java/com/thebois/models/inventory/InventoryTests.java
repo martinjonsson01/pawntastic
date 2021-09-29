@@ -69,7 +69,7 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        final int count = inventory.countItem(ItemType.ROCK);
+        final int count = inventory.numberOf(ItemType.ROCK);
 
         // Assert
         assertThat(count).isEqualTo(0);
@@ -84,7 +84,7 @@ public class InventoryTests {
         inventory.add(new Log());
         inventory.add(new Log());
 
-        final int count = inventory.countItem(ItemType.LOG);
+        final int count = inventory.numberOf(ItemType.LOG);
 
         // Assert
         assertThat(count).isEqualTo(2);
@@ -99,7 +99,7 @@ public class InventoryTests {
         inventory.add(new Log());
         inventory.add(new Log());
 
-        final int count = inventory.countItem(ItemType.ROCK);
+        final int count = inventory.numberOf(ItemType.ROCK);
 
         // Assert
         assertThat(count).isEqualTo(0);
