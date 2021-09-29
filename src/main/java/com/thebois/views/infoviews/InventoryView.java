@@ -40,19 +40,19 @@ public class InventoryView implements IActorView {
     /**
      * When new count is received the view is will update the counters for all items.
      *
-     * @param inventoryItemCount The count of each item in the inventory.
+     * @param itemCount The count of each item in the inventory.
      */
-    public void update(final Map<ItemType, Integer> inventoryItemCount) {
+    public void update(final Map<ItemType, Integer> itemCount) {
         root.clearChildren();
-        final Label defaultInventoryLabel = new Label("Inventory", skin);
-        root.addActor(defaultInventoryLabel);
-        for (final var entry : inventoryItemCount.entrySet()) {
-            final String labelName = entry.getKey().name().toLowerCase(Locale.ROOT);
-            final String labelText = StringUtils.capitalizeFirst(labelName + "s")
-                                     + ": "
-                                     + entry.getValue();
-            final Label inventoryInformationLabel = new Label(labelText, skin);
-            root.addActor(inventoryInformationLabel);
+        final Label titleLabel = new Label("Inventory", skin);
+        root.addActor(titleLabel);
+        for (final var entry : itemCount.entrySet()) {
+            final String itemName = entry.getKey().name().toLowerCase(Locale.ROOT);
+            final String itemNameAndCount = StringUtils.capitalizeFirst(itemName + "s")
+                                            + ": "
+                                            + entry.getValue();
+            final Label itemNameAndCountLabel = new Label(itemNameAndCount, skin);
+            root.addActor(itemNameAndCountLabel);
         }
     }
 
