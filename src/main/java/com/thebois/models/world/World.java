@@ -63,7 +63,7 @@ public class World implements IWorld, IFinder {
         }
 
         canonicalMatrix = new ITile[worldSize][worldSize];
-        repopulateCanonicalMatrix();
+        updateCanonicalMatrix();
 
         this.colony = colony;
     }
@@ -80,7 +80,7 @@ public class World implements IWorld, IFinder {
      * Warning: expensive method, do not call every frame!
      * </p>
      */
-    private void repopulateCanonicalMatrix() {
+    private void updateCanonicalMatrix() {
         // Fill with terrain.
         MatrixUtils.forEachElement(terrainMatrix, tile -> {
             final Position position = tile.getPosition();
@@ -171,7 +171,7 @@ public class World implements IWorld, IFinder {
         if (isPositionPlaceable(position)) {
             structureMatrix[posY][posX] = Optional.of(new House(position));
 
-            repopulateCanonicalMatrix();
+            updateCanonicalMatrix();
             postObstacleEvent(posX, posY);
             return true;
         }
