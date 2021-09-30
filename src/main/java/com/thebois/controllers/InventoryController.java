@@ -20,7 +20,7 @@ public class InventoryController {
      * Instantiates the controller with the view and a colony reference.
      *
      * @param inventoryView The view to be updated.
-     * @param inventory     The colony to get information from, regarding the inventory.
+     * @param inventory     The inventory to get information from, e.g. item counts.
      */
     public InventoryController(final InventoryView inventoryView, final IInventory inventory) {
         this.inventoryView = inventoryView;
