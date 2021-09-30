@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import com.thebois.controllers.ColonyController;
-import com.thebois.controllers.ColonyInventoryController;
+import com.thebois.controllers.InventoryController;
 import com.thebois.controllers.RoleController;
 import com.thebois.controllers.StructureController;
 import com.thebois.controllers.TerrainController;
@@ -60,7 +60,7 @@ class ColonyManagement extends Game {
     private TerrainController terrainController;
     private StructureController structureController;
     private ColonyController colonyController;
-    private ColonyInventoryController colonyInventoryController;
+    private InventoryController inventoryController;
 
     @Override
     public void create() {
@@ -136,7 +136,7 @@ class ColonyManagement extends Game {
                                                            tileSize,
                                                            gameView);
         this.colonyController = new ColonyController(world, colonyView);
-        this.colonyInventoryController = new ColonyInventoryController(
+        this.inventoryController = new InventoryController(
             inventoryView,
             world.getColonyInventory());
         new RoleController(world.getRoleAllocator(), roleView);
@@ -156,7 +156,7 @@ class ColonyManagement extends Game {
         terrainController.update();
         colonyController.update();
         structureController.update();
-        colonyInventoryController.update();
+        inventoryController.update();
     }
 
     private void initInputProcessors() {

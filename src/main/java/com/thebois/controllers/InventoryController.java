@@ -11,7 +11,7 @@ import com.thebois.views.infoviews.InventoryView;
 /**
  * Makes sure the inventory view is updated with correct information.
  */
-public class ColonyInventoryController {
+public class InventoryController {
 
     private final InventoryView inventoryView;
     private final IInventory colony;
@@ -23,8 +23,8 @@ public class ColonyInventoryController {
      * @param inventoryView The view to be updated.
      * @param colony              The colony to get information from, regarding the inventory.
      */
-    public ColonyInventoryController(final InventoryView inventoryView,
-                                     final IInventory colony) {
+    public InventoryController(final InventoryView inventoryView,
+                               final IInventory colony) {
         this.inventoryView = inventoryView;
         this.colony = colony;
         itemCounts = new HashMap<ItemType, Integer>();
