@@ -1,5 +1,6 @@
 package com.thebois.models.inventory;
 
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -106,6 +107,80 @@ public class InventoryTests {
 
         // Assert
         assertThat(count).isEqualTo(0);
+    }
+
+    @Test
+    public void takeMultipleItemsFromInventory() {
+        // Arrange
+        final Inventory inventory = new Inventory();
+
+        // Act
+        inventory.add(new Log());
+        inventory.add(new Log());
+
+        final ArrayList<IItem> result = inventory.takeAmount(ItemType.LOG, 2);
+
+        // Assert
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).getType()).isEqualTo(ItemType.LOG);
+        assertThat(result.get(1).getType()).isEqualTo(ItemType.LOG);
+    }
+
+    @Test
+    public void canNotTakeMultipleItemsFromInventory() {
+        // Arrange
+        final Inventory inventory = new Inventory();
+
+        // Act
+        inventory.add(new Log());
+        inventory.add(new Log());
+
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            inventory.takeAmount(ItemType.ROCK, 2);
+        });
+
+        // Assert
+        assertThat(exception.getMessage()).isEqualTo(
+            "Not enough of the specified ItemType in the inventory");
+    }
+
+    @Test
+    public void inventoryHasMultipleOfItem() {
+        // Arrange
+        final Inventory inventory = new Inventory();
+
+        // Act
+        inventory.add(new Log());
+        inventory.add(new Log());
+
+        final boolean result = inventory.hasItem(ItemType.LOG, 2);
+
+        // Assert
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void inventoryDoesNotHaveMultipleOfItem() {
+        // Arrange
+        final Inventory inventory = new Inventory();
+
+        // Act
+        final boolean result = inventory.hasItem(ItemType.LOG, 2);
+
+        // Assert
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void addMultipleItemsToInventory() {
+        // Arrange
+        final Inventory inventory = new Inventory();
+        final ArrayList<IItem> items = new ArrayList<>();
+        items.add(new Log());
+        items.add(new Log());
+
+        // Act
+        inventory.addMultiple(items);
     }
 
 }

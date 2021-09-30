@@ -66,7 +66,7 @@ public class Inventory {
      */
     public ArrayList<IItem> takeAmount(final ItemType itemType, final int amount) {
         final ArrayList<IItem> taken = new ArrayList<>(amount);
-        for (int i = 0; i <= amount; i++) {
+        for (int i = 0; i < amount; i++) {
             try {
                 taken.add(take(itemType));
             }
