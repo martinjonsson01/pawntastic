@@ -43,7 +43,7 @@ public class ColonyInventoryController {
     private Map<ItemType, Integer> createItemCounts() {
         final Map<ItemType, Integer> newItemCounts = new HashMap<ItemType, Integer>();
         for (final ItemType itemType : ItemType.values()) {
-            newItemCounts.put(itemType, colony.getItemCount(itemType));
+            newItemCounts.put(itemType, colony.numberOf(itemType));
         }
         return newItemCounts;
     }

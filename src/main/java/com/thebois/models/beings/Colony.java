@@ -1,6 +1,8 @@
 package com.thebois.models.beings;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -11,6 +13,7 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
@@ -18,7 +21,7 @@ import com.thebois.models.inventory.items.ItemType;
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
  */
-public class Colony extends AbstractBeingGroup implements IRoleAllocator {
+public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInventory {
 
     private final Inventory inventory = new Inventory();
 
@@ -45,37 +48,6 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         for (final Position vacantPosition : vacantPositions) {
             addBeing(new Pawn(vacantPosition, vacantPosition, random));
         }
-    }
-
-    /**
-     * Allows items to be stored in the shared inventory for the colony.
-     *
-     * @param item The item to be stored.
-     */
-    public void addItem(final IItem item) {
-        inventory.add(item);
-    }
-
-    /**
-     * Allows item to be retrieved from the shared colony inventory.
-     *
-     * @param itemType The type of item that is to be retrieved from the inventory.
-     *
-     * @return An item from the inventory of the requested type if it exists.
-     */
-    public IItem takeItem(final ItemType itemType) {
-        return inventory.take(itemType);
-    }
-
-    /**
-     * Counts items of the specified the type in the colony inventory.
-     *
-     * @param itemType The type to be counted.
-     *
-     * @return Number of the speceifed type in the inventory.
-     */
-    public Integer getItemCount(final ItemType itemType) {
-        return inventory.numberOf(itemType);
     }
 
     @Override
@@ -159,6 +131,41 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         return getBeings().stream()
                           .filter(being -> role.equals(being.getRole()))
                           .collect(Collectors.toList());
+    }
+
+    @Override
+    public void add(final IItem item) {
+        inventory.add(item);
+    }
+
+    @Override
+    public void addMultiple(final List<IItem> stack) {
+        inventory.addMultiple(stack);
+    }
+
+    @Override
+    public IItem take(final ItemType itemType) {
+        return inventory.take(itemType);
+    }
+
+    @Override
+    public ArrayList<IItem> takeAmount(final ItemType itemType, final int amount) {
+        return inventory.takeAmount(itemType, amount);
+    }
+
+    @Override
+    public boolean hasItem(final ItemType itemType) {
+        return inventory.hasItem(itemType);
+    }
+
+    @Override
+    public boolean hasItem(final ItemType itemType, final int amount) {
+        return inventory.hasItem(itemType, amount);
+    }
+
+    @Override
+    public int numberOf(final ItemType itemType) {
+        return inventory.numberOf(itemType);
     }
 
 }

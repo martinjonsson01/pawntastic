@@ -69,7 +69,7 @@ public class ColonyTests {
 
         // Act
         final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            colony.takeItem(itemType);
+            colony.take(itemType);
         });
 
         // Assert
@@ -82,8 +82,8 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.addItem(new Log());
-        final IItem item = colony.takeItem(ItemType.LOG);
+        colony.add(new Log());
+        final IItem item = colony.take(ItemType.LOG);
 
         // Assert
         assertThat(item.getType()).isEqualTo(ItemType.LOG);
@@ -95,7 +95,7 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        final int count = colony.getItemCount(ItemType.ROCK);
+        final int count = colony.numberOf(ItemType.ROCK);
 
         // Assert
         assertThat(count).isEqualTo(0);
@@ -107,10 +107,10 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.addItem(new Log());
-        colony.addItem(new Log());
+        colony.add(new Log());
+        colony.add(new Log());
 
-        final int count = colony.getItemCount(ItemType.LOG);
+        final int count = colony.numberOf(ItemType.LOG);
 
         // Assert
         assertThat(count).isEqualTo(2);
@@ -122,10 +122,10 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.addItem(new Log());
-        colony.addItem(new Log());
+        colony.add(new Log());
+        colony.add(new Log());
 
-        final int count = colony.getItemCount(ItemType.ROCK);
+        final int count = colony.numberOf(ItemType.ROCK);
 
         // Assert
         assertThat(count).isEqualTo(0);
@@ -134,6 +134,106 @@ public class ColonyTests {
     private Colony mockColony() {
         final Collection<IBeing> pawns = new ArrayList<>(0);
         return new Colony(pawns);
+    }
+
+    @Test
+    public void takeMultipleItemsFromColony() {
+        // Arrange
+        final Colony colony = mockColony();
+
+        // Act
+        colony.add(new Log());
+        colony.add(new Log());
+
+        final ArrayList<IItem> result = colony.takeAmount(ItemType.LOG, 2);
+
+        // Assert
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).getType()).isEqualTo(ItemType.LOG);
+        assertThat(result.get(1).getType()).isEqualTo(ItemType.LOG);
+    }
+
+    @Test
+    public void canNotTakeMultipleItemsFromColony() {
+        // Arrange
+        final Colony colony = mockColony();
+
+        // Act
+        colony.add(new Log());
+        colony.add(new Log());
+
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            colony.takeAmount(ItemType.ROCK, 2);
+        });
+
+        // Assert
+        assertThat(exception.getMessage()).isEqualTo(
+            "Not enough of the specified ItemType in the inventory");
+    }
+
+    @Test
+    public void colonyHasItem(){
+        // Arrange
+        final Colony colony = mockColony();
+
+        // Act
+        colony.add(new Log());
+        final boolean result = colony.hasItem(ItemType.LOG);
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void colonyDoesNotHaveItem(){
+        // Arrange
+        final Colony colony = mockColony();
+
+        // Act
+        final boolean result = colony.hasItem(ItemType.LOG);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void colonyHasMultipleOfItem() {
+        // Arrange
+        final Colony colony = mockColony();
+
+        // Act
+        colony.add(new Log());
+        colony.add(new Log());
+
+        final boolean result = colony.hasItem(ItemType.LOG, 2);
+
+        // Assert
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void colonyDoesNotHaveMultipleOfItem() {
+        // Arrange
+        final Colony colony = mockColony();
+
+        // Act
+        final boolean result = colony.hasItem(ItemType.LOG, 2);
+
+        // Assert
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void addMultipleItemsToColony() {
+        // Arrange
+        final Colony colony = mockColony();
+        final ArrayList<IItem> items = new ArrayList<>();
+        items.add(new Log());
+        items.add(new Log());
+
+        // Act
+        colony.addMultiple(items);
+
+        // Assert
+        assertThat(colony.hasItem(ItemType.LOG, 2)).isTrue();
     }
 
 }

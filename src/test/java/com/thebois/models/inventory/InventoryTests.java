@@ -181,6 +181,9 @@ public class InventoryTests {
 
         // Act
         inventory.addMultiple(items);
+
+        // Assert
+        assertThat(inventory.hasItem(ItemType.LOG, 2)).isTrue();
     }
 
 }
