@@ -13,35 +13,19 @@ public class Inventory implements IInventory {
 
     private final ArrayList<IItem> items = new ArrayList<>();
 
-    /**
-     * Inputs an item to the inventory.
-     *
-     * @param item The item to be added to the inventory.
-     */
+    @Override
     public void add(final IItem item) {
         items.add(item);
     }
 
-    /**
-     * Inputs more than just one item into the inventory.
-     *
-     * @param stack The items to be added to the inventory.
-     */
+    @Override
     public void addMultiple(final List<IItem> stack) {
         for (final IItem item : stack) {
             add(item);
         }
     }
 
-    /**
-     * Removes and returns the first item of the specified type.
-     *
-     * @param itemType The item type to be taken.
-     *
-     * @return The item removed from the inventory.
-     *
-     * @throws IllegalArgumentException If the item type is not in the inventory.
-     */
+    @Override
     public IItem take(final ItemType itemType) {
 
         if (hasItem(itemType)) {
@@ -53,17 +37,7 @@ public class Inventory implements IInventory {
         }
     }
 
-    /**
-     * Take multiple items from the inventory.
-     *
-     * @param itemType The item type to be taken.
-     * @param amount   The amount of items to be taken.
-     *
-     * @return The list of items removed from the inventory.
-     *
-     * @throws IllegalArgumentException If the amount given is greater that the items of the
-     *                                  specified item type in the inventory.
-     */
+    @Override
     public ArrayList<IItem> takeAmount(final ItemType itemType, final int amount) {
         final ArrayList<IItem> taken = new ArrayList<>(amount);
         for (int i = 0; i < amount; i++) {
@@ -88,13 +62,7 @@ public class Inventory implements IInventory {
         return index;
     }
 
-    /**
-     * Check if an item type is in the current inventory.
-     *
-     * @param itemType The item type to be checked for.
-     *
-     * @return A boolean indicating if the item is in the inventory or not.
-     */
+    @Override
     public boolean hasItem(final ItemType itemType) {
         for (final IItem item : items) {
             if (item.getType().equals(itemType)) {
@@ -104,14 +72,7 @@ public class Inventory implements IInventory {
         return false;
     }
 
-    /**
-     * Check if a given amount of an item type is in the current inventory.
-     *
-     * @param itemType The item type to be checked for.
-     * @param amount   The amount of to be checked for.
-     *
-     * @return A boolean indicating it the amount of the specified item is in the inventory or not.
-     */
+    @Override
     public boolean hasItem(final ItemType itemType, final int amount) {
         for (int i = 0; i <= amount; i++) {
             if (!hasItem(itemType)) {
@@ -121,13 +82,7 @@ public class Inventory implements IInventory {
         return true;
     }
 
-    /**
-     * Counts how many items are in the current inventory of the specified type.
-     *
-     * @param itemType The type to be counted.
-     *
-     * @return The counter.
-     */
+    @Override
     public int numberOf(final ItemType itemType) {
         int count = 0;
         for (final IItem item : items) {
