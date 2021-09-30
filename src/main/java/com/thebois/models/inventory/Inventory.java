@@ -57,6 +57,7 @@ public class Inventory implements IInventory {
         for (final IItem item : items) {
             if (item.getType().equals(itemType)) {
                 index = items.indexOf(item);
+                break;
             }
         }
         return index;
@@ -64,17 +65,12 @@ public class Inventory implements IInventory {
 
     @Override
     public boolean hasItem(final ItemType itemType) {
-        for (final IItem item : items) {
-            if (item.getType().equals(itemType)) {
-                return true;
-            }
-        }
-        return false;
+        return numberOf(itemType) >= 1;
     }
 
     @Override
     public boolean hasItem(final ItemType itemType, final int amount) {
-        return numberOf(itemType) == amount;
+        return numberOf(itemType) >= amount;
     }
 
     @Override

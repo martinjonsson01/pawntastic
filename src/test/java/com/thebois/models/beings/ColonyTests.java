@@ -172,7 +172,7 @@ public class ColonyTests {
     }
 
     @Test
-    public void colonyHasItem(){
+    public void colonyHasItem() {
         // Arrange
         final Colony colony = mockColony();
 
@@ -184,7 +184,7 @@ public class ColonyTests {
     }
 
     @Test
-    public void colonyDoesNotHaveItem(){
+    public void colonyDoesNotHaveItem() {
         // Arrange
         final Colony colony = mockColony();
 
