@@ -220,8 +220,8 @@ public class World implements IFinder {
     }
 
     @Override
-    public Collection<Optional<IStructure>> findNearestStructure(final Position position,
-                                                                 final int count) {
+    public Collection<Optional<IStructure>> findNearestStructures(final Position position,
+                                                                  final int count) {
 
         final int searchRow = Math.round(position.getPosY());
         final int searchCol = Math.round(position.getPosX());

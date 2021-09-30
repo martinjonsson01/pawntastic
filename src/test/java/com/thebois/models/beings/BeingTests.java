@@ -2,7 +2,6 @@ package com.thebois.models.beings;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -245,7 +244,7 @@ public class BeingTests {
 
         final IFinder mockFinder = Mockito.mock(IFinder.class);
 
-        when(mockFinder.findNearestStructure(any(), anyInt())).thenReturn(structures);
+        when(mockFinder.findNearestStructures(any(), anyInt())).thenReturn(structures);
         // builtStructure would be found first by the current finder
         when(mockFinder.findNearestStructure(any())).thenReturn(Optional.of(builtStructure));
 

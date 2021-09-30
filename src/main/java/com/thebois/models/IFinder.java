@@ -27,7 +27,7 @@ public interface IFinder {
      *
      * @return The found IStructure.
      */
-    Collection<Optional<IStructure>> findNearestStructure(Position position, int count);
+    Collection<Optional<IStructure>> findNearestStructures(Position position, int count);
 
     /**
      * Returns the IStructure at position.

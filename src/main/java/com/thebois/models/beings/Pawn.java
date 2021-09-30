@@ -51,7 +51,7 @@ public class Pawn extends AbstractBeing {
 
     protected void pickNearestIncompleteStructureAsDestination() {
         final Collection<Optional<IStructure>> structures =
-            getFinder().findNearestStructure(this.getPosition(), 10);
+            getFinder().findNearestStructures(this.getPosition(), 10);
         final Boolean[] found = {false};
         for (final Optional<IStructure> structure : structures) {
             structure.ifPresent(iStructure -> {
