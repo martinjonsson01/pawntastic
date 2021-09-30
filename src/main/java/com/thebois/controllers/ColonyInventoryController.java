@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.thebois.models.beings.Colony;
+import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.views.infoviews.InventoryView;
 
@@ -13,7 +14,7 @@ import com.thebois.views.infoviews.InventoryView;
 public class ColonyInventoryController {
 
     private final InventoryView inventoryView;
-    private final Colony colony;
+    private final IInventory colony;
     private Map<ItemType, Integer> itemCounts;
 
     /**
@@ -23,7 +24,7 @@ public class ColonyInventoryController {
      * @param colony              The colony to get information from, regarding the inventory.
      */
     public ColonyInventoryController(final InventoryView inventoryView,
-                                     final Colony colony) {
+                                     final IInventory colony) {
         this.inventoryView = inventoryView;
         this.colony = colony;
         itemCounts = new HashMap<ItemType, Integer>();

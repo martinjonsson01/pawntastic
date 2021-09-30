@@ -138,7 +138,7 @@ class ColonyManagement extends Game {
         this.colonyController = new ColonyController(world, colonyView);
         this.colonyInventoryController = new ColonyInventoryController(
             inventoryView,
-            world.getColony());
+            world.getColonyInventory());
         new RoleController(world.getRoleAllocator(), roleView);
     }
 
