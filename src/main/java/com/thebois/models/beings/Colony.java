@@ -52,7 +52,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      *
      * @param item The item to be stored.
      */
-    public void addItem(IItem item) {
+    public void addItem(final IItem item) {
         inventory.add(item);
     }
 
@@ -63,7 +63,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      *
      * @return An item from the inventory of the requested type if it exists.
      */
-    public Optional<IItem> takeItem(ItemType itemType) {
+    public IItem takeItem(final ItemType itemType) {
         return inventory.take(itemType);
     }
 
@@ -74,7 +74,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      *
      * @return Number of the speceifed type in the inventory.
      */
-    public Integer getItemCount(ItemType itemType) {
+    public Integer getItemCount(final ItemType itemType) {
         return inventory.numberOf(itemType);
     }
 

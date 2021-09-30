@@ -3,7 +3,6 @@ package com.thebois.models.beings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,7 @@ import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.Log;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class ColonyTests {
@@ -68,10 +68,12 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        final Optional<IItem> result = colony.takeItem(itemType);
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            colony.takeItem(itemType);
+        });
 
         // Assert
-        assertThat(result.isEmpty()).isTrue();
+        assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
     }
 
     @Test
@@ -81,11 +83,10 @@ public class ColonyTests {
 
         // Act
         colony.addItem(new Log());
-        final Optional<IItem> item = colony.takeItem(ItemType.LOG);
+        final IItem item = colony.takeItem(ItemType.LOG);
 
         // Assert
-        assertThat(item.isPresent()).isTrue();
-        assertThat(item.get().getType()).isEqualTo(ItemType.LOG);
+        assertThat(item.getType()).isEqualTo(ItemType.LOG);
     }
 
     @Test

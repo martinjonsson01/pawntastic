@@ -2,7 +2,6 @@ package com.thebois.models.inventory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
@@ -55,13 +54,15 @@ public class Inventory {
     }
 
     /**
+     * Take multiple items from the inventory.
+     *
      * @param itemType The item type to be taken.
      * @param amount   The amount of items to be taken.
      *
      * @return The list of items removed from the inventory.
      *
      * @throws IllegalArgumentException If the amount given is greater that the items of the
-     *                                  speceifed item type in the inventory.
+     *                                  specified item type in the inventory.
      */
     public ArrayList<IItem> takeAmount(final ItemType itemType, final int amount) {
         final ArrayList<IItem> taken = new ArrayList<>(amount);

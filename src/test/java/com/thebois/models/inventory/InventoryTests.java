@@ -1,6 +1,5 @@
 package com.thebois.models.inventory;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import com.thebois.models.inventory.items.Log;
 import com.thebois.models.inventory.items.Rock;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class InventoryTests {
 
@@ -28,24 +28,28 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        final Optional<IItem> result = inventory.take(itemType);
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            inventory.take(itemType);
+        });
 
         // Assert
-        assertThat(result.isEmpty()).isTrue();
+        assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
     }
 
     @Test
-    public void takeItemReturnsEmptyWhenOnlyOtherItemsInInventory() {
+    public void takeItemThrowsExceptionWhenOnlyOtherItemsInInventory() {
         // Arrange
         final Inventory inventory = new Inventory();
 
         // Act
         inventory.add(new Log());
         inventory.add(new Log());
-        final Optional<IItem> result = inventory.take(ItemType.ROCK);
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            inventory.take(ItemType.ROCK);
+        });
 
         // Assert
-        assertThat(result.isEmpty()).isTrue();
+        assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
     }
 
     @Test
@@ -56,11 +60,10 @@ public class InventoryTests {
         // Act
         inventory.add(new Rock());
         inventory.add(new Log());
-        final Optional<IItem> item = inventory.take(ItemType.LOG);
+        final IItem item = inventory.take(ItemType.LOG);
 
         // Assert
-        assertThat(item.isPresent()).isTrue();
-        assertThat(item.get().getType()).isEqualTo(ItemType.LOG);
+        assertThat(item.getType()).isEqualTo(ItemType.LOG);
     }
 
     @Test
