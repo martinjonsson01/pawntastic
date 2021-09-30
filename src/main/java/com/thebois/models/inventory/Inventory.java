@@ -74,12 +74,7 @@ public class Inventory implements IInventory {
 
     @Override
     public boolean hasItem(final ItemType itemType, final int amount) {
-        for (int i = 0; i <= amount; i++) {
-            if (!hasItem(itemType)) {
-                return false;
-            }
-        }
-        return true;
+        return numberOf(itemType) == amount;
     }
 
     @Override
