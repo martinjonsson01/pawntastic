@@ -214,11 +214,24 @@ public class ColonyTests {
     }
 
     @Test
-    public void colonyDoesNotHaveMultipleOfItem() {
+    public void emptyInventoryDoesNotHaveItemsSuccess() {
         // Arrange
         final Colony colony = mockColony();
 
         // Act
+        final boolean result = colony.hasItem(ItemType.LOG, 2);
+
+        // Assert
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void falseWhenInventoryDoesNotHaveRequestedAmountOfItemsSuccess() {
+        // Arrange
+        final Colony colony = mockColony();
+
+        // Act
+        colony.add(new Log());
         final boolean result = colony.hasItem(ItemType.LOG, 2);
 
         // Assert
