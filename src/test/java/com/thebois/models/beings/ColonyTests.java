@@ -15,6 +15,8 @@ import com.thebois.models.Position;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.Log;
+import com.thebois.models.world.Grass;
+import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,16 +29,18 @@ public class ColonyTests {
     }
 
     @Test
-    public void constructWithPositionsCreatesOneBeingPerPosition() {
+    public void constructWithTilesCreatesOneBeingPerPosition() {
         // Arrange
         final int beingCount = 25;
         final List<Position> positions = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
-            positions.add(new Position());
+            positions.add(new Position(0, 0));
         }
+        final IWorld mockWorld = mock(IWorld.class);
+        when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
 
         // Act
-        final Colony colony = new Colony(positions);
+        final Colony colony = new Colony(positions, mockWorld);
 
         // Assert
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);
