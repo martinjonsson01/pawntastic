@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
@@ -40,7 +39,7 @@ public class ColonyView implements IView {
     private final float tileSize;
     private final int radius;
     private IBeingGroup colony;
-    private Texture beingTexture;
+    private final Texture beingTexture;
 
     /**
      * Instantiates a new ColonyView.
@@ -50,21 +49,8 @@ public class ColonyView implements IView {
     public ColonyView(final float tileSize) {
         this.tileSize = tileSize;
         this.radius = Math.round(tileSize / 2f);
-
-        createBeingTexture();
-    }
-
-    private void createBeingTexture() {
-        final int superSampledRadius = radius * TEXTURE_SUPER_SAMPLING_FACTOR;
-        final Pixmap pixmap = new Pixmap(superSampledRadius * 2,
-                                         superSampledRadius * 2,
-                                         Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fillCircle(superSampledRadius, superSampledRadius, superSampledRadius);
-        beingTexture = new Texture(pixmap, true);
-        beingTexture.setFilter(Texture.TextureFilter.MipMapLinearLinear,
-                               Texture.TextureFilter.MipMapLinearLinear);
-        pixmap.dispose();
+        this.beingTexture = TextureUtils.createCircleTexture(radius
+                                                             * TEXTURE_SUPER_SAMPLING_FACTOR);
     }
 
     /**
