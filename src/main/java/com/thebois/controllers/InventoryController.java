@@ -3,7 +3,6 @@ package com.thebois.controllers;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.thebois.models.beings.Colony;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.views.infoviews.InventoryView;
