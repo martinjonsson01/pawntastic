@@ -14,19 +14,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.google.common.eventbus.EventBus;
 
 import com.thebois.controllers.ColonyController;
+import com.thebois.controllers.InventoryController;
 import com.thebois.controllers.RoleController;
 import com.thebois.controllers.StructureController;
 import com.thebois.controllers.TerrainController;
 import com.thebois.models.world.World;
-import com.thebois.views.ColonyView;
+import com.thebois.views.gameviews.ColonyView;
 import com.thebois.views.GameScreen;
-import com.thebois.views.GameView;
-import com.thebois.views.IActorView;
+import com.thebois.views.gameviews.GameView;
+import com.thebois.views.infoviews.IActorView;
 import com.thebois.views.IView;
-import com.thebois.views.InfoView;
-import com.thebois.views.RoleView;
-import com.thebois.views.StructureView;
-import com.thebois.views.WorldView;
+import com.thebois.views.infoviews.InfoView;
+import com.thebois.views.infoviews.RoleView;
+import com.thebois.views.gameviews.StructureView;
+import com.thebois.views.gameviews.WorldView;
+import com.thebois.views.infoviews.InventoryView;
 import com.thebois.views.debug.BeingPathDebugView;
 import com.thebois.views.debug.FrameCounterView;
 
@@ -56,6 +58,7 @@ public class ColonyManagement extends Game {
     /* Views - InfoView */
     private InfoView infoView;
     private RoleView roleView;
+    private InventoryView inventoryView;
     /* Views - GameView*/
     private GameView gameView;
     private WorldView worldView;
@@ -70,6 +73,7 @@ public class ColonyManagement extends Game {
     private TerrainController terrainController;
     private StructureController structureController;
     private ColonyController colonyController;
+    private InventoryController inventoryController;
     private float tileSize;
 
     @Override
@@ -134,7 +138,8 @@ public class ColonyManagement extends Game {
 
     private void createInfoView() {
         roleView = new RoleView(uiSkin);
-        final List<IActorView> widgetViews = List.of(roleView);
+        inventoryView = new InventoryView(uiSkin);
+        final List<IActorView> widgetViews = List.of(roleView, inventoryView);
         infoView = new InfoView(widgetViews);
     }
 
@@ -146,6 +151,9 @@ public class ColonyManagement extends Game {
                                                            tileSize,
                                                            gameView);
         this.colonyController = new ColonyController(world, colonyView);
+        this.inventoryController = new InventoryController(
+            inventoryView,
+            world.getColonyInventory());
         new RoleController(world.getRoleAllocator(), roleView);
     }
 
@@ -186,6 +194,7 @@ public class ColonyManagement extends Game {
         terrainController.update();
         colonyController.update();
         structureController.update();
+        inventoryController.update();
     }
 
 }

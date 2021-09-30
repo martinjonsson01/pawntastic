@@ -9,9 +9,10 @@ import com.thebois.ColonyManagement;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
+import com.thebois.models.beings.AbstractBeingGroup;
 import com.thebois.models.beings.Colony;
-import com.thebois.models.beings.IBeingGroup;
 import com.thebois.models.beings.roles.IRoleAllocator;
+import com.thebois.models.inventory.IInventory;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.utils.MatrixUtils;
@@ -200,7 +201,17 @@ public class World implements IWorld, IFinder {
      *
      * @return the colony.
      */
-    public IBeingGroup getColony() {
+    public AbstractBeingGroup getColony() {
+        return colony;
+    }
+
+    /**
+     * Returns the players' colony with only inventory methods allowed.
+     * (Temporary until we refactor world/colony)
+     *
+     * @return the colony.
+     */
+    public IInventory getColonyInventory() {
         return colony;
     }
 

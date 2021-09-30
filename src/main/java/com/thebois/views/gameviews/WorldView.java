@@ -1,4 +1,4 @@
-package com.thebois.views;
+package com.thebois.views.gameviews;
 
 import java.util.ArrayList;
 
@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import com.thebois.models.world.ITerrain;
+import com.thebois.views.IView;
 
 /**
  * World view handles all the drawing of the world itself and its information on how to draw it.
