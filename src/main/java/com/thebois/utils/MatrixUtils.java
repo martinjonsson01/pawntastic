@@ -63,11 +63,13 @@ public final class MatrixUtils {
      *
      * @return First found present Optional element of type TType.
      */
-    public static <TType> Collection<Optional<TType>> matrixSpiralSearch(final Optional<TType>[][] matrix,
-                                                                         final int startRow,
-                                                                         final int startCol,
-                                                                         final int maxSearchRadius,
-                                                                         final int maxFoundElements) {
+    public static <TType> Collection<Optional<TType>> matrixSpiralSearch(
+        final Optional<TType>[][] matrix,
+        final int startRow,
+        final int startCol,
+        final int maxSearchRadius,
+        final int maxFoundElements) {
+
         // Spiral search pattern
         final int[][] searchPattern = {
             {0, 0}, {0, 1}, {1, 1},
