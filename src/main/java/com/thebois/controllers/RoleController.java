@@ -10,9 +10,9 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.views.IActorView;
-import com.thebois.views.RoleView;
-import com.thebois.views.SpinnerButton;
+import com.thebois.views.infoviews.IActorView;
+import com.thebois.views.infoviews.RoleView;
+import com.thebois.views.infoviews.SpinnerButton;
 
 /**
  * Controls the interactions from the player regarding role allocations.

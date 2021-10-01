@@ -5,12 +5,17 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
+import com.thebois.models.world.Grass;
+import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class RoleAllocatorTests {
 
@@ -18,7 +23,7 @@ public class RoleAllocatorTests {
     public void tryIncreaseAllocationSucceedsWhenNoRolesAssigned() {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
-        final Colony cut = new Colony(mockOriginPositions(3));
+        final Colony cut = new Colony(mockStartPositions(3), mockWorld());
 
         // Act
         final boolean success = cut.tryIncreaseAllocation(role);
@@ -28,7 +33,7 @@ public class RoleAllocatorTests {
         assertThat(cut.getBeings()).anyMatch(being -> role.equals(being.getRole().getType()));
     }
 
-    private Iterable<Position> mockOriginPositions(final int count) {
+    private Iterable<Position> mockStartPositions(final int count) {
         final List<Position> positions = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             positions.add(new Position());
@@ -36,12 +41,18 @@ public class RoleAllocatorTests {
         return positions;
     }
 
+    private IWorld mockWorld() {
+        final IWorld mockWorld = Mockito.mock(IWorld.class);
+        when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
+        return mockWorld;
+    }
+
     @Test
     public void tryIncreaseAllocationFailsWhenAllRolesAssigned() {
         // Arrange
         final RoleType existingRole = RoleFactory.lumberjack().getType();
         final RoleType newRole = RoleFactory.farmer().getType();
-        final Colony cut = new Colony(mockOriginPositions(3));
+        final Colony cut = new Colony(mockStartPositions(3), mockWorld());
         cut.tryIncreaseAllocation(existingRole, 3);
 
         // Act
@@ -60,7 +71,7 @@ public class RoleAllocatorTests {
         final RoleType secondRole = RoleFactory.miner().getType();
         final RoleType newRole = RoleFactory.farmer().getType();
 
-        final Colony cut = new Colony(mockOriginPositions(7));
+        final Colony cut = new Colony(mockStartPositions(7), mockWorld());
 
         cut.tryIncreaseAllocation(firstRole, 3);
         cut.tryIncreaseAllocation(secondRole, 3);
@@ -80,7 +91,7 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
 
-        final Colony cut = new Colony(mockOriginPositions(4));
+        final Colony cut = new Colony(mockStartPositions(4), mockWorld());
 
         cut.tryIncreaseAllocation(role, 3);
 
@@ -97,7 +108,7 @@ public class RoleAllocatorTests {
     public void tryDecreaseAllocationFailsWhenNoRolesAssigned() {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
-        final Colony cut = new Colony(mockOriginPositions(3));
+        final Colony cut = new Colony(mockStartPositions(3), mockWorld());
 
         // Act
         final boolean success = cut.tryDecreaseAllocation(role);
@@ -112,7 +123,7 @@ public class RoleAllocatorTests {
     public void tryDecreaseAllocationFailsWhenNotEnoughRolesAssigned() {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
-        final Colony cut = new Colony(mockOriginPositions(3));
+        final Colony cut = new Colony(mockStartPositions(3), mockWorld());
         cut.tryIncreaseAllocation(role, 1);
 
         // Act
@@ -128,7 +139,7 @@ public class RoleAllocatorTests {
     public void tryDecreaseAllocationSucceedsWhenAllRolesAssigned() {
         // Arrange
         final RoleType existingRole = RoleFactory.farmer().getType();
-        final Colony cut = new Colony(mockOriginPositions(3));
+        final Colony cut = new Colony(mockStartPositions(3), mockWorld());
         cut.tryIncreaseAllocation(existingRole, 3);
 
         // Act
@@ -144,7 +155,7 @@ public class RoleAllocatorTests {
     public void tryDecreaseAllocationSucceedsWhenEnoughRolesAssigned() {
         // Arrange
         final RoleType existingRole = RoleFactory.farmer().getType();
-        final Colony cut = new Colony(mockOriginPositions(3));
+        final Colony cut = new Colony(mockStartPositions(3), mockWorld());
         cut.tryIncreaseAllocation(existingRole, 3);
 
         // Act
@@ -160,7 +171,7 @@ public class RoleAllocatorTests {
     public void tryDecreaseAllocationSucceedsWhenOneHasRole() {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
-        final Colony cut = new Colony(mockOriginPositions(4));
+        final Colony cut = new Colony(mockStartPositions(4), mockWorld());
         cut.tryIncreaseAllocation(role);
 
         // Act
@@ -179,7 +190,7 @@ public class RoleAllocatorTests {
         final RoleType secondRole = RoleFactory.miner().getType();
         final RoleType thirdRole = RoleFactory.farmer().getType();
 
-        final IRoleAllocator cut = new Colony(mockOriginPositions(16));
+        final IRoleAllocator cut = new Colony(mockStartPositions(16), mockWorld());
 
         final int expectedFirstCount = 3;
         final int expectedSecondCount = 5;
@@ -204,7 +215,7 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
 
-        final Colony cut = new Colony(mockOriginPositions(3));
+        final Colony cut = new Colony(mockStartPositions(3), mockWorld());
         cut.tryIncreaseAllocation(role);
 
         // Act
@@ -219,7 +230,7 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
 
-        final Colony cut = new Colony(mockOriginPositions(3));
+        final Colony cut = new Colony(mockStartPositions(3), mockWorld());
 
         // Act
         final boolean canDecrease = cut.canDecreaseAllocation(role);
@@ -231,7 +242,7 @@ public class RoleAllocatorTests {
     @Test
     public void canIncreaseAllocationReturnsTrueWhenNoneHaveRole() {
         // Arrange
-        final Colony cut = new Colony(mockOriginPositions(3));
+        final Colony cut = new Colony(mockStartPositions(3), mockWorld());
 
         // Act
         final boolean canIncrease = cut.canIncreaseAllocation();
@@ -245,7 +256,7 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
 
-        final Colony cut = new Colony(mockOriginPositions(3));
+        final Colony cut = new Colony(mockStartPositions(3), mockWorld());
         cut.tryIncreaseAllocation(role, 3);
 
         // Act

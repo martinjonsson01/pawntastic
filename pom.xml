@@ -44,6 +44,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.0-jre</version>
+        </dependency>
         <!-- LibGDX dependencies-->
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>

@@ -6,8 +6,8 @@ import java.util.Collection;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import com.thebois.models.world.World;
-import com.thebois.views.IActorView;
-import com.thebois.views.InfoView;
+import com.thebois.views.infoviews.IActorView;
+import com.thebois.views.infoviews.InfoView;
 
 /**
  * Container class for controllers that manage the info.
@@ -26,9 +26,12 @@ public class InfoController {
     public InfoController(final World world, final Skin skin) {
 
         final RoleController roleController = new RoleController(world.getRoleAllocator(), skin);
+        final InventoryController inventoryController =
+            new InventoryController(world.getColonyInventory(), skin);
 
         controllers = new ArrayList<>();
         controllers.add(roleController);
+        controllers.add(inventoryController);
 
         infoView = createInfoView();
     }

@@ -2,7 +2,7 @@ package com.thebois.controllers;
 
 import com.thebois.models.world.World;
 import com.thebois.views.IView;
-import com.thebois.views.WorldView;
+import com.thebois.views.gameviews.WorldView;
 
 /**
  * A controller that gathers data from the world and updates the view.

@@ -1,4 +1,4 @@
-package com.thebois.views;
+package com.thebois.views.infoviews;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.utils.StringUtils;
 
 /**
  * Displays all the different roles and the controls used to assign them.
@@ -66,17 +67,14 @@ public class RoleView implements IActorView {
 
         roleButtons.put(roleType, button);
 
-        final String roleName = capitalizeFirst(roleType.name().toLowerCase(Locale.ROOT) + "s");
+        final String roleName = StringUtils.capitalizeFirst(roleType.name().toLowerCase(Locale.ROOT)
+                                                            + "s");
         final Label roleLabel = new Label(roleName, skin);
 
         final Group buttonGroup = new VerticalGroup();
         buttonGroup.addActor(roleLabel);
         buttonGroup.addActor(button);
         return buttonGroup;
-    }
-
-    private String capitalizeFirst(final String text) {
-        return text.substring(0, 1).toUpperCase() + text.substring(1);
     }
 
     public AbstractMap<RoleType, SpinnerButton> getRoleButtons() {

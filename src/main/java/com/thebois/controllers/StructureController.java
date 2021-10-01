@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.thebois.models.world.World;
 import com.thebois.views.IProjector;
 import com.thebois.views.IView;
-import com.thebois.views.StructureView;
+import com.thebois.views.gameviews.StructureView;
 
 /**
  * Controller for Structures in the world.

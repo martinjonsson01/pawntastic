@@ -1,8 +1,8 @@
 package com.thebois.controllers;
 
 import com.thebois.models.world.World;
-import com.thebois.views.ColonyView;
 import com.thebois.views.IView;
+import com.thebois.views.gameviews.ColonyView;
 
 /**
  * Collects data form the world and sends it to its corresponding view.

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.google.common.eventbus.EventBus;
 
 import com.thebois.controllers.InfoController;
 import com.thebois.controllers.WorldController;
@@ -22,8 +23,20 @@ import com.thebois.views.ViewportWrapper;
 /**
  * The main representation of the game.
  */
-class ColonyManagement extends Game {
+public class ColonyManagement extends Game {
 
+    /**
+     * The global event bus that most events pass through.
+     */
+    public static final EventBus BUS = new EventBus();
+    /* Toggles debug-mode. */
+    /**
+     * Global variable used to check if game is run in debug mode.
+     */
+    public static final boolean DEBUG = false;
+    /**
+     * Number of tiles per axis in the world.
+     */
     public static final int WORLD_SIZE = 50;
     /* These two decide the aspect ratio that will be preserved. */
     private static final float VIEWPORT_WIDTH = 1300;
@@ -41,16 +54,17 @@ class ColonyManagement extends Game {
     // Controllers
     private WorldController worldController;
     private InfoController infoController;
+    // Screens
+    private float tileSize;
 
     @Override
     public void create() {
-        final float tileSize = Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH) / WORLD_SIZE;
+        tileSize = Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH) / WORLD_SIZE;
 
         setUpUserInterfaceSkin();
 
         // Model
         createModels();
-
         // Camera & Viewport
         final OrthographicCamera camera = new OrthographicCamera();
         final FitViewport viewport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, camera);
@@ -59,7 +73,7 @@ class ColonyManagement extends Game {
         final IProjector projector = new ViewportWrapper(viewport);
 
         // Controllers
-        this.worldController = new WorldController(world, projector, tileSize, WORLD_SIZE);
+        this.worldController = new WorldController(world, projector, tileSize, font);
         this.infoController = new InfoController(world, uiSkin);
 
         // Screens
@@ -69,6 +83,8 @@ class ColonyManagement extends Game {
                                     worldController.getGameView(),
                                     infoController.getInfoView());
         this.setScreen(gameScreen);
+
+        // Input Processors
         initInputProcessors();
     }
 
@@ -80,6 +96,10 @@ class ColonyManagement extends Game {
         skinAtlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
         uiSkin.addRegions(skinAtlas);
         uiSkin.load(Gdx.files.internal("uiskin.json"));
+    }
+
+    private void createModels() {
+        world = new World(WORLD_SIZE, PAWN_COUNT);
     }
 
     private void generateFont() {
@@ -98,11 +118,8 @@ class ColonyManagement extends Game {
         generator.dispose();
     }
 
-    private void createModels() {
-        world = new World(WORLD_SIZE, PAWN_COUNT);
-    }
-
     @Override
+
     public void dispose() {
         gameScreen.dispose();
         skinAtlas.dispose();
