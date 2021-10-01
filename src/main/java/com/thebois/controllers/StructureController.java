@@ -5,39 +5,35 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 import com.thebois.models.world.World;
 import com.thebois.views.IProjector;
+import com.thebois.views.IView;
 import com.thebois.views.StructureView;
 
 /**
  * Controller for Structures in the world.
  */
-public class StructureController extends AbstractInputProcessor {
+public class StructureController extends AbstractInputProcessor implements IController {
 
     private final World world;
     private final StructureView structureView;
     private final IProjector projector;
     private final float tileSize;
-    private final Widget gameWidget;
+    private Widget gameWidget;
 
     /**
      * Creates a instance of a Structure Controller.
      *
-     * @param world         The world in which the structures exists.
-     * @param structureView A view where the structures will be displayed.
-     * @param projector     Projector used for converting screen coordinates to world coordinates.
-     * @param tileSize      The tile size represented on the screen.
-     * @param gameWidget    The widget in which the game in rendered in.
+     * @param world     The world in which the structures exists.
+     * @param projector Projector used for converting screen coordinates to world coordinates.
+     * @param tileSize  The tile size represented on the screen.
      */
     public StructureController(final World world,
-                               final StructureView structureView,
                                final IProjector projector,
-                               float tileSize,
-                               Widget gameWidget) {
+                               final float tileSize) {
 
         this.world = world;
-        this.structureView = structureView;
+        this.structureView = new StructureView(tileSize);
         this.projector = projector;
         this.tileSize = tileSize;
-        this.gameWidget = gameWidget;
 
         structureView.update(world.getStructures());
     }
@@ -58,10 +54,24 @@ public class StructureController extends AbstractInputProcessor {
         return false;
     }
 
+    @Override
+    public IView getIView() {
+        return structureView;
+    }
+
     /**
      * Updates the view with data from the world.
      */
     public void update() {
+    }
+
+    /**
+     * Set the game widget used to project coordinates with.
+     *
+     * @param gameWidget The widget in which the game in rendered in.
+     */
+    public void setGameWidget(final Widget gameWidget) {
+        this.gameWidget = gameWidget;
     }
 
 }

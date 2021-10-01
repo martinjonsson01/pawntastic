@@ -28,24 +28,22 @@ public class GameScreen implements Screen {
     /**
      * Creates an instance of GameScreen.
      *
-     * @param viewportHeight The height used for viewport
-     * @param viewportWidth  The width used for viewport
-     * @param skin           The skin with styles to apply to all widgets
-     * @param gameView       The view of the game world to render
-     * @param infoView       The view displaying info about the colony
+     * @param viewport The viewport for the game.
+     * @param camera   The camera used to display the game.
+     * @param skin     The skin with styles to apply to all widgets
+     * @param gameView The view of the game world to render
+     * @param infoView The view displaying info about the colony
      */
-    public GameScreen(final float viewportHeight,
-                      final float viewportWidth,
+    public GameScreen(final FitViewport viewport,
+                      final OrthographicCamera camera,
                       final Skin skin,
                       final GameView gameView,
                       final InfoView infoView) {
+        this.viewport = viewport;
+        this.camera = camera;
         this.skin = skin;
         this.gameView = gameView;
         this.infoView = infoView;
-
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(viewportWidth, viewportHeight, camera);
-        camera.translate(viewportWidth / 2, viewportHeight / 2);
 
         createStage();
     }
@@ -62,15 +60,6 @@ public class GameScreen implements Screen {
 
         infoAndWorldGroup.add(infoView.getPane()).expand().fill();
         infoAndWorldGroup.add(gameView);
-    }
-
-    /**
-     * Gets a projector which is a wrapped viewport.
-     *
-     * @return The wrapped viewport as a Projector.
-     */
-    public IProjector getProjector() {
-        return new ViewportWrapper(viewport);
     }
 
     /**

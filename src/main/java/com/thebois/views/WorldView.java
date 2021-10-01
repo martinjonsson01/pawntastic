@@ -33,7 +33,7 @@ public class WorldView implements IView {
     private void createGrassTexture() {
         final int roundedTileSize = (int) this.tileSize;
         final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
-        pixmap.setColor(grassColor);
+        pixmap.setColor(Color.WHITE);
         pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);
         grassTexture = new Texture(pixmap);
         pixmap.dispose();
@@ -51,11 +51,13 @@ public class WorldView implements IView {
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         for (final ITerrain terrain : terrainTiles) {
-            batch.draw(grassTexture,
-                       offsetX + terrain.getPosition().getPosX() * tileSize,
-                       offsetY + terrain.getPosition().getPosY() * tileSize,
-                       tileSize,
-                       tileSize);
+            batch.setColor(grassColor);
+            batch.draw(
+                grassTexture,
+                offsetX + terrain.getPosition().getPosX() * tileSize,
+                offsetY + terrain.getPosition().getPosY() * tileSize,
+                tileSize,
+                tileSize);
         }
     }
 
