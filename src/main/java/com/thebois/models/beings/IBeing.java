@@ -34,11 +34,4 @@ public interface IBeing {
      */
     void update();
 
-    /**
-     * Gets a copy of the path the being is currently walking.
-     *
-     * @return The positions in the path.
-     */
-    Iterable<Position> getPath();
-
 }

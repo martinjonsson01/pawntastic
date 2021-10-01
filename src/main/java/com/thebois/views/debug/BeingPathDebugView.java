@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
-import com.thebois.models.Position;
 import com.thebois.models.beings.IBeing;
 import com.thebois.models.beings.IBeingGroup;
 import com.thebois.views.IView;
@@ -18,7 +17,7 @@ public class BeingPathDebugView implements IView {
     private static final int RADIUS = 2;
     private final IBeingGroup beingGroup;
     private final float tileSize;
-    private Texture circleTexture;
+    private final Texture circleTexture;
 
     /**
      * Initializes with a group of beings to display paths for.
@@ -41,12 +40,12 @@ public class BeingPathDebugView implements IView {
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         for (final IBeing being : beingGroup.getBeings()) {
             batch.setColor(Color.RED);
-            for (final Position position : being.getPath()) {
+            /*for (final Position position : being.getPath()) {
                 batch.draw(
                     circleTexture,
                     position.getPosX() * tileSize + offsetX + tileSize / 2,
                     position.getPosY() * tileSize + offsetY + tileSize / 2);
-            }
+            }*/
         }
     }
 

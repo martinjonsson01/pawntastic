@@ -51,7 +51,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
         final Random random = new Random();
         final IPathFinder pathFinder = new AstarPathFinder(world);
         for (final Position vacantPosition : vacantPositions) {
-            addBeing(new Pawn(vacantPosition, vacantPosition, random, pathFinder));
+            addBeing(new Pawn(vacantPosition));
         }
     }
 
