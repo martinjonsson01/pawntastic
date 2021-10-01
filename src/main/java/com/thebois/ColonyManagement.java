@@ -1,7 +1,9 @@
 package com.thebois;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -18,6 +20,12 @@ import com.thebois.controllers.InventoryController;
 import com.thebois.controllers.RoleController;
 import com.thebois.controllers.StructureController;
 import com.thebois.controllers.TerrainController;
+import com.thebois.models.Position;
+import com.thebois.models.beings.Colony;
+import com.thebois.models.beings.IBeing;
+import com.thebois.models.beings.Pawn;
+import com.thebois.models.beings.pathfinding.AstarPathFinder;
+import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.World;
 import com.thebois.views.gameviews.ColonyView;
 import com.thebois.views.GameScreen;
@@ -46,7 +54,7 @@ public class ColonyManagement extends Game {
     private static final float VIEWPORT_WIDTH = 1300;
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
-    private static final int PAWN_COUNT = 50;
+    private static final int PAWN_POSITIONS = 50;
     /* Toggles debug-mode. */
     private static final boolean DEBUG = false;
     // LibGDX assets
@@ -55,6 +63,7 @@ public class ColonyManagement extends Game {
     private Skin uiSkin;
     // Model
     private World world;
+    private Colony colony;
     /* Views - InfoView */
     private InfoView infoView;
     private RoleView roleView;
@@ -111,11 +120,19 @@ public class ColonyManagement extends Game {
     }
 
     private void createModels() {
-        world = new World(WORLD_SIZE, PAWN_COUNT);
+        world = new World(WORLD_SIZE);
+        final Collection<IBeing> pawns = new ArrayList<>(PAWN_POSITIONS);
+        final Iterable<Position> vacantPositions = world.findEmptyPositions(PAWN_POSITIONS);
+        final Random random = new Random();
+        final IPathFinder pathFinder = new AstarPathFinder(world);
+        for (final Position vacantPosition : vacantPositions) {
+            pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder));
+        }
+        colony = new Colony(pawns);
     }
 
     private void createDebugView() {
-        beingPathDebugView = new BeingPathDebugView(world.getColony(), tileSize);
+        beingPathDebugView = new BeingPathDebugView(colony, tileSize);
         frameCounterView = new FrameCounterView(font);
     }
 
@@ -150,11 +167,9 @@ public class ColonyManagement extends Game {
                                                            gameScreen.getProjector(),
                                                            tileSize,
                                                            gameView);
-        this.colonyController = new ColonyController(world, colonyView);
-        this.inventoryController = new InventoryController(
-            inventoryView,
-            world.getColonyInventory());
-        new RoleController(world.getRoleAllocator(), roleView);
+        this.colonyController = new ColonyController(colony, colonyView);
+        this.inventoryController = new InventoryController(inventoryView, colony.getInventory());
+        new RoleController(colony, roleView);
     }
 
     private void initInputProcessors() {
@@ -190,7 +205,7 @@ public class ColonyManagement extends Game {
     @Override
     public void render() {
         super.render();
-        world.update();
+        colony.update();
         terrainController.update();
         colonyController.update();
         structureController.update();

@@ -39,8 +39,12 @@ public class ColonyTests {
         final IWorld mockWorld = mock(IWorld.class);
         when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
 
-        // Act
-        final Colony colony = new Colony(positions, mockWorld);
+        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(Mockito.mock(IBeing.class));
+        }
+
+        final Colony colony = new Colony(pawns);
 
         // Assert
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);

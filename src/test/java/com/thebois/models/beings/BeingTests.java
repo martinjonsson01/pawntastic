@@ -187,7 +187,7 @@ public class BeingTests {
         final Position from = new Position();
         final Position destination = new Position(2, 2);
         final Position obstaclePosition = new Position(1, 1);
-        final World world = new World(3, 0);
+        final World world = new World(3);
         final IPathFinder pathFinder = new AstarPathFinder(world);
         final IBeing being = new Pawn(from, destination, new Random(), pathFinder);
 

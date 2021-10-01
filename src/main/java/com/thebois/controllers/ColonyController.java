@@ -1,6 +1,6 @@
 package com.thebois.controllers;
 
-import com.thebois.models.world.World;
+import com.thebois.models.beings.Colony;
 import com.thebois.views.gameviews.ColonyView;
 
 /**
@@ -8,17 +8,17 @@ import com.thebois.views.gameviews.ColonyView;
  */
 public class ColonyController {
 
-    private final World world;
+    private final Colony colony;
     private final ColonyView colonyView;
 
     /**
      * Creates a colony controller.
      *
-     * @param world      The world that controller should get data from.
+     * @param colony     The colony that controller should get data from.
      * @param colonyView The view the controller updates.
      */
-    public ColonyController(World world, ColonyView colonyView) {
-        this.world = world;
+    public ColonyController(final Colony colony, final ColonyView colonyView) {
+        this.colony = colony;
         this.colonyView = colonyView;
     }
 
@@ -26,7 +26,7 @@ public class ColonyController {
      * Updates the view with data from the world.
      */
     public void update() {
-        colonyView.update(world.getColony());
+        colonyView.update(colony);
     }
 
 }

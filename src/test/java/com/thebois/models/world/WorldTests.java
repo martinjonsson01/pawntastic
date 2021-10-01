@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
+import com.thebois.models.beings.IBeing;
 import com.thebois.models.world.structures.IStructure;
 
 import static org.assertj.core.api.Assertions.*;
@@ -58,7 +59,7 @@ public class WorldTests {
     public void worldInitiated() {
         // Arrange
         final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = new World(2, 5);
+        final World world = new World(2);
 
         // Act
         final Collection<ITerrain> terrainTiles = world.getTerrainTiles();
@@ -79,7 +80,7 @@ public class WorldTests {
     @Test
     public void worldFind() {
         // Arrange
-        final World world = new World(2, 5);
+        final World world = new World(2);
 
         // Act
         final Object worldObject = world.find();
@@ -93,7 +94,7 @@ public class WorldTests {
     public void getNeighboursOfReturnsExpectedNeighbours(
         final ITile tile, final Iterable<ITile> expectedNeighbours) {
         // Arrange
-        final IWorld world = new World(3, 0);
+        final IWorld world = new World(3);
 
         // Act
         final Iterable<ITile> actualNeighbours = world.getNeighboursOf(tile);
@@ -106,7 +107,7 @@ public class WorldTests {
     public void getTileAtReturnsTileAtGivenPosition() {
         // Arrange
         final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = new World(2, 0);
+        final World world = new World(2);
 
         for (final ITile tile : expectedTerrainTiles) {
             // Act
@@ -121,7 +122,7 @@ public class WorldTests {
     @MethodSource("getOutOfBoundsPositions")
     public void getTileAtThrowsWhenOutOfBounds(final Position outOfBounds) {
         // Arrange
-        final World world = new World(2, 0);
+        final World world = new World(2);
 
         // Assert
         assertThatThrownBy(() -> world.getTileAt(outOfBounds)).isInstanceOf(
@@ -131,7 +132,7 @@ public class WorldTests {
     @Test
     public void createWorldWithNoStructures() {
         // Arrange
-        final World world = new World(2, 0);
+        final World world = new World(2);
 
         // Act
         final Collection<IStructure> structures = world.getStructures();
@@ -143,7 +144,7 @@ public class WorldTests {
     @Test
     public void numberOfStructuresIncreasesIfStructureSuccessfullyPlaced() {
         // Arrange
-        final World world = new World(2, 0);
+        final World world = new World(2);
         final Position position = new Position(1, 1);
         final Collection<IStructure> structures;
         final boolean isBuilt;
@@ -160,7 +161,7 @@ public class WorldTests {
     @MethodSource("getPositionOutSideOfWorld")
     public void structureFailedToBePlaced(final Position placementPosition) {
         // Arrange
-        final World world = new World(2, 0);
+        final World world = new World(2);
         final Collection<IStructure> structures;
         final boolean isBuilt;
 
@@ -176,7 +177,7 @@ public class WorldTests {
     @Test
     public void numberOfStructuresDoesNotChangeIfStructuresPlacedOutsideWorld() {
         // Arrange
-        final World world = new World(2, 0);
+        final World world = new World(2);
         final Position position1 = new Position(2, 2);
         final Position position2 = new Position(-1, -1);
         final Collection<IStructure> structures;
@@ -194,59 +195,65 @@ public class WorldTests {
     public void getColonyReturnsSameColony() {
         // Arrange
         final Colony colony = Mockito.mock(Colony.class);
-        final World world = new World(2, colony);
 
         // Assert
-        assertThat(world.getColony()).isEqualTo(colony);
+        assertThat(colony.getColony()).isEqualTo(colony);
     }
 
     @Test
     public void getRoleAllocatorReturnsRoleAllocator() {
         // Arrange
         final Colony colony = Mockito.mock(Colony.class);
-        final World world = new World(2, colony);
 
         // Assert
-        assertThat(world.getRoleAllocator()).isEqualTo(colony);
+        assertThat(colony.getRoleAllocator()).isEqualTo(colony);
     }
 
     @Test
     public void instantiateWithPawnCountCreatesCorrectNumberOfBeings() {
         // Arrange
         final int pawnCount = 5;
+        final int beingCount = 25;
+        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(Mockito.mock(IBeing.class));
+        }
 
         // Act
-        final World world = new World(3, pawnCount);
+        final Colony colony = new Colony(pawns);
 
         // Assert
-        assertThat(world.getColony().getBeings()).size().isEqualTo(pawnCount);
+        assertThat(colony.getBeings()).size().isEqualTo(pawnCount);
     }
 
     @Test
     public void instantiateWithPawnCountCreatesOnlyAsManyBeingsAsFitInTheWorld() {
         // Arrange
-        final int pawnCount = 5;
         final int pawnFitCount = 4;
+        final int beingCount = 5;
+        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(Mockito.mock(IBeing.class));
+        }
 
         // Act
-        final World world = new World(2, pawnCount);
+        final Colony colony = new Colony(pawns);
 
         // Assert
-        assertThat(world.getColony().getBeings()).size().isEqualTo(pawnFitCount);
+        assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
     }
 
     @Test
     public void testsIfColonyGetsUpdate() {
         // Arrange
         final Colony colony = Mockito.mock(Colony.class);
-        final World world = new World(2, colony);
 
         // Act
-        world.update();
+        colony.update();
 
         // Arrange
         Mockito.verify(colony, Mockito.atLeastOnce()).update();
-        assertThat(world.getColony()).isEqualTo(colony);
+        assertThat(colony.getColony()).isEqualTo(colony);
     }
 
 }
