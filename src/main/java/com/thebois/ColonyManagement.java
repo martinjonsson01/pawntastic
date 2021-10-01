@@ -1,7 +1,5 @@
 package com.thebois;
 
-import java.util.List;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -14,17 +12,11 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import com.thebois.controllers.ColonyController;
-import com.thebois.controllers.RoleController;
+import com.thebois.controllers.InfoController;
 import com.thebois.controllers.WorldController;
 import com.thebois.models.world.World;
-import com.thebois.views.ColonyView;
 import com.thebois.views.GameScreen;
-import com.thebois.views.GameView;
-import com.thebois.views.IActorView;
 import com.thebois.views.IProjector;
-import com.thebois.views.InfoView;
-import com.thebois.views.RoleView;
 import com.thebois.views.ViewportWrapper;
 
 /**
@@ -44,17 +36,11 @@ class ColonyManagement extends Game {
     private Skin uiSkin;
     // Model
     private World world;
-    /* Views - InfoView */
-    private InfoView infoView;
-    private RoleView roleView;
-    /* Views - GameView*/
-    private GameView gameView;
-    private ColonyView colonyView;
     // Screens
     private GameScreen gameScreen;
     // Controllers
     private WorldController worldController;
-    private ColonyController colonyController;
+    private InfoController infoController;
 
     @Override
     public void create() {
@@ -64,10 +50,8 @@ class ColonyManagement extends Game {
 
         // Model
         createModels();
-        // Views
-        createInfoView();
 
-        // Camera & Vieport
+        // Camera & Viewport
         final OrthographicCamera camera = new OrthographicCamera();
         final FitViewport viewport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, camera);
         camera.translate(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2);
@@ -76,16 +60,15 @@ class ColonyManagement extends Game {
 
         // Controllers
         this.worldController = new WorldController(world, projector, tileSize, WORLD_SIZE);
+        this.infoController = new InfoController(world, uiSkin);
 
         // Screens
         gameScreen = new GameScreen(viewport,
                                     camera,
                                     uiSkin,
                                     worldController.getGameView(),
-                                    infoView);
+                                    infoController.getInfoView());
         this.setScreen(gameScreen);
-        // Controllers
-        createControllers(tileSize);
         initInputProcessors();
     }
 
@@ -119,16 +102,6 @@ class ColonyManagement extends Game {
         world = new World(WORLD_SIZE, PAWN_COUNT);
     }
 
-    private void createInfoView() {
-        roleView = new RoleView(uiSkin);
-        final List<IActorView> widgetViews = List.of(roleView);
-        infoView = new InfoView(widgetViews);
-    }
-
-    private void createControllers(final float tileSize) {
-        new RoleController(world.getRoleAllocator(), roleView);
-    }
-
     @Override
     public void dispose() {
         gameScreen.dispose();
@@ -141,6 +114,7 @@ class ColonyManagement extends Game {
         super.render();
         world.update();
         worldController.update();
+        infoController.update();
     }
 
     private void initInputProcessors() {

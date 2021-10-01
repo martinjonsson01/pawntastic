@@ -11,7 +11,7 @@ import com.thebois.views.StructureView;
 /**
  * Controller for Structures in the world.
  */
-public class StructureController extends AbstractInputProcessor implements IController {
+public class StructureController extends AbstractInputProcessor implements IController<IView> {
 
     private final World world;
     private final StructureView structureView;

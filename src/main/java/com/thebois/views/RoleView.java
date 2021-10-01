@@ -30,7 +30,7 @@ public class RoleView implements IActorView {
     /**
      * The view needs an IRoleAllocator to render.
      *
-     * @param skin The skin to style widgets with
+     * @param skin The skin to style widgets with.
      */
     public RoleView(final Skin skin) {
         this.skin = skin;

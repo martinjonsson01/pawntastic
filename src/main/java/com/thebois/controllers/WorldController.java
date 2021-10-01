@@ -15,12 +15,12 @@ import com.thebois.views.IView;
  */
 public class WorldController {
 
-    private final Collection<IController> controllers;
+    private final Collection<IController<IView>> controllers;
     private final Collection<InputProcessor> inputProcessors;
     private final GameView gameView;
 
     /**
-     * Instantiate World controller with all controller and views.
+     * Instantiate World controller with all controller and views used for the world.
      *
      * @param world     The world that the controllers manage.
      * @param projector Projector used for converting screen coordinates to world coordinates.
@@ -52,7 +52,7 @@ public class WorldController {
 
     private GameView createGameView(final float tileSize, final int worldSize) {
         final ArrayList<IView> views = new ArrayList<>();
-        for (final IController controller : controllers) {
+        for (final IController<IView> controller : controllers) {
             views.add(controller.getIView());
         }
         return new GameView(views, worldSize, tileSize);
@@ -62,7 +62,7 @@ public class WorldController {
      * Updates all controllers in the world controller.
      */
     public void update() {
-        for (final IController controller : controllers) {
+        for (final IController<IView> controller : controllers) {
             controller.update();
         }
     }

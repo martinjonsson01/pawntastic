@@ -7,7 +7,7 @@ import com.thebois.views.IView;
 /**
  * Collects data form the world and sends it to its corresponding view.
  */
-public class ColonyController implements IController {
+public class ColonyController implements IController<IView> {
 
     private final World world;
     private final ColonyView colonyView;

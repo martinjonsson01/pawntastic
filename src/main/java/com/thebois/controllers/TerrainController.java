@@ -7,7 +7,7 @@ import com.thebois.views.WorldView;
 /**
  * A controller that gathers data from the world and updates the view.
  */
-public class TerrainController implements IController {
+public class TerrainController implements IController<IView> {
 
     private final World world;
     private final WorldView worldView;
