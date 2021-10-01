@@ -14,4 +14,11 @@ interface ITask {
      */
     void perform(ITaskPerformer performer);
 
+    /**
+     * Checks if the task is finished.
+     *
+     * @return Whether the task is finished.
+     */
+    boolean isCompleted();
+
 }

@@ -1,7 +1,8 @@
 package com.thebois.models.beings.tasks;
 
 import java.util.Collection;
-import java.util.Stack;
+import java.util.Deque;
+import java.util.LinkedList;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -14,11 +15,12 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 /**
  * Moves the performer towards a specified goal.
  */
-public class MoveTask implements ITask {
+class MoveTask implements ITask {
 
     private final Position destination;
     private final IPathFinder pathFinder;
-    private Stack<Position> path = new Stack<>();
+    private Deque<Position> path = new LinkedList<>();
+    private ITaskPerformer performer;
 
     /**
      * Instantiates with a destination to move towards.
@@ -26,15 +28,40 @@ public class MoveTask implements ITask {
      * @param destination The goal to move to.
      * @param pathFinder  A way of generating paths to positions.
      */
-    public MoveTask(final Position destination, final IPathFinder pathFinder) {
+    MoveTask(final Position destination, final IPathFinder pathFinder) {
         this.destination = destination;
         this.pathFinder = pathFinder;
         ColonyManagement.BUS.register(this);
     }
 
     @Override
-    public void perform(final ITaskPerformer performer) {
-        performer.setDestination(destination);
+    public void perform(final ITaskPerformer newPerformer) {
+        this.performer = newPerformer;
+        if (isCompleted()) return;
+
+        final Position position = performer.getPosition();
+        if (path.isEmpty()) calculatePathFrom(position);
+
+        if (position.equals(path.element())) {
+            path.remove();
+        }
+
+        performer.setDestination(path.element());
+    }
+
+    @Override
+    public boolean isCompleted() {
+        return performer.getPosition().equals(destination);
+    }
+
+    private void calculatePathFrom(final Position start) {
+        final Collection<Position> newPath = pathFinder.path(start, destination);
+        setPath(newPath);
+    }
+
+    private void setPath(final Collection<Position> path) {
+        this.path = new LinkedList<>();
+        this.path.addAll(path);
     }
 
     /**
@@ -44,20 +71,12 @@ public class MoveTask implements ITask {
      */
     @Subscribe
     public void onObstaclePlaced(final ObstaclePlacedEvent event) {
+        if (path.isEmpty()) return;
+
         if (path.contains(event.getPosition())) {
             // Find new path to current goal.
-            calculatePathFrom(path.lastElement());
+            calculatePathFrom(performer.getPosition());
         }
-    }
-
-    private void calculatePathFrom(Position start) {
-        final Collection<Position> newPath = pathFinder.path(start, destination);
-        setPath(newPath);
-    }
-
-    private void setPath(final Collection<Position> path) {
-        this.path = new Stack<>();
-        this.path.addAll(path);
     }
 
 }
