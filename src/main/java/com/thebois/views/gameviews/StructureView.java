@@ -1,4 +1,4 @@
-package com.thebois.views;
+package com.thebois.views.gameviews;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.views.IView;
 
 /**
  * Responsible for displaying structures.

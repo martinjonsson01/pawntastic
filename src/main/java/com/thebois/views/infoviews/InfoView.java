@@ -1,4 +1,4 @@
-package com.thebois.views;
+package com.thebois.views.infoviews;
 
 import java.util.List;
 

@@ -2,6 +2,7 @@ package com.thebois.models.world;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -19,6 +20,23 @@ import static org.assertj.core.api.Assertions.*;
 
 public class WorldTests {
 
+    /* For a 3x3 world */
+    public static Stream<Arguments> getTileAndNeighbours() {
+        return Stream.of(Arguments.of(mockTile(0, 0), List.of(mockTile(0, 1), mockTile(1, 0))),
+                         Arguments.of(mockTile(2, 0), List.of(mockTile(2, 1), mockTile(1, 0))),
+                         Arguments.of(mockTile(0, 2), List.of(mockTile(0, 1), mockTile(1, 2))),
+                         Arguments.of(mockTile(2, 2), List.of(mockTile(2, 1), mockTile(1, 2))),
+                         Arguments.of(mockTile(1, 1),
+                                      List.of(mockTile(1, 0),
+                                              mockTile(0, 1),
+                                              mockTile(2, 1),
+                                              mockTile(1, 2))));
+    }
+
+    private static ITile mockTile(final int positionX, final int positionY) {
+        return new Grass(positionX, positionY);
+    }
+
     public static Stream<Arguments> getPositionOutSideOfWorld() {
         return Stream.of(Arguments.of(new Position(-1, 0)),
                          Arguments.of(new Position(0, -1)),
@@ -26,6 +44,15 @@ public class WorldTests {
                          Arguments.of(new Position(-1000, -1000)),
                          Arguments.of(new Position(10000, 0)),
                          Arguments.of(new Position(0, 10000)));
+    }
+
+    /* For a 2x2 world */
+    public static Stream<Arguments> getOutOfBoundsPositions() {
+        return Stream.of(Arguments.of(new Position(-1, 0)),
+                         Arguments.of(new Position(3, 0)),
+                         Arguments.of(new Position(0, -1)),
+                         Arguments.of(new Position(0, 3)),
+                         Arguments.of(new Position(-1, 3)));
     }
 
     @Test
@@ -48,6 +75,58 @@ public class WorldTests {
         terrainTiles.add(new Grass(1, 0));
         terrainTiles.add(new Grass(1, 1));
         return terrainTiles;
+    }
+
+    @Test
+    public void worldFind() {
+        // Arrange
+        final World world = new World(2, 5);
+
+        // Act
+        final Object worldObject = world.find();
+
+        // Assert
+        assertThat(worldObject).isEqualTo(null);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getTileAndNeighbours")
+    public void getNeighboursOfReturnsExpectedNeighbours(
+        final ITile tile, final Iterable<ITile> expectedNeighbours) {
+        // Arrange
+        final IWorld world = new World(3, 0);
+
+        // Act
+        final Iterable<ITile> actualNeighbours = world.getNeighboursOf(tile);
+
+        // Assert
+        assertThat(actualNeighbours).containsExactlyInAnyOrderElementsOf(expectedNeighbours);
+    }
+
+    @Test
+    public void getTileAtReturnsTileAtGivenPosition() {
+        // Arrange
+        final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
+        final World world = new World(2, 0);
+
+        for (final ITile tile : expectedTerrainTiles) {
+            // Act
+            final ITile tileAtPosition = world.getTileAt(tile.getPosition());
+
+            // Assert
+            assertThat(tileAtPosition).isEqualTo(tile);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getOutOfBoundsPositions")
+    public void getTileAtThrowsWhenOutOfBounds(final Position outOfBounds) {
+        // Arrange
+        final World world = new World(2, 0);
+
+        // Assert
+        assertThatThrownBy(() -> world.getTileAt(outOfBounds)).isInstanceOf(
+            IndexOutOfBoundsException.class);
     }
 
     @Test
@@ -130,6 +209,31 @@ public class WorldTests {
 
         // Assert
         assertThat(world.getRoleAllocator()).isEqualTo(colony);
+    }
+
+    @Test
+    public void instantiateWithPawnCountCreatesCorrectNumberOfBeings() {
+        // Arrange
+        final int pawnCount = 5;
+
+        // Act
+        final World world = new World(3, pawnCount);
+
+        // Assert
+        assertThat(world.getColony().getBeings()).size().isEqualTo(pawnCount);
+    }
+
+    @Test
+    public void instantiateWithPawnCountCreatesOnlyAsManyBeingsAsFitInTheWorld() {
+        // Arrange
+        final int pawnCount = 5;
+        final int pawnFitCount = 4;
+
+        // Act
+        final World world = new World(2, pawnCount);
+
+        // Assert
+        assertThat(world.getColony().getBeings()).size().isEqualTo(pawnFitCount);
     }
 
     @Test

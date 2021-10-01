@@ -1,10 +1,12 @@
-package com.thebois.views;
+package com.thebois.views.gameviews;
 
 import java.util.Collection;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Disposable;
+
+import com.thebois.views.IView;
 
 /**
  * A view of the game world.
