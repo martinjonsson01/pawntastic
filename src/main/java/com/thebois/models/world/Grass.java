@@ -13,7 +13,7 @@ public class Grass extends AbstractTerrain {
      * @param posX The x-coordinate of the tile
      * @param posY The y-coordinate of the tile
      */
-    public Grass(float posX, float posY) {
+    public Grass(final float posX, final float posY) {
         super(posX, posY);
     }
 
@@ -35,4 +35,10 @@ public class Grass extends AbstractTerrain {
     public Grass deepClone() {
         return new Grass(getPosition());
     }
+
+    @Override
+    public float getCost() {
+        return 0;
+    }
+
 }

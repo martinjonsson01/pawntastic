@@ -31,4 +31,9 @@ public class House extends AbstractStructure {
         return new House(getPosition());
     }
 
+    @Override
+    public float getCost() {
+        return Float.MAX_VALUE;
+    }
+
 }

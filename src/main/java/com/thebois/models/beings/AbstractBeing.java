@@ -1,8 +1,17 @@
 package com.thebois.models.beings;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Stack;
 
+import com.google.common.eventbus.Subscribe;
+
+import com.thebois.ColonyManagement;
+import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
+import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 
@@ -13,27 +22,43 @@ public abstract class AbstractBeing implements IBeing, ITaskPerformer {
 
     // The max speed of the AbstractBeing
     private static final float MAX_WALKING_DISTANCE = 0.1f;
-    // The position the AbstractBeing wants to reach.
-    private Position destination;
-    // The current position held by the AbstractBeing.
-    private Position currentPosition;
+    private final IPathFinder pathFinder;
+    private Stack<Position> path;
+    private Position position;
     private AbstractRole role;
 
     /**
      * Creates an AbstractBeing with an initial position.
      *
-     * @param currentPosition the initial position of the AbstractBeing.
-     * @param destination     the initial destination of the AbstractBeing.
+     * @param startPosition the initial position of the AbstractBeing.
+     * @param destination   the initial destination of the AbstractBeing.
+     * @param pathFinder    The generator of paths to positions in the world.
      */
-    public AbstractBeing(final Position currentPosition, final Position destination) {
-        this.currentPosition = currentPosition;
-        this.destination = destination;
+    public AbstractBeing(
+        final Position startPosition, final Position destination, final IPathFinder pathFinder) {
+        this.position = startPosition;
         this.role = RoleFactory.idle();
+        this.pathFinder = pathFinder;
+        setPath(pathFinder.path(startPosition, destination));
+        ColonyManagement.BUS.register(this);
+    }
+
+    /**
+     * Listens to the ObstaclePlacedEvent in order to update pathfinding.
+     *
+     * @param event The published event.
+     */
+    @Subscribe
+    public void onObstaclePlaced(final ObstaclePlacedEvent event) {
+        if (path.contains(event.getPosition())) {
+            // Find new path to current goal.
+            setPath(pathFinder.path(position, path.firstElement()));
+        }
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDestination(), getPosition(), getRole());
+        return Objects.hash(getPosition(), getRole());
     }
 
     @Override
@@ -41,19 +66,13 @@ public abstract class AbstractBeing implements IBeing, ITaskPerformer {
         if (this == o) return true;
         if (!(o instanceof AbstractBeing)) return false;
         final AbstractBeing that = (AbstractBeing) o;
-        return Objects.equals(getDestination(), that.getDestination())
-               && Objects.equals(currentPosition,
-                                 that.currentPosition)
-               && Objects.equals(getRole(), that.getRole());
-    }
-
-    protected Position getDestination() {
-        return destination.deepClone();
+        return Objects.equals(getPosition(), that.getPosition()) && Objects.equals(getRole(),
+                                                                                   that.getRole());
     }
 
     @Override
     public Position getPosition() {
-        return currentPosition.deepClone();
+        return position.deepClone();
     }
 
     @Override
@@ -79,9 +98,13 @@ public abstract class AbstractBeing implements IBeing, ITaskPerformer {
      */
     protected void move() {
 
+        if (path.isEmpty()) return;
+
+        final Position destination = path.peek();
+
         // Calculate delta of distance between current position and the destination
-        final float deltaX = this.destination.getPosX() - this.currentPosition.getPosX();
-        final float deltaY = this.destination.getPosY() - this.currentPosition.getPosY();
+        final float deltaX = destination.getPosX() - this.position.getPosX();
+        final float deltaY = destination.getPosY() - this.position.getPosY();
 
         // Pythagorean theorem
         final float totalDistance = (float) Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
@@ -96,24 +119,42 @@ public abstract class AbstractBeing implements IBeing, ITaskPerformer {
 
         // To avoid the position being set to NaN
         if (totalDistance == 0) {
-            this.currentPosition = destination;
+            this.position = destination;
+            path.pop();
         }
         else {
 
             // Calculate new position
-            final float newPosX =
-                this.currentPosition.getPosX() + normDeltaX * updatedWalkingDistance;
-            final float newPosY =
-                this.currentPosition.getPosY() + normDeltaY * updatedWalkingDistance;
+            final float newPosX = this.position.getPosX() + normDeltaX * updatedWalkingDistance;
+            final float newPosY = this.position.getPosY() + normDeltaY * updatedWalkingDistance;
 
             // Apply new position to current position
-            this.currentPosition.setPosX(newPosX);
-            this.currentPosition.setPosY(newPosY);
+            this.position.setPosX(newPosX);
+            this.position.setPosY(newPosY);
         }
     }
 
-    protected void setDestination(final Position destination) {
-        this.destination = destination;
+    @Override
+    public Iterable<Position> getPath() {
+        final ArrayList<Position> positions = new ArrayList<>(path.size());
+        for (final Position pathPosition : path) {
+            positions.add(pathPosition.deepClone());
+        }
+        return positions;
+    }
+
+    protected void setPath(final Collection<Position> path) {
+        this.path = new Stack<>();
+        this.path.addAll(path);
+    }
+
+    protected Optional<Position> getDestination() {
+        if (path.isEmpty()) return Optional.empty();
+        return Optional.of(path.peek().deepClone());
+    }
+
+    protected IPathFinder getPathFinder() {
+        return pathFinder;
     }
 
 }
