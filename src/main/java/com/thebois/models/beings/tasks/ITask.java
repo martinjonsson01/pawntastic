@@ -5,7 +5,7 @@ import com.thebois.models.beings.ITaskPerformer;
 /**
  * An internal interface representing an action to be performed in a certain way.
  */
-interface ITask {
+public interface ITask {
 
     /**
      * Performs the task on a given performer.

@@ -11,8 +11,10 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.beings.tasks.ITask;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class BeingTests {
 
@@ -54,6 +56,38 @@ public class BeingTests {
 
         // Assert
         assertThatThrownBy(() -> being.setRole(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void updateGetsTaskFromRole() {
+        // Arrange
+        final AbstractRole role = mock(AbstractRole.class);
+        final AbstractBeing being = new Pawn(new Position());
+        final ITask task = mock(ITask.class);
+        being.setRole(role);
+        when(role.getCurrentTask()).thenReturn(task);
+
+        // Act
+        being.update();
+
+        // Assert
+        verify(role, times(1)).getCurrentTask();
+    }
+
+    @Test
+    public void updatePerformsTask() {
+        // Arrange
+        final AbstractRole role = mock(AbstractRole.class);
+        final AbstractBeing being = new Pawn(new Position());
+        final ITask task = mock(ITask.class);
+        being.setRole(role);
+        when(role.getCurrentTask()).thenReturn(task);
+
+        // Act
+        being.update();
+
+        // Assert
+        verify(task, times(1)).perform(being);
     }
 
     @Test

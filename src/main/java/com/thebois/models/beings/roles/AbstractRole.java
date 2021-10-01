@@ -3,6 +3,7 @@ package com.thebois.models.beings.roles;
 import java.util.Objects;
 
 import com.thebois.models.IDeepClonable;
+import com.thebois.models.beings.tasks.ITask;
 
 /**
  * Represents an assignment to a specific work task.
@@ -50,6 +51,13 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
     @Override
     public AbstractRole deepClone() {
         return RoleFactory.fromType(getType());
+    }
+
+    /**
+     * Gets the task to perform at the moment.
+     */
+    public ITask getCurrentTask() {
+        return null;
     }
 
 }

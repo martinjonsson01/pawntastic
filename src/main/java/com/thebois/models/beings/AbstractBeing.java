@@ -62,6 +62,7 @@ public abstract class AbstractBeing implements IBeing, ITaskPerformer {
 
     @Override
     public void update() {
+        role.getCurrentTask().perform(this);
         move();
     }
 
@@ -98,7 +99,7 @@ public abstract class AbstractBeing implements IBeing, ITaskPerformer {
     }
 
     @Override
-    public void setDestination(Position destination) {
+    public void setDestination(final Position destination) {
         this.destination = destination;
     }
 
