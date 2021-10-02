@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Stack;
 
-import com.thebois.models.IFinder;
 import com.google.common.eventbus.Subscribe;
 
 import com.thebois.ColonyManagement;
@@ -15,6 +14,7 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.IFinder;
 
 /**
  * An abstract implementation of IBeing.

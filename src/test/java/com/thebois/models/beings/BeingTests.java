@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -97,11 +96,11 @@ public class BeingTests {
         when(mockRandom.nextInt(anyInt())).thenReturn(0);
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         when(pathFinder.path(any(), any())).thenReturn(List.of(endPosition));
-        final AbstractBeing being = new Pawn(startPosition, endPosition, mockRandom, pathFinder);
         final AbstractBeing being = new Pawn(
             startPosition,
             endPosition,
             mockRandom,
+            pathFinder,
             new World(10, 0));
 
         // Act
@@ -121,7 +120,8 @@ public class BeingTests {
         final IBeing being = new Pawn(new Position(0, 0),
                                       new Position(1, 1),
                                       new Random(),
-                                      pathFinder);
+                                      pathFinder,
+                                      new World(10, 0));
 
         // Assert
         assertThatThrownBy(() -> being.setRole(null)).isInstanceOf(IllegalArgumentException.class);
@@ -135,7 +135,12 @@ public class BeingTests {
         final Position endPosition = new Position(123, 456);
         final List<Position> actualPath = List.of(endPosition);
         when(pathFinder.path(any(), any())).thenReturn(actualPath);
-        final AbstractBeing being = new Pawn(new Position(), endPosition, mockRandom, pathFinder);
+        final AbstractBeing being = new Pawn(
+            new Position(),
+            endPosition,
+            mockRandom,
+            pathFinder,
+            new World(10, 0));
 
         // Act
         final Iterable<Position> pathPositions = being.getPath();
@@ -154,13 +159,13 @@ public class BeingTests {
         final IBeing first = new Pawn(currentPosition.deepClone(),
                                       destination.deepClone(),
                                       new Random(),
-                                      pathFinder),
+                                      pathFinder,
                                       new World(10, 0));
         first.setRole(role);
         final IBeing second = new Pawn(currentPosition.deepClone(),
                                        destination.deepClone(),
                                        new Random(),
-                                       pathFinder),
+                                       pathFinder,
                                        new World(10, 0));
         second.setRole(role);
 
@@ -205,7 +210,7 @@ public class BeingTests {
         final Position obstaclePosition = new Position(1, 1);
         final World world = new World(3, 0);
         final IPathFinder pathFinder = new AstarPathFinder(world);
-        final IBeing being = new Pawn(from, destination, new Random(), pathFinder);
+        final IBeing being = new Pawn(from, destination, new Random(), pathFinder, world);
 
         // Assert
         final Iterable<Position> oldPath = being.getPath();
@@ -225,7 +230,12 @@ public class BeingTests {
         final Position startPosition = new Position();
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         when(pathFinder.path(any(), any())).thenReturn(List.of());
-        final IBeing being = new Pawn(startPosition, startPosition, new Random(), pathFinder);
+        final IBeing being = new Pawn(
+            startPosition,
+            startPosition,
+            new Random(),
+            pathFinder,
+            new World(10, 0));
 
         // Act
         being.update();
@@ -271,10 +281,17 @@ public class BeingTests {
         // Arrange
 
         final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        when(pathFinder.path(any(), any())).thenReturn(List.of());
         final Position position = new Position();
         final IStructure structure = new House(position);
         when(mockFinder.findNearestStructure(any())).thenReturn(Optional.of(structure));
-        final Pawn pawn = new Pawn(position, position, Mockito.mock(Random.class), mockFinder);
+        final Pawn pawn = new Pawn(
+            position,
+            position,
+            Mockito.mock(Random.class),
+            pathFinder,
+            mockFinder);
 
         // Act
         final float initialBuildStatus = structure.builtStatus();
@@ -290,11 +307,17 @@ public class BeingTests {
     public void pawnDoNotBuildsHouses() {
         // Arrange
         final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final Position position = new Position(0, 0);
         final Position farAway = new Position(50, 50);
         final IStructure structure = new House(farAway);
         when(mockFinder.findNearestStructure(any())).thenReturn(Optional.of(structure));
-        final Pawn pawn = new Pawn(position, position, Mockito.mock(Random.class), mockFinder);
+        final Pawn pawn = new Pawn(
+            position,
+            position,
+            Mockito.mock(Random.class),
+            pathFinder,
+            mockFinder);
 
         // Act
         final float initialBuildStatus = structure.builtStatus();
@@ -321,6 +344,8 @@ public class BeingTests {
         when(unBuiltStructure.builtStatus()).thenReturn(0f);
         when(builtStructure.builtStatus()).thenReturn(1f);
 
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+
         final Collection<Optional<IStructure>> structures = new ArrayList<>();
         structures.add(Optional.of(builtStructure));
         structures.add(Optional.of(unBuiltStructure));
@@ -331,7 +356,12 @@ public class BeingTests {
         // builtStructure would be found first by the current finder
         when(mockFinder.findNearestStructure(any())).thenReturn(Optional.of(builtStructure));
 
-        final Pawn pawn = new Pawn(positionB, positionB, Mockito.mock(Random.class), mockFinder);
+        final Pawn pawn = new Pawn(
+            positionB,
+            positionB,
+            Mockito.mock(Random.class),
+            pathFinder,
+            mockFinder);
 
         // Act
         pawn.update();

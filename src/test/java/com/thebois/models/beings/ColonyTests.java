@@ -17,6 +17,7 @@ import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.Log;
 import com.thebois.models.world.Grass;
 import com.thebois.models.world.IWorld;
+import com.thebois.models.world.World;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -40,7 +41,7 @@ public class ColonyTests {
         when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
 
         // Act
-        final Colony colony = new Colony(positions, mockWorld);
+        final Colony colony = new Colony(positions, mockWorld, new World(10, 0));
 
         // Assert
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);

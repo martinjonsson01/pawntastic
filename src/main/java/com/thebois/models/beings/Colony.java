@@ -43,21 +43,15 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
      *
      * @param vacantPositions Positions in the world that a Pawn can be placed on.
      * @param world           The world the pawns move around in.
-     */
-    public Colony(final Iterable<Position> vacantPositions, final IWorld world) {
-        createBeings(vacantPositions, world);
-    }
-
-    /**
-     * Creates an instance of Colony with n number of pawns.
-     *
-     * @param vacantPositions Positions in the world that a Pawn can be placed on.
-     *
      * @param finder finder used to locate things in the world.
+     *
      */
-    public Colony(final Iterable<Position> vacantPositions, final IFinder finder) {
+    public Colony(
+        final Iterable<Position> vacantPositions,
+        final IWorld world,
+        final IFinder finder) {
         setFinder(finder);
-        createBeings(vacantPositions);
+        createBeings(vacantPositions, world);
     }
 
     private void createBeings(final Iterable<Position> vacantPositions, final IWorld world) {

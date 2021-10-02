@@ -77,18 +77,6 @@ public class WorldTests {
         return terrainTiles;
     }
 
-    @Test
-    public void worldFind() {
-        // Arrange
-        final World world = new World(2, 5);
-
-        // Act
-        final Object worldObject = world.find();
-
-        // Assert
-        assertThat(worldObject).isEqualTo(null);
-    }
-
     @ParameterizedTest
     @MethodSource("getTileAndNeighbours")
     public void getNeighboursOfReturnsExpectedNeighbours(

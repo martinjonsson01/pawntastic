@@ -70,7 +70,7 @@ public class World implements IWorld, IFinder {
     }
 
     private Colony initColony(final int pawnCount) {
-        return new Colony(findEmptyPositions(pawnCount), this);
+        return new Colony(findEmptyPositions(pawnCount), this, this);
     }
 
     /**
@@ -276,7 +276,6 @@ public class World implements IWorld, IFinder {
         return this.structureMatrix[row][col];
     }
 
-}
     @Override
     public Iterable<ITile> getNeighboursOf(final ITile tile) {
         final ArrayList<ITile> tiles = new ArrayList<>(8);

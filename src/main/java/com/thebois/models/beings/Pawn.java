@@ -32,7 +32,8 @@ public class Pawn extends AbstractBeing {
         final Position startPosition,
         final Position destination,
         final Random random,
-        final IPathFinder pathFinder) {
+        final IPathFinder pathFinder,
+        final IFinder finder) {
         super(startPosition, destination, pathFinder);
         this.random = random;
         setFinder(finder);
@@ -68,6 +69,16 @@ public class Pawn extends AbstractBeing {
                 }
             });
             if (found[0]) return;
+        }
+    }
+
+    private void setDestination(final Position destination) {
+        if (getDestination().isPresent()) {
+            if (getDestination().get().equals(destination)) {
+                final Collection<Position> newPath = getPathFinder().path(getPosition(),
+                                                                          destination);
+                setPath(newPath);
+            }
         }
     }
 
