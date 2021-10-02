@@ -30,6 +30,7 @@ jobs:
       uses: mathieudutour/github-tag-action@v5
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        default_bump: minor
 
     - name: Rename artifact with version
       run: cp "target/ColonyManagement.jar" "target/ColonyManagement-${{ steps.tag_version.outputs.new_tag }}.jar"
