@@ -1,8 +1,10 @@
-package com.thebois.controllers;
+package com.thebois.controllers.gamecontrollers;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
+import com.thebois.controllers.AbstractInputProcessor;
+import com.thebois.controllers.IController;
 import com.thebois.models.world.World;
 import com.thebois.views.IProjector;
 import com.thebois.views.IView;

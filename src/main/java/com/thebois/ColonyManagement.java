@@ -13,8 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.google.common.eventbus.EventBus;
 
-import com.thebois.controllers.InfoController;
-import com.thebois.controllers.WorldController;
+import com.thebois.controllers.infocontrollers.InfoController;
+import com.thebois.controllers.gamecontrollers.WorldController;
 import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
 import com.thebois.views.IProjector;
@@ -43,6 +43,7 @@ public class ColonyManagement extends Game {
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int PAWN_COUNT = 50;
+    private float tileSize;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
@@ -54,8 +55,6 @@ public class ColonyManagement extends Game {
     // Controllers
     private WorldController worldController;
     private InfoController infoController;
-    // Screens
-    private float tileSize;
 
     @Override
     public void create() {
@@ -84,7 +83,7 @@ public class ColonyManagement extends Game {
                                     infoController.getInfoView());
         this.setScreen(gameScreen);
 
-        // Input Processors
+        // Set up Input Processors
         initInputProcessors();
     }
 

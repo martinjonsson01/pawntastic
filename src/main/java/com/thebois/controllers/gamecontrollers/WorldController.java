@@ -1,4 +1,4 @@
-package com.thebois.controllers;
+package com.thebois.controllers.gamecontrollers;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import com.thebois.ColonyManagement;
+import com.thebois.controllers.IController;
 import com.thebois.models.world.World;
 import com.thebois.views.IProjector;
 import com.thebois.views.IView;

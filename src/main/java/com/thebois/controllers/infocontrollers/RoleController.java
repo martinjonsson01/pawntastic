@@ -1,10 +1,11 @@
-package com.thebois.controllers;
+package com.thebois.controllers.infocontrollers;
 
 import java.util.AbstractMap;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import com.thebois.controllers.IController;
 import com.thebois.listeners.events.ValueChangedEvent;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;

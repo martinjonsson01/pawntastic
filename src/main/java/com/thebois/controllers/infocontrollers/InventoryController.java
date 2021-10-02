@@ -1,10 +1,11 @@
-package com.thebois.controllers;
+package com.thebois.controllers.infocontrollers;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import com.thebois.controllers.IController;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.views.infoviews.IActorView;

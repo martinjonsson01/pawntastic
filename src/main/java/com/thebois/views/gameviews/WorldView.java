@@ -3,12 +3,12 @@ package com.thebois.views.gameviews;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import com.thebois.models.world.ITerrain;
 import com.thebois.views.IView;
+import com.thebois.views.TextureUtils;
 
 /**
  * World view handles all the drawing of the world itself and its information on how to draw it.
@@ -28,16 +28,7 @@ public class WorldView implements IView {
     public WorldView(final float tileSize) {
         this.tileSize = tileSize;
 
-        createGrassTexture();
-    }
-
-    private void createGrassTexture() {
-        final int roundedTileSize = (int) this.tileSize;
-        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);
-        grassTexture = new Texture(pixmap);
-        pixmap.dispose();
+        grassTexture = TextureUtils.createSquareTexture(tileSize);
     }
 
     /**
