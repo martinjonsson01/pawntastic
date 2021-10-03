@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import com.thebois.ColonyManagement;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
@@ -26,16 +27,18 @@ public class World implements IWorld, IFinder {
     private final Optional<IStructure>[][] structureMatrix;
     private final int worldSize;
     private final ITile[][] canonicalMatrix;
+    private final Random random;
     private Colony colony;
 
     /**
      * Initiates the world with the given size and the amount of pawns in the colony.
      *
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
-     * @param pawnCount The amount of beings to initialize the players' BeingGroup with
+     * @param pawnCount The amount of beings to initialize the player's BeingGroup with
+     * @param random    A generator of random numbers.
      */
-    public World(final int worldSize, final int pawnCount) {
-        this(worldSize, null);
+    public World(final int worldSize, final int pawnCount, final Random random) {
+        this(worldSize, null, random);
         this.colony = initColony(pawnCount);
     }
 
@@ -44,9 +47,11 @@ public class World implements IWorld, IFinder {
      *
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
      * @param colony    The Colony that should be added to the world.
+     * @param random    A generator of random numbers.
      */
-    public World(final int worldSize, final Colony colony) {
+    public World(final int worldSize, final Colony colony, final Random random) {
         this.worldSize = worldSize;
+        this.random = random;
 
         terrainMatrix = new ITerrain[worldSize][worldSize];
         for (int y = 0; y < worldSize; y++) {
@@ -206,8 +211,8 @@ public class World implements IWorld, IFinder {
     }
 
     /**
-     * Returns the players' colony with only inventory methods allowed.
-     * (Temporary until we refactor world/colony)
+     * Returns the players' colony with only inventory methods allowed. (Temporary until we refactor
+     * world/colony)
      *
      * @return the colony.
      */
@@ -266,6 +271,28 @@ public class World implements IWorld, IFinder {
             throw new IndexOutOfBoundsException("Given position is outside of the world.");
         }
         return terrainMatrix[posY][posX];
+    }
+
+    @Override
+    public ITile getRandomVacantSpot() {
+        Position randomPosition;
+        do {
+            randomPosition = createRandomPosition();
+        } while (!isVacant(randomPosition));
+
+        return getTileAt(randomPosition);
+    }
+
+    private Position createRandomPosition() {
+        final int randomX = random.nextInt(worldSize);
+        final int randomY = random.nextInt(worldSize);
+        return new Position(randomX, randomY);
+    }
+
+    private boolean isVacant(final Position position) {
+        final int y = (int) position.getPosY();
+        final int x = (int) position.getPosX();
+        return canonicalMatrix[y][x] instanceof ITerrain;
     }
 
     private boolean isDiagonalTo(final ITile tile, final ITile neighbour) {

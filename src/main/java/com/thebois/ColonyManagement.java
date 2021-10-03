@@ -2,6 +2,7 @@ package com.thebois;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -19,18 +20,18 @@ import com.thebois.controllers.RoleController;
 import com.thebois.controllers.StructureController;
 import com.thebois.controllers.TerrainController;
 import com.thebois.models.world.World;
-import com.thebois.views.gameviews.ColonyView;
 import com.thebois.views.GameScreen;
-import com.thebois.views.gameviews.GameView;
-import com.thebois.views.infoviews.IActorView;
 import com.thebois.views.IView;
-import com.thebois.views.infoviews.InfoView;
-import com.thebois.views.infoviews.RoleView;
-import com.thebois.views.gameviews.StructureView;
-import com.thebois.views.gameviews.WorldView;
-import com.thebois.views.infoviews.InventoryView;
 import com.thebois.views.debug.BeingPathDebugView;
 import com.thebois.views.debug.FrameCounterView;
+import com.thebois.views.gameviews.ColonyView;
+import com.thebois.views.gameviews.GameView;
+import com.thebois.views.gameviews.StructureView;
+import com.thebois.views.gameviews.WorldView;
+import com.thebois.views.infoviews.IActorView;
+import com.thebois.views.infoviews.InfoView;
+import com.thebois.views.infoviews.InventoryView;
+import com.thebois.views.infoviews.RoleView;
 
 /**
  * The main representation of the game.
@@ -111,7 +112,7 @@ public class ColonyManagement extends Game {
     }
 
     private void createModels() {
-        world = new World(WORLD_SIZE, PAWN_COUNT);
+        world = new World(WORLD_SIZE, PAWN_COUNT, new Random());
     }
 
     private void createDebugView() {
@@ -151,9 +152,8 @@ public class ColonyManagement extends Game {
                                                            tileSize,
                                                            gameView);
         this.colonyController = new ColonyController(world, colonyView);
-        this.inventoryController = new InventoryController(
-            inventoryView,
-            world.getColonyInventory());
+        this.inventoryController = new InventoryController(inventoryView,
+                                                           world.getColonyInventory());
         new RoleController(world.getRoleAllocator(), roleView);
     }
 

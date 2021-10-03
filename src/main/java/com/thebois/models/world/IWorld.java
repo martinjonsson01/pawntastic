@@ -35,4 +35,11 @@ public interface IWorld {
      */
     ITile getTileAt(int posX, int posY);
 
+    /**
+     * Finds a vacant spot and returns it.
+     *
+     * @return The vacant tile.
+     */
+    ITile getRandomVacantSpot();
+
 }

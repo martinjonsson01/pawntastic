@@ -7,8 +7,6 @@ import com.thebois.models.Position;
  */
 public class Pawn extends AbstractBeing {
 
-    //private final Random random;
-
     /**
      * Instantiates with an initial position and a destination to travel to.
      *
@@ -18,19 +16,4 @@ public class Pawn extends AbstractBeing {
         super(startPosition);
     }
 
-    @Override
-    public void update() {
-        super.update();
-
-        //if (getDestination().isEmpty()) setRandomDestination();
-    }
-
-    /*private void setRandomDestination() {
-        final int randomX = random.nextInt(WORLD_SIZE);
-        final int randomY = random.nextInt(WORLD_SIZE);
-        final Position destination = new Position(randomX, randomY);
-
-        final Collection<Position> newPath = getPathFinder().path(getPosition(), destination);
-        setPath(newPath);
-    }*/
 }
