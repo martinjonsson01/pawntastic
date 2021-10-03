@@ -1,4 +1,4 @@
-package com.thebois.models.beings.tasks;
+package com.thebois.models.beings.actions;
 
 import org.junit.jupiter.api.Test;
 
@@ -6,12 +6,12 @@ import com.thebois.models.Position;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class TaskFactoryTests {
+public class ActionFactoryTests {
 
     @Test
     public void createMoveToThrowsWhenPathFinderNotSet() {
         // Assert
-        assertThrows(NullPointerException.class, () -> TaskFactory.createMoveTo(new Position()));
+        assertThrows(NullPointerException.class, () -> ActionFactory.createMoveTo(new Position()));
     }
 
 }

@@ -3,8 +3,8 @@ package com.thebois.models.beings.roles;
 import java.util.Collection;
 import java.util.List;
 
-import com.thebois.models.beings.tasks.ITaskGenerator;
-import com.thebois.models.beings.tasks.TaskFactory;
+import com.thebois.models.beings.actions.IActionGenerator;
+import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.world.IWorld;
 
 /**
@@ -29,13 +29,13 @@ class IdleRole extends AbstractRole {
     }
 
     @Override
-    protected Collection<ITaskGenerator> getTaskGenerators() {
-        final ITaskGenerator randomMove = getRandomMove();
+    protected Collection<IActionGenerator> getTaskGenerators() {
+        final IActionGenerator randomMove = getRandomMove();
         return List.of(randomMove);
     }
 
-    private ITaskGenerator getRandomMove() {
-        return () -> TaskFactory.createMoveTo(world.getRandomVacantSpot().getPosition());
+    private IActionGenerator getRandomMove() {
+        return () -> ActionFactory.createMoveTo(world.getRandomVacantSpot().getPosition());
     }
 
 }

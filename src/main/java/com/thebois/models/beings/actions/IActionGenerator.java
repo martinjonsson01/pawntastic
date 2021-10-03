@@ -1,4 +1,4 @@
-package com.thebois.models.beings.tasks;
+package com.thebois.models.beings.actions;
 
 /**
  * Represents a generator of actions.
@@ -7,13 +7,13 @@ package com.thebois.models.beings.tasks;
  * fly depending on current conditions.
  * </p>
  */
-public interface ITaskGenerator {
+public interface IActionGenerator {
 
     /**
      * Gets the action.
      *
      * @return The generated action.
      */
-    ITask generate();
+    IAction generate();
 
 }

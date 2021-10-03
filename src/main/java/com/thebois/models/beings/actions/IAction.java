@@ -1,11 +1,11 @@
-package com.thebois.models.beings.tasks;
+package com.thebois.models.beings.actions;
 
 import com.thebois.models.beings.ITaskPerformer;
 
 /**
  * An internal interface representing an action to be performed in a certain way.
  */
-public interface ITask {
+public interface IAction {
 
     /**
      * Performs the task on a given performer.

@@ -3,7 +3,7 @@ package com.thebois.models.beings;
 import com.thebois.models.Position;
 
 /**
- * An internal interface that represents a performer of tasks.
+ * An internal interface that represents a performer of actions.
  */
 public interface ITaskPerformer {
 

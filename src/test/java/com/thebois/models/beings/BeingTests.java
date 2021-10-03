@@ -16,9 +16,9 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.models.beings.tasks.ITask;
-import com.thebois.models.beings.tasks.ITaskGenerator;
-import com.thebois.models.beings.tasks.TaskFactory;
+import com.thebois.models.beings.actions.IAction;
+import com.thebois.models.beings.actions.IActionGenerator;
+import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
@@ -78,12 +78,12 @@ public class BeingTests {
     @BeforeEach
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
-        TaskFactory.setPathFinder(mock(IPathFinder.class));
+        ActionFactory.setPathFinder(mock(IPathFinder.class));
     }
 
     @AfterEach
     public void teardown() {
-        TaskFactory.setPathFinder(null);
+        ActionFactory.setPathFinder(null);
         RoleFactory.setWorld(null);
     }
 
@@ -120,7 +120,7 @@ public class BeingTests {
         // Arrange
         final AbstractRole role = mock(AbstractRole.class);
         final AbstractBeing being = createBeing();
-        final ITask task = mock(ITask.class);
+        final IAction task = mock(IAction.class);
         being.setRole(role);
         when(role.obtainNextTask()).thenReturn(task);
 
@@ -136,7 +136,7 @@ public class BeingTests {
         // Arrange
         final AbstractRole role = mock(AbstractRole.class);
         final AbstractBeing being = createBeing();
-        final ITask task = mock(ITask.class);
+        final IAction task = mock(IAction.class);
         being.setRole(role);
         when(role.obtainNextTask()).thenReturn(task);
 
@@ -216,8 +216,8 @@ public class BeingTests {
         }
 
         @Override
-        protected Collection<ITaskGenerator> getTaskGenerators() {
-            final ITask nothingTask = mock(ITask.class);
+        protected Collection<IActionGenerator> getTaskGenerators() {
+            final IAction nothingTask = mock(IAction.class);
             when(nothingTask.isCompleted()).thenReturn(false);
             return List.of(() -> nothingTask);
         }

@@ -6,16 +6,16 @@ import java.util.Objects;
 import java.util.Queue;
 
 import com.thebois.models.IDeepClonable;
-import com.thebois.models.beings.tasks.ITask;
-import com.thebois.models.beings.tasks.ITaskGenerator;
+import com.thebois.models.beings.actions.IAction;
+import com.thebois.models.beings.actions.IActionGenerator;
 
 /**
  * Represents an assignment to a specific work task.
  */
 public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
 
-    private final Queue<ITaskGenerator> tasks = new LinkedList<>();
-    private ITask currentTask;
+    private final Queue<IActionGenerator> tasks = new LinkedList<>();
+    private IAction currentTask;
 
     @Override
     public int hashCode() {
@@ -65,14 +65,14 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
      *
      * @return The current task that needs to be completed.
      */
-    public ITask obtainNextTask() {
+    public IAction obtainNextTask() {
         if (tasks.isEmpty()) tasks.addAll(getTaskGenerators());
 
         if (currentTask == null || currentTask.isCompleted()) {
-            // Take tasks from queue until one is found that is not completed.
-            ITask newTask;
+            // Take actions from queue until one is found that is not completed.
+            IAction newTask;
             do {
-                final ITaskGenerator actionable = tasks.remove();
+                final IActionGenerator actionable = tasks.remove();
                 newTask = actionable.generate();
             } while (newTask.isCompleted());
 
@@ -86,14 +86,14 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
      * Gets a set of task generators that, when called, generate a task with up to date
      * information.
      * <p>
-     * Task generators are used instead of tasks directly, because the generated task may differ
+     * Task generators are used instead of actions directly, because the generated task may differ
      * depending on the moment in time when it is to be performed. E.g. a house needs to be
      * constructed, but once the role gets around to handing out that task the house is already
      * completed.
      * </p>
      *
-     * @return Generators of tasks to perform.
+     * @return Generators of actions to perform.
      */
-    protected abstract Collection<ITaskGenerator> getTaskGenerators();
+    protected abstract Collection<IActionGenerator> getTaskGenerators();
 
 }

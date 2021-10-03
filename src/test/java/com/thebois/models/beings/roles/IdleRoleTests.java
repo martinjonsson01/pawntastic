@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
-import com.thebois.models.beings.tasks.ITask;
-import com.thebois.models.beings.tasks.TaskFactory;
+import com.thebois.models.beings.actions.IAction;
+import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 
@@ -22,13 +22,13 @@ public class IdleRoleTests {
     public void setup() {
         mockWorld = mock(IWorld.class);
         RoleFactory.setWorld(mockWorld);
-        TaskFactory.setPathFinder(mock(IPathFinder.class));
+        ActionFactory.setPathFinder(mock(IPathFinder.class));
     }
 
     @AfterEach
     public void teardown() {
         RoleFactory.setWorld(null);
-        TaskFactory.setPathFinder(null);
+        ActionFactory.setPathFinder(null);
     }
 
     @Test
@@ -39,10 +39,10 @@ public class IdleRoleTests {
         when(mockTile.getPosition()).thenReturn(randomPosition);
         when(mockWorld.getRandomVacantSpot()).thenReturn(mockTile);
         final AbstractRole role = RoleFactory.idle();
-        final ITask expectedTask = TaskFactory.createMoveTo(randomPosition);
+        final IAction expectedTask = ActionFactory.createMoveTo(randomPosition);
 
         // Act
-        final ITask task = role.obtainNextTask();
+        final IAction task = role.obtainNextTask();
 
         // Assert
         assertThat(task).isEqualTo(expectedTask);

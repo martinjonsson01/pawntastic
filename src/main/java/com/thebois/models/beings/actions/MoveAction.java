@@ -1,4 +1,4 @@
-package com.thebois.models.beings.tasks;
+package com.thebois.models.beings.actions;
 
 import java.util.Collection;
 import java.util.Deque;
@@ -16,7 +16,7 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 /**
  * Moves the performer towards a specified goal.
  */
-class MoveTask implements ITask {
+class MoveAction implements IAction {
 
     private final Position destination;
     private final IPathFinder pathFinder;
@@ -31,7 +31,7 @@ class MoveTask implements ITask {
      * @param destination The goal to move to.
      * @param pathFinder  A way of generating paths to positions.
      */
-    MoveTask(final Position destination, final IPathFinder pathFinder) {
+    MoveAction(final Position destination, final IPathFinder pathFinder) {
         this.destination = destination;
         this.pathFinder = pathFinder;
         ColonyManagement.BUS.register(this);
@@ -45,8 +45,8 @@ class MoveTask implements ITask {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof MoveTask)) return false;
-        final MoveTask moveTask = (MoveTask) o;
+        if (!(o instanceof MoveAction)) return false;
+        final MoveAction moveTask = (MoveAction) o;
         return destination.equals(moveTask.destination);
     }
 

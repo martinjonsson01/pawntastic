@@ -20,7 +20,7 @@ import com.thebois.controllers.RoleController;
 import com.thebois.controllers.StructureController;
 import com.thebois.controllers.TerrainController;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
-import com.thebois.models.beings.tasks.TaskFactory;
+import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
 import com.thebois.views.IView;
@@ -115,7 +115,7 @@ public class ColonyManagement extends Game {
 
     private void createModels() {
         world = new World(WORLD_SIZE, PAWN_COUNT, new Random());
-        TaskFactory.setPathFinder(new AstarPathFinder(world));
+        ActionFactory.setPathFinder(new AstarPathFinder(world));
     }
 
     private void createDebugView() {

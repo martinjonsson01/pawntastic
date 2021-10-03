@@ -1,4 +1,4 @@
-package com.thebois.models.beings.tasks;
+package com.thebois.models.beings.actions;
 
 import java.util.Objects;
 
@@ -6,17 +6,17 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 
 /**
- * Creates tasks.
+ * Creates actions.
  */
-public final class TaskFactory {
+public final class ActionFactory {
 
     private static IPathFinder pathFinder;
 
-    private TaskFactory() {
+    private ActionFactory() {
     }
 
     public static void setPathFinder(final IPathFinder pathFinder) {
-        TaskFactory.pathFinder = pathFinder;
+        ActionFactory.pathFinder = pathFinder;
     }
 
     /**
@@ -26,10 +26,10 @@ public final class TaskFactory {
      *
      * @return The move task.
      */
-    public static ITask createMoveTo(final Position destination) {
+    public static IAction createMoveTo(final Position destination) {
         Objects.requireNonNull(pathFinder,
                                "PathFinder needs to be set before calling factory methods.");
-        return new MoveTask(destination, pathFinder);
+        return new MoveAction(destination, pathFinder);
     }
 
 }

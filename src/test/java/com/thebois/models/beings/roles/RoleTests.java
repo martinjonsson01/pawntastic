@@ -12,8 +12,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.thebois.models.beings.tasks.ITask;
-import com.thebois.models.beings.tasks.ITaskGenerator;
+import com.thebois.models.beings.actions.IAction;
+import com.thebois.models.beings.actions.IActionGenerator;
 import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
@@ -102,48 +102,48 @@ public class RoleTests {
     @Test
     public void obtainNextTaskReturnsTasksInOrderWhenTasksAreCompletedInSequence() {
         // Arrange
-        final ITask first = mockTask(false);
-        final ITask second = mockTask(false);
-        final ITask third = mockTask(false);
+        final IAction first = mockTask(false);
+        final IAction second = mockTask(false);
+        final IAction third = mockTask(false);
         final AbstractRole role = mockTestRole(first, second, third);
 
         // Act
-        final ITask actualFirst = role.obtainNextTask();
+        final IAction actualFirst = role.obtainNextTask();
         // Simulate first task completing between this call and the next.
         when(first.isCompleted()).thenReturn(true);
-        final ITask actualSecond = role.obtainNextTask();
+        final IAction actualSecond = role.obtainNextTask();
         // Simulate second task completing between this call and the next.
         when(actualSecond.isCompleted()).thenReturn(true);
-        final ITask actualThird = role.obtainNextTask();
+        final IAction actualThird = role.obtainNextTask();
 
         // Assert
-        final List<ITask> actualTasks = List.of(actualFirst, actualSecond, actualThird);
+        final List<IAction> actualTasks = List.of(actualFirst, actualSecond, actualThird);
         assertThat(actualTasks).containsExactly(first, second, third);
     }
 
-    private ITask mockTask(final boolean completed) {
-        final ITask task = mock(ITask.class);
+    private IAction mockTask(final boolean completed) {
+        final IAction task = mock(IAction.class);
         when(task.isCompleted()).thenReturn(completed);
         return task;
     }
 
-    private AbstractRole mockTestRole(final ITask... params) {
-        final List<ITask> tasks = List.of(params);
-        final List<ITaskGenerator> taskGenerators =
-            tasks.stream().map(task -> (ITaskGenerator) () -> task).collect(Collectors.toList());
+    private AbstractRole mockTestRole(final IAction... params) {
+        final List<IAction> tasks = List.of(params);
+        final List<IActionGenerator> taskGenerators =
+            tasks.stream().map(task -> (IActionGenerator) () -> task).collect(Collectors.toList());
         return new TestRole(taskGenerators);
     }
 
     @Test
     public void obtainNextTaskSkipsOverAlreadyCompletedTasks() {
         // Arrange
-        final ITask completedTask1 = mockTask(true);
-        final ITask completedTask2 = mockTask(true);
-        final ITask uncompletedTask = mockTask(false);
+        final IAction completedTask1 = mockTask(true);
+        final IAction completedTask2 = mockTask(true);
+        final IAction uncompletedTask = mockTask(false);
         final AbstractRole role = mockTestRole(completedTask1, completedTask2, uncompletedTask);
 
         // Act
-        final ITask actualTask = role.obtainNextTask();
+        final IAction actualTask = role.obtainNextTask();
 
         // Assert
         assertThat(actualTask).isEqualTo(uncompletedTask);
@@ -152,13 +152,13 @@ public class RoleTests {
     @Test
     public void obtainNextTaskReturnsSameTaskWhenItIsNotYetCompleted() {
         // Arrange
-        final ITask uncompletedTask = mockTask(false);
-        final ITask nextTask = mockTask(false);
+        final IAction uncompletedTask = mockTask(false);
+        final IAction nextTask = mockTask(false);
         final AbstractRole role = mockTestRole(uncompletedTask, nextTask);
 
         // Act
-        final ITask actualTaskFirstTime = role.obtainNextTask();
-        final ITask actualTaskSecondTime = role.obtainNextTask();
+        final IAction actualTaskFirstTime = role.obtainNextTask();
+        final IAction actualTaskSecondTime = role.obtainNextTask();
 
         // Assert
         assertThat(actualTaskFirstTime).isEqualTo(actualTaskSecondTime).isEqualTo(uncompletedTask);
@@ -169,9 +169,9 @@ public class RoleTests {
      */
     private static class TestRole extends AbstractRole {
 
-        private final Collection<ITaskGenerator> taskGenerators;
+        private final Collection<IActionGenerator> taskGenerators;
 
-        TestRole(final Collection<ITaskGenerator> taskGenerators) {
+        TestRole(final Collection<IActionGenerator> taskGenerators) {
             this.taskGenerators = taskGenerators;
         }
 
@@ -181,7 +181,7 @@ public class RoleTests {
         }
 
         @Override
-        protected Collection<ITaskGenerator> getTaskGenerators() {
+        protected Collection<IActionGenerator> getTaskGenerators() {
             return taskGenerators;
         }
 
