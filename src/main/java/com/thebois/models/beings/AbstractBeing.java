@@ -28,6 +28,15 @@ public abstract class AbstractBeing implements IBeing, ITaskPerformer {
         this.role = role;
     }
 
+    public Position getDestination() {
+        return destination;
+    }
+
+    @Override
+    public void setDestination(final Position destination) {
+        this.destination = destination;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(getPosition(), getRole());
@@ -96,11 +105,6 @@ public abstract class AbstractBeing implements IBeing, ITaskPerformer {
             this.position.setPosX(newPosX);
             this.position.setPosY(newPosY);
         }
-    }
-
-    @Override
-    public void setDestination(final Position destination) {
-        this.destination = destination;
     }
 
 }

@@ -34,4 +34,11 @@ public interface IBeing {
      */
     void update();
 
+    /**
+     * Gets the current destination.
+     *
+     * @return The destination location.
+     */
+    Position getDestination();
+
 }

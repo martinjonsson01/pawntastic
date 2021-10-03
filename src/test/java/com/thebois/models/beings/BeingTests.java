@@ -12,13 +12,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.models.Position;
+import com.thebois.models.beings.actions.ActionFactory;
+import com.thebois.models.beings.actions.IAction;
+import com.thebois.models.beings.actions.IActionGenerator;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.models.beings.actions.IAction;
-import com.thebois.models.beings.actions.IActionGenerator;
-import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
@@ -95,14 +95,14 @@ public class BeingTests {
         final AbstractRole nothingRole = new NothingRole();
         final AbstractBeing being = createBeing(start, nothingRole);
         being.setDestination(destination);
-        final float distanceToDestinationBefore = start.distanceTo(destination);
+        final float distanceToDestinationBefore = start.distanceTo(being.getDestination());
 
         // Act
         being.update();
 
         // Assert
         final Position actualPosition = being.getPosition();
-        final float distanceToDestinationAfter = actualPosition.distanceTo(destination);
+        final float distanceToDestinationAfter = actualPosition.distanceTo(being.getDestination());
         assertThat(distanceToDestinationAfter).isLessThan(distanceToDestinationBefore);
     }
 

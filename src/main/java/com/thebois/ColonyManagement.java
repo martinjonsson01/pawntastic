@@ -19,8 +19,8 @@ import com.thebois.controllers.InventoryController;
 import com.thebois.controllers.RoleController;
 import com.thebois.controllers.StructureController;
 import com.thebois.controllers.TerrainController;
-import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.actions.ActionFactory;
+import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
 import com.thebois.views.IView;
@@ -51,7 +51,7 @@ public class ColonyManagement extends Game {
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int PAWN_COUNT = 50;
     /* Toggles debug-mode. */
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
@@ -119,7 +119,7 @@ public class ColonyManagement extends Game {
     }
 
     private void createDebugView() {
-        beingPathDebugView = new BeingPathDebugView(world.getColony(), tileSize);
+        beingPathDebugView = new BeingPathDebugView(world.getColony(), tileSize, world);
         frameCounterView = new FrameCounterView(font);
     }
 
