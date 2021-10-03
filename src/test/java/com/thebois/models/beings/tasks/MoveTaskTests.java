@@ -77,6 +77,28 @@ public class MoveTaskTests {
     }
 
     @Test
+    public void performCompletesTaskWhenDestinationIsUnreachable() {
+        // Arrange
+        final Position start = new Position(0, 0);
+        final Position end = new Position(3, 3);
+
+        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        when(performer.getPosition()).thenReturn(start);
+
+        final List<Position> path = List.of();
+        when(pathFinder.path(start, end)).thenReturn(path);
+
+        final ITask task = TaskFactory.createMoveTo(end);
+
+        // Act
+        task.perform(performer);
+        final boolean isCompleted = task.isCompleted();
+
+        // Assert
+        assertThat(isCompleted).isTrue();
+    }
+
+    @Test
     public void hashCodeIsEqualWhenPositionIsEqual() {
         // Arrange
         final Position destination = new Position(10, 10);

@@ -20,6 +20,7 @@ class MoveTask implements ITask {
 
     private final Position destination;
     private final IPathFinder pathFinder;
+    private boolean canReachDestination = true;
     private Deque<Position> path = new LinkedList<>();
     private ITaskPerformer performer;
     private Position latestPosition = new Position(-1, -1);
@@ -56,7 +57,13 @@ class MoveTask implements ITask {
         if (isCompleted()) return;
 
         final Position position = performer.getPosition();
-        if (path.isEmpty()) calculatePathFrom(position);
+        if (path.isEmpty()) {
+            calculatePathFrom(position);
+            if (path.isEmpty()) {
+                canReachDestination = false;
+                return;
+            }
+        }
 
         if (position.equals(path.element())) {
             path.remove();
@@ -67,7 +74,7 @@ class MoveTask implements ITask {
 
     @Override
     public boolean isCompleted() {
-        return latestPosition.equals(destination);
+        return !canReachDestination || latestPosition.equals(destination);
     }
 
     private void calculatePathFrom(final Position start) {
@@ -88,7 +95,6 @@ class MoveTask implements ITask {
     @Subscribe
     public void onObstaclePlaced(final ObstaclePlacedEvent event) {
         if (path.isEmpty()) return;
-        if (performer == null) return;
 
         if (path.contains(event.getPosition())) {
             // Find new path to current goal.

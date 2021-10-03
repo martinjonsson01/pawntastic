@@ -42,6 +42,20 @@ public class AstarPathFinderTests {
         return mockTile;
     }
 
+    @ParameterizedTest
+    @MethodSource("getPositionsAndDestinations")
+    public void pathContainsDestinationLast(final Position start, final Position destination) {
+        // Arrange
+        final IWorld world = new World(30, 0, mock(Random.class));
+        final IPathFinder cut = new AstarPathFinder(world);
+
+        // Act
+        final Collection<Position> path = cut.path(start, destination);
+
+        // Assert
+        assertThat(path).last().isEqualTo(destination);
+    }
+
     @Test
     public void pathAvoidsTilesWithHighCost() {
         // Arrange
