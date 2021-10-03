@@ -1,8 +1,10 @@
 package com.thebois.models.beings.roles;
 
+import java.util.Collection;
 import java.util.Objects;
 
 import com.thebois.models.IDeepClonable;
+import com.thebois.models.beings.tasks.IActionable;
 import com.thebois.models.beings.tasks.ITask;
 
 /**
@@ -59,5 +61,7 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
     public ITask getCurrentTask() {
         return null;
     }
+
+    protected abstract Collection<IActionable> getTasks();
 
 }
