@@ -3,12 +3,12 @@ package com.thebois.models.beings;
 import com.thebois.models.Position;
 
 /**
- * Pawn.
+ * A being that belongs to and is controlled by a colony.
  */
 public class Pawn extends AbstractBeing {
 
     /**
-     * Instantiates with an initial position and a destination to travel to.
+     * Instantiates with an initial position.
      *
      * @param startPosition The initial position.
      */

@@ -3,6 +3,8 @@ package com.thebois.models.beings.roles;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.thebois.models.world.IWorld;
+
 /**
  * Creates requested instances of specific roles.
  */
@@ -14,23 +16,24 @@ public final class RoleFactory {
     /**
      * Gets a role using its type.
      *
-     * @param roleType The type of role to get
+     * @param roleType The type of role to get.
      *
-     * @return The role with the specified type
+     * @return The role with the specified type.
      *
-     * @throws java.util.NoSuchElementException If there is no such role
+     * @throws java.util.NoSuchElementException If there is no such role.
      */
     public static AbstractRole fromType(final RoleType roleType) {
-        return all().stream()
-                    .filter(role -> role.getType().equals(roleType))
-                    .findFirst()
-                    .orElseThrow();
+        return all()
+            .stream()
+            .filter(role -> role.getType().equals(roleType))
+            .findFirst()
+            .orElseThrow();
     }
 
     /**
      * Creates an instance of every type of role.
      *
-     * @return All roles
+     * @return All roles.
      */
     public static Collection<AbstractRole> all() {
         final ArrayList<AbstractRole> roles = new ArrayList<>();
@@ -47,7 +50,7 @@ public final class RoleFactory {
     /**
      * Creates a new lumberjack role.
      *
-     * @return A new lumberjack role
+     * @return A new lumberjack role.
      */
     public static AbstractRole lumberjack() {
         return new LumberjackRole();
@@ -56,7 +59,7 @@ public final class RoleFactory {
     /**
      * Creates a new farmer role.
      *
-     * @return A new farmer role
+     * @return A new farmer role.
      */
     public static AbstractRole farmer() {
         return new FarmerRole();
@@ -65,7 +68,7 @@ public final class RoleFactory {
     /**
      * Creates a new guard role.
      *
-     * @return A new guard role
+     * @return A new guard role.
      */
     public static AbstractRole guard() {
         return new GuardRole();
@@ -74,7 +77,7 @@ public final class RoleFactory {
     /**
      * Creates a new miner role.
      *
-     * @return A new miner role
+     * @return A new miner role.
      */
     public static AbstractRole miner() {
         return new MinerRole();
@@ -83,7 +86,7 @@ public final class RoleFactory {
     /**
      * Creates a new fisher role.
      *
-     * @return A new fisher role
+     * @return A new fisher role.
      */
     public static AbstractRole fisher() {
         return new FisherRole();
@@ -92,7 +95,7 @@ public final class RoleFactory {
     /**
      * Creates a new builder role.
      *
-     * @return A new builder role
+     * @return A new builder role.
      */
     public static AbstractRole builder() {
         return new BuilderRole();
@@ -101,10 +104,21 @@ public final class RoleFactory {
     /**
      * Creates a new idle role.
      *
-     * @return A new idle role
+     * @return A new idle role.
      */
     public static AbstractRole idle() {
         return new IdleRole();
+    }
+
+    /**
+     * Creates a new idle role with random movement.
+     *
+     * @param world The world to roam around in.
+     *
+     * @return A new randomly moving idle role.
+     */
+    public static AbstractRole idle(final IWorld world) {
+        return new IdleRole(world);
     }
 
 }

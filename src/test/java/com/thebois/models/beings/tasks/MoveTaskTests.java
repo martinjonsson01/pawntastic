@@ -25,14 +25,30 @@ public class MoveTaskTests {
     private IPathFinder pathFinder;
 
     public static Stream<Arguments> getPositionsAndDestinations() {
-        return Stream.of(
-            Arguments.of(new Position(0, 0), new Position(0, 1)),
-            Arguments.of(new Position(0, 0), new Position(1, 0)),
-            Arguments.of(new Position(0, 0), new Position(99, 99)),
-            Arguments.of(new Position(0, 0), new Position(-1, -1)),
-            Arguments.of(new Position(0, 0), new Position(-99, -99)),
-            Arguments.of(new Position(123, 456), new Position(0, 0)),
-            Arguments.of(new Position(456, 789), new Position(0, 0)));
+        return Stream.of(Arguments.of(new Position(0, 0), new Position(0, 1)),
+                         Arguments.of(new Position(0, 0), new Position(1, 0)),
+                         Arguments.of(new Position(0, 0), new Position(99, 99)),
+                         Arguments.of(new Position(0, 0), new Position(-1, -1)),
+                         Arguments.of(new Position(0, 0), new Position(-99, -99)),
+                         Arguments.of(new Position(123, 456), new Position(0, 0)),
+                         Arguments.of(new Position(456, 789), new Position(0, 0)));
+    }
+
+    public static Stream<Arguments> getEqualMoveTasks() {
+        TaskFactory.setPathFinder(mock(IPathFinder.class));
+        final ITask sameInstance = TaskFactory.createMoveTo(new Position(0, 1));
+        return Stream.of(Arguments.of(sameInstance, sameInstance),
+                         Arguments.of(TaskFactory.createMoveTo(new Position(0, 1)),
+                                      TaskFactory.createMoveTo(new Position(0, 1))));
+    }
+
+    public static Stream<Arguments> getNotEqualMoveTasks() {
+        TaskFactory.setPathFinder(mock(IPathFinder.class));
+        return Stream.of(Arguments.of(TaskFactory.createMoveTo(new Position(0, 0)),
+                                      TaskFactory.createMoveTo(new Position(0, 1))),
+                         Arguments.of(TaskFactory.createMoveTo(new Position(0, 1)), null),
+                         Arguments.of(TaskFactory.createMoveTo(new Position(0, 1)),
+                                      mock(ITask.class)));
     }
 
     @BeforeEach
@@ -44,6 +60,35 @@ public class MoveTaskTests {
     @AfterEach
     public void restore() {
         TaskFactory.setPathFinder(null);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getEqualMoveTasks")
+    public void equalsIsTrueForEqualTasks(final ITask first, final ITask second) {
+        // Assert
+        assertThat(first).isEqualTo(second);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getNotEqualMoveTasks")
+    public void equalsIsFalseForNotEqualTasks(final ITask first, final ITask second) {
+        // Assert
+        assertThat(first).isNotEqualTo(second);
+    }
+
+    @Test
+    public void hashCodeIsEqualWhenPositionIsEqual() {
+        // Arrange
+        final Position destination = new Position(10, 10);
+        final ITask first = TaskFactory.createMoveTo(destination);
+        final ITask second = TaskFactory.createMoveTo(destination);
+
+        // Act
+        final int firstHash = first.hashCode();
+        final int secondHash = second.hashCode();
+
+        // Assert
+        assertThat(firstHash).isEqualTo(secondHash);
     }
 
     @ParameterizedTest

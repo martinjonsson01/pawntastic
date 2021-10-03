@@ -3,6 +3,7 @@ package com.thebois.models.beings.tasks;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -21,6 +22,7 @@ class MoveTask implements ITask {
     private final IPathFinder pathFinder;
     private Deque<Position> path = new LinkedList<>();
     private ITaskPerformer performer;
+    private Position latestPosition = new Position();
 
     /**
      * Instantiates with a destination to move towards.
@@ -35,8 +37,22 @@ class MoveTask implements ITask {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(destination);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MoveTask)) return false;
+        final MoveTask moveTask = (MoveTask) o;
+        return destination.equals(moveTask.destination);
+    }
+
+    @Override
     public void perform(final ITaskPerformer newPerformer) {
         this.performer = newPerformer;
+        this.latestPosition = newPerformer.getPosition();
         if (isCompleted()) return;
 
         final Position position = performer.getPosition();
@@ -51,7 +67,7 @@ class MoveTask implements ITask {
 
     @Override
     public boolean isCompleted() {
-        return performer.getPosition().equals(destination);
+        return latestPosition.equals(destination);
     }
 
     private void calculatePathFrom(final Position start) {
@@ -72,6 +88,7 @@ class MoveTask implements ITask {
     @Subscribe
     public void onObstaclePlaced(final ObstaclePlacedEvent event) {
         if (path.isEmpty()) return;
+        if (performer == null) return;
 
         if (path.contains(event.getPosition())) {
             // Find new path to current goal.

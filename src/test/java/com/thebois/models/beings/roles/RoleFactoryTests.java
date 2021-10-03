@@ -41,10 +41,9 @@ public class RoleFactoryTests {
 
     @ParameterizedTest
     @MethodSource("getRoleTypes")
-    public void fromTypeReturnsCorrectRole(final RoleType roleType,
-                                           final AbstractRole expectedRole) {
+    public void fromTypeReturnsCorrectRole(final RoleType type, final AbstractRole expectedRole) {
         // Act
-        final AbstractRole actualRole = RoleFactory.fromType(roleType);
+        final AbstractRole actualRole = RoleFactory.fromType(type);
 
         // Assert
         assertThat(actualRole).isEqualTo(expectedRole);
