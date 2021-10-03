@@ -3,7 +3,7 @@ package com.thebois.models.beings.roles;
 import java.util.Collection;
 import java.util.List;
 
-import com.thebois.models.beings.tasks.IActionable;
+import com.thebois.models.beings.tasks.ITaskGenerator;
 
 /**
  * The builder constructs buildings.
@@ -16,7 +16,7 @@ class IdleRole extends AbstractRole {
     }
 
     @Override
-    protected Collection<IActionable> getTasks() {
+    protected Collection<ITaskGenerator> getTaskGenerators() {
         return List.of();
     }
 

@@ -65,13 +65,13 @@ public class BeingTests {
         final AbstractBeing being = new Pawn(new Position());
         final ITask task = mock(ITask.class);
         being.setRole(role);
-        when(role.getCurrentTask()).thenReturn(task);
+        when(role.obtainNextTask()).thenReturn(task);
 
         // Act
         being.update();
 
         // Assert
-        verify(role, times(1)).getCurrentTask();
+        verify(role, times(1)).obtainNextTask();
     }
 
     @Test
@@ -81,7 +81,7 @@ public class BeingTests {
         final AbstractBeing being = new Pawn(new Position());
         final ITask task = mock(ITask.class);
         being.setRole(role);
-        when(role.getCurrentTask()).thenReturn(task);
+        when(role.obtainNextTask()).thenReturn(task);
 
         // Act
         being.update();

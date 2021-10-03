@@ -1,16 +1,21 @@
 package com.thebois.models.beings.roles;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Queue;
 
 import com.thebois.models.IDeepClonable;
-import com.thebois.models.beings.tasks.IActionable;
+import com.thebois.models.beings.tasks.ITaskGenerator;
 import com.thebois.models.beings.tasks.ITask;
 
 /**
  * Represents an assignment to a specific work task.
  */
 public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
+
+    private final Queue<ITaskGenerator> tasks = new LinkedList<>();
+    private ITask currentTask;
 
     @Override
     public int hashCode() {
@@ -56,12 +61,39 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
     }
 
     /**
-     * Gets the task to perform at the moment.
+     * Calculates the next task to perform at the moment and returns it.
+     *
+     * @return The current task that needs to be completed.
      */
-    public ITask getCurrentTask() {
-        return null;
+    public ITask obtainNextTask() {
+        if (tasks.isEmpty()) tasks.addAll(getTaskGenerators());
+
+        if (currentTask == null || currentTask.isCompleted()) {
+            // Take tasks from queue until one is found that is not completed.
+            ITask newTask;
+            do {
+                final ITaskGenerator actionable = tasks.remove();
+                newTask = actionable.generate();
+            } while (newTask.isCompleted());
+
+            this.currentTask = newTask;
+        }
+
+        return currentTask;
     }
 
-    protected abstract Collection<IActionable> getTasks();
+    /**
+     * Gets a set of task generators that, when called, generate a task with up to date
+     * information.
+     * <p>
+     * Task generators are used instead of tasks directly, because the generated task may differ
+     * depending on the moment in time when it is to be performed. E.g. a house needs to be
+     * constructed, but once the role gets around to handing out that task the house is already
+     * completed.
+     * </p>
+     *
+     * @return Generators of tasks to perform.
+     */
+    protected abstract Collection<ITaskGenerator> getTaskGenerators();
 
 }

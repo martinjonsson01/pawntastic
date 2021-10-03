@@ -7,13 +7,13 @@ package com.thebois.models.beings.tasks;
  * fly depending on current conditions.
  * </p>
  */
-public interface IActionable {
+public interface ITaskGenerator {
 
     /**
      * Gets the action.
      *
      * @return The generated action.
      */
-    ITask get();
+    ITask generate();
 
 }

@@ -3,7 +3,7 @@ package com.thebois.models.beings.roles;
 import java.util.Collection;
 import java.util.List;
 
-import com.thebois.models.beings.tasks.IActionable;
+import com.thebois.models.beings.tasks.ITaskGenerator;
 
 /**
  * The fisher catches fish out of water.
@@ -16,7 +16,7 @@ class FisherRole extends AbstractRole {
     }
 
     @Override
-    protected Collection<IActionable> getTasks() {
+    protected Collection<ITaskGenerator> getTaskGenerators() {
         return List.of();
     }
 
