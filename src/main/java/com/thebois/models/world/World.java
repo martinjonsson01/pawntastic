@@ -13,6 +13,7 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.AbstractBeingGroup;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.roles.IRoleAllocator;
+import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
@@ -52,6 +53,7 @@ public class World implements IWorld, IFinder {
     public World(final int worldSize, final Colony colony, final Random random) {
         this.worldSize = worldSize;
         this.random = random;
+        RoleFactory.setWorld(this);
 
         terrainMatrix = new ITerrain[worldSize][worldSize];
         for (int y = 0; y < worldSize; y++) {
@@ -75,7 +77,7 @@ public class World implements IWorld, IFinder {
     }
 
     private Colony initColony(final int pawnCount) {
-        return new Colony(findEmptyPositions(pawnCount), this);
+        return new Colony(findEmptyPositions(pawnCount));
     }
 
     /**
@@ -95,14 +97,13 @@ public class World implements IWorld, IFinder {
             canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
         });
         // Replace terrain with any possible structure.
-        MatrixUtils.forEachElement(
-            structureMatrix,
-            maybeStructure -> maybeStructure.ifPresent(structure -> {
-                final Position position = structure.getPosition();
-                final int posY = (int) position.getPosY();
-                final int posX = (int) position.getPosX();
-                canonicalMatrix[posY][posX] = structure.deepClone();
-            }));
+        MatrixUtils.forEachElement(structureMatrix,
+                                   maybeStructure -> maybeStructure.ifPresent(structure -> {
+                                       final Position position = structure.getPosition();
+                                       final int posY = (int) position.getPosY();
+                                       final int posX = (int) position.getPosX();
+                                       canonicalMatrix[posY][posX] = structure.deepClone();
+                                   }));
     }
 
     private Iterable<Position> findEmptyPositions(final int count) {

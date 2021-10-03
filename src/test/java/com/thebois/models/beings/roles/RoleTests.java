@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,6 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.models.beings.tasks.ITask;
 import com.thebois.models.beings.tasks.ITaskGenerator;
+import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -28,7 +31,7 @@ public class RoleTests {
             Arguments.of(new MinerRole(), new MinerRole()),
             Arguments.of(new FisherRole(), new FisherRole()),
             Arguments.of(new BuilderRole(), new BuilderRole()),
-            Arguments.of(new IdleRole(), new IdleRole()));
+            Arguments.of(new IdleRole(mock(IWorld.class)), new IdleRole(mock(IWorld.class))));
     }
 
     public static Stream<Arguments> getUnequalRoles() {
@@ -48,6 +51,16 @@ public class RoleTests {
             Arguments.of(new FarmerRole(), "Farmer"),
             Arguments.of(new GuardRole(), "Guard"),
             Arguments.of(new MinerRole(), "Miner"));
+    }
+
+    @BeforeEach
+    public void setup() {
+        RoleFactory.setWorld(mock(IWorld.class));
+    }
+
+    @AfterEach
+    public void teardown() {
+        RoleFactory.setWorld(null);
     }
 
     @ParameterizedTest

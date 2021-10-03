@@ -3,12 +3,17 @@ package com.thebois.models.beings.roles;
 import java.util.Collection;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.models.world.IWorld;
+
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class RoleFactoryTests {
 
@@ -20,7 +25,17 @@ public class RoleFactoryTests {
             Arguments.of(RoleType.GUARD, new GuardRole()),
             Arguments.of(RoleType.LUMBERJACK, new LumberjackRole()),
             Arguments.of(RoleType.MINER, new MinerRole()),
-            Arguments.of(RoleType.IDLE, new IdleRole()));
+            Arguments.of(RoleType.IDLE, new IdleRole(mock(IWorld.class))));
+    }
+
+    @BeforeEach
+    public void setup() {
+        RoleFactory.setWorld(mock(IWorld.class));
+    }
+
+    @AfterEach
+    public void teardown() {
+        RoleFactory.setWorld(null);
     }
 
     @Test
@@ -36,7 +51,7 @@ public class RoleFactoryTests {
             new FisherRole(),
             new MinerRole(),
             new GuardRole(),
-            new IdleRole());
+            new IdleRole(mock(IWorld.class)));
     }
 
     @ParameterizedTest

@@ -1,5 +1,7 @@
 package com.thebois.models.beings;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
@@ -15,7 +17,9 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.beings.tasks.ITask;
+import com.thebois.models.beings.tasks.ITaskGenerator;
 import com.thebois.models.beings.tasks.TaskFactory;
+import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,10 +27,12 @@ import static org.mockito.Mockito.*;
 public class BeingTests {
 
     public static Stream<Arguments> getEqualBeings() {
+        RoleFactory.setWorld(mock(IWorld.class));
         final AbstractBeing beingA = createBeing(0, 0, RoleType.BUILDER);
         final AbstractBeing beingB = createBeing(0, 0, RoleType.BUILDER);
         final AbstractBeing beingC = createBeing(0, 0, RoleType.BUILDER);
-        return Stream.of(Arguments.of(createBeing(0, 0, RoleType.FARMER),
+        return Stream.of(Arguments.of(createBeing(), createBeing()),
+                         Arguments.of(createBeing(0, 0, RoleType.FARMER),
                                       createBeing(0, 0, RoleType.FARMER)),
                          Arguments.of(createBeing(123, 456, RoleType.FISHER),
                                       createBeing(123, 456, RoleType.FISHER)),
@@ -43,12 +49,18 @@ public class BeingTests {
         return createBeing(new Position(startX, startY), role);
     }
 
+    private static AbstractBeing createBeing() {
+        final AbstractRole role = RoleFactory.idle();
+        return createBeing(new Position(), role);
+    }
+
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
         return new Pawn(currentPosition.deepClone(), role);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
+        RoleFactory.setWorld(mock(IWorld.class));
         return Stream.of(Arguments.of(createBeing(0, 0, RoleType.FARMER),
                                       createBeing(0, 0, RoleType.FISHER)),
                          Arguments.of(createBeing(0, 0, RoleType.LUMBERJACK),
@@ -65,12 +77,14 @@ public class BeingTests {
 
     @BeforeEach
     public void setup() {
+        RoleFactory.setWorld(mock(IWorld.class));
         TaskFactory.setPathFinder(mock(IPathFinder.class));
     }
 
     @AfterEach
     public void teardown() {
         TaskFactory.setPathFinder(null);
+        RoleFactory.setWorld(null);
     }
 
     @ParameterizedTest
@@ -78,7 +92,8 @@ public class BeingTests {
     public void updateMovesTowardsDestinationWhenNotAtDestination(final Position destination) {
         // Arrange
         final Position start = new Position();
-        final AbstractBeing being = createBeing(start);
+        final AbstractRole nothingRole = new NothingRole();
+        final AbstractBeing being = createBeing(start, nothingRole);
         being.setDestination(destination);
         final float distanceToDestinationBefore = start.distanceTo(destination);
 
@@ -91,15 +106,10 @@ public class BeingTests {
         assertThat(distanceToDestinationAfter).isLessThan(distanceToDestinationBefore);
     }
 
-    private static AbstractBeing createBeing(final Position position) {
-        final AbstractRole role = RoleFactory.idle();
-        return createBeing(position, role);
-    }
-
     @Test
     public void setRoleWithNullThrowsException() {
         // Arrange
-        final IBeing being = createBeing(new Position());
+        final IBeing being = createBeing();
 
         // Assert
         assertThatThrownBy(() -> being.setRole(null)).isInstanceOf(IllegalArgumentException.class);
@@ -121,10 +131,6 @@ public class BeingTests {
         verify(role, times(1)).obtainNextTask();
     }
 
-    private static AbstractBeing createBeing() {
-        return createBeing(new Position());
-    }
-
     @Test
     public void updatePerformsTask() {
         // Arrange
@@ -144,11 +150,10 @@ public class BeingTests {
     @Test
     public void hashCodeReturnsSameIfEqual() {
         // Arrange
-        final Position currentPosition = new Position(0, 0);
         final AbstractRole role = RoleFactory.farmer();
-        final IBeing first = createBeing(currentPosition.deepClone());
+        final IBeing first = createBeing();
         first.setRole(role);
-        final IBeing second = createBeing(currentPosition.deepClone());
+        final IBeing second = createBeing();
         second.setRole(role);
 
         // Act
@@ -162,10 +167,8 @@ public class BeingTests {
     @Test
     public void hashCodeReturnDifferentIfNotEqual() {
         // Arrange
-        final AbstractRole role = RoleFactory.farmer();
-        final IBeing first = createBeing(new Position(0, 0));
-        first.setRole(role);
-        final IBeing second = createBeing(new Position(123, 123));
+        final IBeing first = createBeing(new Position(0, 0), RoleFactory.farmer());
+        final IBeing second = createBeing(new Position(123, 123), RoleFactory.idle());
 
         // Act
         final int firstHashCode = first.hashCode();
@@ -178,7 +181,7 @@ public class BeingTests {
     @Test
     public void equalsReturnsFalseForOtherType() {
         // Arrange
-        final IBeing being = createBeing(new Position(0, 0));
+        final IBeing being = createBeing();
         being.setRole(RoleFactory.farmer());
 
         // Assert
@@ -200,6 +203,25 @@ public class BeingTests {
         final AbstractBeing first, final AbstractBeing second) {
         // Assert
         assertThat(first).isNotEqualTo(second);
+    }
+
+    /**
+     * A test role that does nothing.
+     */
+    private static class NothingRole extends AbstractRole {
+
+        @Override
+        public RoleType getType() {
+            return null;
+        }
+
+        @Override
+        protected Collection<ITaskGenerator> getTaskGenerators() {
+            final ITask nothingTask = mock(ITask.class);
+            when(nothingTask.isCompleted()).thenReturn(false);
+            return List.of(() -> nothingTask);
+        }
+
     }
 
 }

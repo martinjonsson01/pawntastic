@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,6 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import com.thebois.models.Position;
+import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.Log;
@@ -28,6 +31,16 @@ public class ColonyTests {
         return Stream.of(Arguments.of(ItemType.LOG), Arguments.of(ItemType.ROCK));
     }
 
+    @BeforeEach
+    public void setup() {
+        RoleFactory.setWorld(mock(IWorld.class));
+    }
+
+    @AfterEach
+    public void teardown() {
+        RoleFactory.setWorld(null);
+    }
+
     @Test
     public void constructWithTilesCreatesOneBeingPerPosition() {
         // Arrange
@@ -40,7 +53,7 @@ public class ColonyTests {
         when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
 
         // Act
-        final Colony colony = new Colony(positions, mockWorld);
+        final Colony colony = new Colony(positions);
 
         // Assert
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);
@@ -72,12 +85,16 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            colony.take(itemType);
-        });
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                                                 () -> colony.take(itemType));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
+    }
+
+    private Colony mockColony() {
+        final Collection<IBeing> pawns = new ArrayList<>(0);
+        return new Colony(pawns);
     }
 
     @Test
@@ -135,11 +152,6 @@ public class ColonyTests {
         assertThat(count).isEqualTo(0);
     }
 
-    private Colony mockColony() {
-        final Collection<IBeing> pawns = new ArrayList<>(0);
-        return new Colony(pawns);
-    }
-
     @Test
     public void takeMultipleItemsFromColony() {
         // Arrange
@@ -166,9 +178,9 @@ public class ColonyTests {
         colony.add(new Log());
         colony.add(new Log());
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            colony.takeAmount(ItemType.ROCK, 2);
-        });
+        final Exception exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> colony.takeAmount(ItemType.ROCK, 2));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo(

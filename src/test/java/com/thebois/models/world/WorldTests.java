@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -14,6 +15,7 @@ import org.mockito.Mockito;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
+import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.world.structures.IStructure;
 
 import static org.assertj.core.api.Assertions.*;
@@ -116,6 +118,11 @@ public class WorldTests {
         terrainTiles.add(new Grass(1, 0));
         terrainTiles.add(new Grass(1, 1));
         return terrainTiles;
+    }
+
+    @AfterEach
+    public void teardown() {
+        RoleFactory.setWorld(null);
     }
 
     @Test

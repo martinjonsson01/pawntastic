@@ -3,7 +3,6 @@ package com.thebois.models.beings.roles;
 import java.util.Collection;
 import java.util.List;
 
-import com.thebois.models.Position;
 import com.thebois.models.beings.tasks.ITaskGenerator;
 import com.thebois.models.beings.tasks.TaskFactory;
 import com.thebois.models.world.IWorld;
@@ -13,7 +12,7 @@ import com.thebois.models.world.IWorld;
  */
 class IdleRole extends AbstractRole {
 
-    private IWorld world;
+    private final IWorld world;
 
     /**
      * Instantiates with a world to randomly move around in.
@@ -22,13 +21,6 @@ class IdleRole extends AbstractRole {
      */
     IdleRole(final IWorld world) {
         this.world = world;
-    }
-
-    /**
-     * Instantiates with no random movement.
-     */
-    IdleRole() {
-
     }
 
     @Override
@@ -43,9 +35,6 @@ class IdleRole extends AbstractRole {
     }
 
     private ITaskGenerator getRandomMove() {
-        if (world == null) {
-            return () -> TaskFactory.createMoveTo(new Position(0, 0));
-        }
         return () -> TaskFactory.createMoveTo(world.getRandomVacantSpot().getPosition());
     }
 

@@ -2,6 +2,7 @@ package com.thebois.models.beings.roles;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 import com.thebois.models.world.IWorld;
 
@@ -10,7 +11,13 @@ import com.thebois.models.world.IWorld;
  */
 public final class RoleFactory {
 
+    private static IWorld world;
+
     private RoleFactory() {
+    }
+
+    public static void setWorld(final IWorld world) {
+        RoleFactory.world = world;
     }
 
     /**
@@ -102,22 +109,14 @@ public final class RoleFactory {
     }
 
     /**
-     * Creates a new idle role.
-     *
-     * @return A new idle role.
-     */
-    public static AbstractRole idle() {
-        return new IdleRole();
-    }
-
-    /**
      * Creates a new idle role with random movement.
-     *
-     * @param world The world to roam around in.
      *
      * @return A new randomly moving idle role.
      */
-    public static AbstractRole idle(final IWorld world) {
+    public static AbstractRole idle() {
+        Objects.requireNonNull(
+            world,
+            "World can not be null. Call RoleFactory.setWorld to set it.");
         return new IdleRole(world);
     }
 

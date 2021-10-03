@@ -16,7 +16,6 @@ import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
-import com.thebois.models.world.IWorld;
 
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
@@ -38,15 +37,14 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
      * Creates an instance of Colony with a number of pawns.
      *
      * @param vacantPositions Positions in the world that a Pawn can be placed on.
-     * @param world           The world the pawns move around in.
      */
-    public Colony(final Iterable<Position> vacantPositions, final IWorld world) {
-        createBeings(vacantPositions, world);
+    public Colony(final Iterable<Position> vacantPositions) {
+        createBeings(vacantPositions);
     }
 
-    private void createBeings(final Iterable<Position> vacantPositions, final IWorld world) {
+    private void createBeings(final Iterable<Position> vacantPositions) {
         for (final Position vacantPosition : vacantPositions) {
-            final AbstractRole role = RoleFactory.idle(world);
+            final AbstractRole role = RoleFactory.idle();
             addBeing(new Pawn(vacantPosition, role));
         }
     }

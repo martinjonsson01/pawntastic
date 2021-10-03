@@ -16,39 +16,30 @@ import static org.mockito.Mockito.*;
 
 public class IdleRoleTests {
 
+    private IWorld mockWorld;
+
     @BeforeEach
     public void setup() {
+        mockWorld = mock(IWorld.class);
+        RoleFactory.setWorld(mockWorld);
         TaskFactory.setPathFinder(mock(IPathFinder.class));
     }
 
     @AfterEach
     public void teardown() {
+        RoleFactory.setWorld(null);
         TaskFactory.setPathFinder(null);
     }
 
     @Test
     public void obtainNextTaskIsMoveTaskToRandomPositionInWorld() {
         // Arrange
-        final IWorld mockWorld = mock(IWorld.class);
         final ITile mockTile = mock(ITile.class);
         final Position randomPosition = new Position(2, 3);
         when(mockTile.getPosition()).thenReturn(randomPosition);
         when(mockWorld.getRandomVacantSpot()).thenReturn(mockTile);
-        final AbstractRole role = RoleFactory.idle(mockWorld);
-        final ITask expectedTask = TaskFactory.createMoveTo(randomPosition);
-
-        // Act
-        final ITask task = role.obtainNextTask();
-
-        // Assert
-        assertThat(task).isEqualTo(expectedTask);
-    }
-
-    @Test
-    public void roleWithoutWorldAlwaysMovesToOrigin() {
-        // Arrange
         final AbstractRole role = RoleFactory.idle();
-        final ITask expectedTask = TaskFactory.createMoveTo(new Position(0, 0));
+        final ITask expectedTask = TaskFactory.createMoveTo(randomPosition);
 
         // Act
         final ITask task = role.obtainNextTask();
