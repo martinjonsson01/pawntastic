@@ -22,7 +22,7 @@ class MoveTask implements ITask {
     private final IPathFinder pathFinder;
     private Deque<Position> path = new LinkedList<>();
     private ITaskPerformer performer;
-    private Position latestPosition = new Position();
+    private Position latestPosition = new Position(-1, -1);
 
     /**
      * Instantiates with a destination to move towards.

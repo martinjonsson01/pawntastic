@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.thebois.models.Position;
-import com.thebois.models.beings.pathfinding.AstarPathFinder;
-import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
@@ -48,10 +45,9 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     }
 
     private void createBeings(final Iterable<Position> vacantPositions, final IWorld world) {
-        final Random random = new Random();
-        final IPathFinder pathFinder = new AstarPathFinder(world);
         for (final Position vacantPosition : vacantPositions) {
-            addBeing(new Pawn(vacantPosition));
+            final AbstractRole role = RoleFactory.idle(world);
+            addBeing(new Pawn(vacantPosition, role));
         }
     }
 

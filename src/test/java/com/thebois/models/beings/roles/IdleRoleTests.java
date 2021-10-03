@@ -44,4 +44,17 @@ public class IdleRoleTests {
         assertThat(task).isEqualTo(expectedTask);
     }
 
+    @Test
+    public void roleWithoutWorldAlwaysMovesToOrigin() {
+        // Arrange
+        final AbstractRole role = RoleFactory.idle();
+        final ITask expectedTask = TaskFactory.createMoveTo(new Position(0, 0));
+
+        // Act
+        final ITask task = role.obtainNextTask();
+
+        // Assert
+        assertThat(task).isEqualTo(expectedTask);
+    }
+
 }

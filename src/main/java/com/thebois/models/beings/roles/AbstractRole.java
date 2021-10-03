@@ -6,8 +6,8 @@ import java.util.Objects;
 import java.util.Queue;
 
 import com.thebois.models.IDeepClonable;
-import com.thebois.models.beings.tasks.ITaskGenerator;
 import com.thebois.models.beings.tasks.ITask;
+import com.thebois.models.beings.tasks.ITaskGenerator;
 
 /**
  * Represents an assignment to a specific work task.

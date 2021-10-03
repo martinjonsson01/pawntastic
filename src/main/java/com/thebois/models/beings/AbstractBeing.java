@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
-import com.thebois.models.beings.roles.RoleFactory;
 
 /**
  * An abstract implementation of IBeing.
@@ -18,14 +17,15 @@ public abstract class AbstractBeing implements IBeing, ITaskPerformer {
     private Position destination;
 
     /**
-     * Creates an AbstractBeing with an initial position.
+     * Instantiates with an initial position and role.
      *
-     * @param startPosition the initial position of the AbstractBeing.
+     * @param startPosition The initial position.
+     * @param role          The starting role.
      */
-    public AbstractBeing(final Position startPosition) {
+    public AbstractBeing(final Position startPosition, final AbstractRole role) {
         this.position = startPosition;
         this.destination = startPosition;
-        this.role = RoleFactory.idle();
+        this.role = role;
     }
 
     @Override
