@@ -1,5 +1,7 @@
 package com.thebois.models.beings;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -247,6 +249,28 @@ public class BeingTests {
         final AbstractBeing first, final AbstractBeing second) {
         // Assert
         assertThat(first).isNotEqualTo(second);
+    }
+
+    @Test
+    public void addBeingIncreasesBeingCount() {
+        // Arrange
+        final Collection<IBeing> pawns = new ArrayList<>();
+        pawns.add(Mockito.mock(IBeing.class));
+        final AbstractBeingGroup colony = new Colony(pawns);
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        final IBeing being = new Pawn(new Position(0, 0),
+                                      new Position(1, 1),
+                                      new Random(),
+                                      pathFinder);
+
+        // Act
+        final int before = colony.getBeings().size();
+        colony.addBeing(being);
+        final int after = colony.getBeings().size();
+
+        // Assert
+        assertThat(before).isEqualTo(1);
+        assertThat(after).isEqualTo(2);
     }
 
 }
