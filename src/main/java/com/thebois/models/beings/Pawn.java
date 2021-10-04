@@ -18,6 +18,8 @@ public class Pawn extends AbstractBeing {
     /* Temporary hard-coded world size. Should be removed when pathfinding is implemented. */
     private static final int WORLD_SIZE = 50;
     private final Random random;
+    private Optional<IStructure> closestStructure = Optional.empty();
+    private Optional<IStructure> previousClosestStructure = Optional.empty();
 
     /**
      * Instantiates with an initial position and a destination to travel to.
@@ -43,7 +45,7 @@ public class Pawn extends AbstractBeing {
     public void update() {
         super.update();
         deliverItemToNearestStructure();
-        pickNearestIncompleteStructureAsDestination();
+        updateClosestStructure();
 
         if (getDestination().isEmpty()) setRandomDestination();
     }
@@ -57,28 +59,50 @@ public class Pawn extends AbstractBeing {
         setPath(newPath);
     }
 
-    protected void pickNearestIncompleteStructureAsDestination() {
-        final Collection<Optional<IStructure>> structures =
-            getFinder().findNearestStructures(this.getPosition(), 10);
-        final Boolean[] found = {false};
-        for (final Optional<IStructure> structure : structures) {
-            structure.ifPresent(iStructure -> {
-                if (structure.get().builtStatus() < 1f) {
-                    setDestination(iStructure.getPosition());
-                    found[0] = true;
-                }
-            });
-            if (found[0]) return;
+    protected void updateClosestStructure() {
+        if (closestStructure.isPresent()) {
+            if (closestStructure.get().isCompleted()) {
+                closestStructure = findIncompleteStructure();
+            }
+        }
+        else {
+            closestStructure = findIncompleteStructure();
+            setClosestStructureAsFinalDestination();
         }
     }
 
-    private void setDestination(final Position destination) {
-        if (getDestination().isPresent()) {
-            if (getDestination().get().equals(destination)) {
-                final Collection<Position> newPath = getPathFinder().path(getPosition(),
-                                                                          destination);
+    protected Optional<IStructure> findIncompleteStructure() {
+        final Collection<Optional<IStructure>> structures =
+            getFinder().findNearestStructures(this.getPosition(), 10);
+
+        for (final Optional<IStructure> structure : structures) {
+            if (structure.isPresent()) {
+                if (!structure.get().isCompleted()) {
+                    return structure;
+                }
+            }
+            else {
+                return Optional.empty();
+            }
+        }
+        return Optional.empty();
+    }
+
+    private void setClosestStructureAsFinalDestination() {
+        closestStructure.ifPresent(structure -> setFinalDestination(structure.getPosition()));
+    }
+
+    private void setFinalDestination(final Position destination) {
+        final Position nextTo = nearestPositionNextTo(destination);
+        if (getFinalDestination().isPresent()) {
+            if (!getFinalDestination().get().equals(nextTo)) {
+                final Collection<Position> newPath = getPathFinder().path(getPosition(), nextTo);
                 setPath(newPath);
             }
+        }
+        else {
+            final Collection<Position> newPath = getPathFinder().path(getPosition(), nextTo);
+            setPath(newPath);
         }
     }
 

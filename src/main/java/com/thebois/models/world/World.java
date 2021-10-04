@@ -307,7 +307,7 @@ public class World implements IWorld, IFinder {
 
     @Override
     public ITile getTileAt(final int posX, final int posY) {
-        if (posX < 0 || posY < 0 || posX >= worldSize || posY >= worldSize) {
+        if (posX < 0 || posY < 0 || posX > worldSize || posY > worldSize) {
             throw new IndexOutOfBoundsException("Given position is outside of the world.");
         }
         return terrainMatrix[posY][posX];
