@@ -28,7 +28,7 @@ public class Inventory implements IInventory {
     @Override
     public IItem take(final ItemType itemType) {
         final int firstIndexOfItemType = getFirstIndexOf(itemType);
-        if (firstIndexOfItemType != 0) {
+        if (firstIndexOfItemType != -1) {
             return items.remove(firstIndexOfItemType);
         }
         else {
