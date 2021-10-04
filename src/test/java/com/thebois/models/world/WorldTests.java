@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
+import com.thebois.models.inventory.IInventory;
 import com.thebois.models.world.structures.IStructure;
 
 import static org.assertj.core.api.Assertions.*;
@@ -52,6 +53,18 @@ public class WorldTests {
                          Arguments.of(new Position(0, -1)),
                          Arguments.of(new Position(0, 3)),
                          Arguments.of(new Position(-1, 3)));
+    }
+
+    @Test
+    public void getColonyInventoryReturnsNotNull() {
+        // Arrange
+        final World world = new World(2, 5);
+
+        // Act
+        final IInventory inventory = world.getColonyInventory();
+
+        // Assert
+        assertThat(inventory).isNotNull();
     }
 
     @Test
