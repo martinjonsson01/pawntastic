@@ -3,6 +3,7 @@ package com.thebois.models.beings.roles;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,8 @@ import org.mockito.Mockito;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
+import com.thebois.models.beings.Pawn;
+import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.Grass;
 import com.thebois.models.world.IWorld;
 
@@ -25,9 +28,15 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
 
-        final int beingCount = 0;
+        final int beingCount = 3;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        pawns.add(Mockito.mock(IBeing.class));
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
+        }
         final Colony cut = new Colony(pawns);
 
         // Act
@@ -57,8 +66,15 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType existingRole = RoleFactory.lumberjack().getType();
         final RoleType newRole = RoleFactory.farmer().getType();
-        final Collection<IBeing> pawns = new ArrayList<>(1);
-        pawns.add(Mockito.mock(IBeing.class));
+        final int beingCount = 3;
+        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
+        }
         final Colony cut = new Colony(pawns);
         cut.tryIncreaseAllocation(existingRole, 3);
 
@@ -78,8 +94,15 @@ public class RoleAllocatorTests {
         final RoleType secondRole = RoleFactory.miner().getType();
         final RoleType newRole = RoleFactory.farmer().getType();
 
-        final Collection<IBeing> pawns = new ArrayList<>(1);
-        pawns.add(Mockito.mock(IBeing.class));
+        final int beingCount = 7;
+        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
+        }
         final Colony cut = new Colony(pawns);
 
         cut.tryIncreaseAllocation(firstRole, 3);
@@ -101,7 +124,15 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
 
-        final Collection<IBeing> pawns = new ArrayList<>(1);
+        final int beingCount = 4;
+        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
+        }
         final Colony cut = new Colony(pawns);
 
         cut.tryIncreaseAllocation(role, 3);
@@ -120,10 +151,14 @@ public class RoleAllocatorTests {
     public void tryDecreaseAllocationFailsWhenNoRolesAssigned() {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
-        final int beingCount = 25;
+        final int beingCount = 3;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
         }
         final Colony cut = new Colony(pawns);
 
@@ -140,10 +175,14 @@ public class RoleAllocatorTests {
     public void tryDecreaseAllocationFailsWhenNotEnoughRolesAssigned() {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
-        final int beingCount = 25;
+        final int beingCount = 3;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
         }
         final Colony cut = new Colony(pawns);
         cut.tryIncreaseAllocation(role, 1);
@@ -161,10 +200,14 @@ public class RoleAllocatorTests {
     public void tryDecreaseAllocationSucceedsWhenAllRolesAssigned() {
         // Arrange
         final RoleType existingRole = RoleFactory.farmer().getType();
-        final int beingCount = 25;
+        final int beingCount = 3;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
         }
         final Colony cut = new Colony(pawns);
         cut.tryIncreaseAllocation(existingRole, 3);
@@ -182,10 +225,14 @@ public class RoleAllocatorTests {
     public void tryDecreaseAllocationSucceedsWhenEnoughRolesAssigned() {
         // Arrange
         final RoleType existingRole = RoleFactory.farmer().getType();
-        final int beingCount = 25;
+        final int beingCount = 3;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
         }
         final Colony cut = new Colony(pawns);
         cut.tryIncreaseAllocation(existingRole, 3);
@@ -203,10 +250,14 @@ public class RoleAllocatorTests {
     public void tryDecreaseAllocationSucceedsWhenOneHasRole() {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
-        final int beingCount = 25;
+        final int beingCount = 4;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
         }
         final Colony cut = new Colony(pawns);
         cut.tryIncreaseAllocation(role);
@@ -227,12 +278,16 @@ public class RoleAllocatorTests {
         final RoleType secondRole = RoleFactory.miner().getType();
         final RoleType thirdRole = RoleFactory.farmer().getType();
 
-        final int beingCount = 25;
+        final int beingCount = 16;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
         }
-        final IRoleAllocator cut = new Colony(pawns);
+        final Colony cut = new Colony(pawns);
 
         final int expectedFirstCount = 3;
         final int expectedSecondCount = 5;
@@ -257,10 +312,14 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
 
-        final int beingCount = 25;
+        final int beingCount = 3;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
         }
         final Colony cut = new Colony(pawns);
         cut.tryIncreaseAllocation(role);
@@ -277,10 +336,14 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
 
-        final int beingCount = 25;
+        final int beingCount = 3;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
         }
         final Colony cut = new Colony(pawns);
 
@@ -294,10 +357,14 @@ public class RoleAllocatorTests {
     @Test
     public void canIncreaseAllocationReturnsTrueWhenNoneHaveRole() {
         // Arrange
-        final int beingCount = 25;
+        final int beingCount = 3;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
         }
         final Colony cut = new Colony(pawns);
 
@@ -313,10 +380,14 @@ public class RoleAllocatorTests {
         // Arrange
         final RoleType role = RoleFactory.lumberjack().getType();
 
-        final int beingCount = 25;
+        final int beingCount = 3;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
+            pawns.add(new Pawn(
+                new Position(0, 0),
+                new Position(0, 1),
+                Mockito.mock(Random.class),
+                Mockito.mock(IPathFinder.class)));
         }
         final Colony cut = new Colony(pawns);
         cut.tryIncreaseAllocation(role, 3);

@@ -121,7 +121,7 @@ public class ColonyManagement extends Game {
 
     private void createModels() {
         world = new World(WORLD_SIZE);
-        final Collection<IBeing> pawns = new ArrayList<>(PAWN_POSITIONS);
+        final Collection<IBeing> pawns = new ArrayList<>();
         final Iterable<Position> vacantPositions = world.findEmptyPositions(PAWN_POSITIONS);
         final Random random = new Random();
         final IPathFinder pathFinder = new AstarPathFinder(world);

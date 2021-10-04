@@ -3,6 +3,7 @@ package com.thebois.models.world;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,9 @@ import org.mockito.Mockito;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
+import com.thebois.models.beings.Pawn;
+import com.thebois.models.beings.pathfinding.AstarPathFinder;
+import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.structures.IStructure;
 
 import static org.assertj.core.api.Assertions.*;
@@ -194,7 +198,12 @@ public class WorldTests {
     @Test
     public void getColonyReturnsSameColony() {
         // Arrange
-        final Colony colony = Mockito.mock(Colony.class);
+        final int beingCount = 5;
+        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(Mockito.mock(IBeing.class));
+        }
+        final Colony colony = new Colony(pawns);
 
         // Assert
         assertThat(colony.getColony()).isEqualTo(colony);
@@ -203,7 +212,12 @@ public class WorldTests {
     @Test
     public void getRoleAllocatorReturnsRoleAllocator() {
         // Arrange
-        final Colony colony = Mockito.mock(Colony.class);
+        final int beingCount = 5;
+        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            pawns.add(Mockito.mock(IBeing.class));
+        }
+        final Colony colony = new Colony(pawns);
 
         // Assert
         assertThat(colony.getRoleAllocator()).isEqualTo(colony);
@@ -212,24 +226,6 @@ public class WorldTests {
     @Test
     public void instantiateWithPawnCountCreatesCorrectNumberOfBeings() {
         // Arrange
-        final int pawnCount = 5;
-        final int beingCount = 25;
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
-
-        // Act
-        final Colony colony = new Colony(pawns);
-
-        // Assert
-        assertThat(colony.getBeings()).size().isEqualTo(pawnCount);
-    }
-
-    @Test
-    public void instantiateWithPawnCountCreatesOnlyAsManyBeingsAsFitInTheWorld() {
-        // Arrange
-        final int pawnFitCount = 4;
         final int beingCount = 5;
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
@@ -240,20 +236,28 @@ public class WorldTests {
         final Colony colony = new Colony(pawns);
 
         // Assert
-        assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
+        assertThat(colony.getBeings()).size().isEqualTo(beingCount);
     }
 
     @Test
-    public void testsIfColonyGetsUpdate() {
+    public void instantiateWithPawnCountCreatesOnlyAsManyBeingsAsFitInTheWorld() {
         // Arrange
-        final Colony colony = Mockito.mock(Colony.class);
+        final int pawnFitCount = 4;
+        final World world = new World(2);
+        final Collection<IBeing> pawns = new ArrayList<>();
+        final Iterable<Position> vacantPositions = world.findEmptyPositions(5);
+        final Random random = new Random();
+        final IPathFinder pathFinder = new AstarPathFinder(world);
+        for (final Position vacantPosition : vacantPositions) {
+            pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder));
+        }
 
         // Act
-        colony.update();
+        final Colony colony = new Colony(pawns);
 
-        // Arrange
-        Mockito.verify(colony, Mockito.atLeastOnce()).update();
-        assertThat(colony.getColony()).isEqualTo(colony);
+        // Assert
+        assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
     }
+
 
 }
