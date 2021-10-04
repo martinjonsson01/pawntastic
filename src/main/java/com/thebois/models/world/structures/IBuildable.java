@@ -33,6 +33,13 @@ public interface IBuildable {
     float builtStatus();
 
     /**
+     * Returns true if builtStatus is equal to 1.
+     *
+     * @return Whether the IBuildable is built or not.
+     */
+    boolean isCompleted();
+
+    /**
      * Method for removing selected IItems from the IBuildable object.
      *
      * @param retrieving IItem to be retrieved from the object.

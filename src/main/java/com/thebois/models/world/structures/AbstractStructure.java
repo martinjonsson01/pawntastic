@@ -100,6 +100,11 @@ abstract class AbstractStructure implements IStructure {
     }
 
     @Override
+    public boolean isCompleted() {
+        return Float.compare(builtStatus(), 1f) == 0;
+    }
+
+    @Override
     public boolean dismantle(final IItem retrieving) {
         if (deliveredItems.contains(retrieving)) {
             deliveredItems.remove(retrieving);
