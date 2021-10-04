@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 import com.thebois.models.Position;
-import com.thebois.models.world.inventory.IItem;
+import com.thebois.models.inventory.items.IItem;
 
 /**
  * Base structure for the game.
@@ -89,19 +89,20 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public float builtStatus() {
-        final float totalDelivered = this.deliveredItems.size();
-        final float totalNeeded = this.allNeededItems.size();
-        final float ratio = totalDelivered / totalNeeded;
-        // builtStatus is NaN only if there is no Needed Items,
-        // That means the building is complete, hence return 1.
-        if (Float.isNaN(ratio)) return 1;
+        if (this.allNeededItems.isEmpty()) {
+            return 1f;
+        }
+        else {
+            final float totalDelivered = this.deliveredItems.size();
+            final float totalNeeded = this.allNeededItems.size();
 
-        return totalDelivered / totalNeeded;
+            return totalDelivered / totalNeeded;
+        }
     }
 
     @Override
     public boolean isCompleted() {
-        return Float.compare(builtStatus(), 1f) == 0;
+        return Float.compare(builtStatus(), 1f) >= 0;
     }
 
     @Override

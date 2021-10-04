@@ -1,14 +1,17 @@
 package com.thebois.models.world.structures;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.thebois.models.Position;
-import com.thebois.models.world.inventory.IItem;
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.Log;
+import com.thebois.models.inventory.items.Rock;
 
 /**
  * A structure of type House.
  */
 public class House extends AbstractStructure {
-
-    private float builtRatio = 0;
 
     /**
      * Creates a house structure at a given position in the world.
@@ -17,7 +20,7 @@ public class House extends AbstractStructure {
      * @param posY Position in Y-axis.
      */
     public House(final int posX, final int posY) {
-        super(posX, posY, StructureType.HOUSE);
+        this(new Position(posX, posY));
     }
 
     /**
@@ -27,21 +30,12 @@ public class House extends AbstractStructure {
      */
     public House(final Position position) {
         super(position, StructureType.HOUSE);
-    }
-
-    @Override
-    public boolean deliverItem(final IItem deliveredItem) {
-        // Temporary variable to show update of buildings
-        final float buildFrequency = 0.01f;
-
-        // builtRatio = (builtRatio + buildFrequency) % 1f;
-        builtRatio = Math.min(builtRatio + buildFrequency, 1);
-        return true;
-    }
-
-    @Override
-    public float builtStatus() {
-        return builtRatio;
+        final Collection<IItem> neededItems = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            neededItems.add(new Log());
+            neededItems.add(new Rock());
+        }
+        setAllNeededItems(neededItems);
     }
 
     @Override

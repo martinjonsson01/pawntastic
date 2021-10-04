@@ -10,4 +10,14 @@ public class Log implements IItem {
         return ItemType.LOG;
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof Log;
+    }
+
 }

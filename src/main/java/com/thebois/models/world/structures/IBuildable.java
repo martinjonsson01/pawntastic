@@ -2,7 +2,7 @@ package com.thebois.models.world.structures;
 
 import java.util.Collection;
 
-import com.thebois.models.world.inventory.IItem;
+import com.thebois.models.inventory.items.IItem;
 
 /**
  * IBuildable is an interface for interacting game entities that can be built.

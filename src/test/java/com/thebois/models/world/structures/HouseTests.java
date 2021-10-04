@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.thebois.models.Position;
-import com.thebois.models.world.inventory.IItem;
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.Rock;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -43,7 +44,7 @@ public class HouseTests {
     public void deliverItemTest() {
         // Arrange
         final House house = new House(new Position());
-        final IItem item = new IItem() {
+        final IItem item = new Rock() {
         };
 
         // Act
@@ -56,7 +57,7 @@ public class HouseTests {
     public void builtStatusTest() {
         // Arrange
         final House house = new House(new Position());
-        final IItem item = new IItem() {
+        final IItem item = new Rock() {
         };
 
         // Act
@@ -112,8 +113,7 @@ public class HouseTests {
     public void dismantleTest() {
         // Arrange
         final House house = new House(new Position());
-        final IItem item = new IItem() {
-        };
+        final IItem item = new Rock();
         final Collection<IItem> items = new ArrayList<>();
         items.add(item);
 
@@ -130,8 +130,7 @@ public class HouseTests {
     public void failToDismantleTest() {
         // Arrange
         final House house = new House(new Position());
-        final IItem item = new IItem() {
-        };
+        final IItem item = new Rock();
         final Collection<IItem> items = new ArrayList<>();
         items.add(item);
 

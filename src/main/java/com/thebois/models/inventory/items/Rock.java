@@ -10,4 +10,14 @@ public class Rock implements IItem {
         return ItemType.ROCK;
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof Rock;
+    }
+
 }

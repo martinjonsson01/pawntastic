@@ -7,7 +7,8 @@ import java.util.Random;
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
-import com.thebois.models.world.inventory.IItem;
+import com.thebois.models.inventory.items.Log;
+import com.thebois.models.inventory.items.Rock;
 import com.thebois.models.world.structures.IStructure;
 
 /**
@@ -63,6 +64,7 @@ public class Pawn extends AbstractBeing {
         if (closestStructure.isPresent()) {
             if (closestStructure.get().isCompleted()) {
                 closestStructure = findIncompleteStructure();
+                setClosestStructureAsFinalDestination();
             }
         }
         else {
@@ -110,7 +112,9 @@ public class Pawn extends AbstractBeing {
         final Optional<IStructure> structure = getFinder().findNearestStructure(this.getPosition());
         structure.ifPresent(iStructure -> {
             if (iStructure.getPosition().distanceTo(getPosition()) < 2f) {
-                iStructure.deliverItem(new IItem() {
+                iStructure.deliverItem(new Rock() {
+                });
+                iStructure.deliverItem(new Log() {
                 });
             }
         });
