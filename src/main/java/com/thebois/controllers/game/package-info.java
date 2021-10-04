@@ -2,4 +2,4 @@
  * Controllers that manage world views.
  */
 
-package com.thebois.controllers.gamecontrollers;
+package com.thebois.controllers.game;

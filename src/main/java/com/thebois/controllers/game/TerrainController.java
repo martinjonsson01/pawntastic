@@ -1,9 +1,9 @@
-package com.thebois.controllers.gamecontrollers;
+package com.thebois.controllers.game;
 
 import com.thebois.controllers.IController;
 import com.thebois.models.world.World;
-import com.thebois.views.gameviews.IView;
-import com.thebois.views.gameviews.TerrainView;
+import com.thebois.views.game.IView;
+import com.thebois.views.game.TerrainView;
 
 /**
  * A controller used to get data about terrains and pass the data to view.

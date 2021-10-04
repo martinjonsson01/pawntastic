@@ -1,4 +1,4 @@
-package com.thebois.views.gameviews;
+package com.thebois.views.game;
 
 import java.util.Collection;
 

@@ -1,4 +1,4 @@
-package com.thebois.controllers.gamecontrollers;
+package com.thebois.controllers.game;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
@@ -7,8 +7,8 @@ import com.thebois.controllers.AbstractInputProcessor;
 import com.thebois.controllers.IController;
 import com.thebois.models.world.World;
 import com.thebois.views.IProjector;
-import com.thebois.views.gameviews.IView;
-import com.thebois.views.gameviews.StructureView;
+import com.thebois.views.game.IView;
+import com.thebois.views.game.StructureView;
 
 /**
  * Controller for Structures in the world.

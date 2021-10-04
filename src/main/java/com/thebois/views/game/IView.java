@@ -1,4 +1,4 @@
-package com.thebois.views.gameviews;
+package com.thebois.views.game;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Disposable;

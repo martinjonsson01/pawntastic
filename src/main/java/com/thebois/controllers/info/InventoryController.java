@@ -1,4 +1,4 @@
-package com.thebois.controllers.infocontrollers;
+package com.thebois.controllers.info;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.thebois.controllers.IController;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.ItemType;
-import com.thebois.views.infoviews.IActorView;
-import com.thebois.views.infoviews.InventoryView;
+import com.thebois.views.info.IActorView;
+import com.thebois.views.info.InventoryView;
 
 /**
  * Makes sure the inventory view is updated with correct information.

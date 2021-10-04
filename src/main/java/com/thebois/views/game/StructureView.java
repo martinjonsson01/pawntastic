@@ -1,4 +1,4 @@
-package com.thebois.views.gameviews;
+package com.thebois.views.game;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;

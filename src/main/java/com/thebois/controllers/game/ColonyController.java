@@ -1,9 +1,9 @@
-package com.thebois.controllers.gamecontrollers;
+package com.thebois.controllers.game;
 
 import com.thebois.controllers.IController;
 import com.thebois.models.beings.AbstractBeingGroup;
-import com.thebois.views.gameviews.ColonyView;
-import com.thebois.views.gameviews.IView;
+import com.thebois.views.game.ColonyView;
+import com.thebois.views.game.IView;
 
 /**
  * Collects data form the world and sends it to its corresponding view.

@@ -11,8 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import com.thebois.views.gameviews.GameView;
-import com.thebois.views.infoviews.InfoView;
+import com.thebois.views.game.GameView;
+import com.thebois.views.info.InfoView;
 
 /**
  * The main screen displaying the world and UI.

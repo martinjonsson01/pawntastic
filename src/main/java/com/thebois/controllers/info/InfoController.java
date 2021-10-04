@@ -1,4 +1,4 @@
-package com.thebois.controllers.infocontrollers;
+package com.thebois.controllers.info;
 
 import java.util.Collection;
 import java.util.List;
@@ -8,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import com.thebois.controllers.IController;
 import com.thebois.models.world.World;
-import com.thebois.views.infoviews.IActorView;
-import com.thebois.views.infoviews.InfoView;
+import com.thebois.views.info.IActorView;
+import com.thebois.views.info.InfoView;
 
 /**
  * Container class for controllers that manage the info.

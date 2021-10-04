@@ -13,8 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.google.common.eventbus.EventBus;
 
-import com.thebois.controllers.infocontrollers.InfoController;
-import com.thebois.controllers.gamecontrollers.WorldController;
+import com.thebois.controllers.info.InfoController;
+import com.thebois.controllers.game.WorldController;
 import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
 import com.thebois.views.IProjector;

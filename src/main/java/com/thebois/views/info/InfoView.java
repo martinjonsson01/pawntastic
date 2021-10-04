@@ -1,4 +1,4 @@
-package com.thebois.views.infoviews;
+package com.thebois.views.info;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;

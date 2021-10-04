@@ -1,4 +1,4 @@
-package com.thebois.controllers.gamecontrollers;
+package com.thebois.controllers.game;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,8 +13,8 @@ import com.thebois.models.world.World;
 import com.thebois.views.IProjector;
 import com.thebois.views.debug.BeingPathDebugView;
 import com.thebois.views.debug.FrameCounterView;
-import com.thebois.views.gameviews.GameView;
-import com.thebois.views.gameviews.IView;
+import com.thebois.views.game.GameView;
+import com.thebois.views.game.IView;
 
 /**
  * Container class for controllers that manage the world.
