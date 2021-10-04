@@ -3,7 +3,7 @@ package com.thebois.controllers.gamecontrollers;
 import com.thebois.controllers.IController;
 import com.thebois.models.world.World;
 import com.thebois.views.gameviews.IView;
-import com.thebois.views.gameviews.WorldView;
+import com.thebois.views.gameviews.TerrainView;
 
 /**
  * A controller that gathers data from the world and updates the view.
@@ -11,7 +11,7 @@ import com.thebois.views.gameviews.WorldView;
 public class TerrainController implements IController<IView> {
 
     private final World world;
-    private final WorldView worldView;
+    private final TerrainView terrainView;
 
     /**
      * Creates a Terrain Controller.
@@ -21,19 +21,19 @@ public class TerrainController implements IController<IView> {
      */
     public TerrainController(final World world, final float tileSize) {
         this.world = world;
-        this.worldView = new WorldView(tileSize);
+        this.terrainView = new TerrainView(tileSize);
     }
 
     @Override
     public IView getIView() {
-        return worldView;
+        return terrainView;
     }
 
     /**
      * Updates the view with data from the world.
      */
     public void update() {
-        worldView.update(world.getTerrainTiles());
+        terrainView.update(world.getTerrainTiles());
     }
 
 }

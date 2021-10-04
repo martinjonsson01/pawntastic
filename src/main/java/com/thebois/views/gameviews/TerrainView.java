@@ -12,7 +12,7 @@ import com.thebois.views.TextureUtils;
 /**
  * World view handles all the drawing of the world itself and its information on how to draw it.
  */
-public class WorldView implements IView {
+public class TerrainView implements IView {
 
     private final Color grassColor = new Color(0.005f, 0.196f, 0.107f, 1);
     private final float tileSize;
@@ -24,7 +24,7 @@ public class WorldView implements IView {
      *
      * @param tileSize The size of a single tile, in pixels.
      */
-    public WorldView(final float tileSize) {
+    public TerrainView(final float tileSize) {
         this.tileSize = tileSize;
 
         grassTexture = TextureUtils.createSquareTexture(tileSize);
