@@ -12,6 +12,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import com.thebois.models.Position;
+import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.Log;
@@ -255,6 +257,23 @@ public class ColonyTests {
 
         // Assert
         assertThat(colony.hasItem(ItemType.LOG, 2)).isTrue();
+    }
+
+    @Test
+    public void getInventoryReturnsTheColonyInventory(){
+        // Arrange
+        final Colony colony = mockColony();
+        final ArrayList<IItem> items = new ArrayList<>();
+        items.add(new Log());
+        items.add(new Log());
+
+        // Act
+        final IInventory inventory = colony.getInventory();
+        final boolean colonyResult = colony.hasItem(ItemType.LOG, 2);
+        final boolean inventoryResult = inventory.hasItem(ItemType.LOG, 2);
+
+        // Assert
+        assertThat(colonyResult).isEqualTo(inventoryResult);
     }
 
 }
