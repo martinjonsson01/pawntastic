@@ -1,22 +1,15 @@
 package com.thebois.models.beings;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.List;
 import java.util.Random;
-import java.util.Stack;
 import java.util.stream.Stream;
-
-import javax.net.ssl.SSLContextSpi;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.lwjgl.system.CallbackI;
 import org.mockito.Mockito;
-import org.mockito.exceptions.misusing.InvalidUseOfMatchersException;
 
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
@@ -307,7 +300,7 @@ public class BeingTests {
 
         // Assert
 
-        assertThat(initialBuildStatus).isLessThan(finalBuildStatus);
+        assertThat(initialBuildStatus).isLessThanOrEqualTo(finalBuildStatus);
     }
 
     @Test
@@ -369,6 +362,169 @@ public class BeingTests {
 
         // Assert
         assertThat(testPawn.getFinalDestination().get()).isEqualTo(correctDestination);
+    }
+
+    @Test
+    public void allStructuresCompleted() {
+        // Arrange
+        final Position positionA = new Position(10, 0);
+        final Position startPosition = new Position(20, 0);
+        final Position positionB = new Position(30, 0);
+
+        final Position correctDestination = new Position(0, 0);
+
+        final World world = new World(50, 0);
+        final IPathFinder pathFinder = new AstarPathFinder(world);
+
+        final Random mockRandom = Mockito.mock(Random.class);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+
+        world.createStructure(positionA);
+        world.createStructure(positionB);
+
+        for (int i = 0; i < 10; i++) {
+            world.getStructureAt(positionB).get().deliverItem(new Rock());
+            world.getStructureAt(positionB).get().deliverItem(new Log());
+            world.getStructureAt(positionA).get().deliverItem(new Rock());
+            world.getStructureAt(positionA).get().deliverItem(new Log());
+
+        }
+
+        final Pawn testPawn = new Pawn(
+            startPosition,
+            new Position(),
+            mockRandom,
+            pathFinder,
+            world);
+
+        // Act
+        testPawn.update();
+
+        // Assert
+        assertThat(testPawn.getFinalDestination().get()).isEqualTo(correctDestination);
+    }
+
+    @Test
+    public void allStructuresCompletedNewPlaced() {
+        // Arrange
+        final Position positionA = new Position(10, 0);
+        final Position startPosition = new Position(20, 0);
+        final Position positionB = new Position(30, 0);
+        final Position positionC = new Position(40, 0);
+
+        final Position correctDestination = new Position(39, 0);
+
+        final World world = new World(50, 0);
+        final IPathFinder pathFinder = new AstarPathFinder(world);
+
+        final Random mockRandom = Mockito.mock(Random.class);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+
+        world.createStructure(positionA);
+        world.createStructure(positionB);
+
+        for (int i = 0; i < 10; i++) {
+            world.getStructureAt(positionB).get().deliverItem(new Rock());
+            world.getStructureAt(positionB).get().deliverItem(new Log());
+            world.getStructureAt(positionA).get().deliverItem(new Rock());
+            world.getStructureAt(positionA).get().deliverItem(new Log());
+
+        }
+
+        final Pawn testPawn = new Pawn(
+            startPosition,
+            new Position(),
+            mockRandom,
+            pathFinder,
+            world);
+
+        // Act
+        testPawn.update();
+        testPawn.update();
+        world.createStructure(positionC);
+        testPawn.update();
+
+        // Assert
+        assertThat(testPawn.getFinalDestination().get()).isEqualTo(correctDestination);
+    }
+
+    @Test
+    public void deliverItemsToCloseStructure() {
+        // Arrange
+        final Position positionA = new Position(10, 0);
+        final Position startPosition = new Position(11, 0);
+
+        final World world = new World(50, 0);
+        final IPathFinder pathFinder = new AstarPathFinder(world);
+
+        final Random mockRandom = Mockito.mock(Random.class);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+
+        world.createStructure(positionA);
+
+        final IStructure structureAtA = world.getStructureAt(positionA).get();
+
+        final Pawn testPawn = new Pawn(startPosition,
+                                       new Position(),
+                                       mockRandom,
+                                       pathFinder,
+                                       world);
+
+        // Act
+        final float initialBuiltRatio = structureAtA.builtStatus();
+        testPawn.update();
+
+        // Assert
+        assertThat(initialBuiltRatio).isLessThan(structureAtA.builtStatus());
+    }
+
+    @Test
+    public void findNewUnBuiltStructure() {
+        // Arrange
+        final Position positionA = new Position(10, 0);
+        final Position positionB = new Position(20, 0);
+        final Position startPosition = new Position(11, 0);
+
+        final World world = new World(50, 0);
+        final IPathFinder pathFinder = new AstarPathFinder(world);
+
+        final Random mockRandom = Mockito.mock(Random.class);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+
+        world.createStructure(positionA);
+        world.createStructure(positionB);
+
+        final IStructure structureAtA = world.getStructureAt(positionA).get();
+        final IStructure structureAtB = world.getStructureAt(positionB).get();
+
+        for (int i = 0; i < 9; i++) {
+            structureAtA.deliverItem(new Log());
+            structureAtA.deliverItem(new Rock());
+
+            structureAtB.deliverItem(new Log());
+            structureAtB.deliverItem(new Rock());
+        }
+
+        final Pawn testPawn = new Pawn(startPosition,
+                                       new Position(),
+                                       mockRandom,
+                                       pathFinder,
+                                       world);
+
+        // Act
+        final float initialBuiltRatio = structureAtA.builtStatus();
+        // deliver items to structureAtA
+        testPawn.update();
+        // update to find new un-built structure
+        testPawn.update();
+
+        testPawn.getFinalDestination();
+
+        // Assert
+        assertThat(initialBuiltRatio).isLessThan(structureAtA.builtStatus());
     }
 
 }

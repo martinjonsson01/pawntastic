@@ -20,7 +20,6 @@ public class Pawn extends AbstractBeing {
     private static final int WORLD_SIZE = 50;
     private final Random random;
     private Optional<IStructure> closestStructure = Optional.empty();
-    private Optional<IStructure> previousClosestStructure = Optional.empty();
 
     /**
      * Instantiates with an initial position and a destination to travel to.
@@ -45,8 +44,8 @@ public class Pawn extends AbstractBeing {
     @Override
     public void update() {
         super.update();
-        deliverItemToStructure(closestStructure);
         updateClosestStructure();
+        deliverItemToStructure(closestStructure);
 
         if (getDestination().isEmpty()) setRandomDestination();
     }
@@ -62,7 +61,7 @@ public class Pawn extends AbstractBeing {
 
     protected void updateClosestStructure() {
         if (closestStructure.isPresent() && getFinalDestination().isPresent()) {
-
+            // If the structure is completed or destination is unreachable pick a new one
             if (closestStructure.get().isCompleted() || closestStructure.get().getPosition().equals(
                 getFinalDestination().get())) {
                 closestStructure = findIncompleteStructure();
@@ -110,13 +109,11 @@ public class Pawn extends AbstractBeing {
         }
     }
 
-    protected void deliverItemToStructure(Optional<IStructure> structure) {
+    protected void deliverItemToStructure(final Optional<IStructure> structure) {
         structure.ifPresent(iStructure -> {
             if (iStructure.getPosition().distanceTo(getPosition()) < 2f) {
-                iStructure.deliverItem(new Rock() {
-                });
-                iStructure.deliverItem(new Log() {
-                });
+                iStructure.deliverItem(new Rock());
+                iStructure.deliverItem(new Log());
             }
         });
     }

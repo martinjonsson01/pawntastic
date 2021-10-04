@@ -31,7 +31,8 @@ public class House extends AbstractStructure {
     public House(final Position position) {
         super(position, StructureType.HOUSE);
         final Collection<IItem> neededItems = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        final int numberOfItems = 10;
+        for (int i = 0; i < numberOfItems; i++) {
             neededItems.add(new Log());
             neededItems.add(new Rock());
         }
