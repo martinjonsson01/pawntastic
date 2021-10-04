@@ -24,7 +24,7 @@ public class World implements IWorld, IFinder {
     private final ITile[][] canonicalMatrix;
 
     /**
-     * Initiates the world with the given size and colony.
+     * Initiates the world with the given size.
      *
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
      */

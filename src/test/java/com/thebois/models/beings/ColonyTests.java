@@ -45,6 +45,7 @@ public class ColonyTests {
             pawns.add(Mockito.mock(IBeing.class));
         }
 
+        // Act
         final Colony colony = new Colony(pawns);
 
         // Assert
