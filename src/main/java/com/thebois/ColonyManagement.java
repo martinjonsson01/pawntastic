@@ -79,8 +79,8 @@ public class ColonyManagement extends Game {
         gameScreen = new GameScreen(viewport,
                                     camera,
                                     uiSkin,
-                                    worldController.getGameView(),
-                                    infoController.getInfoView());
+                                    worldController.getView(),
+                                    infoController.getView());
         this.setScreen(gameScreen);
 
         // Set up Input Processors

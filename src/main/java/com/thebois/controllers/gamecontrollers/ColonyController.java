@@ -1,26 +1,26 @@
 package com.thebois.controllers.gamecontrollers;
 
 import com.thebois.controllers.IController;
-import com.thebois.models.world.World;
-import com.thebois.views.gameviews.IView;
+import com.thebois.models.beings.AbstractBeingGroup;
 import com.thebois.views.gameviews.ColonyView;
+import com.thebois.views.gameviews.IView;
 
 /**
  * Collects data form the world and sends it to its corresponding view.
  */
 public class ColonyController implements IController<IView> {
 
-    private final World world;
+    private final AbstractBeingGroup colony;
     private final ColonyView colonyView;
 
     /**
      * Creates a colony controller.
      *
-     * @param world    The world to get colony from.
+     * @param colony   The colony that should be updated and displayed.
      * @param tileSize The tile size for the tiles in the world.
      */
-    public ColonyController(final World world, final float tileSize) {
-        this.world = world;
+    public ColonyController(final AbstractBeingGroup colony, final float tileSize) {
+        this.colony = colony;
         this.colonyView = new ColonyView(tileSize);
     }
 
@@ -33,7 +33,7 @@ public class ColonyController implements IController<IView> {
      * Updates the view with data from the world.
      */
     public void update() {
-        colonyView.update(world.getColony());
+        colonyView.update(colony);
     }
 
 }

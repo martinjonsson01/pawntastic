@@ -19,7 +19,7 @@ import com.thebois.views.gameviews.IView;
 /**
  * Container class for controllers that manage the world.
  */
-public class WorldController {
+public class WorldController implements IController<GameView> {
 
     private final Collection<IController<IView>> controllers;
     private final Collection<InputProcessor> inputProcessors;
@@ -42,7 +42,7 @@ public class WorldController {
                                                                                 projector,
                                                                                 tileSize);
         final TerrainController terrainController = new TerrainController(world, tileSize);
-        final ColonyController colonyController = new ColonyController(world, tileSize);
+        final ColonyController colonyController = new ColonyController(world.getColony(), tileSize);
 
         controllers = List.of(terrainController, structureController, colonyController);
         inputProcessors = List.of(structureController);
@@ -70,17 +70,16 @@ public class WorldController {
         return List.of(frameCounterView, beingPathDebugView);
     }
 
-    /**
-     * Updates all controllers in the world controller.
-     */
+    @Override
+    public GameView getView() {
+        return gameView;
+    }
+
+    @Override
     public void update() {
         for (final IController<IView> controller : controllers) {
             controller.update();
         }
-    }
-
-    public GameView getGameView() {
-        return gameView;
     }
 
     public Iterable<InputProcessor> getInputProcessors() {

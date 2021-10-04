@@ -1,7 +1,8 @@
 package com.thebois.controllers.infocontrollers;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -13,7 +14,7 @@ import com.thebois.views.infoviews.InfoView;
 /**
  * Container class for controllers that manage the info.
  */
-public class InfoController {
+public class InfoController implements IController<InfoView> {
 
     private final Collection<IController<IActorView>> controllers;
     private final InfoView infoView;
@@ -30,28 +31,22 @@ public class InfoController {
         final InventoryController inventoryController =
             new InventoryController(world.getColonyInventory(), skin);
 
-        controllers = new ArrayList<>();
-        controllers.add(roleController);
-        controllers.add(inventoryController);
-
+        controllers = List.of(roleController, inventoryController);
         infoView = createInfoView();
     }
 
     private InfoView createInfoView() {
-        final ArrayList<IActorView> views = new ArrayList<>();
-        for (final IController<IActorView> controller : controllers) {
-            views.add(controller.getView());
-        }
+        final List<IActorView> views = controllers.stream().map(IController::getView).collect(
+            Collectors.toList());
         return new InfoView(views);
     }
 
-    public InfoView getInfoView() {
+    @Override
+    public InfoView getView() {
         return infoView;
     }
 
-    /**
-     * Updates all controllers in the info controller.
-     */
+    @Override
     public void update() {
         for (final IController<IActorView> controller : controllers) {
             controller.update();
