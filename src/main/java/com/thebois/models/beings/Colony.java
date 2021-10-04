@@ -37,7 +37,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
      *
      * @return the colony.
      */
-    public AbstractBeingGroup getColony() {
+    public Colony getColony() {
         return this;
     }
 
