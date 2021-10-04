@@ -42,10 +42,9 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     }
 
     /**
-     * Returns the players' colony with only inventory methods allowed. (Temporary until we refactor
-     * world/colony)
+     * Returns the (player) inventory.
      *
-     * @return the colony.
+     * @return the inventory.
      */
     public IInventory getInventory() {
         return inventory;
@@ -56,7 +55,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
      *
      * @return the role allocator.
      */
-    public IRoleAllocator getRoleAllocator() {
+    public Colony getRoleAllocator() {
         return this;
     }
 
