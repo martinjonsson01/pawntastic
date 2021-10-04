@@ -198,12 +198,7 @@ public class WorldTests {
     @Test
     public void getColonyReturnsSameColony() {
         // Arrange
-        final int beingCount = 5;
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
-        final Colony colony = new Colony(pawns);
+        final Colony colony = mockColonyWithMockBeings(5);
 
         // Assert
         assertThat(colony.getColony()).isEqualTo(colony);
@@ -212,12 +207,7 @@ public class WorldTests {
     @Test
     public void getRoleAllocatorReturnsRoleAllocator() {
         // Arrange
-        final int beingCount = 5;
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
-        final Colony colony = new Colony(pawns);
+        final Colony colony = mockColonyWithMockBeings(5);
 
         // Assert
         assertThat(colony.getRoleAllocator()).isEqualTo(colony);
@@ -226,17 +216,19 @@ public class WorldTests {
     @Test
     public void instantiateWithPawnCountCreatesCorrectNumberOfBeings() {
         // Arrange
-        final int beingCount = 5;
+        final Colony colony = mockColonyWithMockBeings(5);
+
+        // Assert
+        assertThat(colony.getBeings()).size().isEqualTo(5);
+    }
+
+    private Colony mockColonyWithMockBeings(final int beingCount) {
         final Collection<IBeing> pawns = new ArrayList<>(beingCount);
         for (int i = 0; i < beingCount; i++) {
             pawns.add(Mockito.mock(IBeing.class));
         }
 
-        // Act
-        final Colony colony = new Colony(pawns);
-
-        // Assert
-        assertThat(colony.getBeings()).size().isEqualTo(beingCount);
+        return new Colony(pawns);
     }
 
     @Test
