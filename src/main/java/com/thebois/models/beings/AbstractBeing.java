@@ -193,7 +193,7 @@ public abstract class AbstractBeing implements IBeing {
             }
 
             if (getPosition().manhattanDistanceTo(nearestPosition)
-                < getPosition().distanceTo(lastPosition)) {
+                > getPosition().distanceTo(lastPosition)) {
                 nearestPosition = lastPosition;
             }
         }

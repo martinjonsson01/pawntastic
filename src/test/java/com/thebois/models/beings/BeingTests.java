@@ -5,13 +5,18 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 import java.util.stream.Stream;
+
+import javax.net.ssl.SSLContextSpi;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.lwjgl.system.CallbackI;
 import org.mockito.Mockito;
+import org.mockito.exceptions.misusing.InvalidUseOfMatchersException;
 
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
@@ -20,6 +25,8 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.inventory.items.Log;
+import com.thebois.models.inventory.items.Rock;
 import com.thebois.models.world.World;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
@@ -332,43 +339,36 @@ public class BeingTests {
     @Test
     public void doesPawnWalkToNearestUnBuiltBuilding() {
         // Arrange
-        final Position positionA = new Position(1, 0);
-        final Position positionB = new Position(2, 0);
-        final Position positionC = new Position(3, 0);
+        final Position positionA = new Position(10, 0);
+        final Position startPosition = new Position(20, 0);
+        final Position positionB = new Position(30, 0);
 
-        final IStructure unBuiltStructure = Mockito.mock(IStructure.class);
-        final IStructure builtStructure = Mockito.mock(IStructure.class);
+        final Position correctDestination = new Position(11, 0);
 
-        when(unBuiltStructure.getPosition()).thenReturn(positionA);
-        when(builtStructure.getPosition()).thenReturn(positionC);
-        when(unBuiltStructure.builtStatus()).thenReturn(0f);
-        when(builtStructure.builtStatus()).thenReturn(1f);
+        final World world = new World(50, 0);
+        final IPathFinder pathFinder = new AstarPathFinder(world);
 
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        world.createStructure(positionA);
+        world.createStructure(positionB);
 
-        final Collection<Optional<IStructure>> structures = new ArrayList<>();
-        structures.add(Optional.of(builtStructure));
-        structures.add(Optional.of(unBuiltStructure));
+        for (int i = 0; i < 10; i++) {
+            world.getStructureAt(positionB).get().deliverItem(new Rock());
+            world.getStructureAt(positionB).get().deliverItem(new Log());
 
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        }
 
-        when(mockFinder.findNearestStructures(any(), anyInt())).thenReturn(structures);
-        // builtStructure would be found first by the current finder
-        when(mockFinder.findNearestStructure(any())).thenReturn(Optional.of(builtStructure));
-
-        final Pawn pawn = new Pawn(
-            positionB,
-            positionB,
-            Mockito.mock(Random.class),
+        final Pawn testPawn = new Pawn(
+            startPosition,
+            new Position(),
+            new Random(),
             pathFinder,
-            mockFinder);
+            world);
 
         // Act
-        pawn.update();
+        testPawn.update();
 
         // Assert
-        // Value did not change because Pawn was not close enough
-        assertThat(pawn.getDestination()).isEqualTo(positionA);
+        assertThat(testPawn.getFinalDestination().get()).isEqualTo(correctDestination);
     }
 
 }

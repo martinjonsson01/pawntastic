@@ -349,4 +349,56 @@ public class WorldTests {
         assertThat(structure.get().getPosition()).isEqualTo(position);
     }
 
+    @Test
+    public void noNearestStructure() {
+        // Arrange
+        final World world = new World(50, 0);
+
+        // Act
+        final Optional<IStructure> structure = world.findNearestStructure(new Position(20f, 20f));
+
+        // Assert
+        assertThat(structure.isPresent()).isFalse();
+    }
+
+    @Test
+    public void noNearestStructures() {
+        // Arrange
+        final World world = new World(50, 0);
+
+        // Act
+        final Collection<Optional<IStructure>> structures = world.findNearestStructures(
+            new Position(20f, 20f),
+            10);
+
+        // Assert
+        for (final Optional<IStructure> structure : structures) {
+            assertThat(structure.isPresent()).isFalse();
+        }
+    }
+
+    private static Stream<Arguments> getPositionsAndSizeToTest() {
+        return Stream.of(Arguments.of(List.of(new Position(10, 10),
+                                              new Position(30, 5),
+                                              new Position(6, 33),
+                                              new Position(23, 23),
+                                              new Position(0, 0)), 5),
+                         Arguments.of(List.of(), 0));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsAndSizeToTest")
+    public void testGetStructureCollection(final Collection<Position> positions, final int amount) {
+        // Arrange
+        final World world = new World(50, 0);
+
+        // Act
+        for (final Position position : positions) {
+            world.createStructure(position);
+        }
+
+        // Assert
+        assertThat(world.getStructureCollection().size()).isEqualTo(amount);
+    }
+
 }

@@ -64,7 +64,7 @@ public class HouseTests {
         house.deliverItem(item);
 
         // Assert
-        assertThat(house.builtStatus()).isEqualTo(0.01f);
+        assertThat(house.builtStatus()).isEqualTo(1 / 20f);
     }
 
     @Test
