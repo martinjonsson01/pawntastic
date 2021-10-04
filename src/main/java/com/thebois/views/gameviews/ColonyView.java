@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.thebois.models.beings.IBeing;
 import com.thebois.models.beings.IBeingGroup;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.views.IView;
 import com.thebois.views.TextureUtils;
 
 /**

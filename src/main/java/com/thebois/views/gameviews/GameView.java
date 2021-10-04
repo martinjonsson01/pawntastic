@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Disposable;
 
 import com.thebois.ColonyManagement;
-import com.thebois.views.IView;
 
 /**
  * A view of the game world.

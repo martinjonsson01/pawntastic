@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import com.thebois.models.world.ITerrain;
-import com.thebois.views.IView;
 import com.thebois.views.TextureUtils;
 
 /**

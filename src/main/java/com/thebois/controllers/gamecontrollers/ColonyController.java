@@ -2,7 +2,7 @@ package com.thebois.controllers.gamecontrollers;
 
 import com.thebois.controllers.IController;
 import com.thebois.models.world.World;
-import com.thebois.views.IView;
+import com.thebois.views.gameviews.IView;
 import com.thebois.views.gameviews.ColonyView;
 
 /**

@@ -10,7 +10,7 @@ import com.thebois.ColonyManagement;
 import com.thebois.controllers.IController;
 import com.thebois.models.world.World;
 import com.thebois.views.IProjector;
-import com.thebois.views.IView;
+import com.thebois.views.gameviews.IView;
 import com.thebois.views.debug.BeingPathDebugView;
 import com.thebois.views.debug.FrameCounterView;
 import com.thebois.views.gameviews.GameView;

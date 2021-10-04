@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-import com.thebois.views.IView;
+import com.thebois.views.gameviews.IView;
 
 /**
  * Displays an FPS counter on screen.
