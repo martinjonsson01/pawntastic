@@ -13,7 +13,6 @@ import org.mockito.Mockito;
 
 import com.thebois.models.Position;
 import com.thebois.models.inventory.IInventory;
-import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.Log;
@@ -260,7 +259,7 @@ public class ColonyTests {
     }
 
     @Test
-    public void getInventoryReturnsTheColonyInventory(){
+    public void getInventoryReturnsTheColonyInventory() {
         // Arrange
         final Colony colony = mockColony();
         final ArrayList<IItem> items = new ArrayList<>();

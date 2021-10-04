@@ -1,6 +1,5 @@
 package com.thebois.models.beings.pathfinding;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -12,8 +11,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import com.thebois.models.Position;
-import com.thebois.models.beings.Colony;
-import com.thebois.models.beings.IBeing;
 import com.thebois.models.world.Grass;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
