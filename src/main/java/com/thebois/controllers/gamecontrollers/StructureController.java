@@ -28,9 +28,8 @@ public class StructureController extends AbstractInputProcessor implements ICont
      * @param projector Projector used for converting screen coordinates to world coordinates.
      * @param tileSize  The tile size represented on the screen.
      */
-    public StructureController(final World world,
-                               final IProjector projector,
-                               final float tileSize) {
+    public StructureController(
+        final World world, final IProjector projector, final float tileSize) {
 
         this.world = world;
         this.structureView = new StructureView(tileSize);
@@ -57,18 +56,16 @@ public class StructureController extends AbstractInputProcessor implements ICont
     }
 
     @Override
-    public IView getIView() {
+    public IView getView() {
         return structureView;
     }
 
-    /**
-     * Updates the view with data from the world.
-     */
+    @Override
     public void update() {
     }
 
     /**
-     * Set the game widget used to project coordinates with.
+     * Set the game widget used to get the offset.
      *
      * @param gameWidget The widget in which the game in rendered in.
      */

@@ -1,19 +1,19 @@
 package com.thebois.controllers;
 
 /**
- * Interface for controllers to expose getViews and Update method.
+ * Represent an updater for a view.
  *
- * @param <TView> What kind of view the controller manage, i.e IView for game and IActorView for
+ * @param <TView> What kind of view the controller manages, i.e IView for game and IActorView for
  *                info panels.
  */
 public interface IController<TView> {
 
     /**
-     * Get the view that the controllers updates.
+     * Get the view that the controller updates.
      *
      * @return The view.
      */
-    TView getIView();
+    TView getView();
 
     /**
      * Updates the part of the world that the controller manage.

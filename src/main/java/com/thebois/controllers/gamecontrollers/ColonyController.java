@@ -16,7 +16,7 @@ public class ColonyController implements IController<IView> {
     /**
      * Creates a colony controller.
      *
-     * @param world    The world that controller should get data from.
+     * @param world    The world to get colony from.
      * @param tileSize The tile size for the tiles in the world.
      */
     public ColonyController(final World world, final float tileSize) {
@@ -25,7 +25,7 @@ public class ColonyController implements IController<IView> {
     }
 
     @Override
-    public IView getIView() {
+    public IView getView() {
         return colonyView;
     }
 

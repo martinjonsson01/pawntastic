@@ -67,7 +67,7 @@ public class RoleController implements IController<IActorView> {
     }
 
     @Override
-    public IActorView getIView() {
+    public IActorView getView() {
         return roleView;
     }
 

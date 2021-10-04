@@ -33,7 +33,7 @@ public class InventoryController implements IController<IActorView> {
     }
 
     @Override
-    public IActorView getIView() {
+    public IActorView getView() {
         return inventoryView;
     }
 

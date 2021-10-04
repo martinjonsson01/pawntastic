@@ -19,7 +19,7 @@ public class InfoController {
     private final InfoView infoView;
 
     /**
-     * Instantiate Info Controller with all controller and views used for all panels.
+     * Instantiate with all controller and views used for all panels.
      *
      * @param world The world that controllers manage.
      * @param skin  The skin to style widgets with.
@@ -40,7 +40,7 @@ public class InfoController {
     private InfoView createInfoView() {
         final ArrayList<IActorView> views = new ArrayList<>();
         for (final IController<IActorView> controller : controllers) {
-            views.add(controller.getIView());
+            views.add(controller.getView());
         }
         return new InfoView(views);
     }

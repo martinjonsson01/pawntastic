@@ -6,7 +6,7 @@ import com.thebois.views.gameviews.IView;
 import com.thebois.views.gameviews.TerrainView;
 
 /**
- * A controller that gathers data from the world and updates the view.
+ * A controller used to get data about terrains and pass the data to view.
  */
 public class TerrainController implements IController<IView> {
 
@@ -25,7 +25,7 @@ public class TerrainController implements IController<IView> {
     }
 
     @Override
-    public IView getIView() {
+    public IView getView() {
         return terrainView;
     }
 
