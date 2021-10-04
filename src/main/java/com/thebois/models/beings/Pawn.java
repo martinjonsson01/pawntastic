@@ -45,7 +45,7 @@ public class Pawn extends AbstractBeing {
     @Override
     public void update() {
         super.update();
-        deliverItemToNearestStructure();
+        deliverItemToStructure(closestStructure);
         updateClosestStructure();
 
         if (getDestination().isEmpty()) setRandomDestination();
@@ -110,10 +110,9 @@ public class Pawn extends AbstractBeing {
         }
     }
 
-    protected void deliverItemToNearestStructure() {
-        final Optional<IStructure> structure = getFinder().findNearestStructure(this.getPosition());
+    protected void deliverItemToStructure(Optional<IStructure> structure) {
         structure.ifPresent(iStructure -> {
-            if (iStructure.getPosition().distanceTo(getPosition()) < 5f) {
+            if (iStructure.getPosition().distanceTo(getPosition()) < 2f) {
                 iStructure.deliverItem(new Rock() {
                 });
                 iStructure.deliverItem(new Log() {
