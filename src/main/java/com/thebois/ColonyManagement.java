@@ -121,6 +121,10 @@ public class ColonyManagement extends Game {
 
     private void createModels() {
         world = new World(WORLD_SIZE);
+        colony = new Colony(createPawns());
+    }
+
+    private Collection<IBeing> createPawns() {
         final Collection<IBeing> pawns = new ArrayList<>();
         final Iterable<Position> vacantPositions = world.findEmptyPositions(PAWN_POSITIONS);
         final Random random = new Random();
@@ -128,7 +132,7 @@ public class ColonyManagement extends Game {
         for (final Position vacantPosition : vacantPositions) {
             pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder));
         }
-        colony = new Colony(pawns);
+        return pawns;
     }
 
     private void createDebugView() {
