@@ -6,7 +6,7 @@ import com.thebois.views.game.ColonyView;
 import com.thebois.views.game.IView;
 
 /**
- * Collects data form the world and sends it to its corresponding view.
+ * Collects data from the colony and sends it to Colony View.
  */
 public class ColonyController implements IController<IView> {
 
@@ -29,9 +29,7 @@ public class ColonyController implements IController<IView> {
         return colonyView;
     }
 
-    /**
-     * Updates the view with data from the world.
-     */
+    @Override
     public void update() {
         colonyView.update(colony);
     }

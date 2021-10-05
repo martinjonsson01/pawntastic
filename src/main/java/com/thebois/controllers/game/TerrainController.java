@@ -29,9 +29,7 @@ public class TerrainController implements IController<IView> {
         return terrainView;
     }
 
-    /**
-     * Updates the view with data from the world.
-     */
+    @Override
     public void update() {
         terrainView.update(world.getTerrainTiles());
     }

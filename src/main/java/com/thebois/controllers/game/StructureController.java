@@ -67,7 +67,7 @@ public class StructureController extends AbstractInputProcessor implements ICont
     /**
      * Set the game widget used to get the offset.
      *
-     * @param gameWidget The widget in which the game in rendered in.
+     * @param gameWidget The widget in which the game is rendered.
      */
     public void setGameWidget(final Widget gameWidget) {
         this.gameWidget = gameWidget;

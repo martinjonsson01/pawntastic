@@ -37,9 +37,7 @@ public class InventoryController implements IController<IActorView> {
         return inventoryView;
     }
 
-    /**
-     * Updates the inventoryView with up-to-date information about the inventory.
-     */
+    @Override
     public void update() {
         final Map<ItemType, Integer> newItemCounts = createItemCounts();
         if (!itemCounts.equals(newItemCounts)) {
