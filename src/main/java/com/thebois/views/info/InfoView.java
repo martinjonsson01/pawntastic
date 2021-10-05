@@ -1,6 +1,4 @@
-package com.thebois.views.infoviews;
-
-import java.util.List;
+package com.thebois.views.info;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -25,7 +23,7 @@ public class InfoView {
      *
      * @param widgetViews The widget views to render within this view
      */
-    public InfoView(final List<IActorView> widgetViews) {
+    public InfoView(final Iterable<IActorView> widgetViews) {
 
         final VerticalGroup infoPaneGroup = new VerticalGroup();
         infoPaneGroup.expand().fill();

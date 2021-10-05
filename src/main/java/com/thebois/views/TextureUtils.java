@@ -31,4 +31,23 @@ public final class TextureUtils {
         return circleTexture;
     }
 
+    /**
+     * Creates a new instance of a square shaped texture with the given sideLength length.
+     *
+     * @param sideLength The radius of the circle texture, in pixels.
+     *
+     * @return The square texture.
+     */
+    public static Texture createSquareTexture(final float sideLength) {
+        final int roundedSideLength = Math.round(sideLength);
+        final Pixmap pixmap = new Pixmap(roundedSideLength,
+                                         roundedSideLength,
+                                         Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fillRectangle(0, 0, roundedSideLength, roundedSideLength);
+        final Texture squareTexture = new Texture(pixmap);
+        pixmap.dispose();
+        return squareTexture;
+    }
+
 }

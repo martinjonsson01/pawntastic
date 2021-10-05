@@ -1,4 +1,4 @@
-package com.thebois.views.infoviews;
+package com.thebois.views.info;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -83,7 +83,6 @@ public class RoleView implements IActorView {
 
     @Override
     public Actor getWidgetContainer() {
-        createRoleButtons();
         return root;
     }
 
