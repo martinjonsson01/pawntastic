@@ -1,9 +1,7 @@
 package com.thebois;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -20,12 +18,8 @@ import com.thebois.controllers.InventoryController;
 import com.thebois.controllers.RoleController;
 import com.thebois.controllers.StructureController;
 import com.thebois.controllers.TerrainController;
-import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
-import com.thebois.models.beings.IBeing;
-import com.thebois.models.beings.Pawn;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
-import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.World;
 import com.thebois.views.gameviews.ColonyView;
 import com.thebois.views.GameScreen;
