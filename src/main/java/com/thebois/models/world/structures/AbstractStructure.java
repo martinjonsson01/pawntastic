@@ -78,7 +78,7 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public boolean deliverItem(final IItem deliveredItem) {
-        if (allNeededItems.contains(deliveredItem)) {
+        if (neededItems().contains(deliveredItem)) {
             deliveredItems.add(deliveredItem);
             return true;
         }

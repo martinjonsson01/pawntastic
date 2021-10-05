@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 
 import com.thebois.models.Position;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.Log;
 import com.thebois.models.inventory.items.Rock;
 
 import static org.assertj.core.api.Assertions.*;
@@ -41,6 +42,18 @@ public class HouseTests {
     }
 
     @Test
+    public void testEqualsHouse() {
+        // Arrange
+        final Position position = new Position(123, 456);
+
+        // Act
+        final House structure = new House(position);
+
+        // Assert
+        assertThat(structure.getType()).isEqualTo(StructureType.HOUSE);
+    }
+
+    @Test
     public void deliverItemTest() {
         // Arrange
         final House house = new House(new Position());
@@ -51,6 +64,23 @@ public class HouseTests {
 
         // Assert
         assertThat(house.deliverItem(item)).isTrue();
+    }
+
+    @Test
+    public void deliverItemFailed() {
+        // Arrange
+        final House house = new House(new Position());
+        final IItem item = new Rock() {
+        };
+
+        // Act
+        for (int i = 0; i < 10; i++) {
+            house.deliverItem(new Rock());
+            house.deliverItem(new Log());
+        }
+
+        // Assert
+        assertThat(house.deliverItem(item)).isFalse();
     }
 
     @Test
@@ -131,13 +161,25 @@ public class HouseTests {
         // Arrange
         final House house = new House(new Position());
         final IItem item = new Rock();
-        final Collection<IItem> items = new ArrayList<>();
-        items.add(item);
+
+        // Act
+        house.dismantle(item);
+
+        // Assert
+        assertThat(house.dismantle(item)).isFalse();
+    }
+
+    @Test
+    public void houseHasNoNeededResourcesTest() {
+        // Arrange
+        final House house = new House(new Position());
+        final IItem item = new Rock();
+        house.setAllNeededItems(new ArrayList<>());
 
         // Act
 
         // Assert
-        assertThat(house.dismantle(item)).isFalse();
+        assertThat(house.builtStatus()).isEqualTo(1f);
     }
 
 }
