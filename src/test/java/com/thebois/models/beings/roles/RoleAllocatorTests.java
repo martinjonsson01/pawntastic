@@ -1,8 +1,7 @@
 package com.thebois.models.beings.roles;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Random;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,6 @@ import org.mockito.Mockito;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
-import com.thebois.models.beings.Pawn;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 
 import static org.assertj.core.api.Assertions.*;
@@ -33,15 +31,12 @@ public class RoleAllocatorTests {
     }
 
     private Colony mockColonyWithBeings(final int beingCount) {
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
+        final List<Position> vacantPositions = new ArrayList<>();
         for (int i = 0; i < beingCount; i++) {
-            pawns.add(new Pawn(
-                new Position(0, 0),
-                new Position(0, 1),
-                Mockito.mock(Random.class),
-                Mockito.mock(IPathFinder.class)));
+            vacantPositions.add(new Position(0, 0));
         }
-        return new Colony(pawns);
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        return new Colony(vacantPositions, pathFinder);
     }
 
     @Test

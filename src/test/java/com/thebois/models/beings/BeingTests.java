@@ -1,7 +1,5 @@
 package com.thebois.models.beings;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -254,10 +252,10 @@ public class BeingTests {
     @Test
     public void addBeingIncreasesBeingCount() {
         // Arrange
-        final Collection<IBeing> pawns = new ArrayList<>();
-        pawns.add(Mockito.mock(IBeing.class));
-        final AbstractBeingGroup colony = new Colony(pawns);
+        final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        final AbstractBeingGroup colony = new Colony(vacantPositions, pathFinder);
+
         final IBeing being = new Pawn(new Position(0, 0),
                                       new Position(1, 1),
                                       new Random(),

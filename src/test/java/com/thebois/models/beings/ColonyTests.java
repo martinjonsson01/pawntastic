@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import com.thebois.models.Position;
+import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
@@ -40,35 +41,13 @@ public class ColonyTests {
         final IWorld mockWorld = mock(IWorld.class);
         when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
 
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
 
         // Act
-        final Colony colony = new Colony(pawns);
+        final Colony colony = new Colony(positions, pathFinder);
 
         // Assert
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);
-    }
-
-    @Test
-    public void updateCallsUpdateOnAllBeings() {
-        // Arrange
-        final int beingCount = 25;
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
-        final Colony colony = new Colony(pawns);
-
-        // Act
-        colony.update();
-
-        // Assert
-        for (final IBeing pawn : pawns) {
-            verify(pawn, times(1)).update();
-        }
     }
 
     @ParameterizedTest
@@ -142,8 +121,9 @@ public class ColonyTests {
     }
 
     private Colony mockColony() {
-        final Collection<IBeing> pawns = new ArrayList<>(0);
-        return new Colony(pawns);
+        final List<Position> positions = new ArrayList<>();
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        return new Colony(positions, pathFinder);
     }
 
     @Test

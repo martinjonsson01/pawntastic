@@ -121,18 +121,7 @@ public class ColonyManagement extends Game {
 
     private void createModels() {
         world = new World(WORLD_SIZE);
-        colony = new Colony(createPawns());
-    }
-
-    private Collection<IBeing> createPawns() {
-        final Collection<IBeing> pawns = new ArrayList<>();
-        final Iterable<Position> vacantPositions = world.findEmptyPositions(PAWN_POSITIONS);
-        final Random random = new Random();
-        final IPathFinder pathFinder = new AstarPathFinder(world);
-        for (final Position vacantPosition : vacantPositions) {
-            pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder));
-        }
-        return pawns;
+        colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS), new AstarPathFinder(world));
     }
 
     private void createDebugView() {

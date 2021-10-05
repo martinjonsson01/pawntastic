@@ -3,7 +3,6 @@ package com.thebois.models.world;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -14,8 +13,6 @@ import org.mockito.Mockito;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
-import com.thebois.models.beings.IBeing;
-import com.thebois.models.beings.Pawn;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.structures.IStructure;
@@ -205,12 +202,12 @@ public class WorldTests {
     }
 
     private Colony mockColonyWithMockBeings() {
-        final Collection<IBeing> pawns = new ArrayList<>(5);
+        final List<Position> vacantPositions = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
+            vacantPositions.add(new Position(0, 0));
         }
-
-        return new Colony(pawns);
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        return new Colony(vacantPositions, pathFinder);
     }
 
     @Test
@@ -218,16 +215,11 @@ public class WorldTests {
         // Arrange
         final int pawnFitCount = 4;
         final World world = new World(2);
-        final Collection<IBeing> pawns = new ArrayList<>();
         final Iterable<Position> vacantPositions = world.findEmptyPositions(5);
-        final Random random = new Random();
         final IPathFinder pathFinder = new AstarPathFinder(world);
-        for (final Position vacantPosition : vacantPositions) {
-            pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder));
-        }
 
         // Act
-        final Colony colony = new Colony(pawns);
+        final Colony colony = new Colony(vacantPositions, pathFinder);
 
         // Assert
         assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
