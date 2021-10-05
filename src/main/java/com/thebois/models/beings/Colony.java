@@ -33,30 +33,12 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     }
 
     /**
-     * Returns the players' colony.
-     *
-     * @return the colony.
-     */
-    public Colony getColony() {
-        return this;
-    }
-
-    /**
      * Returns the (player) inventory.
      *
      * @return the inventory.
      */
     public IInventory getInventory() {
         return inventory;
-    }
-
-    /**
-     * Returns the role allocator for the players' colony.
-     *
-     * @return the role allocator.
-     */
-    public Colony getRoleAllocator() {
-        return this;
     }
 
     @Override

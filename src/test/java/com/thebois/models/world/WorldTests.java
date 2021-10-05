@@ -196,24 +196,6 @@ public class WorldTests {
     }
 
     @Test
-    public void getColonyReturnsSameColony() {
-        // Arrange
-        final Colony colony = mockColonyWithMockBeings();
-
-        // Assert
-        assertThat(colony.getColony()).isEqualTo(colony);
-    }
-
-    @Test
-    public void getRoleAllocatorReturnsRoleAllocator() {
-        // Arrange
-        final Colony colony = mockColonyWithMockBeings();
-
-        // Assert
-        assertThat(colony.getRoleAllocator()).isEqualTo(colony);
-    }
-
-    @Test
     public void instantiateWithPawnCountCreatesCorrectNumberOfBeings() {
         // Arrange
         final Colony colony = mockColonyWithMockBeings();
