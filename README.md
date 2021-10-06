@@ -13,7 +13,7 @@ There is a UML class diagram of each package located in the README file of each 
 
 ### Prerequisites
 
-* [Java 15](https://jdk.java.net/archive/)
+* [Java 15](https://jdk.java.net/archive/) or later
 
 To run the latest version of the game, download the jar file from [releases](https://github.com/martinjonsson01/OOPP-WITH-THE-BOIS/releases/) and run it using the command:
 ```terminal
@@ -38,6 +38,8 @@ To build the game directly from the source code, you need to have some common de
 4. Run `mvn compile exec:java` to start the program.
 
 ### Common Issues and Solutions
+* You get `java.lang.UnsupportedClassVersionError`.
+  * You're running the program with too old a version of Java. You need Java 15 or later. If you have it installed, then your environment variables are incorrectly configured. Make sure your Path environment variable contains a path to the `bin` folder of your Java installation. Also make sure that no older versions of Java are in your Path (both user and system variables)
 * `mvn` not recognized as a command.
   * The `bin` folder of the Maven installation has not been added to the PATH environment variable.
 * `mvn` outputs *"The JAVA_HOME environment variable is not defined correctly"*
