@@ -6,6 +6,5 @@
 
 <suppressions>
     <suppress checks="ClassDataAbstractionCoupling" files="ColonyManagement"/>
-    <suppress checks="ClassFanOutComplexity" files="ColonyManagement"/>
     <suppress checks="NoWhitespaceAfter" files="MatrixUtilsTests" />
 </suppressions>
