@@ -24,7 +24,7 @@ import com.thebois.models.inventory.items.ItemType;
  */
 public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInventory {
 
-    private final Inventory inventory = new Inventory();
+    private final IInventory inventory = new Inventory();
 
     /**
      * Creates a colony and fills it with pawns in the request open positions.
