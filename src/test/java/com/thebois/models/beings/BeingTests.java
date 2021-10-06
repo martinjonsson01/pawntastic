@@ -93,6 +93,15 @@ public class BeingTests {
     }
 
     @Test
+    public void setRoleWithNullThrowsException() {
+        // Arrange
+        final IBeing being = new Pawn(new Position(0, 0), new Position(1, 1), new Random());
+
+        // Assert
+        assertThatThrownBy(() -> being.setRole(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     public void hashCodeReturnsSameIfEqual() {
         // Arrange
         final Position currentPosition = new Position(0, 0);
