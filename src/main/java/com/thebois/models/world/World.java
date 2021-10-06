@@ -50,12 +50,13 @@ public class World implements IWorld, IFinder {
      *
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
      * @param colony    The Colony that should be added to the world.
+     * @param seed      The seed used to generate the world.
      */
     public World(final int worldSize, final Colony colony, final int seed) {
         this.worldSize = worldSize;
         terrainMatrix = setUpTerrain(seed);
         structureMatrix = setUpStructures();
-        resourceMatrix = setUpResources();
+        resourceMatrix = setUpResources(seed);
         canonicalMatrix = new ITile[worldSize][worldSize];
         updateCanonicalMatrix();
         this.colony = colony;
@@ -77,8 +78,8 @@ public class World implements IWorld, IFinder {
         return terrainGenerator.generateTerrainMatrix(worldSize);
     }
 
-    private Optional<IResource>[][] setUpResources() {
-        final ResourceGenerator resourceGenerator = new ResourceGenerator();
+    private Optional<IResource>[][] setUpResources(final int seed) {
+        final ResourceGenerator resourceGenerator = new ResourceGenerator(seed);
         return resourceGenerator.generateResourceMatrix(worldSize);
     }
 

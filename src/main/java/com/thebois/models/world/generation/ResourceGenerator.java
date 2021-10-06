@@ -1,35 +1,25 @@
 package com.thebois.models.world.generation;
 
 import java.util.Optional;
-import java.util.Random;
 
+import com.thebois.models.world.generation.patterns.LargeChunks;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.Water;
-import com.thebois.utils.PerlinNoiseGenerator;
 
 /**
  * Generator used to generate resources for the world.
  */
-public class ResourceGenerator {
+public class ResourceGenerator extends AbstractGenerator {
 
-    private static final float DIRT_THRESHOLD = 0.5f;
-    private final PerlinNoiseGenerator resourceGenerator;
+    private static final float WATER_THRESHOLD = 0.5f;
 
     /**
-     * Instantiate a Terrain Generator with pre-made settings used for generating values.
+     * Instantiate a Resource Generator with pre-made settings used for generating values.
+     *
+     * @param seed The seed used to generate resources in the world.
      */
-    public ResourceGenerator() {
-        final Random random = new Random();
-        final int octaves = 1;
-        final float amplitude = 4f;
-        final float frequency = 0.1f;
-        final float persistence = 1.0f;
-        final int seed = random.nextInt(Integer.MAX_VALUE);
-        resourceGenerator = new PerlinNoiseGenerator(octaves,
-                                                     amplitude,
-                                                     frequency,
-                                                     persistence,
-                                                     seed);
+    public ResourceGenerator(final int seed) {
+        super(new LargeChunks(), seed);
     }
 
     /**
@@ -44,8 +34,8 @@ public class ResourceGenerator {
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
 
-                final float height = resourceGenerator.perlinNoise(x, y);
-                if (height > DIRT_THRESHOLD) {
+                final float height = sample(x, y);
+                if (height > WATER_THRESHOLD) {
                     resourceMatrix[y][x] = Optional.of(new Water(x, y));
                 }
                 else {
