@@ -255,4 +255,18 @@ public class ColonyTests {
         assertThat(colonyResult).isEqualTo(inventoryResult);
     }
 
+    @Test
+    public void ensureBeingsUpdatesWhenColonyUpdates() {
+        // Arrange
+        final IBeing being = Mockito.mock(IBeing.class);
+        final Colony colony = mockColony();
+
+        // Act
+        colony.addBeing(being);
+        colony.update();
+
+        // Assert
+        verify(being, times(1)).update();
+    }
+
 }
