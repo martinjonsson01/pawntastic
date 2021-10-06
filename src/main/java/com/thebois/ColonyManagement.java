@@ -1,36 +1,26 @@
 package com.thebois;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.google.common.eventbus.EventBus;
 
-import com.thebois.controllers.ColonyController;
-import com.thebois.controllers.InventoryController;
-import com.thebois.controllers.RoleController;
-import com.thebois.controllers.StructureController;
-import com.thebois.controllers.TerrainController;
+import com.thebois.controllers.info.InfoController;
+import com.thebois.controllers.game.WorldController;
+import com.thebois.models.beings.Colony;
+import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.world.World;
-import com.thebois.views.gameviews.ColonyView;
 import com.thebois.views.GameScreen;
-import com.thebois.views.gameviews.GameView;
-import com.thebois.views.infoviews.IActorView;
-import com.thebois.views.IView;
-import com.thebois.views.infoviews.InfoView;
-import com.thebois.views.infoviews.RoleView;
-import com.thebois.views.gameviews.StructureView;
-import com.thebois.views.gameviews.WorldView;
-import com.thebois.views.infoviews.InventoryView;
-import com.thebois.views.debug.BeingPathDebugView;
-import com.thebois.views.debug.FrameCounterView;
+import com.thebois.views.IProjector;
+import com.thebois.views.ViewportWrapper;
 
 /**
  * The main representation of the game.
@@ -41,40 +31,33 @@ public class ColonyManagement extends Game {
      * The global event bus that most events pass through.
      */
     public static final EventBus BUS = new EventBus();
-    private static final int WORLD_SIZE = 50;
+    /* Toggles debug-mode. */
+    /**
+     * Global variable used to check if game is run in debug mode.
+     */
+    public static final boolean DEBUG = false;
+    /**
+     * Number of tiles per axis in the world.
+     */
+    public static final int WORLD_SIZE = 50;
     /* These two decide the aspect ratio that will be preserved. */
     private static final float VIEWPORT_WIDTH = 1300;
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
-    private static final int PAWN_COUNT = 50;
-    /* Toggles debug-mode. */
-    private static final boolean DEBUG = false;
+    private static final int PAWN_POSITIONS = 50;
+    private float tileSize;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
     private Skin uiSkin;
     // Model
     private World world;
-    /* Views - InfoView */
-    private InfoView infoView;
-    private RoleView roleView;
-    private InventoryView inventoryView;
-    /* Views - GameView*/
-    private GameView gameView;
-    private WorldView worldView;
-    private StructureView structureView;
-    private ColonyView colonyView;
-    /* Views - GameView DEBUG */
-    private BeingPathDebugView beingPathDebugView;
-    private FrameCounterView frameCounterView;
+    private Colony colony;
     // Screens
     private GameScreen gameScreen;
     // Controllers
-    private TerrainController terrainController;
-    private StructureController structureController;
-    private ColonyController colonyController;
-    private InventoryController inventoryController;
-    private float tileSize;
+    private WorldController worldController;
+    private InfoController infoController;
 
     @Override
     public void create() {
@@ -84,19 +67,26 @@ public class ColonyManagement extends Game {
 
         // Model
         createModels();
+        // Camera & Viewport
+        final OrthographicCamera camera = new OrthographicCamera();
+        final FitViewport viewport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, camera);
+        camera.translate(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2);
 
-        // Views
-        if (DEBUG) createDebugView();
-        createGameView();
-        createInfoView();
-
-        // Screens
-        gameScreen = new GameScreen(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, uiSkin, gameView, infoView);
-
-        this.setScreen(gameScreen);
+        final IProjector projector = new ViewportWrapper(viewport);
 
         // Controllers
-        createControllers();
+        this.worldController = new WorldController(world, colony, projector, tileSize, font);
+        this.infoController = new InfoController(colony, uiSkin);
+
+        // Screens
+        gameScreen = new GameScreen(viewport,
+                                    camera,
+                                    uiSkin,
+                                    worldController.getView(),
+                                    infoController.getView());
+        this.setScreen(gameScreen);
+
+        // Set up Input Processors
         initInputProcessors();
     }
 
@@ -111,57 +101,8 @@ public class ColonyManagement extends Game {
     }
 
     private void createModels() {
-        world = new World(WORLD_SIZE, PAWN_COUNT);
-    }
-
-    private void createDebugView() {
-        beingPathDebugView = new BeingPathDebugView(world.getColony(), tileSize);
-        frameCounterView = new FrameCounterView(font);
-    }
-
-    private void createGameView() {
-        worldView = new WorldView(tileSize);
-
-        // Arrange Views for gameScreen
-        colonyView = new ColonyView(tileSize);
-        structureView = new StructureView(tileSize);
-        final List<IView> views = new ArrayList<>();
-        views.add(worldView);
-        views.add(colonyView);
-        views.add(structureView);
-        if (DEBUG) {
-            views.add(beingPathDebugView);
-            views.add(frameCounterView);
-        }
-        gameView = new GameView(views, WORLD_SIZE, tileSize);
-    }
-
-    private void createInfoView() {
-        roleView = new RoleView(uiSkin);
-        inventoryView = new InventoryView(uiSkin);
-        final List<IActorView> widgetViews = List.of(roleView, inventoryView);
-        infoView = new InfoView(widgetViews);
-    }
-
-    private void createControllers() {
-        this.terrainController = new TerrainController(world, worldView);
-        this.structureController = new StructureController(world,
-                                                           structureView,
-                                                           gameScreen.getProjector(),
-                                                           tileSize,
-                                                           gameView);
-        this.colonyController = new ColonyController(world, colonyView);
-        this.inventoryController = new InventoryController(
-            inventoryView,
-            world.getColonyInventory());
-        new RoleController(world.getRoleAllocator(), roleView);
-    }
-
-    private void initInputProcessors() {
-        final InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(gameScreen.getInputProcessor());
-        multiplexer.addProcessor(structureController);
-        Gdx.input.setInputProcessor(multiplexer);
+        world = new World(WORLD_SIZE);
+        colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS), new AstarPathFinder(world));
     }
 
     private void generateFont() {
@@ -181,6 +122,7 @@ public class ColonyManagement extends Game {
     }
 
     @Override
+
     public void dispose() {
         gameScreen.dispose();
         skinAtlas.dispose();
@@ -190,11 +132,18 @@ public class ColonyManagement extends Game {
     @Override
     public void render() {
         super.render();
-        world.update();
-        terrainController.update();
-        colonyController.update();
-        structureController.update();
-        inventoryController.update();
+        colony.update();
+        worldController.update();
+        infoController.update();
+    }
+
+    private void initInputProcessors() {
+        final InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(gameScreen.getInputProcessor());
+        for (final InputProcessor inputProcessor : worldController.getInputProcessors()) {
+            multiplexer.addProcessor(inputProcessor);
+        }
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
 }

@@ -1,19 +1,18 @@
-package com.thebois.views.gameviews;
+package com.thebois.views.game;
 
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import com.thebois.models.world.ITerrain;
-import com.thebois.views.IView;
+import com.thebois.views.TextureUtils;
 
 /**
  * World view handles all the drawing of the world itself and its information on how to draw it.
  */
-public class WorldView implements IView {
+public class TerrainView implements IView {
 
     private final Color grassColor = new Color(0.005f, 0.196f, 0.107f, 1);
     private final float tileSize;
@@ -25,19 +24,10 @@ public class WorldView implements IView {
      *
      * @param tileSize The size of a single tile, in pixels.
      */
-    public WorldView(final float tileSize) {
+    public TerrainView(final float tileSize) {
         this.tileSize = tileSize;
 
-        createGrassTexture();
-    }
-
-    private void createGrassTexture() {
-        final int roundedTileSize = (int) this.tileSize;
-        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
-        pixmap.setColor(grassColor);
-        pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);
-        grassTexture = new Texture(pixmap);
-        pixmap.dispose();
+        grassTexture = TextureUtils.createSquareTexture(tileSize);
     }
 
     /**
@@ -52,11 +42,13 @@ public class WorldView implements IView {
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         for (final ITerrain terrain : terrainTiles) {
-            batch.draw(grassTexture,
-                       offsetX + terrain.getPosition().getPosX() * tileSize,
-                       offsetY + terrain.getPosition().getPosY() * tileSize,
-                       tileSize,
-                       tileSize);
+            batch.setColor(grassColor);
+            batch.draw(
+                grassTexture,
+                offsetX + terrain.getPosition().getPosX() * tileSize,
+                offsetY + terrain.getPosition().getPosY() * tileSize,
+                tileSize,
+                tileSize);
         }
     }
 

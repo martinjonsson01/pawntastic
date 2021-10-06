@@ -1,4 +1,4 @@
-package com.thebois.views.gameviews;
+package com.thebois.views.game;
 
 import java.util.Collection;
 
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Disposable;
 
-import com.thebois.views.IView;
+import com.thebois.ColonyManagement;
 
 /**
  * A view of the game world.
@@ -19,13 +19,12 @@ public class GameView extends Widget implements Disposable {
     /**
      * Instantiates a new view of the world.
      *
-     * @param views     The different sub-views of the world
-     * @param worldSize The size of the world in tiles
-     * @param tileSize  The size of a single tile in world space
+     * @param views    The different sub-views of the world
+     * @param tileSize The size of a single tile in world space
      */
-    public GameView(final Collection<IView> views, final int worldSize, final float tileSize) {
+    public GameView(final Collection<IView> views, final float tileSize) {
         this.views = views;
-        this.worldScreenSize = tileSize * worldSize;
+        this.worldScreenSize = tileSize * ColonyManagement.WORLD_SIZE;
     }
 
     @Override
