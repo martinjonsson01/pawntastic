@@ -24,6 +24,16 @@ public class PositionTests {
             Arguments.of(new Position(-20, -30), new Position(0, 0), 36.0555f));
     }
 
+    public static Stream<Arguments> getPositionsAndManhattanDistances() {
+        return Stream.of(
+            Arguments.of(new Position(0, 0), new Position(0, 0), 0),
+            Arguments.of(new Position(0, 0), new Position(1, 1), 2),
+            Arguments.of(new Position(-123, -456), new Position(123, 456), 1158),
+            Arguments.of(new Position(1, 0), new Position(2, 0), 1),
+            Arguments.of(new Position(0, 1), new Position(0, 2), 1),
+            Arguments.of(new Position(-20, -30), new Position(0, 0), 50));
+    }
+
     @Test
     public void constructorSetsCoordinates() {
         // Arrange
@@ -173,6 +183,18 @@ public class PositionTests {
 
         // Assert
         assertThat(actualDistance).isCloseTo(expectedDistance, Assertions.offset(0.001f));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsAndManhattanDistances")
+    public void manhattanDistanceToReturnsCorrectDistance(final Position first,
+                                                          final Position second,
+                                                          final int expectedDistance) {
+        // Act
+        final int actualDistance = first.manhattanDistanceTo(second);
+
+        // Assert
+        assertThat(actualDistance).isEqualTo(expectedDistance);
     }
 
 }

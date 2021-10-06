@@ -1,21 +1,32 @@
 package com.thebois.models.beings;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.thebois.models.Position;
+import com.thebois.models.beings.pathfinding.AstarPathFinder;
+import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.Inventory;
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
+import com.thebois.models.world.IWorld;
 
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
  */
-public class Colony extends AbstractBeingGroup implements IRoleAllocator {
+public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInventory {
+
+    private final Inventory inventory = new Inventory();
 
     /**
      * Initializes with already existing beings.
@@ -27,18 +38,20 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     }
 
     /**
-     * Creates an instance of Colony with n number of pawns.
+     * Creates an instance of Colony with a number of pawns.
      *
-     * @param vacantPositions Positions in the world that a Pawn can be placed on
+     * @param vacantPositions Positions in the world that a Pawn can be placed on.
+     * @param world           The world the pawns move around in.
      */
-    public Colony(final Iterable<Position> vacantPositions) {
-        createBeings(vacantPositions);
+    public Colony(final Iterable<Position> vacantPositions, final IWorld world) {
+        createBeings(vacantPositions, world);
     }
 
-    private void createBeings(final Iterable<Position> vacantPositions) {
+    private void createBeings(final Iterable<Position> vacantPositions, final IWorld world) {
         final Random random = new Random();
+        final IPathFinder pathFinder = new AstarPathFinder(world);
         for (final Position vacantPosition : vacantPositions) {
-            addBeing(new Pawn(vacantPosition, vacantPosition, random));
+            addBeing(new Pawn(vacantPosition, vacantPosition, random, pathFinder));
         }
     }
 
@@ -120,9 +133,45 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     }
 
     private Collection<IBeing> findBeingsWithRole(final AbstractRole role) {
-        return getBeings().stream()
-                          .filter(being -> role.equals(being.getRole()))
-                          .collect(Collectors.toList());
+        return getBeings()
+            .stream()
+            .filter(being -> role.equals(being.getRole()))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public void add(final IItem item) {
+        inventory.add(item);
+    }
+
+    @Override
+    public void addMultiple(final List<IItem> stack) {
+        inventory.addMultiple(stack);
+    }
+
+    @Override
+    public IItem take(final ItemType itemType) {
+        return inventory.take(itemType);
+    }
+
+    @Override
+    public ArrayList<IItem> takeAmount(final ItemType itemType, final int amount) {
+        return inventory.takeAmount(itemType, amount);
+    }
+
+    @Override
+    public boolean hasItem(final ItemType itemType) {
+        return inventory.hasItem(itemType);
+    }
+
+    @Override
+    public boolean hasItem(final ItemType itemType, final int amount) {
+        return inventory.hasItem(itemType, amount);
+    }
+
+    @Override
+    public int numberOf(final ItemType itemType) {
+        return inventory.numberOf(itemType);
     }
 
 }

@@ -36,4 +36,9 @@ public class Dirt extends AbstractTerrain {
         return new Dirt(getPosition());
     }
 
+    @Override
+    public float getCost() {
+        return 0;
+    }
+
 }

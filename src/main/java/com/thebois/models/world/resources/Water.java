@@ -41,4 +41,9 @@ public class Water extends AbstractResource {
         return new Water(getPosition());
     }
 
+    @Override
+    public float getCost() {
+        return Float.MAX_VALUE;
+    }
+
 }

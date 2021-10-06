@@ -35,4 +35,16 @@ public class GrassTests {
         assertThat(actualPosition.getPosY()).isEqualTo(posY);
     }
 
+    @Test
+    public void getCostReturnsGreaterThanOrEqualToZero() {
+        // Arrange
+        final Grass grass = new Grass(0f, 0f);
+
+        // Act
+        final float cost = grass.getCost();
+
+        // Assert
+        assertThat(cost).isGreaterThanOrEqualTo(0f);
+    }
+
 }

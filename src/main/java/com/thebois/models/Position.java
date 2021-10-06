@@ -11,17 +11,6 @@ public final class Position implements IDeepClonable<Position> {
     private float posY;
 
     /**
-     * Creates position at specified coordinates.
-     *
-     * @param posX The x-coordinate
-     * @param posY The y-coordinate
-     */
-    public Position(final float posX, final float posY) {
-        this.posX = posX;
-        this.posY = posY;
-    }
-
-    /**
      * Creates position at 0,0.
      */
     public Position() {
@@ -29,11 +18,22 @@ public final class Position implements IDeepClonable<Position> {
     }
 
     /**
+     * Creates position at specified coordinates.
+     *
+     * @param posX The x-coordinate.
+     * @param posY The y-coordinate.
+     */
+    public Position(final float posX, final float posY) {
+        this.posX = posX;
+        this.posY = posY;
+    }
+
+    /**
      * Calculates the euclidean distance between two positions.
      *
-     * @param other The position to compare distance to
+     * @param other The position to compare distance to.
      *
-     * @return The distance between the points
+     * @return The distance between the points.
      */
     public float distanceTo(final Position other) {
         return distanceTo(other.getPosX(), other.getPosY());
@@ -42,10 +42,10 @@ public final class Position implements IDeepClonable<Position> {
     /**
      * Calculates the euclidean distance between two positions.
      *
-     * @param otherPosX The x-coordinate to compare distance to
-     * @param otherPosY The y-coordinate to compare distance to
+     * @param otherPosX The x-coordinate to compare distance to.
+     * @param otherPosY The y-coordinate to compare distance to.
      *
-     * @return The distance between the points
+     * @return The distance between the points.
      */
     public float distanceTo(final float otherPosX, final float otherPosY) {
         final float distanceX = Math.abs(getPosX() - otherPosX);
@@ -86,6 +86,11 @@ public final class Position implements IDeepClonable<Position> {
         return Float.compare(position.posX, posX) == 0 && Float.compare(position.posY, posY) == 0;
     }
 
+    @Override
+    public String toString() {
+        return "{" + "x=" + posX + ", y=" + posY + '}';
+    }
+
     /**
      * Makes a deep copy of the position and returns it.
      *
@@ -94,6 +99,23 @@ public final class Position implements IDeepClonable<Position> {
     @Override
     public Position deepClone() {
         return new Position(this.posX, this.posY);
+    }
+
+    /**
+     * Calculates the Manhattan distance to the destination.
+     *
+     * <p>
+     * Manhattan distance is distance calculated through a grid. Doesn't allow diagonal movements.
+     * </p>
+     *
+     * @param destination The position to check the distance to.
+     *
+     * @return The manhattan distance to the destination.
+     */
+    public int manhattanDistanceTo(final Position destination) {
+        final float distanceX = Math.abs(getPosX() - destination.getPosX());
+        final float distanceY = Math.abs(getPosY() - destination.getPosY());
+        return Math.round(distanceX + distanceY);
     }
 
 }

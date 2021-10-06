@@ -20,8 +20,8 @@ public abstract class AbstractTerrain implements ITerrain {
     }
 
     @Override
-    public Position getPosition() {
-        return position.deepClone();
+    public int hashCode() {
+        return Objects.hash(position);
     }
 
     @Override
@@ -33,8 +33,13 @@ public abstract class AbstractTerrain implements ITerrain {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(position);
+    public String toString() {
+        return "AbstractTerrain{" + "position=" + position + '}';
+    }
+
+    @Override
+    public Position getPosition() {
+        return position.deepClone();
     }
 
 }

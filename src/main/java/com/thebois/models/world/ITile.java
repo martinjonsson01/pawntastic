@@ -14,4 +14,11 @@ public interface ITile {
      */
     Position getPosition();
 
+    /**
+     * Gets the cost of moving across.
+     *
+     * @return The cost of moving across
+     */
+    float getCost();
+
 }
