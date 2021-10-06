@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * Wrapper class for viewport.
  */
-class ViewportWrapper implements IProjector {
+public class ViewportWrapper implements IProjector {
 
     private final Viewport viewport;
 
@@ -15,7 +15,7 @@ class ViewportWrapper implements IProjector {
      *
      * @param viewport the viewport to be wrapped.
      */
-    protected ViewportWrapper(final Viewport viewport) {
+    public ViewportWrapper(final Viewport viewport) {
         this.viewport = viewport;
     }
 

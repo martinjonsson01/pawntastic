@@ -1,43 +1,40 @@
-package com.thebois.controllers;
+package com.thebois.controllers.game;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
+import com.thebois.controllers.AbstractInputProcessor;
+import com.thebois.controllers.IController;
 import com.thebois.models.world.World;
 import com.thebois.views.IProjector;
-import com.thebois.views.gameviews.StructureView;
+import com.thebois.views.game.IView;
+import com.thebois.views.game.StructureView;
 
 /**
  * Controller for Structures in the world.
  */
-public class StructureController extends AbstractInputProcessor {
+public class StructureController extends AbstractInputProcessor implements IController<IView> {
 
     private final World world;
     private final StructureView structureView;
     private final IProjector projector;
     private final float tileSize;
-    private final Widget gameWidget;
+    private Widget gameWidget;
 
     /**
      * Creates a instance of a Structure Controller.
      *
-     * @param world         The world in which the structures exists.
-     * @param structureView A view where the structures will be displayed.
-     * @param projector     Projector used for converting screen coordinates to world coordinates.
-     * @param tileSize      The tile size represented on the screen.
-     * @param gameWidget    The widget in which the game in rendered in.
+     * @param world     The world in which the structures exists.
+     * @param projector Projector used for converting screen coordinates to world coordinates.
+     * @param tileSize  The tile size represented on the screen.
      */
-    public StructureController(final World world,
-                               final StructureView structureView,
-                               final IProjector projector,
-                               float tileSize,
-                               Widget gameWidget) {
+    public StructureController(
+        final World world, final IProjector projector, final float tileSize) {
 
         this.world = world;
-        this.structureView = structureView;
+        this.structureView = new StructureView(tileSize);
         this.projector = projector;
         this.tileSize = tileSize;
-        this.gameWidget = gameWidget;
 
         structureView.update(world.getStructures());
     }
@@ -58,10 +55,22 @@ public class StructureController extends AbstractInputProcessor {
         return false;
     }
 
-    /**
-     * Updates the view with data from the world.
-     */
+    @Override
+    public IView getView() {
+        return structureView;
+    }
+
+    @Override
     public void update() {
+    }
+
+    /**
+     * Set the game widget used to get the offset.
+     *
+     * @param gameWidget The widget in which the game is rendered.
+     */
+    public void setGameWidget(final Widget gameWidget) {
+        this.gameWidget = gameWidget;
     }
 
 }

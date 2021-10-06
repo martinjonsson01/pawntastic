@@ -1,20 +1,24 @@
-package com.thebois.controllers;
+package com.thebois.controllers.info;
 
 import java.util.AbstractMap;
 import java.util.stream.Collectors;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
+import com.thebois.controllers.IController;
 import com.thebois.listeners.events.ValueChangedEvent;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.views.infoviews.RoleView;
-import com.thebois.views.infoviews.SpinnerButton;
+import com.thebois.views.info.IActorView;
+import com.thebois.views.info.RoleView;
+import com.thebois.views.info.SpinnerButton;
 
 /**
  * Controls the interactions from the player regarding role allocations.
  */
-public class RoleController {
+public class RoleController implements IController<IActorView> {
 
     private final IRoleAllocator roleAllocator;
     private final RoleView roleView;
@@ -23,12 +27,12 @@ public class RoleController {
     /**
      * Instantiates a new role controller that controls the provided role view.
      *
-     * @param roleAllocator Used for getting the current role allocations
-     * @param roleView      The view to listen to and send updates to
+     * @param roleAllocator Used for getting the current role allocations.
+     * @param skin          The skin to style widgets with.
      */
-    public RoleController(final IRoleAllocator roleAllocator, final RoleView roleView) {
+    public RoleController(final IRoleAllocator roleAllocator, final Skin skin) {
         this.roleAllocator = roleAllocator;
-        this.roleView = roleView;
+        this.roleView = new RoleView(skin);
 
         roleView.updateRoles(RoleFactory.all()
                                         .stream()
@@ -60,6 +64,16 @@ public class RoleController {
         for (final SpinnerButton roleButton : roleButtons.values()) {
             roleButton.updateButtonDisabledState();
         }
+    }
+
+    @Override
+    public IActorView getView() {
+        return roleView;
+    }
+
+    @Override
+    public void update() {
+
     }
 
 }
