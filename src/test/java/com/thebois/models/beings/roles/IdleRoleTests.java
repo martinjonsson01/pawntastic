@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
+import com.thebois.models.beings.ITaskPerformer;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.ActionFactory;
@@ -40,9 +41,11 @@ public class IdleRoleTests {
         when(mockWorld.getRandomVacantSpot()).thenReturn(mockTile);
         final AbstractRole role = RoleFactory.idle();
         final IAction expectedTask = ActionFactory.createMoveTo(randomPosition);
+        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        when(performer.getPosition()).thenReturn(new Position());
 
         // Act
-        final IAction task = role.obtainNextTask();
+        final IAction task = role.obtainNextTask(performer);
 
         // Assert
         assertThat(task).isEqualTo(expectedTask);

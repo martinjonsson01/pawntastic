@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Queue;
 
 import com.thebois.models.IDeepClonable;
+import com.thebois.models.beings.ITaskPerformer;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionGenerator;
 
@@ -63,18 +64,20 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
     /**
      * Calculates the next task to perform at the moment and returns it.
      *
+     * @param performer The entity who will perform the obtained task.
+     *
      * @return The current task that needs to be completed.
      */
-    public IAction obtainNextTask() {
+    public IAction obtainNextTask(final ITaskPerformer performer) {
         if (tasks.isEmpty()) tasks.addAll(getTaskGenerators());
 
-        if (currentTask == null || currentTask.isCompleted()) {
+        if (currentTask == null || currentTask.isCompleted(performer)) {
             // Take actions from queue until one is found that is not completed.
             IAction newTask;
             do {
                 final IActionGenerator actionable = tasks.remove();
                 newTask = actionable.generate();
-            } while (newTask.isCompleted());
+            } while (newTask.isCompleted(performer));
 
             this.currentTask = newTask;
         }

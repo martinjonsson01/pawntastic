@@ -17,8 +17,10 @@ public interface IAction {
     /**
      * Checks if the task is finished.
      *
+     * @param performer The entity to check if has .
+     *
      * @return Whether the task is finished.
      */
-    boolean isCompleted();
+    boolean isCompleted(ITaskPerformer performer);
 
 }

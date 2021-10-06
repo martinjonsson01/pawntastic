@@ -1,7 +1,7 @@
 package com.thebois.models.beings.actions;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -21,9 +21,7 @@ class MoveAction implements IAction {
     private final Position destination;
     private final IPathFinder pathFinder;
     private boolean canReachDestination = true;
-    private Deque<Position> path = new LinkedList<>();
-    private ITaskPerformer performer;
-    private Position latestPosition = new Position(-1, -1);
+    private LinkedList<Position> path = new LinkedList<>();
 
     /**
      * Instantiates with a destination to move towards.
@@ -51,10 +49,8 @@ class MoveAction implements IAction {
     }
 
     @Override
-    public void perform(final ITaskPerformer newPerformer) {
-        this.performer = newPerformer;
-        this.latestPosition = newPerformer.getPosition();
-        if (isCompleted()) return;
+    public void perform(final ITaskPerformer performer) {
+        if (isCompleted(performer)) return;
 
         final Position position = performer.getPosition();
         if (path.isEmpty()) {
@@ -73,8 +69,8 @@ class MoveAction implements IAction {
     }
 
     @Override
-    public boolean isCompleted() {
-        return !canReachDestination || latestPosition.equals(destination);
+    public boolean isCompleted(final ITaskPerformer performer) {
+        return !canReachDestination || performer.getPosition().equals(destination);
     }
 
     private void calculatePathFrom(final Position start) {
@@ -97,9 +93,24 @@ class MoveAction implements IAction {
         if (path.isEmpty()) return;
 
         if (path.contains(event.getPosition())) {
-            // Find new path to current goal.
-            calculatePathFrom(performer.getPosition());
+            recalculatePathAroundObstacle(event.getPosition());
         }
+    }
+
+    private void recalculatePathAroundObstacle(final Position obstaclePosition) {
+        final int obstacleInPathIndex = path.indexOf(obstaclePosition);
+        final int nodeBeforeObstacleIndex = Math.max(0, obstacleInPathIndex - 1);
+        final Position pathNodeBeforeObstacle = path.get(nodeBeforeObstacleIndex);
+
+        final Collection<Position> recalculatedPathSegment = pathFinder.path(pathNodeBeforeObstacle,
+                                                                             destination);
+
+        final int originalSegmentEndIndex = Math.max(0, nodeBeforeObstacleIndex - 1);
+        final Collection<Position> originalPathSegment = path.subList(0, originalSegmentEndIndex);
+
+        final Collection<Position> recalculatedPath = new ArrayList<>(originalPathSegment);
+        recalculatedPath.addAll(recalculatedPathSegment);
+        setPath(recalculatedPath);
     }
 
 }

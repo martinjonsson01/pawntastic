@@ -122,13 +122,13 @@ public class BeingTests {
         final AbstractBeing being = createBeing();
         final IAction task = mock(IAction.class);
         being.setRole(role);
-        when(role.obtainNextTask()).thenReturn(task);
+        when(role.obtainNextTask(being)).thenReturn(task);
 
         // Act
         being.update();
 
         // Assert
-        verify(role, times(1)).obtainNextTask();
+        verify(role, times(1)).obtainNextTask(being);
     }
 
     @Test
@@ -138,7 +138,7 @@ public class BeingTests {
         final AbstractBeing being = createBeing();
         final IAction task = mock(IAction.class);
         being.setRole(role);
-        when(role.obtainNextTask()).thenReturn(task);
+        when(role.obtainNextTask(being)).thenReturn(task);
 
         // Act
         being.update();
@@ -218,7 +218,7 @@ public class BeingTests {
         @Override
         protected Collection<IActionGenerator> getTaskGenerators() {
             final IAction nothingTask = mock(IAction.class);
-            when(nothingTask.isCompleted()).thenReturn(false);
+            when(nothingTask.isCompleted(any())).thenReturn(false);
             return List.of(() -> nothingTask);
         }
 

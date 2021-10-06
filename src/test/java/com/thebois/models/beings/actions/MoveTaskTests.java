@@ -38,20 +38,17 @@ public class MoveTaskTests {
         ActionFactory.setPathFinder(mock(IPathFinder.class));
         final IAction sameInstance = ActionFactory.createMoveTo(new Position(0, 1));
         return Stream.of(Arguments.of(sameInstance, sameInstance),
-                         Arguments.of(
-                             ActionFactory.createMoveTo(new Position(0, 1)),
-                             ActionFactory.createMoveTo(new Position(0, 1))));
+                         Arguments.of(ActionFactory.createMoveTo(new Position(0, 1)),
+                                      ActionFactory.createMoveTo(new Position(0, 1))));
     }
 
     public static Stream<Arguments> getNotEqualMoveTasks() {
         ActionFactory.setPathFinder(mock(IPathFinder.class));
-        return Stream.of(Arguments.of(
-                             ActionFactory.createMoveTo(new Position(0, 0)),
-                             ActionFactory.createMoveTo(new Position(0, 1))),
+        return Stream.of(Arguments.of(ActionFactory.createMoveTo(new Position(0, 0)),
+                                      ActionFactory.createMoveTo(new Position(0, 1))),
                          Arguments.of(ActionFactory.createMoveTo(new Position(0, 1)), null),
-                         Arguments.of(
-                             ActionFactory.createMoveTo(new Position(0, 1)),
-                             mock(IAction.class)));
+                         Arguments.of(ActionFactory.createMoveTo(new Position(0, 1)),
+                                      mock(IAction.class)));
     }
 
     @BeforeEach
@@ -95,7 +92,7 @@ public class MoveTaskTests {
 
         // Act
         task.perform(performer);
-        final boolean isCompleted = task.isCompleted();
+        final boolean isCompleted = task.isCompleted(performer);
 
         // Assert
         assertThat(isCompleted).isTrue();
@@ -145,7 +142,7 @@ public class MoveTaskTests {
     }
 
     @Test
-    public void pathIsRecalculatedWhenObstacleIsInWay() {
+    public void entirePathIsRecalculatedWhenObstacleIsInWayAtStartOfPath() {
         // Arrange
         final Position start = new Position(0, 0);
         final Position end = new Position(3, 3);
@@ -154,7 +151,7 @@ public class MoveTaskTests {
         when(performer.getPosition()).thenReturn(start);
 
         final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), end);
-        when(pathFinder.path(start, end)).thenReturn(path);
+        when(pathFinder.path(any(), any())).thenReturn(path);
 
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
 
@@ -165,7 +162,7 @@ public class MoveTaskTests {
         ColonyManagement.BUS.post(obstacleEvent);
 
         // Assert
-        verify(pathFinder, times(2)).path(start, end);
+        verify(pathFinder, times(2)).path(any(), any());
     }
 
     @Test
@@ -221,7 +218,7 @@ public class MoveTaskTests {
 
         // Act
         task.perform(performer);
-        final boolean completed = task.isCompleted();
+        final boolean completed = task.isCompleted(performer);
 
         // Assert
         assertThat(completed).isTrue();
@@ -243,7 +240,7 @@ public class MoveTaskTests {
 
         // Act
         task.perform(performer);
-        final boolean completed = task.isCompleted();
+        final boolean completed = task.isCompleted(performer);
 
         // Assert
         assertThat(completed).isFalse();
