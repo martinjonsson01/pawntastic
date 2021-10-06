@@ -27,7 +27,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     private final IInventory inventory = new Inventory();
 
     /**
-     * Creates a colony and fills it with pawns in the request open positions.
+     * Creates a colony and fills it with pawns in the provided open positions.
      *
      * @param vacantPositions Positions in the world where pawns can be created.
      * @param pathFinder      The pathfinder that the pawns will use.
@@ -41,11 +41,6 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
         setBeings(pawns);
     }
 
-    /**
-     * Returns the (player) inventory.
-     *
-     * @return the inventory.
-     */
     public IInventory getInventory() {
         return inventory;
     }
