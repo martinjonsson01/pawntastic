@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.thebois.models.Position;
-import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
@@ -19,40 +18,31 @@ import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
-import com.thebois.models.world.IWorld;
 
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
  */
 public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInventory {
 
-    private final Inventory inventory = new Inventory();
+    private final IInventory inventory = new Inventory();
 
     /**
-     * Initializes with already existing beings.
+     * Creates a colony and fills it with pawns in the provided open positions.
      *
-     * @param beings The beings that should belong to the colony
+     * @param vacantPositions Positions in the world where pawns can be created.
+     * @param pathFinder      The pathfinder that the pawns will use.
      */
-    public Colony(final Collection<IBeing> beings) {
-        setBeings(beings);
-    }
-
-    /**
-     * Creates an instance of Colony with a number of pawns.
-     *
-     * @param vacantPositions Positions in the world that a Pawn can be placed on.
-     * @param world           The world the pawns move around in.
-     */
-    public Colony(final Iterable<Position> vacantPositions, final IWorld world) {
-        createBeings(vacantPositions, world);
-    }
-
-    private void createBeings(final Iterable<Position> vacantPositions, final IWorld world) {
+    public Colony(final Iterable<Position> vacantPositions, final IPathFinder pathFinder) {
+        final Collection<IBeing> pawns = new ArrayList<>();
         final Random random = new Random();
-        final IPathFinder pathFinder = new AstarPathFinder(world);
         for (final Position vacantPosition : vacantPositions) {
-            addBeing(new Pawn(vacantPosition, vacantPosition, random, pathFinder));
+            pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder));
         }
+        setBeings(pawns);
+    }
+
+    public IInventory getInventory() {
+        return inventory;
     }
 
     @Override
