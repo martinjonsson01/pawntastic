@@ -13,7 +13,7 @@ There is a UML class diagram of each package located in the README file of each 
 
 ### Prerequisites
 
-* Java 15 or later
+* [Java 15](https://jdk.java.net/archive/)
 
 To run the latest version of the game, download the jar file from [releases](https://github.com/martinjonsson01/OOPP-WITH-THE-BOIS/releases/) and run it using the command:
 ```terminal
