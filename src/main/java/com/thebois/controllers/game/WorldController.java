@@ -46,8 +46,12 @@ public class WorldController implements IController<GameView> {
                                                                                 tileSize);
         final TerrainController terrainController = new TerrainController(world, tileSize);
         final ColonyController colonyController = new ColonyController(colony, tileSize);
+        final ResourceController resourceController = new ResourceController(world, tileSize);
 
-        controllers = List.of(terrainController, structureController, colonyController);
+        controllers = List.of(terrainController,
+                              resourceController,
+                              structureController,
+                              colonyController);
         inputProcessors = List.of(structureController);
 
         gameView = createGameView(world, colony, tileSize, font);
@@ -59,13 +63,13 @@ public class WorldController implements IController<GameView> {
         final List<IView> views =
             controllers.stream().map(IController::getView).collect(Collectors.toList());
         if (ColonyManagement.DEBUG) {
-            views.addAll(createDebugViews(world, colony, tileSize, font));
+            views.addAll(createDebugViews(colony, tileSize, font));
         }
         return new GameView(views, tileSize);
     }
 
     private List<IView> createDebugViews(
-        final World world, final Colony colony, final float tileSize, final BitmapFont font) {
+        final Colony colony, final float tileSize, final BitmapFont font) {
         final BeingPathDebugView beingPathDebugView = new BeingPathDebugView(colony, tileSize);
         final FrameCounterView frameCounterView = new FrameCounterView(font);
 

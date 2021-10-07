@@ -10,7 +10,7 @@ import com.thebois.models.world.terrains.ITerrain;
  */
 public class TerrainGenerator extends AbstractGenerator {
 
-    private static final float DIRT_THRESHOLD = 0.5f;
+    private static final float DIRT_THRESHOLD = 1000f;
 
     /**
      * Instantiate a Terrain Generator with pre-made settings used for generating values.

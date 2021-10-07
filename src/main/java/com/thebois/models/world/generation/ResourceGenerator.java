@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.thebois.models.world.generation.patterns.IGenerationPattern;
 import com.thebois.models.world.generation.patterns.LargeChunks;
+import com.thebois.models.world.generation.patterns.SmallerChunks;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceFactory;
 import com.thebois.models.world.resources.ResourceType;
@@ -23,7 +24,7 @@ public class ResourceGenerator extends AbstractGenerator {
     static {
         RESOURCE_PATTERN = new HashMap<>();
         RESOURCE_PATTERN.put(ResourceType.WATER, new LargeChunks());
-        RESOURCE_PATTERN.put(ResourceType.TREE, new LargeChunks());
+        RESOURCE_PATTERN.put(ResourceType.TREE, new SmallerChunks());
     }
 
     static {
@@ -32,6 +33,8 @@ public class ResourceGenerator extends AbstractGenerator {
         RESOURCE_THRESHOLD.put(ResourceType.TREE, TREE_THRESHOLD);
     }
 
+    private int seed;
+
     /**
      * Instantiate a Resource Generator with pre-made settings used for generating values.
      *
@@ -39,6 +42,7 @@ public class ResourceGenerator extends AbstractGenerator {
      */
     public ResourceGenerator(final int seed) {
         super(new LargeChunks(), seed);
+        this.seed = seed;
     }
 
     /**
