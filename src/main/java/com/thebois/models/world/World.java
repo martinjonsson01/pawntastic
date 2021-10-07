@@ -80,6 +80,14 @@ public class World implements IWorld, IFinder {
             final int posX = (int) position.getPosX();
             canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
         });
+        // Replace terrain with any possible resource.
+        MatrixUtils.forEachElement(resourceMatrix,
+                                   maybeResource -> maybeResource.ifPresent(resource -> {
+                                       final Position position = resource.getPosition();
+                                       final int posY = (int) position.getPosY();
+                                       final int posX = (int) position.getPosX();
+                                       canonicalMatrix[posY][posX] = resource.deepClone();
+                                   }));
         // Replace terrain with any possible structure.
         MatrixUtils.forEachElement(structureMatrix,
                                    maybeStructure -> maybeStructure.ifPresent(structure -> {
@@ -101,9 +109,16 @@ public class World implements IWorld, IFinder {
         final List<Position> emptyPositions = new ArrayList<>();
         MatrixUtils.forEachElement(canonicalMatrix, tile -> {
             if (emptyPositions.size() >= count) return;
-            emptyPositions.add(tile.getPosition());
+            if (isPositionEmpty(tile.getPosition())) {
+                emptyPositions.add(tile.getPosition());
+            }
         });
         return emptyPositions;
+    }
+
+    private boolean isPositionEmpty(final Position position) {
+        return canonicalMatrix[(int) position.getPosY()][(int) position.getPosX()].getCost()
+                 < Float.MAX_VALUE;
     }
 
     /**
@@ -200,7 +215,7 @@ public class World implements IWorld, IFinder {
         if (posIntX < 0 || posIntX >= structureMatrix[posIntY].length) {
             return false;
         }
-        return structureMatrix[posIntY][posIntX].isEmpty();
+        return isPositionEmpty(position);
     }
 
     private void postObstacleEvent(final int posX, final int posY) {

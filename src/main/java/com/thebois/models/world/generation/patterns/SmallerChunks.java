@@ -13,19 +13,19 @@ public class SmallerChunks implements IGenerationPattern {
 
     @Override
     public float getPersistence() {
-        final float persistence = 0.5f;
+        final float persistence = 1f;
         return persistence;
     }
 
     @Override
     public int getOctave() {
-        final int octave = 3;
+        final int octave = 4;
         return octave;
     }
 
     @Override
     public float getAmplitude() {
-        final float amplitude = 3f;
+        final float amplitude = 1f;
         return amplitude;
     }
 
