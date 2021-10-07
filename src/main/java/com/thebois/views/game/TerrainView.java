@@ -17,7 +17,7 @@ import com.thebois.views.TextureUtils;
  */
 public class TerrainView implements IView {
 
-    private static final Color GRASS_COLOR = new Color(0.005f, 0.196f, 0.107f, 1);
+    private static final Color GRASS_COLOR = Color.valueOf("#008000");
     private static final Color DIRT_COLOR = Color.valueOf("#bbc200");
     private static final Map<TerrainType, Color> TERRAIN_COLOR;
 

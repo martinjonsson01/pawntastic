@@ -48,4 +48,26 @@ public final class TextureUtils {
         return squareTexture;
     }
 
+    /**
+     * Creates a new instance of a triangle shaped texture with the side length.
+     *
+     * @param sideLength The size of the triangle texture, in pixels.
+     *
+     * @return The trinagle texture.
+     */
+    public static Texture createTriangleTexture(final float sideLength) {
+        final int roundedTileSize = (int) sideLength;
+        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fillTriangle(roundedTileSize / 2,
+                            0,
+                            0,
+                            roundedTileSize,
+                            roundedTileSize,
+                            roundedTileSize);
+        final Texture squareTexture = new Texture(pixmap);
+        pixmap.dispose();
+        return squareTexture;
+    }
+
 }

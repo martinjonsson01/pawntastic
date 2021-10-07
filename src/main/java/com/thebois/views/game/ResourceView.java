@@ -17,9 +17,10 @@ import com.thebois.views.TextureUtils;
  */
 public class ResourceView implements IView {
 
-    private static final Color WATER_COLOR = Color.valueOf("#0020D5");
-    private static final Color TREE_COLOR = Color.valueOf("#00D30D");
+    private static final Color WATER_COLOR = Color.valueOf("#1E90FF");
+    private static final Color TREE_COLOR = Color.valueOf("#006400");
     private static final Map<ResourceType, Color> RESOURCE_COLOR;
+    private final Map<ResourceType, Texture> resourceTextureMap;
 
     static {
         RESOURCE_COLOR = new HashMap<>();
@@ -29,7 +30,6 @@ public class ResourceView implements IView {
 
     private final float tileSize;
     private Iterable<IResource> resourceTiles = new ArrayList<>();
-    private final Texture tileTexture;
 
     /**
      * Creates the Resource view.
@@ -38,7 +38,9 @@ public class ResourceView implements IView {
      */
     public ResourceView(final float tileSize) {
         this.tileSize = tileSize;
-        tileTexture = TextureUtils.createSquareTexture(tileSize);
+        resourceTextureMap = new HashMap<>();
+        resourceTextureMap.put(ResourceType.WATER, TextureUtils.createSquareTexture(tileSize));
+        resourceTextureMap.put(ResourceType.TREE, TextureUtils.createTriangleTexture(tileSize));
     }
 
     /**
@@ -55,7 +57,7 @@ public class ResourceView implements IView {
         for (final IResource resource : resourceTiles) {
             batch.setColor(RESOURCE_COLOR.get(resource.getType()));
             batch.draw(
-                tileTexture,
+                resourceTextureMap.get(resource.getType()),
                 offsetX + resource.getPosition().getPosX() * tileSize,
                 offsetY + resource.getPosition().getPosY() * tileSize,
                 tileSize,
@@ -65,7 +67,7 @@ public class ResourceView implements IView {
 
     @Override
     public void dispose() {
-        tileTexture.dispose();
+        resourceTextureMap.values().forEach(Texture::dispose);
     }
 
 }
