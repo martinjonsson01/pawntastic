@@ -40,12 +40,12 @@ public abstract class AbstractResource implements IResource {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final AbstractResource that = (AbstractResource) o;
-        return Objects.equals(position, that.position) && Objects.equals(getType(), that.getType());
+        return Objects.equals(position, that.position);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position, getType());
+        return Objects.hash(position);
     }
 
 }

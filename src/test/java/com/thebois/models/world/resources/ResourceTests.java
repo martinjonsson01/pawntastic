@@ -91,6 +91,21 @@ public class ResourceTests {
     }
 
     @Test
+    public void resourceIsNotEqualToResourceWithOtherType() {
+        // Arrange
+        final Position position = new Position(1, 1);
+        final IResource resource1 = new Water(position);
+        final IResource resource2 = new Tree(position);
+        final boolean isEqual;
+
+        // Act
+        isEqual = resource1.equals(resource2);
+
+        // Assert
+        assertThat(isEqual).isFalse();
+    }
+
+    @Test
     public void resourceIsEqualToIdenticalResource() {
         // Arrange
         final Position position = new Position(1, 1);
