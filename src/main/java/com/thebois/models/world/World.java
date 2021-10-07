@@ -54,12 +54,12 @@ public class World implements IWorld, IFinder {
         return structuresMatrix;
     }
 
-    private ITerrain[][] setUpTerrain(final int seed) {
+    protected ITerrain[][] setUpTerrain(final int seed) {
         final TerrainGenerator terrainGenerator = new TerrainGenerator(seed);
         return terrainGenerator.generateTerrainMatrix(worldSize);
     }
 
-    private Optional<IResource>[][] setUpResources(final int seed) {
+    protected Optional<IResource>[][] setUpResources(final int seed) {
         final ResourceGenerator resourceGenerator = new ResourceGenerator(seed);
         return resourceGenerator.generateResourceMatrix(worldSize);
     }

@@ -16,7 +16,7 @@ import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.structures.IStructure;
-import com.thebois.models.world.terrains.Dirt;
+import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
 
 import static org.assertj.core.api.Assertions.*;
@@ -44,7 +44,7 @@ public class WorldTests {
     }
 
     private static ITile mockTile(final int positionX, final int positionY) {
-        return new Dirt(positionX, positionY);
+        return new Grass(positionX, positionY);
     }
 
     public static Stream<Arguments> getPositionOutSideOfWorld() {
@@ -79,10 +79,10 @@ public class WorldTests {
 
     private Collection<ITerrain> mockTerrainTiles() {
         final ArrayList<ITerrain> terrainTiles = new ArrayList<>();
-        terrainTiles.add(new Dirt(0, 0));
-        terrainTiles.add(new Dirt(0, 1));
-        terrainTiles.add(new Dirt(1, 0));
-        terrainTiles.add(new Dirt(1, 1));
+        terrainTiles.add(new Grass(0, 0));
+        terrainTiles.add(new Grass(0, 1));
+        terrainTiles.add(new Grass(1, 0));
+        terrainTiles.add(new Grass(1, 1));
         return terrainTiles;
     }
 
@@ -104,7 +104,7 @@ public class WorldTests {
     public void getNeighboursOfReturnsExpectedNeighbours(
         final ITile tile, final Iterable<Position> expectedNeighbours) {
         // Arrange
-        final IWorld world = new World(3, 0);
+        final IWorld world = new World(3, 15);
 
         // Act
         final Iterable<ITile> actualNeighbours = world.getNeighboursOf(tile);
@@ -157,7 +157,7 @@ public class WorldTests {
     @Test
     public void numberOfStructuresIncreasesIfStructureSuccessfullyPlaced() {
         // Arrange
-        final World world = new World(2, 0);
+        final World world = new World(2, 15);
         final Position position = new Position(1, 1);
         final Collection<IStructure> structures;
         final boolean isBuilt;
@@ -225,7 +225,7 @@ public class WorldTests {
     public void instantiateWithPawnCountCreatesOnlyAsManyBeingsAsFitInTheWorld() {
         // Arrange
         final int pawnFitCount = 4;
-        final World world = new World(2, 0);
+        final World world = new World(2, 15);
         final Iterable<Position> vacantPositions = world.findEmptyPositions(5);
         final IPathFinder pathFinder = new AstarPathFinder(world);
 

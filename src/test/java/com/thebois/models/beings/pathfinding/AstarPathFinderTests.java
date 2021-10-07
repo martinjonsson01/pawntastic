@@ -2,6 +2,7 @@ package com.thebois.models.beings.pathfinding;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,9 @@ import com.thebois.models.Position;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.World;
+import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.terrains.Grass;
+import com.thebois.models.world.terrains.ITerrain;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -77,7 +80,7 @@ public class AstarPathFinderTests {
      * @return The mocked world.
      */
     private IWorld mock3x3WorldWithObstacles() {
-        final World world = new World(3, 0);
+        final World world = new MockWorld(3, 0);
 
         world.createStructure(1, 0);
         world.createStructure(1, 1);
@@ -109,7 +112,7 @@ public class AstarPathFinderTests {
     public void pathReturnsPositionsThatLeadToDestination(
         final Position from, final Position destination) {
         // Arrange
-        final IWorld world = new World(30, 0);
+        final IWorld world = new MockWorld(30, 0);
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act
@@ -123,8 +126,9 @@ public class AstarPathFinderTests {
     @MethodSource("getPositionsAndDestinations")
     public void pathReturnsEnoughPositionsToCoverDistance(
         final Position from, final Position destination) {
+
         // Arrange
-        final IWorld world = new World(30, 0);
+        final IWorld world = new MockWorld(30, 0);
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act
@@ -133,6 +137,45 @@ public class AstarPathFinderTests {
         // Assert
         final int expectedPositions = from.manhattanDistanceTo(destination) + 1;
         assertThat(path.size()).isEqualTo(expectedPositions);
+    }
+
+    private class MockWorld extends World {
+
+        /**
+         * Initiates the world with the given size.
+         *
+         * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
+         * @param seed      The seed used to generate the world.
+         */
+        private final int worldSize;
+
+        MockWorld(final int worldSize, final int seed) {
+            super(worldSize, worldSize);
+            this.worldSize = worldSize;
+        }
+
+        @Override
+        protected Optional<IResource>[][] setUpResources(final int seed) {
+            final Optional<IResource>[][] resourceMatrix = new Optional[seed][seed];
+            for (int y = 0; y < seed; y++) {
+                for (int x = 0; x < seed; x++) {
+                    resourceMatrix[y][x] = Optional.empty();
+                }
+            }
+            return resourceMatrix;
+        }
+
+        @Override
+        protected ITerrain[][] setUpTerrain(final int seed) {
+            final ITerrain[][] terrainMatrix = new ITerrain[seed][seed];
+            for (int y = 0; y < seed; y++) {
+                for (int x = 0; x < seed; x++) {
+                    terrainMatrix[y][x] = new Grass(x, y);
+                }
+            }
+            return terrainMatrix;
+        }
+
     }
 
 }
