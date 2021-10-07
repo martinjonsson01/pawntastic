@@ -21,10 +21,11 @@ public final class RoleFactory {
      * @throws java.util.NoSuchElementException If there is no such role
      */
     public static AbstractRole fromType(final RoleType roleType) {
-        return all().stream()
-                    .filter(role -> role.getType().equals(roleType))
-                    .findFirst()
-                    .orElseThrow();
+        return all()
+            .stream()
+            .filter(role -> role.getType().equals(roleType))
+            .findFirst()
+            .orElseThrow();
     }
 
     /**

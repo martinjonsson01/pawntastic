@@ -12,8 +12,4 @@ public enum ResourceType {
      * Tree Resource.
      */
     TREE,
-    /**
-     * Rock Resource.
-     */
-    ROCK,
 }
