@@ -14,8 +14,9 @@ public final class StructureView implements IView {
 
     private final float tileSize;
     private Iterable<IStructure> structures;
-    private final Color houseColor = new Color(0.4f, 0.2f, 0f, 1);
-    private Texture houseTexture;
+    private final Color houseColor = Color.valueOf("#CD853F");
+    private final Texture houseTexture;
+    private final Texture ceilingTexture;
 
     /**
      * Creates an instance of a Structure view.
@@ -26,19 +27,29 @@ public final class StructureView implements IView {
         this.tileSize = tileSize;
 
         houseTexture = TextureUtils.createSquareTexture(tileSize);
+        ceilingTexture = TextureUtils.createTriangleTexture(tileSize);
     }
 
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         batch.setColor(houseColor);
         for (final IStructure structure : structures) {
+            // Draws Main house
             batch.setColor(houseColor);
             batch.draw(
                 houseTexture,
                 offsetX + structure.getPosition().getPosX() * tileSize,
                 offsetY + structure.getPosition().getPosY() * tileSize,
                 tileSize,
-                tileSize);
+                tileSize / 2);
+            // Draws roof
+            batch.setColor(Color.BLACK);
+            batch.draw(
+                ceilingTexture,
+                offsetX + structure.getPosition().getPosX() * tileSize,
+                offsetY + (structure.getPosition().getPosY() + 0.5f) * tileSize,
+                tileSize,
+                tileSize / 2);
         }
     }
 
