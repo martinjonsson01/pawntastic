@@ -1,7 +1,6 @@
 package com.thebois.models.beings;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -12,6 +11,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import com.thebois.models.Position;
+import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.Log;
@@ -39,30 +40,13 @@ public class ColonyTests {
         final IWorld mockWorld = mock(IWorld.class);
         when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
 
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+
         // Act
-        final Colony colony = new Colony(positions, mockWorld);
+        final Colony colony = new Colony(positions, pathFinder);
 
         // Assert
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);
-    }
-
-    @Test
-    public void updateCallsUpdateOnAllBeings() {
-        // Arrange
-        final int beingCount = 25;
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
-        final Colony colony = new Colony(pawns);
-
-        // Act
-        colony.update();
-
-        // Assert
-        for (final IBeing pawn : pawns) {
-            verify(pawn, times(1)).update();
-        }
     }
 
     @ParameterizedTest
@@ -136,8 +120,9 @@ public class ColonyTests {
     }
 
     private Colony mockColony() {
-        final Collection<IBeing> pawns = new ArrayList<>(0);
-        return new Colony(pawns);
+        final List<Position> positions = new ArrayList<>();
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        return new Colony(positions, pathFinder);
     }
 
     @Test
@@ -251,6 +236,37 @@ public class ColonyTests {
 
         // Assert
         assertThat(colony.hasItem(ItemType.LOG, 2)).isTrue();
+    }
+
+    @Test
+    public void getInventoryReturnsTheColonyInventory() {
+        // Arrange
+        final Colony colony = mockColony();
+        final ArrayList<IItem> items = new ArrayList<>();
+        items.add(new Log());
+        items.add(new Log());
+
+        // Act
+        final IInventory inventory = colony.getInventory();
+        final boolean colonyResult = colony.hasItem(ItemType.LOG, 2);
+        final boolean inventoryResult = inventory.hasItem(ItemType.LOG, 2);
+
+        // Assert
+        assertThat(colonyResult).isEqualTo(inventoryResult);
+    }
+
+    @Test
+    public void ensureBeingsUpdatesWhenColonyUpdates() {
+        // Arrange
+        final IBeing being = Mockito.mock(IBeing.class);
+        final Colony colony = mockColony();
+
+        // Act
+        colony.addBeing(being);
+        colony.update();
+
+        // Assert
+        verify(being, times(1)).update();
     }
 
 }

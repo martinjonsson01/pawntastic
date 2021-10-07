@@ -13,7 +13,8 @@ import org.mockito.Mockito;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
-import com.thebois.models.inventory.IInventory;
+import com.thebois.models.beings.pathfinding.AstarPathFinder;
+import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.terrains.Dirt;
 import com.thebois.models.world.terrains.ITerrain;
@@ -65,39 +66,15 @@ public class WorldTests {
     }
 
     @Test
-    public void getColonyInventoryReturnsNotNull() {
+    public void worldInitiated() {
         // Arrange
-        final World world = new World(2, 5, 0);
+        final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
+        final World world = new World(2, 0);
 
         // Act
-        final IInventory inventory = world.getColonyInventory();
-
+        final Collection<ITerrain> terrainTiles = world.getTerrainTiles();
         // Assert
-        assertThat(inventory).isNotNull();
-    }
-
-    public static Stream<Arguments> getWorldSizeAndPawnCount() {
-        return Stream.of(Arguments.of(2, 4),
-                         Arguments.of(100, 40),
-                         Arguments.of(25, 5),
-                         Arguments.of(10, 100));
-    }
-
-    @ParameterizedTest
-    @MethodSource("getWorldSizeAndPawnCount")
-    public void worldInitiated(final int worldSize, final int pawnCount) {
-        // Arrange
-        final World world = new World(worldSize, pawnCount, 0);
-        final int actualWorldSize;
-        final int actualPawnCount;
-
-        // Act
-        actualWorldSize = (int) Math.sqrt(world.getTerrainTiles().size());
-        actualPawnCount = world.getColony().getBeings().size();
-
-        // Assert
-        assertThat(actualPawnCount).as("Pawn count").isEqualTo(pawnCount);
-        assertThat(actualWorldSize).as("World size").isEqualTo(worldSize);
+        assertThat(terrainTiles).containsAll(expectedTerrainTiles);
     }
 
     private Collection<ITerrain> mockTerrainTiles() {
@@ -112,7 +89,8 @@ public class WorldTests {
     @Test
     public void worldFind() {
         // Arrange
-        final World world = new World(2, 5, 0);
+
+        final World world = new World(2, 0);
 
         // Act
         final Object worldObject = world.find();
@@ -126,7 +104,7 @@ public class WorldTests {
     public void getNeighboursOfReturnsExpectedNeighbours(
         final ITile tile, final Iterable<Position> expectedNeighbours) {
         // Arrange
-        final IWorld world = new World(3, 0, 0);
+        final IWorld world = new World(3, 0);
 
         // Act
         final Iterable<ITile> actualNeighbours = world.getNeighboursOf(tile);
@@ -142,7 +120,7 @@ public class WorldTests {
     public void getTileAtReturnsTileAtGivenPosition() {
         // Arrange
         final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = new World(2, 0, 0);
+        final World world = new World(2, 0);
 
         for (final ITile tile : expectedTerrainTiles) {
             // Act
@@ -157,7 +135,7 @@ public class WorldTests {
     @MethodSource("getOutOfBoundsPositions")
     public void getTileAtThrowsWhenOutOfBounds(final Position outOfBounds) {
         // Arrange
-        final World world = new World(2, 0, 0);
+        final World world = new World(2, 0);
 
         // Assert
         assertThatThrownBy(() -> world.getTileAt(outOfBounds)).isInstanceOf(
@@ -167,7 +145,7 @@ public class WorldTests {
     @Test
     public void createWorldWithNoStructures() {
         // Arrange
-        final World world = new World(2, 0, 0);
+        final World world = new World(2, 0);
 
         // Act
         final Collection<IStructure> structures = world.getStructures();
@@ -179,7 +157,7 @@ public class WorldTests {
     @Test
     public void numberOfStructuresIncreasesIfStructureSuccessfullyPlaced() {
         // Arrange
-        final World world = new World(2, 0, 0);
+        final World world = new World(2, 0);
         final Position position = new Position(1, 1);
         final Collection<IStructure> structures;
         final boolean isBuilt;
@@ -196,7 +174,7 @@ public class WorldTests {
     @MethodSource("getPositionOutSideOfWorld")
     public void structureFailedToBePlaced(final Position placementPosition) {
         // Arrange
-        final World world = new World(2, 0, 0);
+        final World world = new World(2, 0);
         final Collection<IStructure> structures;
         final boolean isBuilt;
 
@@ -212,7 +190,7 @@ public class WorldTests {
     @Test
     public void numberOfStructuresDoesNotChangeIfStructuresPlacedOutsideWorld() {
         // Arrange
-        final World world = new World(2, 0, 0);
+        final World world = new World(2, 0);
         final Position position1 = new Position(2, 2);
         final Position position2 = new Position(-1, -1);
         final Collection<IStructure> structures;
@@ -227,62 +205,34 @@ public class WorldTests {
     }
 
     @Test
-    public void getColonyReturnsSameColony() {
-        // Arrange
-        final Colony colony = Mockito.mock(Colony.class);
-        final World world = new World(2, colony, 0);
-
-        // Assert
-        assertThat(world.getColony()).isEqualTo(colony);
-    }
-
-    @Test
-    public void getRoleAllocatorReturnsRoleAllocator() {
-        // Arrange
-        final Colony colony = Mockito.mock(Colony.class);
-        final World world = new World(2, colony, 0);
-
-        // Assert
-        assertThat(world.getRoleAllocator()).isEqualTo(colony);
-    }
-
-    @Test
     public void instantiateWithPawnCountCreatesCorrectNumberOfBeings() {
         // Arrange
-        final int pawnCount = 5;
-
-        // Act
-        final World world = new World(3, pawnCount, 0);
-
+        final Colony colony = mockColonyWithMockBeings();
         // Assert
-        assertThat(world.getColony().getBeings()).size().isEqualTo(pawnCount);
+        assertThat(colony.getBeings()).size().isEqualTo(5);
+    }
+
+    private Colony mockColonyWithMockBeings() {
+        final List<Position> vacantPositions = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            vacantPositions.add(new Position(0, 0));
+        }
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        return new Colony(vacantPositions, pathFinder);
     }
 
     @Test
     public void instantiateWithPawnCountCreatesOnlyAsManyBeingsAsFitInTheWorld() {
         // Arrange
-        final int pawnCount = 5;
         final int pawnFitCount = 4;
+        final World world = new World(2, 0);
+        final Iterable<Position> vacantPositions = world.findEmptyPositions(5);
+        final IPathFinder pathFinder = new AstarPathFinder(world);
 
-        // Act
-        final World world = new World(2, pawnCount, 0);
+        final Colony colony = new Colony(vacantPositions, pathFinder);
 
         // Assert
-        assertThat(world.getColony().getBeings()).size().isEqualTo(pawnFitCount);
-    }
-
-    @Test
-    public void testsIfColonyGetsUpdate() {
-        // Arrange
-        final Colony colony = Mockito.mock(Colony.class);
-        final World world = new World(2, colony, 0);
-
-        // Act
-        world.update();
-
-        // Arrange
-        Mockito.verify(colony, Mockito.atLeastOnce()).update();
-        assertThat(world.getColony()).isEqualTo(colony);
+        assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
     }
 
 }

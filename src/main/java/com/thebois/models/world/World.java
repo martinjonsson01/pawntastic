@@ -9,16 +9,12 @@ import com.thebois.ColonyManagement;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
-import com.thebois.models.beings.AbstractBeingGroup;
-import com.thebois.models.beings.Colony;
-import com.thebois.models.beings.roles.IRoleAllocator;
-import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.generation.ResourceGenerator;
-import com.thebois.models.inventory.IInventory;
+import com.thebois.models.world.generation.TerrainGenerator;
+import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.terrains.ITerrain;
-import com.thebois.models.world.generation.TerrainGenerator;
 import com.thebois.utils.MatrixUtils;
 
 /**
@@ -31,35 +27,20 @@ public class World implements IWorld, IFinder {
     private final Optional<IResource>[][] resourceMatrix;
     private int worldSize;
     private ITile[][] canonicalMatrix;
-    private Colony colony;
 
     /**
-     * Initiates the world with the given size and the amount of pawns in the colony.
+     * Initiates the world with the given size.
      *
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
-     * @param pawnCount The amount of beings to initialize the players' BeingGroup with
      * @param seed      The seed used to generate the world.
      */
-    public World(final int worldSize, final int pawnCount, final int seed) {
-        this(worldSize, null, seed);
-        this.colony = initColony(pawnCount);
-    }
-
-    /**
-     * Initiates the world with the given size and colony.
-     *
-     * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
-     * @param colony    The Colony that should be added to the world.
-     * @param seed      The seed used to generate the world.
-     */
-    public World(final int worldSize, final Colony colony, final int seed) {
+    public World(final int worldSize, final int seed) {
         this.worldSize = worldSize;
         terrainMatrix = setUpTerrain(seed);
         structureMatrix = setUpStructures();
         resourceMatrix = setUpResources(seed);
         canonicalMatrix = new ITile[worldSize][worldSize];
         updateCanonicalMatrix();
-        this.colony = colony;
     }
 
     private Optional<IStructure>[][] setUpStructures() {
@@ -81,10 +62,6 @@ public class World implements IWorld, IFinder {
     private Optional<IResource>[][] setUpResources(final int seed) {
         final ResourceGenerator resourceGenerator = new ResourceGenerator(seed);
         return resourceGenerator.generateResourceMatrix(worldSize);
-    }
-
-    private Colony initColony(final int pawnCount) {
-        return new Colony(findEmptyPositions(pawnCount), this);
     }
 
     /**
@@ -113,7 +90,14 @@ public class World implements IWorld, IFinder {
                                    }));
     }
 
-    private Iterable<Position> findEmptyPositions(final int count) {
+    /**
+     * Creates a list of tiles that are not occupied by a structure or resource.
+     *
+     * @param count The amount of empty positions that needs to be found.
+     *
+     * @return List of empty positions.
+     */
+    public Iterable<Position> findEmptyPositions(final int count) {
         final List<Position> emptyPositions = new ArrayList<>();
         MatrixUtils.forEachElement(canonicalMatrix, tile -> {
             if (emptyPositions.size() >= count) return;
@@ -222,41 +206,6 @@ public class World implements IWorld, IFinder {
     private void postObstacleEvent(final int posX, final int posY) {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(posX, posY);
         ColonyManagement.BUS.post(obstacleEvent);
-    }
-
-    /**
-     * Returns the players' colony.
-     *
-     * @return the colony.
-     */
-    public AbstractBeingGroup getColony() {
-        return colony;
-    }
-
-    /**
-     * Returns the players' colony with only inventory methods allowed. (Temporary until we refactor
-     * world/colony)
-     *
-     * @return the colony.
-     */
-    public IInventory getColonyInventory() {
-        return colony;
-    }
-
-    /**
-     * Returns the role allocator for the players' colony.
-     *
-     * @return the role allocator.
-     */
-    public IRoleAllocator getRoleAllocator() {
-        return colony;
-    }
-
-    /**
-     * Updates the state of the world.
-     */
-    public void update() {
-        colony.update();
     }
 
     @Override

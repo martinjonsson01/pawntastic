@@ -13,8 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.google.common.eventbus.EventBus;
 
-import com.thebois.controllers.info.InfoController;
 import com.thebois.controllers.game.WorldController;
+import com.thebois.controllers.info.InfoController;
+import com.thebois.models.beings.Colony;
+import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
 import com.thebois.views.IProjector;
@@ -42,7 +44,7 @@ public class ColonyManagement extends Game {
     private static final float VIEWPORT_WIDTH = 1300;
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
-    private static final int PAWN_COUNT = 50;
+    private static final int PAWN_POSITIONS = 50;
     private float tileSize;
     // LibGDX assets
     private BitmapFont font;
@@ -50,6 +52,7 @@ public class ColonyManagement extends Game {
     private Skin uiSkin;
     // Model
     private World world;
+    private Colony colony;
     // Screens
     private GameScreen gameScreen;
     // Controllers
@@ -72,8 +75,8 @@ public class ColonyManagement extends Game {
         final IProjector projector = new ViewportWrapper(viewport);
 
         // Controllers
-        this.worldController = new WorldController(world, projector, tileSize, font);
-        this.infoController = new InfoController(world, uiSkin);
+        this.worldController = new WorldController(world, colony, projector, tileSize, font);
+        this.infoController = new InfoController(colony, uiSkin);
 
         // Screens
         gameScreen = new GameScreen(viewport,
@@ -98,7 +101,9 @@ public class ColonyManagement extends Game {
     }
 
     private void createModels() {
-        world = new World(WORLD_SIZE, PAWN_COUNT, 0);
+
+        world = new World(WORLD_SIZE, 0);
+        colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS), new AstarPathFinder(world));
     }
 
     private void generateFont() {
@@ -128,7 +133,7 @@ public class ColonyManagement extends Game {
     @Override
     public void render() {
         super.render();
-        world.update();
+        colony.update();
         worldController.update();
         infoController.update();
     }

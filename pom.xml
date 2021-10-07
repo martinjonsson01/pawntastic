@@ -15,6 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>15</java.version>
         <gdx.version>1.10.0</gdx.version>
+        <exec.mainClass>com.thebois.Main</exec.mainClass>
     </properties>
 
     <dependencies>
@@ -245,5 +246,21 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- Tools used for quality assurance -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+                <version>2.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.15.0</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>
