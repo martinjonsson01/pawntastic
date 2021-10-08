@@ -17,8 +17,8 @@ import com.thebois.utils.MatrixUtils;
  */
 public class TerrainGenerator extends AbstractGenerator {
 
-    private static final float DIRT_THRESHOLD = 1000f;
-    private static final float SAND_THRESHOLD = 1000f;
+    private static final float DIRT_THRESHOLD = 0.5f;
+    private static final float SAND_THRESHOLD = 0.35f;
     private static final Map<TerrainType, IGenerationPattern> TERRAIN_PATTERN;
     private static final Map<TerrainType, Float> TERRAIN_THRESHOLD;
 

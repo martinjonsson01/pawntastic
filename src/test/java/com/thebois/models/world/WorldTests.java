@@ -33,12 +33,10 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(
-                             mockTile(1, 1),
-                             List.of(mockPosition(1, 0),
-                                     mockPosition(0, 1),
-                                     mockPosition(2, 1),
-                                     mockPosition(1, 2))));
+                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
+                                                              mockPosition(0, 1),
+                                                              mockPosition(2, 1),
+                                                              mockPosition(1, 2))));
     }
 
     private static Position mockPosition(final int positionX, final int positionY) {
@@ -71,7 +69,7 @@ public class WorldTests {
     public void worldInitiated() {
         // Arrange
         final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = new World(2, 0);
+        final World world = new World(2, 15);
 
         // Act
         final Collection<ITerrain> terrainTiles = world.getTerrainTiles();
