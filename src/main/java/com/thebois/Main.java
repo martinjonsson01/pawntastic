@@ -24,13 +24,14 @@ public final class Main {
     public static void main(String[] args) {
         final Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 
-        config.setTitle("ColonyManagement");
-        config.setIdleFPS(IDLE_FPS);
+        config.setTitle("Pawntastic");
+        config.setWindowIcon("icon.png");
+        config.setForegroundFPS(IDLE_FPS);
         config.useVsync(true);
 
         config.setWindowedMode(WIDTH, HEIGHT);
 
-        new Lwjgl3Application(new ColonyManagement(), config);
+        new Lwjgl3Application(new Pawntastic(), config);
     }
 
 }
