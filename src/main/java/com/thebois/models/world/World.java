@@ -65,10 +65,12 @@ public class World implements IWorld, IFinder {
         });
         // Replace terrain with any possible structure.
         MatrixUtils.forEachElement(structureMatrix, structure -> {
-            final Position position = structure.getPosition();
-            final int posY = (int) position.getPosY();
-            final int posX = (int) position.getPosX();
-            canonicalMatrix[posY][posX] = structure.deepClone();
+            if (structure != null) {
+                final Position position = structure.getPosition();
+                final int posY = (int) position.getPosY();
+                final int posX = (int) position.getPosX();
+                canonicalMatrix[posY][posX] = structure.deepClone();
+            }
         });
     }
 
