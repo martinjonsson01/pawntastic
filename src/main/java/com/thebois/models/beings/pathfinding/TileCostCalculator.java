@@ -1,5 +1,6 @@
 package com.thebois.models.beings.pathfinding;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ import com.thebois.models.world.ITile;
 /**
  * Calculates the cost of moving to a tile.
  */
-class TileCostCalculator {
+class TileCostCalculator implements Serializable {
 
     /**
      * For a ITile, costFromStart[ITile] is the cost of the cheapest path from start to the ITile

@@ -1,5 +1,11 @@
 package com.thebois;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -66,7 +72,15 @@ public class ColonyManagement extends Game {
         setUpUserInterfaceSkin();
 
         // Model
-        createModels();
+        try {
+            createModels();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         // Camera & Viewport
         final OrthographicCamera camera = new OrthographicCamera();
         final FitViewport viewport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, camera);
@@ -100,9 +114,18 @@ public class ColonyManagement extends Game {
         uiSkin.load(Gdx.files.internal("uiskin.json"));
     }
 
-    private void createModels() {
+    private void createModels() throws IOException, ClassNotFoundException {
         world = new World(WORLD_SIZE);
-        colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS), new AstarPathFinder(world));
+        try {
+            final FileInputStream fileInputStream = new FileInputStream("outfile.txt");
+            final ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            colony = (Colony) objectInputStream.readObject();
+            objectInputStream.close();
+        }
+        catch (final IOException exception) {
+            colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS),
+                                new AstarPathFinder(world));
+        }
     }
 
     private void generateFont() {
@@ -124,6 +147,19 @@ public class ColonyManagement extends Game {
     @Override
 
     public void dispose() {
+        try {
+            final FileOutputStream fileOutputStream = new FileOutputStream("outfile.txt");
+            final ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+
+            objectOutputStream.writeObject(colony);
+
+            objectOutputStream.flush();
+            objectOutputStream.close();
+        }
+        catch (IOException error) {
+            error.printStackTrace();
+        }
+
         gameScreen.dispose();
         skinAtlas.dispose();
         uiSkin.dispose();
