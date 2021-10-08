@@ -1,11 +1,12 @@
 package com.thebois.models;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * A two-dimensional location.
  */
-public final class Position implements IDeepClonable<Position> {
+public final class Position implements IDeepClonable<Position>, Serializable {
 
     private float posX;
     private float posY;
