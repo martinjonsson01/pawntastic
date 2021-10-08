@@ -118,7 +118,7 @@ public class World implements IWorld, IFinder {
 
     private boolean isPositionEmpty(final Position position) {
         return canonicalMatrix[(int) position.getPosY()][(int) position.getPosX()].getCost()
-                 < Float.MAX_VALUE;
+               < Float.MAX_VALUE;
     }
 
     /**
@@ -238,7 +238,7 @@ public class World implements IWorld, IFinder {
         for (int neighbourY = startY; neighbourY <= endY; neighbourY++) {
             for (int neighbourX = startX; neighbourX <= endX; neighbourX++) {
                 final ITile neighbour = canonicalMatrix[neighbourY][neighbourX];
-                if (tile.equals(neighbour)) continue;
+                if (position.equals(neighbour.getPosition())) continue;
                 if (isDiagonalTo(tile, neighbour)) continue;
                 tiles.add(neighbour);
             }
@@ -257,7 +257,7 @@ public class World implements IWorld, IFinder {
         if (posX < 0 || posY < 0 || posX >= worldSize || posY >= worldSize) {
             throw new IndexOutOfBoundsException("Given position is outside of the world.");
         }
-        return terrainMatrix[posY][posX];
+        return canonicalMatrix[posY][posX];
     }
 
     private boolean isDiagonalTo(final ITile tile, final ITile neighbour) {
