@@ -32,8 +32,6 @@ public class PerlinNoise {
      *
      * @param settings The settings used to generate the perlin noise.
      * @param seed     A number used to generate the random table.
-     *
-     * @throws IllegalArgumentException If octaves is less than 1.
      */
     public PerlinNoise(
         final IGenerationPattern settings, final int seed) {
