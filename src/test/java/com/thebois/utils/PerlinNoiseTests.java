@@ -85,13 +85,13 @@ public class PerlinNoiseTests {
     @MethodSource("getPositions")
     public void perlinNoiseSameResultWithSameValues(final float posX, final float posY) {
         // Arrange
-        final PerlinNoiseGenerator perlinNoiseGenerator = new PerlinNoiseGenerator();
+        final PerlinNoise perlinNoise = new PerlinNoise();
         final float heightValue1;
         final float heightValue2;
 
         // Act
-        heightValue1 = perlinNoiseGenerator.perlinNoise(posX, posY);
-        heightValue2 = perlinNoiseGenerator.perlinNoise(posX, posY);
+        heightValue1 = perlinNoise.sample(posX, posY);
+        heightValue2 = perlinNoise.sample(posX, posY);
 
         // Assert
         assertThat(heightValue1).isEqualTo(heightValue2);
@@ -102,14 +102,14 @@ public class PerlinNoiseTests {
     public void perlinNoiseDifferentResultWithDifferentValues(
         final float posX1, final float posY1, final float posX2, final float posY2) {
         // Arrange
-        final PerlinNoiseGenerator perlinNoiseGenerator = new PerlinNoiseGenerator();
-        perlinNoiseGenerator.setSeed(0);
+        final PerlinNoise perlinNoise = new PerlinNoise();
+        perlinNoise.setSeed(0);
         final float heightValue1;
         final float heightValue2;
 
         // Act
-        heightValue1 = perlinNoiseGenerator.perlinNoise(posX1, posY1);
-        heightValue2 = perlinNoiseGenerator.perlinNoise(posX2, posY2);
+        heightValue1 = perlinNoise.sample(posX1, posY1);
+        heightValue2 = perlinNoise.sample(posX2, posY2);
 
         // Assert
         assertThat(heightValue1).isNotEqualTo(heightValue2);

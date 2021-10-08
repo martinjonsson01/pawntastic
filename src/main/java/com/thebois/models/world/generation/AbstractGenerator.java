@@ -1,14 +1,14 @@
 package com.thebois.models.world.generation;
 
 import com.thebois.models.world.generation.patterns.IGenerationPattern;
-import com.thebois.utils.PerlinNoiseGenerator;
+import com.thebois.utils.PerlinNoise;
 
 /**
  * Generates noise with given settings.
  */
 public abstract class AbstractGenerator {
 
-    private final PerlinNoiseGenerator perlinNoiseGenerator;
+    private final PerlinNoise perlinNoise;
 
     /**
      * Instantiate a generator with given pattern and seed.
@@ -17,21 +17,21 @@ public abstract class AbstractGenerator {
      * @param seed    The seed used to generate the world.
      */
     public AbstractGenerator(final IGenerationPattern pattern, final int seed) {
-        this.perlinNoiseGenerator = new PerlinNoiseGenerator();
+        this.perlinNoise = new PerlinNoise();
         setGenerationPattern(pattern);
         setSeed(seed);
     }
 
     protected void setGenerationPattern(final IGenerationPattern pattern) {
-        perlinNoiseGenerator.setSettings(pattern);
+        perlinNoise.setSettings(pattern);
     }
 
     protected void setSeed(final int seed) {
-        perlinNoiseGenerator.setSeed(seed);
+        perlinNoise.setSeed(seed);
     }
 
     protected float sample(final float x, final float y) {
-        return perlinNoiseGenerator.perlinNoise(x, y);
+        return perlinNoise.sample(x, y);
     }
 
 }

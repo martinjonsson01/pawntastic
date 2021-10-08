@@ -6,7 +6,7 @@ import com.thebois.models.world.generation.patterns.LargeChunks;
 /**
  * Generator used to generate Perlin Noise.
  */
-public class PerlinNoiseGenerator {
+public class PerlinNoise {
 
     private IGenerationPattern settings;
     private int currentOctave;
@@ -35,7 +35,7 @@ public class PerlinNoiseGenerator {
      *
      * @throws IllegalArgumentException If octaves is less than 1.
      */
-    public PerlinNoiseGenerator(
+    public PerlinNoise(
         final IGenerationPattern settings, final int seed) {
         setSettings(settings);
         setSeed(seed);
@@ -44,7 +44,7 @@ public class PerlinNoiseGenerator {
     /**
      * Instantiate a Perlin Noise Generator.
      */
-    public PerlinNoiseGenerator() {
+    public PerlinNoise() {
         this(new LargeChunks(), 0);
     }
 
@@ -56,7 +56,7 @@ public class PerlinNoiseGenerator {
      *
      * @return The Perlin Noise value.
      */
-    public float perlinNoise(final float coordinateX, final float coordinateY) {
+    public float sample(final float coordinateX, final float coordinateY) {
         double total = 0;
         final int octaves = settings.getOctave();
         final double persistence = settings.getPersistence();
