@@ -3,7 +3,7 @@
     <module name="colony-manager" />
     <extension name="coverage" sample_coverage="false">
       <pattern>
-        <option name="PATTERN" value="com.thebois.abstractions.*" />
+        <option name="PATTERN" value="com.thebois.models.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
