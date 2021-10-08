@@ -19,12 +19,14 @@ public class TerrainView implements IView {
 
     private static final Color GRASS_COLOR = Color.valueOf("#008000");
     private static final Color DIRT_COLOR = Color.valueOf("#bbc200");
+    private static final Color SAND_COLOR = Color.valueOf("#bbc201");
     private static final Map<TerrainType, Color> TERRAIN_COLOR;
 
     static {
         TERRAIN_COLOR = new HashMap<>();
         TERRAIN_COLOR.put(TerrainType.GRASS, GRASS_COLOR);
         TERRAIN_COLOR.put(TerrainType.DIRT, DIRT_COLOR);
+        TERRAIN_COLOR.put(TerrainType.SAND, SAND_COLOR);
     }
 
     private final float tileSize;

@@ -1,15 +1,15 @@
 package com.thebois.utils;
 
+import com.thebois.models.world.generation.patterns.IGenerationPattern;
+import com.thebois.models.world.generation.patterns.LargeChunks;
+
 /**
  * Generator used to generate Perlin Noise.
  */
 public class PerlinNoiseGenerator {
 
-    private int octaves = 1;
+    private IGenerationPattern settings;
     private int currentOctave;
-    private float amplitude;
-    private double frequency;
-    private double persistence;
     private int seed;
     private final int[] primeNumberArray = {
         15731,
@@ -30,32 +30,22 @@ public class PerlinNoiseGenerator {
     /**
      * Instantiate a Perlin Noise Generator with given arguments.
      *
-     * @param octaves     Number of octaves used for generating perlin noise, A number equal or
-     *                    greater than 1.
-     * @param amplitude   The amplitude used to amplify the resulting noise.
-     * @param frequency   Used to decide how big the square should be.
-     * @param persistence Used to decide much the noise should change per addition.
-     * @param seed        A number used to generate the random table.
+     * @param settings The settings used to generate the perlin noise.
+     * @param seed     A number used to generate the random table.
      *
      * @throws IllegalArgumentException If octaves is less than 1.
      */
-    public PerlinNoiseGenerator(final int octaves,
-                                final float amplitude,
-                                final double frequency,
-                                final double persistence,
-                                final int seed) {
-        setOctaves(octaves);
-        this.amplitude = amplitude;
-        this.frequency = frequency;
-        this.persistence = persistence;
+    public PerlinNoiseGenerator(
+        final IGenerationPattern settings, final int seed) {
+        setSettings(settings);
         setSeed(seed);
     }
 
     /**
-     * Instantiate a Perlin Noise Generator with default settings equals to 1.
+     * Instantiate a Perlin Noise Generator.
      */
     public PerlinNoiseGenerator() {
-        this(1, 1, 1, 1, 1);
+        this(new LargeChunks(), 0);
     }
 
     /**
@@ -68,17 +58,20 @@ public class PerlinNoiseGenerator {
      */
     public float perlinNoise(final float coordinateX, final float coordinateY) {
         double total = 0;
-
+        final int octaves = settings.getOctave();
+        final double persistence = settings.getPersistence();
+        final double frequency = settings.getFrequency();
+        final double amplitude = settings.getAmplitude();
         for (int i = 0; i < octaves; i++) {
             currentOctave = i;
             final double octaveAmplification = Math.pow(persistence, i);
-            final double frequencyOffSet = this.frequency * Math.pow(2, i);
+            final double frequencyOffSet = frequency * Math.pow(2, i);
 
             total = total + interpolateNoise(coordinateX * frequencyOffSet + seed,
                                              coordinateY * frequencyOffSet + seed)
                             * octaveAmplification;
         }
-        return (float) (total * this.amplitude);
+        return (float) (total * amplitude);
     }
 
     /**
@@ -181,80 +174,12 @@ public class PerlinNoiseGenerator {
         return 1.0f - temporaryValue1 / (float) variable4;
     }
 
-    // Getters and Setters
-
-    public int getOctaves() {
-        return octaves;
-    }
-
-    /**
-     * Sets the Octaves setting to given int if int is equals or lager than 1.
-     *
-     * @param octaves Number of octaves used for generating perlin noise, A number equal or greater
-     *                than 1.
-     *
-     * @throws IllegalArgumentException if octaves is less than 1.
-     */
-    public void setOctaves(final int octaves) {
-        if (octaves < 1) {
-            throw new IllegalArgumentException("Octaves must be equals or greater than 1");
-        }
-        this.octaves = octaves;
-    }
-
-    public float getAmplitude() {
-        return amplitude;
-    }
-
-    /**
-     * Sets the amplitude value to given float value.
-     *
-     * @param amplitude The amplitude used to amplify the resulting noise. This value should not be
-     *                  0.
-     */
-    public void setAmplitude(final float amplitude) {
-        this.amplitude = amplitude;
-    }
-
-    public double getFrequency() {
-        return frequency;
-    }
-
-    /**
-     * Sets the frequency value to given float value.
-     *
-     * @param frequency The frequency value is used to decide how one value can change from another.
-     *                  This value should be between 0 and 1.
-     */
-    public void setFrequency(final double frequency) {
-        this.frequency = frequency;
-    }
-
-    public double getPersistence() {
-        return persistence;
-    }
-
-    /**
-     * Sets the persistence value to given float value.
-     *
-     * @param persistence The persistence value used to decide how much different octaves affect the
-     *                    resulting noise. This value should not be 0.
-     */
-    public void setPersistence(final double persistence) {
-        this.persistence = persistence;
-    }
-
-    public int getSeed() {
-        return seed;
-    }
-
-    /**
-     * Sets the seed to the given integer value.
-     *
-     * @param seed The seed value used to generate a random noise map.
-     */
     public void setSeed(final int seed) {
         this.seed = seed;
+    }
+
+    public void setSettings(final IGenerationPattern settings) {
+        this.settings = settings;
     }
 
 }

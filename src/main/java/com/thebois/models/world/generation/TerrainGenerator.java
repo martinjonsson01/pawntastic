@@ -1,9 +1,16 @@
 package com.thebois.models.world.generation;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.thebois.models.world.generation.patterns.IGenerationPattern;
 import com.thebois.models.world.generation.patterns.LargeChunks;
 import com.thebois.models.world.terrains.Dirt;
 import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
+import com.thebois.models.world.terrains.Sand;
+import com.thebois.models.world.terrains.TerrainType;
+import com.thebois.utils.MatrixUtils;
 
 /**
  * Generator used to generate tiles for the world.
@@ -11,6 +18,21 @@ import com.thebois.models.world.terrains.ITerrain;
 public class TerrainGenerator extends AbstractGenerator {
 
     private static final float DIRT_THRESHOLD = 1000f;
+    private static final float SAND_THRESHOLD = 1000f;
+    private static final Map<TerrainType, IGenerationPattern> TERRAIN_PATTERN;
+    private static final Map<TerrainType, Float> TERRAIN_THRESHOLD;
+
+    static {
+        TERRAIN_PATTERN = new HashMap<>();
+        TERRAIN_PATTERN.put(TerrainType.DIRT, new LargeChunks());
+        TERRAIN_PATTERN.put(TerrainType.SAND, new LargeChunks());
+    }
+
+    static {
+        TERRAIN_THRESHOLD = new HashMap<>();
+        TERRAIN_THRESHOLD.put(TerrainType.DIRT, DIRT_THRESHOLD);
+        TERRAIN_THRESHOLD.put(TerrainType.SAND, SAND_THRESHOLD);
+    }
 
     /**
      * Instantiate a Terrain Generator with pre-made settings used for generating values.
@@ -30,18 +52,24 @@ public class TerrainGenerator extends AbstractGenerator {
      */
     public ITerrain[][] generateTerrainMatrix(final int worldSize) {
         final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
-                final float height = sample(x, y);
-                if (height > DIRT_THRESHOLD) {
-                    terrainMatrix[y][x] = new Dirt(x, y);
-                }
-                else {
-                    terrainMatrix[y][x] = new Grass(x, y);
-                }
-            }
-        }
+
+        MatrixUtils.populateElements(terrainMatrix, (x, y) -> generateTerrain(x, y));
+
         return terrainMatrix;
+    }
+
+    private ITerrain generateTerrain(
+        final int x, final int y) {
+        final float height = sample(x, y);
+        if (height > DIRT_THRESHOLD) {
+            return new Dirt(x, y);
+        }
+        else if (height > SAND_THRESHOLD) {
+            return new Sand(x, y);
+        }
+        else {
+            return new Grass(x, y);
+        }
     }
 
 }

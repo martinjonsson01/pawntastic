@@ -23,10 +23,7 @@ public abstract class AbstractGenerator {
     }
 
     protected void setGenerationPattern(final IGenerationPattern pattern) {
-        perlinNoiseGenerator.setOctaves(pattern.getOctave());
-        perlinNoiseGenerator.setAmplitude(pattern.getAmplitude());
-        perlinNoiseGenerator.setPersistence(pattern.getPersistence());
-        perlinNoiseGenerator.setFrequency(pattern.getFrequency());
+        perlinNoiseGenerator.setSettings(pattern);
     }
 
     protected void setSeed(final int seed) {

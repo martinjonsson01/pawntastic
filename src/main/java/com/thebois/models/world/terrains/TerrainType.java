@@ -11,5 +11,9 @@ public enum TerrainType {
     /**
      * Terrain of type dirt.
      */
-    DIRT
+    DIRT,
+    /**
+     * Terrain of type sand.
+     */
+    SAND
 }
