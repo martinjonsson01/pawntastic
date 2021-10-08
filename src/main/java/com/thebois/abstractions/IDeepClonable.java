@@ -1,4 +1,4 @@
-package com.thebois.models;
+package com.thebois.abstractions;
 
 /**
  * Forces implementing classes to create a deep clone method.
