@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Disposable;
 
-import com.thebois.ColonyManagement;
+import com.thebois.Pawntastic;
 
 /**
  * A view of the game world.
@@ -24,7 +24,7 @@ public class GameView extends Widget implements Disposable {
      */
     public GameView(final Collection<IView> views, final float tileSize) {
         this.views = views;
-        this.worldScreenSize = tileSize * ColonyManagement.WORLD_SIZE;
+        this.worldScreenSize = tileSize * Pawntastic.WORLD_SIZE;
     }
 
     @Override

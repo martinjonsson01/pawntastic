@@ -8,7 +8,7 @@ import java.util.Stack;
 
 import com.google.common.eventbus.Subscribe;
 
-import com.thebois.ColonyManagement;
+import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -40,7 +40,7 @@ public abstract class AbstractBeing implements IBeing {
         this.role = RoleFactory.idle();
         this.pathFinder = pathFinder;
         setPath(pathFinder.path(startPosition, destination));
-        ColonyManagement.BUS.register(this);
+        Pawntastic.BUS.register(this);
     }
 
     /**

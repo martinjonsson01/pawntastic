@@ -25,7 +25,7 @@ import com.thebois.views.ViewportWrapper;
 /**
  * The main representation of the game.
  */
-public class ColonyManagement extends Game {
+public class Pawntastic extends Game {
 
     /**
      * The global event bus that most events pass through.
