@@ -1,4 +1,4 @@
-package com.thebois.views.infoviews;
+package com.thebois.views.info;
 
 import java.util.Locale;
 import java.util.Map;

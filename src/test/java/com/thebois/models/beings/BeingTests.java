@@ -205,6 +205,24 @@ public class BeingTests {
         assertThat(first).isNotEqualTo(second);
     }
 
+    @Test
+    public void addBeingIncreasesBeingCount() {
+        // Arrange
+        final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
+        final AbstractBeingGroup colony = new Colony(vacantPositions);
+
+        final IBeing being = createBeing();
+
+        // Act
+        final int before = colony.getBeings().size();
+        colony.addBeing(being);
+        final int after = colony.getBeings().size();
+
+        // Assert
+        assertThat(before).isEqualTo(1);
+        assertThat(after).isEqualTo(2);
+    }
+
     /**
      * A test role that does nothing.
      */

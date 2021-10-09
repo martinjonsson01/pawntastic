@@ -1,12 +1,11 @@
-package com.thebois.views.gameviews;
+package com.thebois.views.game;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import com.thebois.models.world.structures.IStructure;
-import com.thebois.views.IView;
+import com.thebois.views.TextureUtils;
 
 /**
  * Responsible for displaying structures.
@@ -26,13 +25,14 @@ public final class StructureView implements IView {
     public StructureView(final float tileSize) {
         this.tileSize = tileSize;
 
-        createHouseTexture();
+        houseTexture = TextureUtils.createSquareTexture(tileSize);
     }
 
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         batch.setColor(houseColor);
         for (final IStructure structure : structures) {
+            batch.setColor(houseColor);
             batch.draw(
                 houseTexture,
                 offsetX + structure.getPosition().getPosX() * tileSize,
@@ -42,21 +42,12 @@ public final class StructureView implements IView {
         }
     }
 
-    private void createHouseTexture() {
-        final int roundedTileSize = (int) this.tileSize;
-        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);
-        houseTexture = new Texture(pixmap);
-        pixmap.dispose();
-    }
-
     /**
      * Updates the structures that should be displayed in the game.
      *
      * @param updatedStructures The structures that are to be displayed.
      */
-    public void update(Iterable<IStructure> updatedStructures) {
+    public void update(final Iterable<IStructure> updatedStructures) {
         this.structures = updatedStructures;
     }
 

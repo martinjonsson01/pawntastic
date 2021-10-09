@@ -1,7 +1,6 @@
 package com.thebois.models.beings;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -15,6 +14,7 @@ import org.mockito.Mockito;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.Log;
@@ -59,25 +59,6 @@ public class ColonyTests {
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);
     }
 
-    @Test
-    public void updateCallsUpdateOnAllBeings() {
-        // Arrange
-        final int beingCount = 25;
-        final Collection<IBeing> pawns = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            pawns.add(Mockito.mock(IBeing.class));
-        }
-        final Colony colony = new Colony(pawns);
-
-        // Act
-        colony.update();
-
-        // Assert
-        for (final IBeing pawn : pawns) {
-            verify(pawn, times(1)).update();
-        }
-    }
-
     @ParameterizedTest
     @MethodSource("getItemTypes")
     public void emptyColonyInventoryIsEmpty(final ItemType itemType) {
@@ -90,11 +71,6 @@ public class ColonyTests {
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
-    }
-
-    private Colony mockColony() {
-        final Collection<IBeing> pawns = new ArrayList<>(0);
-        return new Colony(pawns);
     }
 
     @Test
@@ -152,6 +128,11 @@ public class ColonyTests {
         assertThat(count).isEqualTo(0);
     }
 
+    private Colony mockColony() {
+        final List<Position> positions = new ArrayList<>();
+        return new Colony(positions);
+    }
+
     @Test
     public void takeMultipleItemsFromColony() {
         // Arrange
@@ -178,9 +159,8 @@ public class ColonyTests {
         colony.add(new Log());
         colony.add(new Log());
 
-        final Exception exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> colony.takeAmount(ItemType.ROCK, 2));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                                                 () -> colony.takeAmount(ItemType.ROCK, 2));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo(
@@ -263,6 +243,37 @@ public class ColonyTests {
 
         // Assert
         assertThat(colony.hasItem(ItemType.LOG, 2)).isTrue();
+    }
+
+    @Test
+    public void getInventoryReturnsTheColonyInventory() {
+        // Arrange
+        final Colony colony = mockColony();
+        final ArrayList<IItem> items = new ArrayList<>();
+        items.add(new Log());
+        items.add(new Log());
+
+        // Act
+        final IInventory inventory = colony.getInventory();
+        final boolean colonyResult = colony.hasItem(ItemType.LOG, 2);
+        final boolean inventoryResult = inventory.hasItem(ItemType.LOG, 2);
+
+        // Assert
+        assertThat(colonyResult).isEqualTo(inventoryResult);
+    }
+
+    @Test
+    public void ensureBeingsUpdatesWhenColonyUpdates() {
+        // Arrange
+        final IBeing being = Mockito.mock(IBeing.class);
+        final Colony colony = mockColony();
+
+        // Act
+        colony.addBeing(being);
+        colony.update();
+
+        // Assert
+        verify(being, times(1)).update();
     }
 
 }

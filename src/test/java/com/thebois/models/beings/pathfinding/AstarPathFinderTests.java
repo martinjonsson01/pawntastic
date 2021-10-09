@@ -46,7 +46,7 @@ public class AstarPathFinderTests {
     @MethodSource("getPositionsAndDestinations")
     public void pathContainsDestinationLast(final Position start, final Position destination) {
         // Arrange
-        final IWorld world = new World(30, 0, mock(Random.class));
+        final IWorld world = new World(30, mock(Random.class));
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act
@@ -92,7 +92,7 @@ public class AstarPathFinderTests {
      * @return The mocked world.
      */
     private IWorld mock3x3WorldWithObstacles() {
-        final World world = new World(3, 0, mock(Random.class));
+        final World world = new World(3, mock(Random.class));
 
         world.createStructure(1, 0);
         world.createStructure(1, 1);
@@ -124,7 +124,7 @@ public class AstarPathFinderTests {
     public void pathReturnsPositionsThatLeadToDestination(
         final Position from, final Position destination) {
         // Arrange
-        final IWorld world = new World(30, 0, mock(Random.class));
+        final IWorld world = new World(30, mock(Random.class));
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act
@@ -139,7 +139,7 @@ public class AstarPathFinderTests {
     public void pathReturnsEnoughPositionsToCoverDistance(
         final Position from, final Position destination) {
         // Arrange
-        final IWorld world = new World(30, 0, mock(Random.class));
+        final IWorld world = new World(30, mock(Random.class));
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act

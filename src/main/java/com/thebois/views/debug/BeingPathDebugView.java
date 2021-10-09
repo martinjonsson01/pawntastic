@@ -12,7 +12,7 @@ import com.thebois.models.beings.IBeingGroup;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.IWorld;
-import com.thebois.views.IView;
+import com.thebois.views.game.IView;
 import com.thebois.views.TextureUtils;
 
 /**

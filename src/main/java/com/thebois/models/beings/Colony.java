@@ -22,31 +22,24 @@ import com.thebois.models.inventory.items.ItemType;
  */
 public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInventory {
 
-    private final Inventory inventory = new Inventory();
+    private final IInventory inventory = new Inventory();
 
     /**
-     * Initializes with already existing beings.
+     * Creates a colony and fills it with pawns in the provided open positions.
      *
-     * @param beings The beings that should belong to the colony
-     */
-    public Colony(final Collection<IBeing> beings) {
-        setBeings(beings);
-    }
-
-    /**
-     * Creates an instance of Colony with a number of pawns.
-     *
-     * @param vacantPositions Positions in the world that a Pawn can be placed on.
+     * @param vacantPositions Positions in the world where pawns can be created.
      */
     public Colony(final Iterable<Position> vacantPositions) {
-        createBeings(vacantPositions);
-    }
-
-    private void createBeings(final Iterable<Position> vacantPositions) {
+        final Collection<IBeing> pawns = new ArrayList<>();
         for (final Position vacantPosition : vacantPositions) {
             final AbstractRole role = RoleFactory.idle();
-            addBeing(new Pawn(vacantPosition, role));
+            pawns.add(new Pawn(vacantPosition, role));
         }
+        setBeings(pawns);
+    }
+
+    public IInventory getInventory() {
+        return inventory;
     }
 
     @Override

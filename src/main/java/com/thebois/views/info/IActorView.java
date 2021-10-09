@@ -1,4 +1,4 @@
-package com.thebois.views.infoviews;
+package com.thebois.views.info;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
