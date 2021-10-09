@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import com.thebois.ColonyManagement;
+import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
@@ -182,7 +182,7 @@ public class World implements IWorld, IFinder {
 
     private void postObstacleEvent(final int posX, final int posY) {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(posX, posY);
-        ColonyManagement.BUS.post(obstacleEvent);
+        Pawntastic.BUS.post(obstacleEvent);
     }
 
     @Override

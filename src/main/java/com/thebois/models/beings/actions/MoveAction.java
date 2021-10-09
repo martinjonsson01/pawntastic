@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import com.google.common.eventbus.Subscribe;
 
-import com.thebois.ColonyManagement;
+import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.ITaskPerformer;
@@ -32,7 +32,7 @@ class MoveAction implements IAction {
     MoveAction(final Position destination, final IPathFinder pathFinder) {
         this.destination = destination;
         this.pathFinder = pathFinder;
-        ColonyManagement.BUS.register(this);
+        Pawntastic.BUS.register(this);
     }
 
     @Override

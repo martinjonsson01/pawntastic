@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
 
-import com.thebois.models.IDeepClonable;
 import com.thebois.models.beings.ITaskPerformer;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionGenerator;
+import com.thebois.abstractions.IDeepClonable;
 
 /**
  * Represents an assignment to a specific work task.
@@ -86,7 +86,7 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
     }
 
     /**
-     * Gets a set of task generators that, when called, generate a task with up to date
+     * Gets a set of task generators that, when called, generate a task with up-to-date
      * information.
      * <p>
      * Task generators are used instead of actions directly, because the generated task may differ

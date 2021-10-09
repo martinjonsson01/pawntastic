@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 
-import com.thebois.ColonyManagement;
+import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.ITaskPerformer;
@@ -159,7 +159,7 @@ public class MoveActionTests {
 
         // Act
         task.perform(performer);
-        ColonyManagement.BUS.post(obstacleEvent);
+        Pawntastic.BUS.post(obstacleEvent);
 
         // Assert
         verify(pathFinder, times(2)).path(any(), any());
@@ -183,7 +183,7 @@ public class MoveActionTests {
 
         // Act
         task.perform(performer);
-        ColonyManagement.BUS.post(obstacleEvent);
+        Pawntastic.BUS.post(obstacleEvent);
 
         // Assert
         verify(pathFinder, times(1)).path(start, end);
