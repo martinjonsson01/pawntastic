@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,12 +35,10 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(
-                             mockTile(1, 1),
-                             List.of(mockPosition(1, 0),
-                                     mockPosition(0, 1),
-                                     mockPosition(2, 1),
-                                     mockPosition(1, 2))));
+                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
+                                                              mockPosition(0, 1),
+                                                              mockPosition(2, 1),
+                                                              mockPosition(1, 2))));
     }
 
     private static Position mockPosition(final int positionX, final int positionY) {
@@ -87,6 +86,15 @@ public class WorldTests {
         terrainTiles.add(new Dirt(1, 0));
         terrainTiles.add(new Dirt(1, 1));
         return terrainTiles;
+    }
+
+    private Collection<Position> mockPositions() {
+        final ArrayList<Position> positions = new ArrayList<>();
+        positions.add(new Position(0, 0));
+        positions.add(new Position(0, 1));
+        positions.add(new Position(1, 0));
+        positions.add(new Position(1, 1));
+        return positions;
     }
 
     @Test
@@ -236,9 +244,69 @@ public class WorldTests {
         final IPathFinder pathFinder = new AstarPathFinder(world);
 
         final Colony colony = new Colony(vacantPositions, pathFinder);
-
         // Assert
         assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
+    }
+
+    @Test
+    public void findEmptyPositionsReturnsCorrectAmountOfEmptyPositions() {
+        // Arrange
+        // Instantiate a world filled with dirt.
+        final World world = new World(2, 15);
+        final Iterable<Position> expectedPositions = mockPositions();
+        final Iterable<Position> actualPositions;
+
+        // Act
+        actualPositions = world.findEmptyPositions(4);
+
+        // Assert
+        assertThat(actualPositions).containsExactlyInAnyOrderElementsOf(expectedPositions);
+    }
+
+    @Test
+    public void findEmptyPositionsReturnsEmptyIfNoEmptyPositionsWasFound() {
+        // Arrange
+        // Instantiate a world filled with water.
+        final World world = new World(2, 0);
+        final Iterable<Position> expectedPositions = new ArrayList<>();
+        final Iterable<Position> actualPositions;
+        // Act
+        actualPositions = world.findEmptyPositions(4);
+
+        // Assert
+        assertThat(actualPositions).containsExactlyInAnyOrderElementsOf(expectedPositions);
+    }
+
+    @Test
+    public void findEmptyPositionsReturnsEarlyIfAmountOfEmptyPositionsHaveBeenMet() {
+        // Arrange
+        // Instantiate a world filled with dirt.
+        final World world = new World(2, 15);
+        final ArrayList<Position> positions = new ArrayList<>();
+        positions.add(new Position(0, 0));
+        positions.add(new Position(0, 1));
+        positions.add(new Position(1, 0));
+        final Iterable<Position> actualPositions;
+
+        // Act
+        actualPositions = world.findEmptyPositions(3);
+
+        // Assert
+        assertThat(actualPositions).containsExactlyInAnyOrderElementsOf(positions);
+    }
+
+    private int findSeedWithWorldFilledWithResources() {
+        World world;
+        Iterable<Position> positions;
+
+        for (int i = 0; i < 10000; i++) {
+            world = new World(2, i);
+            positions = world.findEmptyPositions(4);
+            if (StreamSupport.stream(positions.spliterator(), false).count() <= 0) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

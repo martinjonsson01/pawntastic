@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.models.MockWorld;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -18,9 +19,6 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.world.World;
-import com.thebois.models.world.resources.IResource;
-import com.thebois.models.world.terrains.Grass;
-import com.thebois.models.world.terrains.ITerrain;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -273,44 +271,4 @@ public class BeingTests {
         assertThat(before).isEqualTo(1);
         assertThat(after).isEqualTo(2);
     }
-
-    private class MockWorld extends World {
-
-        /**
-         * Initiates the world with the given size.
-         *
-         * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
-         * @param seed      The seed used to generate the world.
-         */
-        private final int worldSize;
-
-        MockWorld(final int worldSize, final int seed) {
-            super(worldSize, worldSize);
-            this.worldSize = worldSize;
-        }
-
-        @Override
-        protected Optional<IResource>[][] setUpResources(final int seed) {
-            final Optional<IResource>[][] resourceMatrix = new Optional[seed][seed];
-            for (int y = 0; y < seed; y++) {
-                for (int x = 0; x < seed; x++) {
-                    resourceMatrix[y][x] = Optional.empty();
-                }
-            }
-            return resourceMatrix;
-        }
-
-        @Override
-        protected ITerrain[][] setUpTerrain(final int seed) {
-            final ITerrain[][] terrainMatrix = new ITerrain[seed][seed];
-            for (int y = 0; y < seed; y++) {
-                for (int x = 0; x < seed; x++) {
-                    terrainMatrix[y][x] = new Grass(x, y);
-                }
-            }
-            return terrainMatrix;
-        }
-
-    }
-
 }
