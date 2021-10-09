@@ -98,10 +98,10 @@ public class PerlinNoise {
         final double vector4 = smoothNoise(integerX + 1, integerY + 1);
 
         // Interpolate gradients
-        final double interpolation1 = interpolate(vector1, vector2, fractalX);
-        final double interpolation2 = interpolate(vector3, vector4, fractalX);
+        final double interpolation1 = interpolateLinear(vector1, vector2, fractalX);
+        final double interpolation2 = interpolateLinear(vector3, vector4, fractalX);
 
-        return interpolate(interpolation1, interpolation2, fractalY);
+        return interpolateLinear(interpolation1, interpolation2, fractalY);
     }
 
     /**
@@ -113,7 +113,8 @@ public class PerlinNoise {
      *
      * @return The interpolated value.
      */
-    private double interpolate(final double value1, final double value2, final double alphaValue) {
+    private double interpolateLinear(
+        final double value1, final double value2, final double alphaValue) {
         return value1 + alphaValue * (value2 - value1);
     }
 
