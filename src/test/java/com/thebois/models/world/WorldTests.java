@@ -16,6 +16,7 @@ import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.terrains.Dirt;
 import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
 
@@ -33,10 +34,12 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
-                                                              mockPosition(0, 1),
-                                                              mockPosition(2, 1),
-                                                              mockPosition(1, 2))));
+                         Arguments.of(
+                             mockTile(1, 1),
+                             List.of(mockPosition(1, 0),
+                                     mockPosition(0, 1),
+                                     mockPosition(2, 1),
+                                     mockPosition(1, 2))));
     }
 
     private static Position mockPosition(final int positionX, final int positionY) {
@@ -68,7 +71,7 @@ public class WorldTests {
     @Test
     public void worldInitiated() {
         // Arrange
-        final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
+        final Collection<ITerrain> expectedTerrainTiles = mockDirtTiles();
         final World world = new World(2, 15);
 
         // Act
@@ -77,12 +80,12 @@ public class WorldTests {
         assertThat(terrainTiles).containsAll(expectedTerrainTiles);
     }
 
-    private Collection<ITerrain> mockTerrainTiles() {
+    private Collection<ITerrain> mockDirtTiles() {
         final ArrayList<ITerrain> terrainTiles = new ArrayList<>();
-        terrainTiles.add(new Grass(0, 0));
-        terrainTiles.add(new Grass(0, 1));
-        terrainTiles.add(new Grass(1, 0));
-        terrainTiles.add(new Grass(1, 1));
+        terrainTiles.add(new Dirt(0, 0));
+        terrainTiles.add(new Dirt(0, 1));
+        terrainTiles.add(new Dirt(1, 0));
+        terrainTiles.add(new Dirt(1, 1));
         return terrainTiles;
     }
 
@@ -119,7 +122,10 @@ public class WorldTests {
     @Test
     public void getTileAtReturnsTileAtGivenPosition() {
         // Arrange
-        final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
+        // World should contain:
+        // Dirt Dirt
+        // Dirt Dirt
+        final Collection<ITerrain> expectedTerrainTiles = mockDirtTiles();
         final World world = new World(2, 15);
 
         for (final ITile tile : expectedTerrainTiles) {
