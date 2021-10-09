@@ -20,7 +20,7 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class MoveTaskTests {
+public class MoveActionTests {
 
     private IPathFinder pathFinder;
 
