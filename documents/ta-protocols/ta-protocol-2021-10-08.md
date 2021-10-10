@@ -14,7 +14,7 @@ Participants: Martin, Jonathan, Jacob, Mathias, Pelle
 
 ## Reports
 
-* No Reports.
+* None.
 
 ## Discussion items
 
@@ -35,7 +35,7 @@ Participants: Martin, Jonathan, Jacob, Mathias, Pelle
 1. Application can instantiate multiple parts of the model, that is okay.
 1. Everything that is not private should be visible.
 1. It’s allowed.
-1. Doesn’t really matter, as long as we are consequent.
+1. Doesn’t really matter, as long as we are consistent.
 
 ## Wrap up
 
