@@ -1,6 +1,6 @@
 package com.thebois.models.world;
 
-import com.thebois.models.IDeepClonable;
+import com.thebois.abstractions.IDeepClonable;
 
 /**
  * Represents a tile of terrain. E.g. grass, dirt etc.
