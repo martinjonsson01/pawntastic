@@ -1,5 +1,5 @@
-# com.thebois.views.infoviews
+# com.thebois.views.info
 
 ## UML Class Diagram
 
-![com.thebois.views.infoviews](./../../../../../../../documents/diagrams/com.thebois.views.infoviews.jpg "com.thebois.views.infoviews")
+![com.thebois.views.info](./../../../../../../../documents/diagrams/com.thebois.views.info.jpg "com.thebois.views.info")
