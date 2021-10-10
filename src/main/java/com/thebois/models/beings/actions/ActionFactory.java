@@ -20,16 +20,25 @@ public final class ActionFactory {
     }
 
     /**
-     * Creates a task that represents moving to a destination.
+     * Creates an action of moving to a destination.
      *
      * @param destination The location to move to.
      *
-     * @return The move task.
+     * @return The move action.
      */
     public static IAction createMoveTo(final Position destination) {
         Objects.requireNonNull(pathFinder,
                                "PathFinder needs to be set before calling factory methods.");
         return new MoveAction(destination, pathFinder);
+    }
+
+    /**
+     * Creates an action of doing nothing at all.
+     *
+     * @return A do-nothing action.
+     */
+    public static IAction createDoNothing() {
+        return new DoNothingAction();
     }
 
 }
