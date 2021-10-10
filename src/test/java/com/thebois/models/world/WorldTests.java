@@ -3,6 +3,7 @@ package com.thebois.models.world;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -13,12 +14,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.StructureType;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -71,12 +74,75 @@ public class WorldTests {
     }
 
     @Test
+    public void getNearbyOfTypeResourceReturnsEmptyWhenNothingNearby() {
+        // Arrange
+        final IResourceFinder finder = createWorld(10);
+        final Position origin = new Position();
+
+        // Act
+        final Optional<IStructure> maybeResource = finder.getNearbyOfType(origin,
+                                                                          StructureType.HOUSE);
+
+        // Assert
+        assertThat(maybeResource).isEmpty();
+    }
+
+    private World createWorld(final int size) {
+        return createWorld(size, mock(Random.class));
+    }
+
+    private World createWorld(final int size, final Random random) {
+        return new World(size, random);
+    }
+
+    @Test
+    public void getNearbyOfTypeResourceReturnsItWhenSingleNearby() {
+        // Arrange
+        final World world = createWorld(10);
+        world.createStructure(5, 5);
+        final IStructure expectedResource =
+            world.getStructures().stream().findFirst().orElseThrow();
+        final Position origin = new Position();
+        final IResourceFinder finder = world;
+
+        // Act
+        final Optional<IStructure> maybeResource = finder.getNearbyOfType(origin,
+                                                                          StructureType.HOUSE);
+
+        // Assert
+        assertThat(maybeResource).hasValue(expectedResource);
+    }
+
+    @Test
+    public void getNearbyOfTypeResourceReturnsClosestWhenMultipleNearby() {
+        // Arrange
+        final World world = createWorld(10);
+        final Position expectedResourcePosition = new Position(9, 6);
+        world.createStructure(expectedResourcePosition);
+        world.createStructure(3, 4);
+        world.createStructure(5, 5);
+        final IStructure expectedResource =
+            world.getStructures().stream().filter(resource -> resource
+                .getPosition()
+                .equals(expectedResourcePosition)).findFirst().orElseThrow();
+        final Position origin = new Position(9, 9);
+        final IResourceFinder finder = world;
+
+        // Act
+        final Optional<IStructure> maybeResource = finder.getNearbyOfType(origin,
+                                                                          StructureType.HOUSE);
+
+        // Assert
+        assertThat(maybeResource).hasValue(expectedResource);
+    }
+
+    @Test
     public void getRandomVacantSpotReturnsRandomTileWhenThereAreNoObstacles() {
         // Arrange
         final Random mockRandom = mock(Random.class);
         final int randomCoordinate = 1;
         when(mockRandom.nextInt(anyInt())).thenReturn(randomCoordinate);
-        final IWorld world = new World(3, mockRandom);
+        final IWorld world = createWorld(3, mockRandom);
         final Position expectedSpot = new Position(randomCoordinate, randomCoordinate);
 
         // Act
@@ -99,7 +165,7 @@ public class WorldTests {
                                                       (int) secondBlockedRandomSpot.getPosY(),
                                                       (int) thirdEmptyRandomSpot.getPosX(),
                                                       (int) thirdEmptyRandomSpot.getPosY());
-        final World world = new World(3, mockRandom);
+        final World world = createWorld(3, mockRandom);
         world.createStructure(firstBlockedRandomSpot);
         world.createStructure(secondBlockedRandomSpot);
 
@@ -114,7 +180,7 @@ public class WorldTests {
     public void worldInitiated() {
         // Arrange
         final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = new World(2, mock(Random.class));
+        final World world = createWorld(2);
 
         // Act
         final Collection<ITerrain> terrainTiles = world.getTerrainTiles();
@@ -135,7 +201,7 @@ public class WorldTests {
     @Test
     public void worldFind() {
         // Arrange
-        final World world = new World(2, mock(Random.class));
+        final World world = createWorld(2);
 
         // Act
         final Object worldObject = world.find();
@@ -149,7 +215,7 @@ public class WorldTests {
     public void getNeighboursOfReturnsExpectedNeighbours(
         final ITile tile, final Iterable<ITile> expectedNeighbours) {
         // Arrange
-        final IWorld world = new World(3, mock(Random.class));
+        final IWorld world = createWorld(3);
 
         // Act
         final Iterable<ITile> actualNeighbours = world.getNeighboursOf(tile);
@@ -162,7 +228,7 @@ public class WorldTests {
     public void getTileAtReturnsTileAtGivenPosition() {
         // Arrange
         final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = new World(2, mock(Random.class));
+        final World world = createWorld(2);
 
         for (final ITile tile : expectedTerrainTiles) {
             // Act
@@ -177,7 +243,7 @@ public class WorldTests {
     @MethodSource("getOutOfBoundsPositions")
     public void getTileAtThrowsWhenOutOfBounds(final Position outOfBounds) {
         // Arrange
-        final World world = new World(2, mock(Random.class));
+        final World world = createWorld(2);
 
         // Assert
         assertThatThrownBy(() -> world.getTileAt(outOfBounds)).isInstanceOf(
@@ -187,7 +253,7 @@ public class WorldTests {
     @Test
     public void createWorldWithNoStructures() {
         // Arrange
-        final World world = new World(2, mock(Random.class));
+        final World world = createWorld(2);
 
         // Act
         final Collection<IStructure> structures = world.getStructures();
@@ -199,7 +265,7 @@ public class WorldTests {
     @Test
     public void numberOfStructuresIncreasesIfStructureSuccessfullyPlaced() {
         // Arrange
-        final World world = new World(2, mock(Random.class));
+        final World world = createWorld(2);
         final Position position = new Position(1, 1);
         final Collection<IStructure> structures;
         final boolean isBuilt;
@@ -216,7 +282,7 @@ public class WorldTests {
     @MethodSource("getPositionOutSideOfWorld")
     public void structureFailedToBePlaced(final Position placementPosition) {
         // Arrange
-        final World world = new World(2, mock(Random.class));
+        final World world = createWorld(2);
         final Collection<IStructure> structures;
         final boolean isBuilt;
 
@@ -232,7 +298,7 @@ public class WorldTests {
     @Test
     public void numberOfStructuresDoesNotChangeIfStructuresPlacedOutsideWorld() {
         // Arrange
-        final World world = new World(2, mock(Random.class));
+        final World world = createWorld(2);
         final Position position1 = new Position(2, 2);
         final Position position2 = new Position(-1, -1);
         final Collection<IStructure> structures;
@@ -267,7 +333,7 @@ public class WorldTests {
     public void instantiateWithPawnCountCreatesOnlyAsManyBeingsAsFitInTheWorld() {
         // Arrange
         final int pawnFitCount = 4;
-        final World world = new World(2, mock(Random.class));
+        final World world = createWorld(2);
         final Iterable<Position> vacantPositions = world.findEmptyPositions(5);
         final IPathFinder pathFinder = new AstarPathFinder(world);
 

@@ -7,18 +7,20 @@ import java.util.Optional;
 import java.util.Random;
 
 import com.thebois.Pawntastic;
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.StructureType;
 import com.thebois.utils.MatrixUtils;
 
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
-public class World implements IWorld, IFinder {
+public class World implements IWorld, IFinder, IResourceFinder {
 
     private final ITerrain[][] terrainMatrix;
     private final Optional<IStructure>[][] structureMatrix;
@@ -117,21 +119,6 @@ public class World implements IWorld, IFinder {
         for (final ITerrain[] matrix : terrainMatrix) {
             for (final ITerrain iTerrain : matrix) {
                 copy.add(iTerrain.deepClone());
-            }
-        }
-        return copy;
-    }
-
-    /**
-     * Returns the structures in a Collection as the interface IStructures.
-     *
-     * @return The list to be returned.
-     */
-    public Collection<IStructure> getStructures() {
-        final Collection<IStructure> copy = new ArrayList<>();
-        for (final Optional<IStructure>[] matrix : structureMatrix) {
-            for (final Optional<IStructure> structure : matrix) {
-                structure.ifPresent(iStructure -> copy.add(iStructure.deepClone()));
             }
         }
         return copy;
@@ -252,6 +239,29 @@ public class World implements IWorld, IFinder {
         final int deltaX = Math.abs(tileX - neighbourX);
         final int deltaY = Math.abs(tileY - neighbourY);
         return deltaX == 1 && deltaY == 1;
+    }
+
+    @Override
+    public Optional<IStructure> getNearbyOfType(final Position origin, final StructureType type) {
+        return getStructures()
+            .stream()
+            .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
+                                           origin.distanceTo(o2.getPosition())));
+    }
+
+    /**
+     * Returns the structures in a Collection as the interface IStructures.
+     *
+     * @return The list to be returned.
+     */
+    public Collection<IStructure> getStructures() {
+        final Collection<IStructure> copy = new ArrayList<>();
+        for (final Optional<IStructure>[] matrix : structureMatrix) {
+            for (final Optional<IStructure> structure : matrix) {
+                structure.ifPresent(iStructure -> copy.add(iStructure.deepClone()));
+            }
+        }
+        return copy;
     }
 
 }
