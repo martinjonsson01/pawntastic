@@ -24,7 +24,6 @@ public final class StructureView implements IView {
      */
     public StructureView(final float tileSize) {
         this.tileSize = tileSize;
-
         houseTexture = TextureUtils.createSquareTexture(tileSize);
     }
 
@@ -43,7 +42,7 @@ public final class StructureView implements IView {
 
     // Houses get different colors based on built status
     private Color getHouseColor(final IStructure structure) {
-        return new Color(structure.builtStatus() / 2 + 1f / 2f, 0f, 0f, 1.0f);
+        return Color.valueOf("1B52AB").lerp(Color.valueOf("3B2916"), structure.builtStatus());
     }
 
     /**
