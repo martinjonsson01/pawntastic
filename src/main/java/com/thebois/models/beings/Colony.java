@@ -32,7 +32,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
      *
      * @param vacantPositions Positions in the world where pawns can be created.
      * @param pathFinder      The pathfinder that the pawns will use.
-     * @param finder          Used to find resources and structures in the world.
+     * @param finder          Used to find things in the world.
      */
     public Colony(final Iterable<Position> vacantPositions, final IPathFinder pathFinder,
                   final IFinder finder) {

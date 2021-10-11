@@ -23,11 +23,11 @@ public class Pawn extends AbstractBeing {
     /**
      * Instantiates with an initial position and a destination to travel to.
      *
-     * @param startPosition initial position.
-     * @param destination   initial destination to travel to.
-     * @param random        the generator of random numbers.
+     * @param startPosition Initial position.
+     * @param destination   Initial destination to travel to.
+     * @param random        The generator of random numbers.
      * @param pathFinder    The generator of paths to positions in the world.
-     * @param finder          Finder used to locate things in the world
+     * @param finder        Used to find things in the world.
      */
     public Pawn(
         final Position startPosition,

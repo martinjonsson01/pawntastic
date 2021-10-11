@@ -32,8 +32,8 @@ public abstract class AbstractBeing implements IBeing {
     /**
      * Creates an AbstractBeing with an initial position.
      *
-     * @param startPosition the initial position of the AbstractBeing.
-     * @param destination   the initial destination of the AbstractBeing.
+     * @param startPosition The initial position of the AbstractBeing.
+     * @param destination   The initial destination of the AbstractBeing.
      * @param pathFinder    The generator of paths to positions in the world.
      * @param finder        Used to find structures in the world.
      */
