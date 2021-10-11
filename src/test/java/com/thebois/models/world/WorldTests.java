@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,6 +15,8 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.world.resources.IResource;
+import com.thebois.models.world.resources.Water;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.terrains.Dirt;
 import com.thebois.models.world.terrains.Grass;
@@ -295,18 +296,23 @@ public class WorldTests {
         assertThat(actualPositions).containsExactlyInAnyOrderElementsOf(positions);
     }
 
-    private int findSeedWithWorldFilledWithResources() {
-        World world;
-        Iterable<Position> positions;
+    @Test
+    public void getResourcesActuallyReturnsResources() {
+        // Arrange
+        // Instantiate a world filled with water.
+        final World world = new World(2, 0);
+        final Collection<IResource> expectedResources = new ArrayList<>();
+        expectedResources.add(new Water(0, 0));
+        expectedResources.add(new Water(1, 0));
+        expectedResources.add(new Water(0, 1));
+        expectedResources.add(new Water(1, 1));
+        final Collection<IResource> actualResources;
 
-        for (int i = 0; i < 10000; i++) {
-            world = new World(2, i);
-            positions = world.findEmptyPositions(4);
-            if (StreamSupport.stream(positions.spliterator(), false).count() <= 0) {
-                return i;
-            }
-        }
-        return -1;
+        // Act
+        actualResources = world.getResources();
+
+        // Assert
+        assertThat(actualResources).containsExactlyInAnyOrderElementsOf(expectedResources);
     }
 
 }
