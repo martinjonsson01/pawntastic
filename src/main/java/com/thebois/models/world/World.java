@@ -199,7 +199,7 @@ public class World implements IWorld, IFinder {
         final int searchRow = Math.round(position.getPosY());
         final int searchCol = Math.round(position.getPosX());
 
-        final int maxSearchRadius = this.worldSize / 2;
+        final int maxSearchRadius = this.worldSize;
 
         final Collection<IStructure> foundStructures =
             MatrixUtils.matrixSpiralSearch(this.structureMatrix,
@@ -222,7 +222,7 @@ public class World implements IWorld, IFinder {
 
         final int searchRow = Math.round(position.getPosY());
         final int searchCol = Math.round(position.getPosX());
-        final int maxSearchRadius = this.worldSize / 2;
+        final int maxSearchRadius = this.worldSize;
 
         return MatrixUtils.matrixSpiralSearch(
             structureMatrix,
