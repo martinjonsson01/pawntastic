@@ -17,10 +17,10 @@ public final class MatrixUtils {
     /**
      * Turns a matrix into a Collection of type TElement.
      *
-     * @param matrix     Matrix to be transformed
-     * @param <TElement> Type of matrix element
+     * @param matrix     Matrix to be transformed.
+     * @param <TElement> Type of matrix element.
      *
-     * @return Returns the matrix in collection form
+     * @return Returns the matrix in collection form.
      */
     public static <TElement> Collection<TElement> matrixToCollection(
         final Optional<TElement>[][] matrix) {
@@ -32,9 +32,9 @@ public final class MatrixUtils {
     /**
      * Iterates a matrix like a list, going from top left element to bottom right.
      *
-     * @param matrix     The matrix to operate on
-     * @param action     The action to perform for each element
-     * @param <TElement> The type of the matrix elements
+     * @param matrix     The matrix to operate on.
+     * @param action     The action to perform for each element.
+     * @param <TElement> The type of the matrix elements.
      */
     public static <TElement> void forEachElement(final TElement[][] matrix,
                                                  final Consumer<TElement> action) {
@@ -100,12 +100,12 @@ public final class MatrixUtils {
     /**
      * Returns a sub matrix based on the given matrix.
      *
-     * @param matrix   The matrix to be used to generate a sub matrix from
-     * @param startRow Row to start at
-     * @param startCol Column to start at
-     * @param endRow   Row to end at
-     * @param endCol   Column to end at
-     * @param <TType>  The generic type of the Optional matrix
+     * @param matrix   The matrix to be used to generate a sub matrix from.
+     * @param startRow Row to start at.
+     * @param startCol Column to start at.
+     * @param endRow   Row to end at.
+     * @param endCol   Column to end at.
+     * @param <TType>  The generic type of the Optional matrix.
      *
      * @return The generated sub matrix
      *

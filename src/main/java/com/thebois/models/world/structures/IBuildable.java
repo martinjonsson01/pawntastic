@@ -12,7 +12,7 @@ public interface IBuildable {
     /**
      * A collection of IItems that are needed for the completion of the IBuildable object.
      *
-     * @return collection of needed items for construction.
+     * @return Returns a collection of needed items for construction.
      */
     Collection<IItem> neededItems();
 
@@ -21,21 +21,21 @@ public interface IBuildable {
      *
      * @param deliveredItem the IItem to be delivered.
      *
-     * @return if delivery was successful.
+     * @return Returns whether the delivery was successful or not.
      */
     boolean deliverItem(IItem deliveredItem);
 
     /**
      * Returns a value between 0 and 1 based on how many of the needed IItems have been received.
      *
-     * @return ratio of completion.
+     * @return Returns a ratio of completion.
      */
     float builtStatus();
 
     /**
-     * Returns true if builtStatus is equal to 1.
+     * Returns true if construction is completed.
      *
-     * @return Whether the IBuildable is built or not.
+     * @return Returns whether the IBuildable is built or not.
      */
     boolean isCompleted();
 
@@ -44,7 +44,7 @@ public interface IBuildable {
      *
      * @param retrieving IItem to be retrieved from the object.
      *
-     * @return if the retrieval was successful.
+     * @return Returns whether the retrieval was successful or not.
      */
     boolean dismantle(IItem retrieving);
 }

@@ -340,22 +340,6 @@ public class WorldTests {
         assertThat(structure.isPresent()).isFalse();
     }
 
-    @Test
-    public void noNearestStructures() {
-        // Arrange
-        final World world = new World(50);
-
-        // Act
-        final Collection<IStructure> structures = world.findNearestStructures(
-            new Position(20f, 20f),
-            10);
-
-        // Assert
-        for (final IStructure structure : structures) {
-            assertThat(structure).isNull();
-        }
-    }
-
     private static Stream<Arguments> getPositionsAndSizeToTest() {
         return Stream.of(Arguments.of(List.of(new Position(10, 10),
                                               new Position(30, 5),
