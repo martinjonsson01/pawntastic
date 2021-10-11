@@ -102,7 +102,7 @@ public class Pawntastic extends Game {
 
     private void createModels() {
         world = new World(WORLD_SIZE);
-        colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS), new AstarPathFinder(world));
+        colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS), new AstarPathFinder(world), world);
     }
 
     private void generateFont() {

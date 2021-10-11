@@ -48,7 +48,7 @@ public class StructureController extends AbstractInputProcessor implements ICont
             final int worldPosX = (int) ((worldSpaceCoordinates.x - offSetX) / tileSize);
             final int worldPosY = (int) ((worldSpaceCoordinates.y - offSetY) / tileSize);
             if (world.createStructure(worldPosX, worldPosY)) {
-                structureView.update(world.getStructureCollection());
+                structureView.update(world.getStructures());
                 return true;
             }
         }
@@ -62,7 +62,7 @@ public class StructureController extends AbstractInputProcessor implements ICont
 
     @Override
     public void update() {
-        structureView.update(world.getStructureCollection());
+        structureView.update(world.getStructures());
     }
 
     /**

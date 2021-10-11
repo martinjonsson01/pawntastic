@@ -44,7 +44,7 @@ public class ColonyTests {
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
 
         // Act
-        final Colony colony = new Colony(positions, mockWorld, new World(10, 0));
+        final Colony colony = new Colony(positions, pathFinder, new World(10));
 
         // Assert
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);
@@ -123,7 +123,7 @@ public class ColonyTests {
     private Colony mockColony() {
         final List<Position> positions = new ArrayList<>();
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        return new Colony(positions, pathFinder);
+        return new Colony(positions, pathFinder, new World(10));
     }
 
     @Test

@@ -73,7 +73,7 @@ public class BeingTests {
                                              destination.deepClone(),
                                              new Random(),
                                              pathFinder,
-                                             new World(10, 0));
+                                             new World(10));
         being.setRole(role);
         return being;
     }
@@ -101,7 +101,7 @@ public class BeingTests {
             endPosition,
             mockRandom,
             pathFinder,
-            new World(10, 0));
+            new World(10));
 
         // Act
         being.update();
@@ -121,7 +121,7 @@ public class BeingTests {
                                       new Position(1, 1),
                                       new Random(),
                                       pathFinder,
-                                      new World(10, 0));
+                                      new World(10));
 
         // Assert
         assertThatThrownBy(() -> being.setRole(null)).isInstanceOf(IllegalArgumentException.class);
@@ -140,7 +140,7 @@ public class BeingTests {
             endPosition,
             mockRandom,
             pathFinder,
-            new World(10, 0));
+            new World(10));
 
         // Act
         final Iterable<Position> pathPositions = being.getPath();
@@ -160,13 +160,13 @@ public class BeingTests {
                                       destination.deepClone(),
                                       new Random(),
                                       pathFinder,
-                                      new World(10, 0));
+                                      new World(10));
         first.setRole(role);
         final IBeing second = new Pawn(currentPosition.deepClone(),
                                        destination.deepClone(),
                                        new Random(),
                                        pathFinder,
-                                       new World(10, 0));
+                                       new World(10));
         second.setRole(role);
 
         // Act
@@ -186,13 +186,13 @@ public class BeingTests {
                                       new Position(1, 1),
                                       new Random(),
                                       pathFinder,
-                                      new World(10, 0));
+                                      new World(10));
         first.setRole(role);
         final IBeing second = new Pawn(new Position(123, 123),
                                        new Position(983, 1235),
                                        new Random(),
                                        pathFinder,
-                                       new World(10, 0));
+                                       new World(10));
 
         // Act
         final int firstHashCode = first.hashCode();
@@ -235,7 +235,7 @@ public class BeingTests {
             startPosition,
             new Random(),
             pathFinder,
-            new World(10, 0));
+            new World(10));
 
         // Act
         being.update();
@@ -252,7 +252,7 @@ public class BeingTests {
                                       new Position(1, 1),
                                       new Random(),
                                       pathFinder,
-                                      new World(10, 0));
+                                      new World(10));
         being.setRole(RoleFactory.farmer());
 
         // Assert
@@ -338,7 +338,7 @@ public class BeingTests {
 
         final Position correctDestination = new Position(11, 0);
 
-        final World world = new World(50, 0);
+        final World world = new World(50);
         final IPathFinder pathFinder = new AstarPathFinder(world);
 
         world.createStructure(positionA);
@@ -373,7 +373,7 @@ public class BeingTests {
 
         final Position correctDestination = new Position(0, 0);
 
-        final World world = new World(50, 0);
+        final World world = new World(50);
         final IPathFinder pathFinder = new AstarPathFinder(world);
 
         final Random mockRandom = Mockito.mock(Random.class);
@@ -415,7 +415,7 @@ public class BeingTests {
 
         final Position correctDestination = new Position(39, 0);
 
-        final World world = new World(50, 0);
+        final World world = new World(50);
         final IPathFinder pathFinder = new AstarPathFinder(world);
 
         final Random mockRandom = Mockito.mock(Random.class);
@@ -456,7 +456,7 @@ public class BeingTests {
         final Position positionA = new Position(10, 0);
         final Position startPosition = new Position(11, 0);
 
-        final World world = new World(50, 0);
+        final World world = new World(50);
         final IPathFinder pathFinder = new AstarPathFinder(world);
 
         final Random mockRandom = Mockito.mock(Random.class);
@@ -488,7 +488,7 @@ public class BeingTests {
         final Position positionB = new Position(20, 0);
         final Position startPosition = new Position(11, 0);
 
-        final World world = new World(50, 0);
+        final World world = new World(50);
         final IPathFinder pathFinder = new AstarPathFinder(world);
 
         final Random mockRandom = Mockito.mock(Random.class);
@@ -532,12 +532,12 @@ public class BeingTests {
         // Arrange
         final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final AbstractBeingGroup colony = new Colony(vacantPositions, pathFinder);
+        final AbstractBeingGroup colony = new Colony(vacantPositions, pathFinder, new World(10));
 
         final IBeing being = new Pawn(new Position(0, 0),
                                       new Position(1, 1),
                                       new Random(),
-                                      pathFinder);
+                                      pathFinder, new World(10));
 
         // Act
         final int before = colony.getBeings().size();

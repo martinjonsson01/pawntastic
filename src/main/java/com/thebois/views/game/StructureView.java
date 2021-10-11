@@ -15,7 +15,7 @@ public final class StructureView implements IView {
     private final float tileSize;
     private Iterable<IStructure> structures;
     private final Color houseColor = new Color(0.4f, 0.2f, 0f, 1);
-    private Texture houseTexture;
+    private final Texture houseTexture;
 
     /**
      * Creates an instance of a Structure view.
@@ -39,15 +39,6 @@ public final class StructureView implements IView {
                        tileSize,
                        tileSize);
         }
-    }
-
-    private void createHouseTexture() {
-        final int roundedTileSize = (int) this.tileSize;
-        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);
-        houseTexture = new Texture(pixmap);
-        pixmap.dispose();
     }
 
     // Houses get different colors based on built status

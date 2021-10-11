@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
@@ -77,18 +78,6 @@ public class WorldTests {
         terrainTiles.add(new Grass(1, 0));
         terrainTiles.add(new Grass(1, 1));
         return terrainTiles;
-    }
-
-    @Test
-    public void worldFind() {
-        // Arrange
-        final World world = new World(2);
-
-        // Act
-        final Object worldObject = world.find();
-
-        // Assert
-        assertThat(worldObject).isEqualTo(null);
     }
 
     @ParameterizedTest
@@ -208,7 +197,8 @@ public class WorldTests {
             vacantPositions.add(new Position(0, 0));
         }
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        return new Colony(vacantPositions, pathFinder);
+        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        return new Colony(vacantPositions, pathFinder, mockFinder);
     }
 
     @Test
@@ -218,9 +208,10 @@ public class WorldTests {
         final World world = new World(2);
         final Iterable<Position> vacantPositions = world.findEmptyPositions(5);
         final IPathFinder pathFinder = new AstarPathFinder(world);
+        final IFinder mockFinder = Mockito.mock(IFinder.class);
 
         // Act
-        final Colony colony = new Colony(vacantPositions, pathFinder);
+        final Colony colony = new Colony(vacantPositions, pathFinder, mockFinder);
 
         // Assert
         assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
@@ -262,7 +253,7 @@ public class WorldTests {
                                          final int endY) {
 
         // Arrange
-        final World world = new World(50, 10);
+        final World world = new World(50);
         world.createStructure(endX, endY);
 
         // Act
@@ -296,7 +287,7 @@ public class WorldTests {
                                          final int endY) {
 
         // Arrange
-        final World world = new World(50, 10);
+        final World world = new World(50);
         world.createStructure(endX, endY);
 
         // Act
@@ -325,7 +316,7 @@ public class WorldTests {
     @MethodSource("getCoordinatesToTest")
     public void getStructureAtTest(final int posX, final int posY) {
         // Arrange
-        final World world = new World(50, 0);
+        final World world = new World(50);
         world.createStructure(posX, posY);
         final Position position = new Position(posX, posY);
 
@@ -340,7 +331,7 @@ public class WorldTests {
     @Test
     public void noNearestStructure() {
         // Arrange
-        final World world = new World(50, 0);
+        final World world = new World(50);
 
         // Act
         final Optional<IStructure> structure = world.findNearestStructure(new Position(20f, 20f));
@@ -352,7 +343,7 @@ public class WorldTests {
     @Test
     public void noNearestStructures() {
         // Arrange
-        final World world = new World(50, 0);
+        final World world = new World(50);
 
         // Act
         final Collection<Optional<IStructure>> structures = world.findNearestStructures(
@@ -378,7 +369,7 @@ public class WorldTests {
     @MethodSource("getPositionsAndSizeToTest")
     public void testGetStructureCollection(final Collection<Position> positions, final int amount) {
         // Arrange
-        final World world = new World(50, 0);
+        final World world = new World(50);
 
         // Act
         for (final Position position : positions) {
@@ -386,7 +377,7 @@ public class WorldTests {
         }
 
         // Assert
-        assertThat(world.getStructureCollection().size()).isEqualTo(amount);
+        assertThat(world.getStructures().size()).isEqualTo(amount);
     }
 
 }
