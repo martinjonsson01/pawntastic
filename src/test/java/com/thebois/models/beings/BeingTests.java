@@ -336,7 +336,7 @@ public class BeingTests {
         final Position startPosition = new Position(20, 0);
         final Position positionB = new Position(30, 0);
 
-        final Position correctDestination = new Position(11, 0);
+        final Position correctDestination = new Position(11, 1);
 
         final World world = new World(50);
         final IPathFinder pathFinder = new AstarPathFinder(world);
@@ -413,7 +413,7 @@ public class BeingTests {
         final Position positionB = new Position(30, 0);
         final Position positionC = new Position(40, 0);
 
-        final Position correctDestination = new Position(39, 0);
+        final Position correctDestination = new Position(41, 1);
 
         final World world = new World(50);
         final IPathFinder pathFinder = new AstarPathFinder(world);
@@ -430,15 +430,13 @@ public class BeingTests {
             world.getStructureAt(positionB).get().deliverItem(new Log());
             world.getStructureAt(positionA).get().deliverItem(new Rock());
             world.getStructureAt(positionA).get().deliverItem(new Log());
-
         }
 
-        final Pawn testPawn = new Pawn(
-            startPosition,
-            new Position(),
-            mockRandom,
-            pathFinder,
-            world);
+        final Pawn testPawn = new Pawn(startPosition,
+                                       new Position(),
+                                       mockRandom,
+                                       pathFinder,
+                                       world);
 
         // Act
         testPawn.update();

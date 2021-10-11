@@ -1,6 +1,7 @@
 package com.thebois.models.beings;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Random;
 
 import com.thebois.models.IFinder;
@@ -43,8 +44,11 @@ public class Pawn extends AbstractBeing {
     public void update() {
         super.update();
 
-        updateClosestStructure();
+        if (closestStructure == null || closestStructure.isCompleted()) {
+            closestStructure = findClosestStructure();
+        }
         if (closestStructure != null) {
+            setFinalDestination(closestStructure.getPosition());
             deliverItemToStructure(closestStructure);
         }
         if (getDestination().isEmpty()) setRandomDestination();
@@ -59,31 +63,23 @@ public class Pawn extends AbstractBeing {
         setPath(newPath);
     }
 
-    protected void updateClosestStructure() {
-        if (closestStructure == null || closestStructure.isCompleted()) {
-            getFinder().findNearestIncompleteStructure(this.getPosition()).ifPresent(iStructure -> {
-                closestStructure = iStructure;
-                setFinalDestination(closestStructure.getPosition());
-            });
-        }
+    protected IStructure findClosestStructure() {
+        final Optional<IStructure> structure =
+            getFinder().findNearestIncompleteStructure(this.getPosition());
+        return structure.orElse(null);
     }
 
     private void setFinalDestination(final Position destination) {
         final Position nextTo = nearestNeighborOf(destination);
-        if (getFinalDestination().isPresent()) {
-            if (!getFinalDestination().get().equals(nextTo)) {
-                final Collection<Position> newPath = getPathFinder().path(getPosition(), nextTo);
-                setPath(newPath);
-            }
-        }
-        else {
-            final Collection<Position> newPath = getPathFinder().path(getPosition(), nextTo);
+        // If finalDestination is empty or is not set to the given destination
+        if (getFinalDestination().isEmpty() || !getFinalDestination().get().equals(nextTo)) {
+            final Collection<Position> newPath = getPathFinder().path(this.getPosition(), nextTo);
             setPath(newPath);
         }
     }
 
     protected void deliverItemToStructure(final IStructure structure) {
-        if (structure.getPosition().distanceTo(getPosition()) < 2f) {
+        if (structure.getPosition().distanceTo(this.getPosition()) < 2f) {
             structure.deliverItem(new Rock());
             structure.deliverItem(new Log());
         }
