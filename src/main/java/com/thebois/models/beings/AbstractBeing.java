@@ -27,7 +27,7 @@ public abstract class AbstractBeing implements IBeing {
     private Stack<Position> path;
     private Position position;
     private AbstractRole role;
-    private IFinder finder;
+    private final IFinder finder;
 
     /**
      * Creates an AbstractBeing with an initial position.

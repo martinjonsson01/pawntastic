@@ -37,12 +37,12 @@ public class Pawn extends AbstractBeing {
         final IFinder finder) {
         super(startPosition, destination, pathFinder, finder);
         this.random = random;
-
     }
 
     @Override
     public void update() {
         super.update();
+
         updateClosestStructure();
         if (closestStructure != null) {
             deliverItemToStructure(closestStructure);
@@ -82,9 +82,6 @@ public class Pawn extends AbstractBeing {
             if (!structure.isCompleted()) {
                 return structure;
             }
-            else {
-                return null;
-            }
         }
         return null;
     }
@@ -110,13 +107,6 @@ public class Pawn extends AbstractBeing {
     }
 
     protected void deliverItemToStructure(final IStructure structure) {
-        //        structure.ifPresent(iStructure -> {
-        //            if (iStructure.getPosition().distanceTo(getPosition()) < 2f) {
-        //                iStructure.deliverItem(new Rock());
-        //                iStructure.deliverItem(new Log());
-        //            }
-        //        });
-
         if (structure.getPosition().distanceTo(getPosition()) < 2f) {
             structure.deliverItem(new Rock());
             structure.deliverItem(new Log());
