@@ -5,14 +5,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import com.thebois.ColonyManagement;
+import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
-import com.thebois.models.beings.AbstractBeingGroup;
-import com.thebois.models.beings.Colony;
-import com.thebois.models.beings.roles.IRoleAllocator;
-import com.thebois.models.inventory.IInventory;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.utils.MatrixUtils;
@@ -26,26 +22,13 @@ public class World implements IWorld, IFinder {
     private final Optional<IStructure>[][] structureMatrix;
     private final int worldSize;
     private final ITile[][] canonicalMatrix;
-    private Colony colony;
 
     /**
-     * Initiates the world with the given size and the amount of pawns in the colony.
+     * Initiates the world with the given size.
      *
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
-     * @param pawnCount The amount of beings to initialize the players' BeingGroup with
      */
-    public World(final int worldSize, final int pawnCount) {
-        this(worldSize, null);
-        this.colony = initColony(pawnCount);
-    }
-
-    /**
-     * Initiates the world with the given size and colony.
-     *
-     * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
-     * @param colony    The Colony that should be added to the world.
-     */
-    public World(final int worldSize, final Colony colony) {
+    public World(final int worldSize) {
         this.worldSize = worldSize;
 
         terrainMatrix = new ITerrain[worldSize][worldSize];
@@ -65,12 +48,6 @@ public class World implements IWorld, IFinder {
 
         canonicalMatrix = new ITile[worldSize][worldSize];
         updateCanonicalMatrix();
-
-        this.colony = colony;
-    }
-
-    private Colony initColony(final int pawnCount) {
-        return new Colony(findEmptyPositions(pawnCount), this, this);
     }
 
     /**
@@ -90,17 +67,23 @@ public class World implements IWorld, IFinder {
             canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
         });
         // Replace terrain with any possible structure.
-        MatrixUtils.forEachElement(
-            structureMatrix,
-            maybeStructure -> maybeStructure.ifPresent(structure -> {
-                final Position position = structure.getPosition();
-                final int posY = (int) position.getPosY();
-                final int posX = (int) position.getPosX();
-                canonicalMatrix[posY][posX] = structure.deepClone();
-            }));
+        MatrixUtils.forEachElement(structureMatrix,
+                                   maybeStructure -> maybeStructure.ifPresent(structure -> {
+                                       final Position position = structure.getPosition();
+                                       final int posY = (int) position.getPosY();
+                                       final int posX = (int) position.getPosX();
+                                       canonicalMatrix[posY][posX] = structure.deepClone();
+                                   }));
     }
 
-    private Iterable<Position> findEmptyPositions(final int count) {
+    /**
+     * Creates a list of tiles that are not occupied by a structure or resource.
+     *
+     * @param count The amount of empty positions that needs to be found.
+     *
+     * @return List of empty positions.
+     */
+    public Iterable<Position> findEmptyPositions(final int count) {
         final List<Position> emptyPositions = new ArrayList<>();
         MatrixUtils.forEachElement(canonicalMatrix, tile -> {
             if (emptyPositions.size() >= count) return;
@@ -184,51 +167,7 @@ public class World implements IWorld, IFinder {
 
     private void postObstacleEvent(final int posX, final int posY) {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(posX, posY);
-        ColonyManagement.BUS.post(obstacleEvent);
-    }
-
-    /**
-     * Returns the players' colony.
-     *
-     * @return the colony.
-     */
-    public AbstractBeingGroup getColony() {
-        return colony;
-    }
-
-    /**
-     * Returns the players' colony with only inventory methods allowed.
-     * (Temporary until we refactor world/colony)
-     *
-     * @return the colony.
-     */
-    public IInventory getColonyInventory() {
-        return colony;
-    }
-
-    /**
-     * Returns the role allocator for the players' colony.
-     *
-     * @return the role allocator.
-     */
-    public IRoleAllocator getRoleAllocator() {
-        return colony;
-    }
-
-    /**
-     * Returns the IStructureMatrix as a collection of IStructure.
-     *
-     * @return IStructure collection
-     */
-    public Collection<IStructure> getStructureCollection() {
-        return MatrixUtils.matrixToCollection(this.structureMatrix);
-    }
-
-    /**
-     * Updates the state of the world.
-     */
-    public void update() {
-        colony.update();
+        Pawntastic.BUS.post(obstacleEvent);
     }
 
     @Override
@@ -307,7 +246,7 @@ public class World implements IWorld, IFinder {
 
     @Override
     public ITile getTileAt(final int posX, final int posY) {
-        if (posX < 0 || posY < 0 || posX > worldSize || posY > worldSize) {
+        if (posX < 0 || posY < 0 || posX >= worldSize || posY >= worldSize) {
             throw new IndexOutOfBoundsException("Given position is outside of the world.");
         }
         return terrainMatrix[posY][posX];

@@ -208,7 +208,7 @@ public class BeingTests {
         final Position from = new Position();
         final Position destination = new Position(2, 2);
         final Position obstaclePosition = new Position(1, 1);
-        final World world = new World(3, 0);
+        final World world = new World(3);
         final IPathFinder pathFinder = new AstarPathFinder(world);
         final IBeing being = new Pawn(from, destination, new Random(), pathFinder, world);
 
@@ -525,6 +525,28 @@ public class BeingTests {
 
         // Assert
         assertThat(initialBuiltRatio).isLessThan(structureAtA.builtStatus());
+    }
+
+    @Test
+    public void addBeingIncreasesBeingCount() {
+        // Arrange
+        final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        final AbstractBeingGroup colony = new Colony(vacantPositions, pathFinder);
+
+        final IBeing being = new Pawn(new Position(0, 0),
+                                      new Position(1, 1),
+                                      new Random(),
+                                      pathFinder);
+
+        // Act
+        final int before = colony.getBeings().size();
+        colony.addBeing(being);
+        final int after = colony.getBeings().size();
+
+        // Assert
+        assertThat(before).isEqualTo(1);
+        assertThat(after).isEqualTo(2);
     }
 
 }
