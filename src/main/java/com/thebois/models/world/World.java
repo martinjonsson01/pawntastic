@@ -116,7 +116,7 @@ public class World implements IWorld, IFinder {
         final Collection<IStructure> copy = new ArrayList<>();
         for (final Optional<IStructure>[] matrix : structureMatrix) {
             for (final Optional<IStructure> structure : matrix) {
-                structure.ifPresent(iStructure -> copy.add(iStructure.deepClone()));
+                structure.ifPresent(copy::add);
             }
         }
         return copy;
