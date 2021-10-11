@@ -172,8 +172,8 @@ public abstract class AbstractBeing implements IBeing {
         this.finder = finder;
     }
 
-    protected Position nearestPositionNextTo(final Position destination) {
-        final int[][] positionsToCheck = {
+    protected Position nearestNeighborOf(final Position destination) {
+        final int[][] positionOffsets = {
             {-1, -1}, {0, -1}, {1, -1},
             {-1, 0}, {1, 0},
             {-1, 1}, {0, 1}, {1, 1},
@@ -183,10 +183,10 @@ public abstract class AbstractBeing implements IBeing {
         Position nearestPosition = new Position();
         Position lastPosition;
 
-        for (int i = 0; i < positionsToCheck.length; i++) {
-            final float xPos = destination.getPosX() + positionsToCheck[i][0];
-            final float yPos = destination.getPosY() + positionsToCheck[i][1];
-            lastPosition = new Position(xPos, yPos);
+        for (int i = 0; i < positionOffsets.length; i++) {
+            final float x = destination.getPosX() + positionOffsets[i][0];
+            final float y = destination.getPosY() + positionOffsets[i][1];
+            lastPosition = new Position(x, y);
             if (firstLoop) {
                 nearestPosition = lastPosition;
                 firstLoop = false;

@@ -96,7 +96,7 @@ public class Pawn extends AbstractBeing {
     }
 
     private void setFinalDestination(final Position destination) {
-        final Position nextTo = nearestPositionNextTo(destination);
+        final Position nextTo = nearestNeighborOf(destination);
         if (getFinalDestination().isPresent()) {
             if (!getFinalDestination().get().equals(nextTo)) {
                 final Collection<Position> newPath = getPathFinder().path(getPosition(), nextTo);
