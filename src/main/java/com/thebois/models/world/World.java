@@ -113,14 +113,6 @@ public class World implements IWorld, IFinder {
      * @return The list to be returned.
      */
     public Collection<IStructure> getStructures() {
-//        final Collection<IStructure> copy = new ArrayList<>();
-//        for (final Optional<IStructure>[] matrix : structureMatrix) {
-//            for (final Optional<IStructure> structure : matrix) {
-//                structure.ifPresent(copy::add);
-//            }
-//        }
-//        return copy;
-
         return MatrixUtils.matrixToCollection(this.structureMatrix);
     }
 
@@ -214,22 +206,6 @@ public class World implements IWorld, IFinder {
             }
         }
         return Optional.empty();
-    }
-
-    @Override
-    public Collection<IStructure> findNearestStructures(final Position position,
-                                                                  final int count) {
-
-        final int searchRow = Math.round(position.getPosY());
-        final int searchCol = Math.round(position.getPosX());
-        final int maxSearchRadius = this.worldSize;
-
-        return MatrixUtils.matrixSpiralSearch(
-            structureMatrix,
-            searchRow,
-            searchCol,
-            maxSearchRadius,
-            count);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.thebois.models;
 
-import java.util.Collection;
 import java.util.Optional;
 
 import com.thebois.models.world.structures.IStructure;
@@ -27,16 +26,6 @@ public interface IFinder {
      * @return The found IStructure.
      */
     Optional<IStructure> findNearestIncompleteStructure(Position position);
-
-    /**
-     * Finds and returns a collection of length n of the closest IStructure to the passed position.
-     *
-     * @param position The position to find structures closest to.
-     * @param count    Number of structures to find.
-     *
-     * @return The found IStructure.
-     */
-    Collection<IStructure> findNearestStructures(Position position, int count);
 
     /**
      * Returns the IStructure at position.
