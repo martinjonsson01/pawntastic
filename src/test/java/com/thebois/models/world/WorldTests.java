@@ -346,13 +346,13 @@ public class WorldTests {
         final World world = new World(50);
 
         // Act
-        final Collection<Optional<IStructure>> structures = world.findNearestStructures(
+        final Collection<IStructure> structures = world.findNearestStructures(
             new Position(20f, 20f),
             10);
 
         // Assert
-        for (final Optional<IStructure> structure : structures) {
-            assertThat(structure.isPresent()).isFalse();
+        for (final IStructure structure : structures) {
+            assertThat(structure).isNull();
         }
     }
 

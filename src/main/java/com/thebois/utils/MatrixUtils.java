@@ -63,7 +63,7 @@ public final class MatrixUtils {
      *
      * @return First found present Optional element of type TType.
      */
-    public static <TType> Collection<Optional<TType>> matrixSpiralSearch(
+    public static <TType> Collection<TType> matrixSpiralSearch(
         final Optional<TType>[][] matrix,
         final int startRow,
         final int startCol,
@@ -76,7 +76,7 @@ public final class MatrixUtils {
             {1, 0}, {1, -1}, {0, -1},
             {-1, -1}, {-1, 0}, {-1, 1},
             };
-        final Collection<Optional<TType>> foundElements = new ArrayList<>();
+        final Collection<TType> foundElements = new ArrayList<>();
 
         for (int searchRadius = 1; searchRadius <= maxSearchRadius; searchRadius++) {
             for (final int[] ints : searchPattern) {
@@ -84,12 +84,7 @@ public final class MatrixUtils {
                     final int searchRow = startRow + ints[0] * searchRadius;
                     final int searchCol = startCol + ints[1] * searchRadius;
 
-                    final Optional<TType> currentElem =
-                        matrix[searchRow][searchCol];
-
-                    if (currentElem.isPresent()) {
-                        foundElements.add(matrix[searchRow][searchCol]);
-                    }
+                    matrix[searchRow][searchCol].ifPresent(foundElements::add);
                 }
                 catch (final ArrayIndexOutOfBoundsException exception) {
                     // Since there is a search limit, we can let the method loop outside of matrix
@@ -98,11 +93,6 @@ public final class MatrixUtils {
             if (foundElements.size() >= maxFoundElements) {
                 break;
             }
-        }
-
-        // If no structure was found
-        if (foundElements.isEmpty()) {
-            foundElements.add(Optional.empty());
         }
         return foundElements;
     }

@@ -96,19 +96,14 @@ public class MatrixUtilsTests {
         // Arrange
 
         // Act
-        final Optional<String> foundStructure = MatrixUtils.matrixSpiralSearch(
+        final String foundString = MatrixUtils.matrixSpiralSearch(
             stringMatrix,
             startX,
             startY,
             3, 1).iterator().next();
 
         // Assert
-        if (foundStructure.isPresent()) {
-            assertThat(foundStructure.get()).isEqualTo(expectedString);
-        }
-        else {
-            assertThat(foundStructure.isEmpty()).isEqualTo(false);
-        }
+        assertThat(foundString).isEqualTo(expectedString);
     }
 
     private static Stream<Arguments> getMatricesAndSubMatricesToTest() {

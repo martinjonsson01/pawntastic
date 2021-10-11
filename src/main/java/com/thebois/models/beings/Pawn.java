@@ -1,7 +1,6 @@
 package com.thebois.models.beings;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Random;
 
 import com.thebois.models.IFinder;
@@ -19,7 +18,7 @@ public class Pawn extends AbstractBeing {
     /* Temporary hard-coded world size. Should be removed when pathfinding is implemented. */
     private static final int WORLD_SIZE = 50;
     private final Random random;
-    private Optional<IStructure> closestStructure = Optional.empty();
+    private IStructure closestStructure;
 
     /**
      * Instantiates with an initial position and a destination to travel to.
@@ -45,8 +44,9 @@ public class Pawn extends AbstractBeing {
     public void update() {
         super.update();
         updateClosestStructure();
-        deliverItemToStructure(closestStructure);
-
+        if (closestStructure != null) {
+            deliverItemToStructure(closestStructure);
+        }
         if (getDestination().isEmpty()) setRandomDestination();
     }
 
@@ -60,9 +60,9 @@ public class Pawn extends AbstractBeing {
     }
 
     protected void updateClosestStructure() {
-        if (closestStructure.isPresent() && getFinalDestination().isPresent()) {
+        if (closestStructure != null && getFinalDestination().isPresent()) {
             // If the structure is completed or destination is unreachable pick a new one
-            if (closestStructure.get().isCompleted() || closestStructure.get().getPosition().equals(
+            if (closestStructure.isCompleted() || closestStructure.getPosition().equals(
                 getFinalDestination().get())) {
                 closestStructure = findIncompleteStructure();
                 setClosestStructureAsFinalDestination();
@@ -74,25 +74,25 @@ public class Pawn extends AbstractBeing {
         }
     }
 
-    protected Optional<IStructure> findIncompleteStructure() {
-        final Collection<Optional<IStructure>> structures =
+    protected IStructure findIncompleteStructure() {
+        final Collection<IStructure> structures =
             getFinder().findNearestStructures(this.getPosition(), 10);
 
-        for (final Optional<IStructure> structure : structures) {
-            if (structure.isPresent()) {
-                if (!structure.get().isCompleted()) {
-                    return structure;
-                }
+        for (final IStructure structure : structures) {
+            if (!structure.isCompleted()) {
+                return structure;
             }
             else {
-                return Optional.empty();
+                return null;
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     private void setClosestStructureAsFinalDestination() {
-        closestStructure.ifPresent(structure -> setFinalDestination(structure.getPosition()));
+        if (closestStructure != null) {
+            setFinalDestination(closestStructure.getPosition());
+        }
     }
 
     private void setFinalDestination(final Position destination) {
@@ -109,13 +109,18 @@ public class Pawn extends AbstractBeing {
         }
     }
 
-    protected void deliverItemToStructure(final Optional<IStructure> structure) {
-        structure.ifPresent(iStructure -> {
-            if (iStructure.getPosition().distanceTo(getPosition()) < 2f) {
-                iStructure.deliverItem(new Rock());
-                iStructure.deliverItem(new Log());
-            }
-        });
+    protected void deliverItemToStructure(final IStructure structure) {
+        //        structure.ifPresent(iStructure -> {
+        //            if (iStructure.getPosition().distanceTo(getPosition()) < 2f) {
+        //                iStructure.deliverItem(new Rock());
+        //                iStructure.deliverItem(new Log());
+        //            }
+        //        });
+
+        if (structure.getPosition().distanceTo(getPosition()) < 2f) {
+            structure.deliverItem(new Rock());
+            structure.deliverItem(new Log());
+        }
     }
 
 }
