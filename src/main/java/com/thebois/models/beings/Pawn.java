@@ -60,35 +60,11 @@ public class Pawn extends AbstractBeing {
     }
 
     protected void updateClosestStructure() {
-        if (closestStructure != null && getFinalDestination().isPresent()) {
-            // If the structure is completed or destination is unreachable pick a new one
-            if (closestStructure.isCompleted() || closestStructure.getPosition().equals(
-                getFinalDestination().get())) {
-                closestStructure = findIncompleteStructure();
-                setClosestStructureAsFinalDestination();
-            }
-        }
-        else {
-            closestStructure = findIncompleteStructure();
-            setClosestStructureAsFinalDestination();
-        }
-    }
-
-    protected IStructure findIncompleteStructure() {
-        final Collection<IStructure> structures =
-            getFinder().findNearestStructures(this.getPosition(), 10);
-
-        for (final IStructure structure : structures) {
-            if (!structure.isCompleted()) {
-                return structure;
-            }
-        }
-        return null;
-    }
-
-    private void setClosestStructureAsFinalDestination() {
-        if (closestStructure != null) {
-            setFinalDestination(closestStructure.getPosition());
+        if (closestStructure == null || closestStructure.isCompleted()) {
+            getFinder().findNearestIncompleteStructure(this.getPosition()).ifPresent(iStructure -> {
+                closestStructure = iStructure;
+                setFinalDestination(closestStructure.getPosition());
+            });
         }
     }
 

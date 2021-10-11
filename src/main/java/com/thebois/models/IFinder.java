@@ -20,6 +20,15 @@ public interface IFinder {
     Optional<IStructure> findNearestStructure(Position position);
 
     /**
+     * Finds and returns the closest incomplete IStructure to the passed position.
+     *
+     * @param position The position to find an incomplete structure closest to.
+     *
+     * @return The found IStructure.
+     */
+    Optional<IStructure> findNearestIncompleteStructure(Position position);
+
+    /**
      * Finds and returns a collection of length n of the closest IStructure to the passed position.
      *
      * @param position The position to find structures closest to.

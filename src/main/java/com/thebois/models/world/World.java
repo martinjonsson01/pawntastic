@@ -195,6 +195,28 @@ public class World implements IWorld, IFinder {
     }
 
     @Override
+    public Optional<IStructure> findNearestIncompleteStructure(final Position position) {
+        final int searchRow = Math.round(position.getPosY());
+        final int searchCol = Math.round(position.getPosX());
+
+        final int maxSearchRadius = this.worldSize / 2;
+
+        final Collection<IStructure> foundStructures =
+            MatrixUtils.matrixSpiralSearch(this.structureMatrix,
+                                           searchRow,
+                                           searchCol,
+                                           maxSearchRadius,
+                                           10);
+
+        for (final IStructure structure : foundStructures) {
+            if (!structure.isCompleted()) {
+                return Optional.of(structure);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Collection<IStructure> findNearestStructures(final Position position,
                                                                   final int count) {
 
