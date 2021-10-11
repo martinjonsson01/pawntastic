@@ -35,9 +35,9 @@ public class Pawn extends AbstractBeing {
         final Random random,
         final IPathFinder pathFinder,
         final IFinder finder) {
-        super(startPosition, destination, pathFinder);
+        super(startPosition, destination, pathFinder, finder);
         this.random = random;
-        setFinder(finder);
+
     }
 
     @Override

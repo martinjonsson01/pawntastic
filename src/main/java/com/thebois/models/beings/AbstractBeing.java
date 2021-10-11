@@ -35,12 +35,17 @@ public abstract class AbstractBeing implements IBeing {
      * @param startPosition the initial position of the AbstractBeing.
      * @param destination   the initial destination of the AbstractBeing.
      * @param pathFinder    The generator of paths to positions in the world.
+     * @param finder        Used to find structures in the world.
      */
     public AbstractBeing(
-        final Position startPosition, final Position destination, final IPathFinder pathFinder) {
+        final Position startPosition,
+        final Position destination,
+        final IPathFinder pathFinder,
+        final IFinder finder) {
         this.position = startPosition;
         this.role = RoleFactory.idle();
         this.pathFinder = pathFinder;
+        this.finder = finder;
         setPath(pathFinder.path(startPosition, destination));
         Pawntastic.BUS.register(this);
     }
@@ -168,35 +173,23 @@ public abstract class AbstractBeing implements IBeing {
         return this.finder;
     }
 
-    protected void setFinder(final IFinder finder) {
-        this.finder = finder;
-    }
-
     protected Position nearestNeighborOf(final Position destination) {
         final int[][] positionOffsets = {
             {-1, -1}, {0, -1}, {1, -1},
             {-1, 0}, {1, 0},
             {-1, 1}, {0, 1}, {1, 1},
             };
-        boolean firstLoop = true;
 
-        Position nearestPosition = new Position();
+        Position nearestNeighbor = new Position(Float.MAX_VALUE, Float.MAX_VALUE);
         Position lastPosition;
 
         for (int i = 0; i < positionOffsets.length; i++) {
             final float x = destination.getPosX() + positionOffsets[i][0];
             final float y = destination.getPosY() + positionOffsets[i][1];
             lastPosition = new Position(x, y);
-            if (firstLoop) {
-                nearestPosition = lastPosition;
-                firstLoop = false;
-            }
 
-            if (getPosition().manhattanDistanceTo(nearestPosition)
-                > getPosition().distanceTo(lastPosition)) {
-                nearestPosition = lastPosition;
-            }
+            nearestNeighbor = lastPosition;
         }
-        return nearestPosition;
+        return nearestNeighbor;
     }
 }
