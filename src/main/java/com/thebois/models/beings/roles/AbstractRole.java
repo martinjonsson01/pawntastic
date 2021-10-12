@@ -2,7 +2,7 @@ package com.thebois.models.beings.roles;
 
 import java.util.Objects;
 
-import com.thebois.models.IDeepClonable;
+import com.thebois.abstractions.IDeepClonable;
 
 /**
  * Represents an assignment to a specific work task.
