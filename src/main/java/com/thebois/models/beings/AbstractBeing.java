@@ -40,7 +40,6 @@ public abstract class AbstractBeing implements IBeing {
         this.role = RoleFactory.idle();
         this.pathFinder = pathFinder;
         setPath(pathFinder.path(startPosition, destination));
-        Pawntastic.BUS.register(this);
     }
 
     /**
@@ -90,6 +89,8 @@ public abstract class AbstractBeing implements IBeing {
 
     @Override
     public void update() {
+        // Registers everytime since we serialize.
+        Pawntastic.BUS.register(this);
         move();
     }
 

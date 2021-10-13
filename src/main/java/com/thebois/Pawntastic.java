@@ -115,14 +115,17 @@ public class Pawntastic extends Game {
     }
 
     private void createModels() throws IOException, ClassNotFoundException {
-        world = new World(WORLD_SIZE);
+
         try {
-            final FileInputStream fileInputStream = new FileInputStream("outfile.txt");
+            final FileInputStream fileInputStream = new FileInputStream(System.getProperty(
+                "user.home") + "/Documents/Pawntastic/saves/save.txt");
             final ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            world = (World) objectInputStream.readObject();
             colony = (Colony) objectInputStream.readObject();
             objectInputStream.close();
         }
         catch (final IOException exception) {
+            world = new World(WORLD_SIZE);
             colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS),
                                 new AstarPathFinder(world));
         }
@@ -148,15 +151,17 @@ public class Pawntastic extends Game {
 
     public void dispose() {
         try {
-            final FileOutputStream fileOutputStream = new FileOutputStream("outfile.txt");
+            final FileOutputStream fileOutputStream = new FileOutputStream(System.getProperty(
+                "user.home") + "/Documents/Pawntastic/saves/save.txt");
             final ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 
+            objectOutputStream.writeObject(world);
             objectOutputStream.writeObject(colony);
 
             objectOutputStream.flush();
             objectOutputStream.close();
         }
-        catch (IOException error) {
+        catch (final IOException error) {
             error.printStackTrace();
         }
 
