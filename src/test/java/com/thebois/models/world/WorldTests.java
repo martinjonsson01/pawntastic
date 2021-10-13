@@ -17,7 +17,6 @@ import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.resources.IResource;
-import com.thebois.models.world.resources.Water;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.terrains.Dirt;
 import com.thebois.models.world.terrains.Grass;
@@ -37,10 +36,12 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
-                                                              mockPosition(0, 1),
-                                                              mockPosition(2, 1),
-                                                              mockPosition(1, 2))));
+                         Arguments.of(
+                             mockTile(1, 1),
+                             List.of(mockPosition(1, 0),
+                                     mockPosition(0, 1),
+                                     mockPosition(2, 1),
+                                     mockPosition(1, 2))));
     }
 
     private static Position mockPosition(final int positionX, final int positionY) {
@@ -263,17 +264,21 @@ public class WorldTests {
         final World world = new World(worldSize, seed);
         final Iterable<Position> emptyPositions;
         // Fill world with Structures
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
-                world.createStructure(x, y);
-            }
-        }
+        fillWorldWithStructures(worldSize, world);
 
         // Act
         emptyPositions = world.findEmptyPositions(amountOfWantedPositions);
 
         // Assert
         assertThat(emptyPositions).isEmpty();
+    }
+
+    private void fillWorldWithStructures(final int worldSize, final World world) {
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
+                world.createStructure(x, y);
+            }
+        }
     }
 
     @Test
@@ -293,22 +298,21 @@ public class WorldTests {
     }
 
     @Test
-    public void getResourcesActuallyReturnsResources() {
+    public void getTerrainsReturnsTerrainEvenIfStructuresAreOnTopOfTerrain() {
         // Arrange
-        // Instantiate a world filled with water.
-        final World world = new World(2, 0);
-        final Collection<IResource> expectedResources = new ArrayList<>();
-        expectedResources.add(new Water(0, 0));
-        expectedResources.add(new Water(1, 0));
-        expectedResources.add(new Water(0, 1));
-        expectedResources.add(new Water(1, 1));
-        final Collection<IResource> actualResources;
+        // Instantiate a world filled with dirt.
+        final int worldSize = 15;
+        final int seed = 0;
+        final World world = new World(worldSize, seed);
+        fillWorldWithStructures(worldSize, world);
+        final int expectedNumberOfTerrainTiles = worldSize * worldSize;
+        final int actualNumberOfTerrainTiles;
 
         // Act
-        actualResources = world.getResources();
+        actualNumberOfTerrainTiles = world.getTerrainTiles().size();
 
         // Assert
-        assertThat(actualResources).containsExactlyInAnyOrderElementsOf(expectedResources);
+        assertThat(actualNumberOfTerrainTiles).isEqualTo(expectedNumberOfTerrainTiles);
     }
 
 }
