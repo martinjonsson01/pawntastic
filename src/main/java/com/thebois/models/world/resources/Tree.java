@@ -40,10 +40,4 @@ public class Tree extends AbstractResource {
     public ResourceType getType() {
         return ResourceType.TREE;
     }
-
-    @Override
-    public void harvest() {
-
-    }
-
 }

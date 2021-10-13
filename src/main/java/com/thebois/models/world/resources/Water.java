@@ -32,11 +32,6 @@ public class Water extends AbstractResource {
     }
 
     @Override
-    public void harvest() {
-
-    }
-
-    @Override
     public IResource deepClone() {
         return new Water(getPosition());
     }

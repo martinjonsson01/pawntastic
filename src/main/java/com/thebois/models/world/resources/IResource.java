@@ -15,9 +15,4 @@ public interface IResource extends ITile, IDeepClonable<IResource> {
      */
     ResourceType getType();
 
-    /**
-     * Harvests the resource.
-     */
-    void harvest();
-
 }
