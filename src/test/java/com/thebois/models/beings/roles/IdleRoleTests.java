@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.ITaskPerformer;
-import com.thebois.models.beings.pathfinding.IPathFinder;
-import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.ActionFactory;
+import com.thebois.models.beings.actions.IAction;
+import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 

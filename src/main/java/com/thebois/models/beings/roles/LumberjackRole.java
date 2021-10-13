@@ -1,7 +1,10 @@
 package com.thebois.models.beings.roles;
 
 import java.util.Collection;
+import java.util.List;
 
+import com.thebois.models.Position;
+import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IActionGenerator;
 
 /**
@@ -16,7 +19,10 @@ class LumberjackRole extends AbstractRole {
 
     @Override
     protected Collection<IActionGenerator> getTaskGenerators() {
-        return RoleFactory.idle().getTaskGenerators();
+        return List.of(
+            () -> ActionFactory.createMoveTo(new Position(2, 2)),
+            () -> ActionFactory.createMoveTo(new Position(2, 2)),
+            () -> ActionFactory.createMoveTo(new Position(2, 2)));
     }
 
 }
