@@ -1,10 +1,6 @@
 package com.thebois;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -75,10 +71,7 @@ public class Pawntastic extends Game {
         try {
             createModels();
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e) {
+        catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         // Camera & Viewport
@@ -117,18 +110,20 @@ public class Pawntastic extends Game {
     private void createModels() throws IOException, ClassNotFoundException {
 
         try {
-            final FileInputStream fileInputStream = new FileInputStream(System.getProperty(
-                "user.home") + "/Documents/Pawntastic/saves/save.txt");
-            final ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            world = (World) objectInputStream.readObject();
-            colony = (Colony) objectInputStream.readObject();
-            objectInputStream.close();
+            getModelsFromSaveFile();
         }
         catch (final IOException exception) {
             world = new World(WORLD_SIZE);
             colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS),
                                 new AstarPathFinder(world));
         }
+    }
+
+    private void getModelsFromSaveFile() throws IOException, ClassNotFoundException {
+        final LoadSystem loadSystem = new LoadSystem();
+        world = (World) loadSystem.read();
+        colony = (Colony) loadSystem.read();
+        loadSystem.close();
     }
 
     private void generateFont() {
@@ -151,15 +146,7 @@ public class Pawntastic extends Game {
 
     public void dispose() {
         try {
-            final FileOutputStream fileOutputStream = new FileOutputStream(System.getProperty(
-                "user.home") + "/Documents/Pawntastic/saves/save.txt");
-            final ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-
-            objectOutputStream.writeObject(world);
-            objectOutputStream.writeObject(colony);
-
-            objectOutputStream.flush();
-            objectOutputStream.close();
+            saveModelsToSaveFile();
         }
         catch (final IOException error) {
             error.printStackTrace();
@@ -168,6 +155,13 @@ public class Pawntastic extends Game {
         gameScreen.dispose();
         skinAtlas.dispose();
         uiSkin.dispose();
+    }
+
+    private void saveModelsToSaveFile() throws IOException {
+        final SaveSystem saveSystem = new SaveSystem();
+        saveSystem.save(world);
+        saveSystem.save(colony);
+        saveSystem.exit();
     }
 
     @Override
