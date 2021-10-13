@@ -25,7 +25,7 @@ public final class MatrixUtils {
     public static <TElement> Collection<TElement> matrixToCollection(
         final Optional<TElement>[][] matrix) {
         final Collection<TElement> matrixCollection = new ArrayList<>();
-        MatrixUtils.forEachElement(matrix, elem -> elem.ifPresent(matrixCollection::add));
+        MatrixUtils.forEachElement(matrix, element -> element.ifPresent(matrixCollection::add));
         return matrixCollection;
     }
 
@@ -96,47 +96,4 @@ public final class MatrixUtils {
         }
         return foundElements;
     }
-
-    /**
-     * Returns a sub matrix based on the given matrix.
-     *
-     * @param matrix   The matrix to be used to generate a sub matrix from.
-     * @param startRow Row to start at.
-     * @param startCol Column to start at.
-     * @param endRow   Row to end at.
-     * @param endCol   Column to end at.
-     * @param <TType>  The generic type of the Optional matrix.
-     *
-     * @return The generated sub matrix
-     *
-     * @throws IllegalArgumentException Entered indices can't be negative
-     */
-    public static <TType> Optional<TType>[][] getSubMatrix(final Optional<TType>[][] matrix,
-                                                           final int startRow,
-                                                           final int startCol,
-                                                           final int endRow,
-                                                           final int endCol) {
-
-        if (startRow > endRow || startCol > endCol) {
-            throw new IllegalArgumentException("The selected indices must increase, start < end");
-        }
-
-        final int rowSize = endRow - startRow + 1;
-        final int colSize = endCol - startCol + 1;
-
-        final Optional<TType>[][] subMatrix = new Optional[rowSize][colSize];
-
-        for (int row = 0; row < rowSize; row++) {
-            for (int col = 0; col < colSize; col++) {
-                try {
-                    subMatrix[row][col] = matrix[startRow + row][startCol + col];
-                }
-                catch (final ArrayIndexOutOfBoundsException exception) {
-                    subMatrix[row][col] = Optional.empty();
-                }
-            }
-        }
-        return subMatrix;
-    }
-
 }
