@@ -1,5 +1,7 @@
 package com.thebois.models.world;
 
+import java.util.Optional;
+
 import com.thebois.models.Position;
 
 /**
@@ -41,5 +43,15 @@ public interface IWorld {
      * @return The vacant tile.
      */
     ITile getRandomVacantSpot();
+
+    /**
+     * Finds an empty neighbour of a tile that is closest to the given position.
+     *
+     * @param tile The tile to get neighbours of.
+     * @param from The position that needs to be closest to the returned neighbour.
+     *
+     * @return The position of the neighbouring tile that is the closest to the given position.
+     */
+    Optional<Position> getClosestNeighbourOf(ITile tile, Position from);
 
 }

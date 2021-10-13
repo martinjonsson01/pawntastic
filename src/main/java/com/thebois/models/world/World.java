@@ -217,7 +217,33 @@ public class World implements IWorld, IFinder, IResourceFinder {
     }
 
     @Override
-    public Iterable<ITile> getNeighboursOf(final ITile tile) {
+    public Optional<IResource> getNearbyOfType(final Position origin, final ResourceType type) {
+        return getResources()
+            .stream()
+            .filter(resource -> resource.getType().equals(type))
+            .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
+                                           origin.distanceTo(o2.getPosition())));
+    }
+
+    /**
+     * Returns the resources in a Collection as the interface IResource.
+     *
+     * @return The list to be returned.
+     */
+    public Collection<IResource> getResources() {
+        final Collection<IResource> copy = new ArrayList<>();
+        for (final IResource[] matrix : resourceMatrix) {
+            for (final IResource maybeResource : matrix) {
+                if (maybeResource != null) {
+                    copy.add(maybeResource.deepClone());
+                }
+            }
+        }
+        return copy;
+    }
+
+    @Override
+    public Collection<ITile> getNeighboursOf(final ITile tile) {
         final ArrayList<ITile> tiles = new ArrayList<>(8);
         final Position position = tile.getPosition();
         final int posY = (int) position.getPosY();
@@ -275,6 +301,29 @@ public class World implements IWorld, IFinder, IResourceFinder {
         return canonicalMatrix[y][x] instanceof ITerrain;
     }
 
+    @Override
+    public Optional<Position> getClosestNeighbourOf(final ITile tile, final Position from) {
+        final Collection<ITile> neighbours = getNeighboursOf(tile);
+
+        final Optional<ITile> firstVacantNeighbour = neighbours
+            .stream()
+            .filter(neighbourTile -> isVacant(neighbourTile.getPosition()))
+            .findFirst();
+        if (firstVacantNeighbour.isEmpty()) return Optional.empty();
+
+        Position closest = firstVacantNeighbour.get().getPosition();
+
+        for (final ITile neighbour : neighbours) {
+            final Position current = neighbour.getPosition();
+            final boolean isCloser = from.distanceTo(current) < from.distanceTo(closest);
+            if (isCloser && isVacant(current)) {
+                closest = current;
+            }
+        }
+
+        return Optional.of(closest);
+    }
+
     private boolean isDiagonalTo(final ITile tile, final ITile neighbour) {
         final int tileX = (int) tile.getPosition().getPosX();
         final int tileY = (int) tile.getPosition().getPosY();
@@ -283,32 +332,6 @@ public class World implements IWorld, IFinder, IResourceFinder {
         final int deltaX = Math.abs(tileX - neighbourX);
         final int deltaY = Math.abs(tileY - neighbourY);
         return deltaX == 1 && deltaY == 1;
-    }
-
-    @Override
-    public Optional<IResource> getNearbyOfType(final Position origin, final ResourceType type) {
-        return getResources()
-            .stream()
-            .filter(resource -> resource.getType().equals(type))
-            .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
-                                           origin.distanceTo(o2.getPosition())));
-    }
-
-    /**
-     * Returns the resources in a Collection as the interface IResource.
-     *
-     * @return The list to be returned.
-     */
-    public Collection<IResource> getResources() {
-        final Collection<IResource> copy = new ArrayList<>();
-        for (final IResource[] matrix : resourceMatrix) {
-            for (final IResource maybeResource : matrix) {
-                if (maybeResource != null) {
-                    copy.add(maybeResource.deepClone());
-                }
-            }
-        }
-        return copy;
     }
 
 }

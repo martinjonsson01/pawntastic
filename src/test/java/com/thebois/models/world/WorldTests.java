@@ -77,6 +77,22 @@ public class WorldTests {
                          Arguments.of(new Position(-1, 3)));
     }
 
+    /**
+     * Pairs a from-position with the position of the neighbour tile that is closest.
+     * <p>
+     * The neighbour tiles are all neighbours to the same tile, the one at 3,3 in a 7x7 world.
+     * </p>
+     *
+     * @return The arguments described above.
+     */
+    public static Stream<Arguments> getPositionsAndClosestNeighbourPosition() {
+        return Stream.of(Arguments.of(new Position(0, 3), new Position(2, 3)),
+                         Arguments.of(new Position(6, 3), new Position(4, 3)),
+                         Arguments.of(new Position(3, 6), new Position(3, 4)),
+                         Arguments.of(new Position(2, 0), new Position(2, 3)),
+                         Arguments.of(new Position(4, 0), new Position(4, 3)));
+    }
+
     @BeforeEach
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
@@ -85,6 +101,60 @@ public class WorldTests {
     @AfterEach
     public void teardown() {
         RoleFactory.setWorld(null);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsAndClosestNeighbourPosition")
+    public void getClosestNeighbourOfReturnsPositionWhenNeighbourIsOccupied(
+        final Position from, final Position closestNeighbour) {
+        // Arrange
+        /*
+          X = destination tile
+          N = empty neighbour
+          O = occupied tile
+          * * * * * * *
+          * * * * * * *
+          * * O N O * *
+          * * N X N * *
+          * * O O O * *
+          * * * * * * *
+          * * * * * * *
+         */
+        final World world = createTestWorld(7, mock(Random.class));
+        world.createStructure(2, 4);
+        world.createStructure(4, 4);
+        world.createStructure(2, 2);
+        world.createStructure(3, 2);
+        world.createStructure(4, 2);
+        final ITile tile = mockTile(3, 3);
+
+        // Act
+        final Optional<Position> actualNeighbour = world.getClosestNeighbourOf(tile, from);
+
+        // Assert
+        assertThat(actualNeighbour).hasValue(closestNeighbour);
+    }
+
+    private World createTestWorld(final int size, final Random random) {
+        return new MockWorld(size, 0, random);
+    }
+
+    @Test
+    public void getClosestNeighbourOfReturnsEmptyWhenAllNeighboursOccupied() {
+        // Arrange
+        final World world = createTestWorld(3, mock(Random.class));
+        world.createStructure(1, 0);
+        world.createStructure(0, 1);
+        world.createStructure(2, 1);
+        world.createStructure(1, 2);
+        final ITile tile = mockTile(1, 1);
+        final Position from = new Position(0, 0);
+
+        // Act
+        final Optional<Position> actualNeighbour = world.getClosestNeighbourOf(tile, from);
+
+        // Assert
+        assertThat(actualNeighbour).isEmpty();
     }
 
     @Test
@@ -147,10 +217,6 @@ public class WorldTests {
 
         // Assert
         assertThat(vacantSpot).isEqualTo(expectedSpot);
-    }
-
-    private World createTestWorld(final int size, final Random random) {
-        return new MockWorld(size, 0, random);
     }
 
     @Test
