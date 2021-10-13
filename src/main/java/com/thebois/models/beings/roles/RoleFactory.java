@@ -69,7 +69,7 @@ public final class RoleFactory {
         Objects.requireNonNull(
             resourceFinder,
             "Resource Finder can not be null. Call RoleFactory.setResourceFinder to set it.");
-        return new LumberjackRole(resourceFinder);
+        return new LumberjackRole(resourceFinder, world);
     }
 
     /**

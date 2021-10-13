@@ -57,14 +57,17 @@ public class LumberjackRoleTests {
     }
 
     @Test
-    public void obtainNextActionIsMoveToTreeWhenTreeExists() {
+    public void obtainNextActionIsMoveToBesidesTreeWhenTreeExists() {
         // Arrange
         final AbstractRole role = RoleFactory.lumberjack();
         final ITaskPerformer performer = mock(ITaskPerformer.class);
-        when(performer.getPosition()).thenReturn(new Position());
+        when(performer.getPosition()).thenReturn(new Position(0, 0));
         final Position treePosition = new Position(5, 3);
-        mockTree(treePosition);
-        final IAction expectedAction = ActionFactory.createMoveTo(treePosition);
+        final Position besidesPosition = new Position(4, 3);
+        final IResource tree = mockTree(treePosition);
+        when(mockWorld.getClosestNeighbourOf(tree, performer.getPosition())).thenReturn(Optional.of(
+            besidesPosition));
+        final IAction expectedAction = ActionFactory.createMoveTo(besidesPosition);
 
         // Act
         final IAction actual = role.obtainNextTask(performer);
@@ -73,9 +76,10 @@ public class LumberjackRoleTests {
         assertThat(actual).isEqualTo(expectedAction);
     }
 
-    private void mockTree(final Position treePosition) {
+    private IResource mockTree(final Position treePosition) {
         final IResource tree = mockResource(treePosition);
         when(finder.getNearbyOfType(any(), eq(ResourceType.TREE))).thenReturn(Optional.of(tree));
+        return tree;
     }
 
     private IResource mockResource(final Position position) {
@@ -84,4 +88,37 @@ public class LumberjackRoleTests {
         return resource;
     }
 
+    @Test
+    public void obtainNextActionIsDoNothingWhenTreeExistsButHasNoVacantNeighbours() {
+        // Arrange
+        final AbstractRole role = RoleFactory.lumberjack();
+        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        when(performer.getPosition()).thenReturn(new Position(0, 0));
+        final Position treePosition = new Position(5, 3);
+        final IResource tree = mockTree(treePosition);
+        when(mockWorld.getClosestNeighbourOf(tree,
+                                             performer.getPosition())).thenReturn(Optional.empty());
+        final IAction expectedAction = ActionFactory.createDoNothing();
+
+        // Act
+        final IAction actual = role.obtainNextTask(performer);
+
+        // Assert
+        assertThat(actual).isEqualTo(expectedAction);
+    }
+
+    /* @Test
+    public void obtainNextActionIsHarvestActionWhenMovedToTree() {
+        // Arrange
+        final AbstractRole role = RoleFactory.lumberjack();
+        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        when(performer.getPosition()).thenReturn(new Position());
+        final IAction moveAction = ActionFactory.createMoveTo(new Position());
+
+        // Act
+        final IAction action = role.obtainNextTask(performer);
+
+        // Assert
+        assertThat(action).isInstanceOf(moveAction.getClass());
+    }*/
 }

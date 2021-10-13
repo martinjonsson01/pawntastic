@@ -49,7 +49,7 @@ public class Pawntastic extends Game {
     private static final float VIEWPORT_WIDTH = 1300;
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
-    private static final int PAWN_POSITIONS = 50;
+    private static final int PAWN_POSITIONS = 1;
     private float tileSize;
     // LibGDX assets
     private BitmapFont font;

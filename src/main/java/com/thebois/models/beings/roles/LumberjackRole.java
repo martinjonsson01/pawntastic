@@ -6,8 +6,11 @@ import java.util.Optional;
 
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
+import com.thebois.models.beings.ITaskPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
+import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionGenerator;
+import com.thebois.models.world.IWorld;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
 
@@ -17,14 +20,17 @@ import com.thebois.models.world.resources.ResourceType;
 class LumberjackRole extends AbstractRole {
 
     private final IResourceFinder finder;
+    private final IWorld world;
 
     /**
      * Instantiates with a way of finding resources.
      *
      * @param finder The locator of resources.
+     * @param world  The world in which the resources are located.
      */
-    LumberjackRole(final IResourceFinder finder) {
+    LumberjackRole(final IResourceFinder finder, final IWorld world) {
         this.finder = finder;
+        this.world = world;
     }
 
     @Override
@@ -34,19 +40,24 @@ class LumberjackRole extends AbstractRole {
 
     @Override
     protected Collection<IActionGenerator> getTaskGenerators() {
-        return List.of(createMoveToTree(),
+        return List.of(this::createMoveToTree,
                        performer -> ActionFactory.createMoveTo(new Position(2, 2)),
                        performer -> ActionFactory.createMoveTo(new Position(2, 2)));
     }
 
-    private IActionGenerator createMoveToTree() {
-        return performer -> {
-            final Optional<IResource> maybeTree = finder.getNearbyOfType(performer.getPosition(),
-                                                                         ResourceType.TREE);
-            if (maybeTree.isEmpty()) return ActionFactory.createDoNothing();
+    private IAction createMoveToTree(final ITaskPerformer performer) {
+        final Position position = performer.getPosition();
+        final Optional<IResource> maybeTree = finder.getNearbyOfType(position, ResourceType.TREE);
+        if (maybeTree.isEmpty()) return ActionFactory.createDoNothing();
 
-            return ActionFactory.createMoveTo(maybeTree.get().getPosition());
-        };
+        final IResource tree = maybeTree.get();
+
+        final Optional<Position> closestSpotNextToTree = world.getClosestNeighbourOf(tree,
+                                                                                     position);
+
+        if (closestSpotNextToTree.isEmpty()) return ActionFactory.createDoNothing();
+
+        return ActionFactory.createMoveTo(closestSpotNextToTree.get());
     }
 
 }

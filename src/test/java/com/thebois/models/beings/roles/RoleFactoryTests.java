@@ -24,7 +24,9 @@ public class RoleFactoryTests {
             Arguments.of(RoleType.FARMER, new FarmerRole()),
             Arguments.of(RoleType.FISHER, new FisherRole()),
             Arguments.of(RoleType.GUARD, new GuardRole()),
-            Arguments.of(RoleType.LUMBERJACK, new LumberjackRole(mock(IResourceFinder.class))),
+            Arguments.of(
+                RoleType.LUMBERJACK,
+                new LumberjackRole(mock(IResourceFinder.class), mock(IWorld.class))),
             Arguments.of(RoleType.MINER, new MinerRole()),
             Arguments.of(RoleType.IDLE, new IdleRole(mock(IWorld.class))));
     }
@@ -48,7 +50,7 @@ public class RoleFactoryTests {
 
         // Assert
         assertThat(roles).contains(
-            new LumberjackRole(mock(IResourceFinder.class)),
+            new LumberjackRole(mock(IResourceFinder.class), mock(IWorld.class)),
             new BuilderRole(),
             new FarmerRole(),
             new FisherRole(),
