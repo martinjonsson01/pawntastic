@@ -94,16 +94,10 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public float getBuiltRatio() {
-        if (allNeededItems.isEmpty()) {
-            return 1f;
-        }
-        else {
-            final float totalDelivered =
-                this.deliveredItems.size();
-            final float totalNeeded = this.allNeededItems.size();
+        final float totalDelivered = this.deliveredItems.size();
+        final float totalNeeded = this.allNeededItems.size();
 
-            return totalDelivered / totalNeeded;
-        }
+        return totalDelivered / totalNeeded;
     }
 
     @Override
