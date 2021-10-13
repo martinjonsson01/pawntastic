@@ -79,13 +79,13 @@ abstract class AbstractStructure implements IStructure {
     }
 
     @Override
-    public Collection<ItemType> neededItems() {
+    public Collection<ItemType> getNeededItems() {
         return allNeededItems.calculateDifference(deliveredItems);
     }
 
     @Override
     public boolean deliverItem(final IItem deliveredItem) {
-        if (neededItems().contains(deliveredItem.getType())) {
+        if (getNeededItems().contains(deliveredItem.getType())) {
             deliveredItems.add(deliveredItem);
             return true;
         }
@@ -93,7 +93,7 @@ abstract class AbstractStructure implements IStructure {
     }
 
     @Override
-    public float builtStatus() {
+    public float getBuiltRatio() {
         if (allNeededItems.isEmpty()) {
             return 1f;
         }
@@ -108,12 +108,12 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public boolean isCompleted() {
-        return Float.compare(builtStatus(), 1f) >= 0;
+        return Float.compare(getBuiltRatio(), 1f) >= 0;
     }
 
     @Override
     public IItem dismantle(final ItemType retrieving) {
-        if (neededItems().contains(retrieving)) {
+        if (getNeededItems().contains(retrieving)) {
             return deliveredItems.take(retrieving);
         }
         return null;
