@@ -69,6 +69,20 @@ public interface IInventory {
     boolean hasItem(ItemType itemType, int amount);
 
     /**
+     * Returns true if IInventory has no items.
+     *
+     * @return Returns true if IInventory has no items.
+     */
+    boolean isEmpty();
+
+    /**
+     * Number of Items in the inventory.
+     *
+     * @return The number of IItems in the inventory.
+     */
+    int size();
+
+    /**
      * Counts how many items are in the implemented inventory of the specified type.
      *
      * @param itemType The type to be counted.
@@ -76,5 +90,14 @@ public interface IInventory {
      * @return The counter.
      */
     int numberOf(ItemType itemType);
+
+    /**
+     * Calculates and returns a list of the differing IItems between two inventories.
+     *
+     * @param inventory The inventory to check against.
+     *
+     * @return A list of differing items.
+     */
+    ArrayList<ItemType> calculateDifference(IInventory inventory);
 
 }

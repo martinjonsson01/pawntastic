@@ -73,6 +73,11 @@ public class Inventory implements IInventory {
     }
 
     @Override
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+
+    @Override
     public int numberOf(final ItemType itemType) {
         int count = 0;
         for (final IItem item : items) {
@@ -81,6 +86,22 @@ public class Inventory implements IInventory {
             }
         }
         return count;
+    }
+
+    @Override
+    public ArrayList<ItemType> calculateDifference(final IInventory inventory) {
+        final ArrayList<ItemType> itemDifference = new ArrayList<>();
+
+        for (final IItem item : this.items) {
+            final int difference =
+                this.numberOf(item.getType()) - inventory.numberOf(item.getType());
+
+            for (int i = 0; i < difference; i++) {
+                itemDifference.add(item.getType());
+            }
+        }
+
+        return itemDifference;
     }
 
 }

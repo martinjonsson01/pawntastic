@@ -3,6 +3,7 @@ package com.thebois.models.world.structures;
 import java.util.Collection;
 
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
 
 /**
  * IBuildable is an interface for interacting game entities that can be built.
@@ -14,7 +15,7 @@ public interface IBuildable {
      *
      * @return Returns a collection of needed items for construction.
      */
-    Collection<IItem> neededItems();
+    Collection<ItemType> neededItems();
 
     /**
      * Method for delivering an IItem to an IBuildable.
@@ -46,5 +47,5 @@ public interface IBuildable {
      *
      * @return Returns whether the retrieval was successful or not.
      */
-    boolean dismantle(IItem retrieving);
+    IItem dismantle(ItemType retrieving);
 }

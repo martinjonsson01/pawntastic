@@ -1,11 +1,13 @@
 package com.thebois.models.world.structures;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
 import com.thebois.models.Position;
+import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Base structure for the game.
@@ -14,8 +16,8 @@ abstract class AbstractStructure implements IStructure {
 
     private Position position;
     private StructureType structureType;
-    private Collection<IItem> allNeededItems = new ArrayList<>();
-    private Collection<IItem> deliveredItems = new ArrayList<>();
+    private IInventory allNeededItems = new Inventory();
+    private IInventory deliveredItems = new Inventory();
 
     /**
      * Creates a structure with a position and structure type.
@@ -23,10 +25,16 @@ abstract class AbstractStructure implements IStructure {
      * @param posX          Position in X-axis.
      * @param posY          Position in Y-axis.
      * @param structureType The type of structure to create.
+     * @param allNeededItems The items needed to finalize construction.
      */
-    AbstractStructure(int posX, int posY, StructureType structureType) {
+    AbstractStructure(
+        int posX,
+        int posY,
+        StructureType structureType,
+        final IInventory allNeededItems) {
         this.position = new Position(posX, posY);
         this.structureType = structureType;
+        this.allNeededItems = allNeededItems;
     }
 
     /**
@@ -34,9 +42,13 @@ abstract class AbstractStructure implements IStructure {
      *
      * @param position      The position the structure have.
      * @param structureType The type of structure to create.
+     * @param allNeededItems The items needed to finalize construction.
      */
-    AbstractStructure(Position position, StructureType structureType) {
-        this((int) position.getPosX(), (int) position.getPosY(), structureType);
+    AbstractStructure(
+        Position position,
+        StructureType structureType,
+        final IInventory allNeededItems) {
+        this((int) position.getPosX(), (int) position.getPosY(), structureType, allNeededItems);
     }
 
     @Override
@@ -67,33 +79,27 @@ abstract class AbstractStructure implements IStructure {
     }
 
     @Override
-    public Collection<IItem> neededItems() {
-        // Make a copy of all IItems in collectionOfAllNeededItems
-        final Collection<IItem> itemDifference = new ArrayList<>(allNeededItems);
-        // Remove IItems that have been delivered
-        deliveredItems.forEach(itemDifference::remove);
-        // Return difference of the two collections
-        return itemDifference;
+    public Collection<ItemType> neededItems() {
+        return allNeededItems.calculateDifference(deliveredItems);
     }
 
     @Override
     public boolean deliverItem(final IItem deliveredItem) {
-        if (neededItems().contains(deliveredItem)) {
+        if (neededItems().contains(deliveredItem.getType())) {
             deliveredItems.add(deliveredItem);
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
     @Override
     public float builtStatus() {
-        if (this.allNeededItems.isEmpty()) {
+        if (allNeededItems.isEmpty()) {
             return 1f;
         }
         else {
-            final float totalDelivered = this.deliveredItems.size();
+            final float totalDelivered =
+                this.deliveredItems.calculateDifference(this.allNeededItems).size();
             final float totalNeeded = this.allNeededItems.size();
 
             return totalDelivered / totalNeeded;
@@ -106,21 +112,18 @@ abstract class AbstractStructure implements IStructure {
     }
 
     @Override
-    public boolean dismantle(final IItem retrieving) {
-        if (deliveredItems.contains(retrieving)) {
-            deliveredItems.remove(retrieving);
-            return true;
+    public IItem dismantle(final ItemType retrieving) {
+        if (neededItems().contains(retrieving)) {
+            return deliveredItems.take(retrieving);
         }
-        else {
-            return false;
-        }
+        return null;
     }
 
-    protected void setAllNeededItems(final Collection<IItem> allNeededItems) {
+    protected void setAllNeededItems(final IInventory allNeededItems) {
         this.allNeededItems = allNeededItems;
     }
 
-    protected void setDeliveredItems(final Collection<IItem> deliveredItems) {
+    protected void setDeliveredItems(final IInventory deliveredItems) {
         this.deliveredItems = deliveredItems;
     }
 
