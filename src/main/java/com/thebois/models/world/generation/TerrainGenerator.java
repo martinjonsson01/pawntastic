@@ -16,8 +16,6 @@ import com.thebois.utils.MatrixUtils;
 public class TerrainGenerator extends AbstractGenerator {
 
     private final Map<TerrainType, INoise> terrainNoise;
-    private final int seed;
-    private final int worldSize;
 
     /**
      * Instantiate a Terrain Generator with pre-made settings used for generating values.
@@ -26,8 +24,7 @@ public class TerrainGenerator extends AbstractGenerator {
      * @param seed      The seed used to generate the world.
      */
     public TerrainGenerator(final int worldSize, final int seed) {
-        this.seed = seed;
-        this.worldSize = worldSize;
+        super(worldSize, seed);
         terrainNoise = new HashMap<>();
         terrainNoise.put(TerrainType.SAND, NoiseFactory.createLargeChunksNoise());
         terrainNoise.put(TerrainType.GRASS, NoiseFactory.createFillMapNoise());
@@ -40,11 +37,11 @@ public class TerrainGenerator extends AbstractGenerator {
      * @return The terrain matrix.
      */
     public ITerrain[][] generateTerrainMatrix() {
-        final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
+        final ITerrain[][] terrainMatrix = new ITerrain[getWorldSize()][getWorldSize()];
 
         for (final TerrainType terrainType : TerrainType.values()) {
             setNoise(terrainNoise.get(terrainType));
-            final int newSeed = seed + terrainType.getSeedPermutation();
+            final int newSeed = getSeed() + terrainType.getSeedPermutation();
             setSeed(newSeed);
             MatrixUtils.populateElements(terrainMatrix,
                                          (x, y) -> generateTerrain(terrainMatrix,

@@ -16,8 +16,6 @@ import com.thebois.utils.MatrixUtils;
 public class ResourceGenerator extends AbstractGenerator {
 
     private final Map<ResourceType, INoise> resourceNoise;
-    private final int seed;
-    private final int worldSize;
 
     /**
      * Instantiate a Resource Generator with pre-made settings used for generating values.
@@ -26,11 +24,10 @@ public class ResourceGenerator extends AbstractGenerator {
      * @param seed      The seed used to generate resources in the world.
      */
     public ResourceGenerator(final int worldSize, final int seed) {
+        super(worldSize, seed);
         resourceNoise = new HashMap<>();
         resourceNoise.put(ResourceType.WATER, NoiseFactory.createLargeChunksNoise());
         resourceNoise.put(ResourceType.TREE, NoiseFactory.createSmallChunksNoise());
-        this.seed = seed;
-        this.worldSize = worldSize;
     }
 
     /**
@@ -43,13 +40,13 @@ public class ResourceGenerator extends AbstractGenerator {
      * @return The resource matrix.
      */
     public IResource[][] generateResourceMatrix() {
-        final IResource[][] resourceMatrix = new IResource[worldSize][worldSize];
+        final IResource[][] resourceMatrix = new IResource[getWorldSize()][getWorldSize()];
         MatrixUtils.populateElements(resourceMatrix, (x, y) -> null);
 
         // Add all resource types to the world.
         for (final ResourceType type : ResourceType.values()) {
             setNoise(resourceNoise.get(type));
-            final int newSeed = seed + type.getSeedPermutation();
+            final int newSeed = getSeed() + type.getSeedPermutation();
             setSeed(newSeed);
             MatrixUtils.populateElements(resourceMatrix,
                                          (x, y) -> generateResource(resourceMatrix, type, x, y));

@@ -8,6 +8,27 @@ import com.thebois.models.world.generation.noises.INoise;
 public abstract class AbstractGenerator {
 
     private INoise noise;
+    private final int seed;
+    private final int worldSize;
+
+    /**
+     * Template for generators used to generate the world.
+     *
+     * @param worldSize The size of the world to generate.
+     * @param seed      The seed used to generate the world.
+     */
+    public AbstractGenerator(final int worldSize, final int seed) {
+        this.seed = seed;
+        this.worldSize = worldSize;
+    }
+
+    protected int getSeed() {
+        return seed;
+    }
+
+    protected int getWorldSize() {
+        return worldSize;
+    }
 
     protected void setNoise(final INoise noise) {
         this.noise = noise;
