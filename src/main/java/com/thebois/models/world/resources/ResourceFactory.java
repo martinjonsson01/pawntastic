@@ -17,14 +17,18 @@ public final class ResourceFactory {
      * @param y    Y position for resource.
      *
      * @return The created resource.
+     *
+     * @throws UnsupportedOperationException If the type of resource wanted to be created have not
+     *                                       been implemented in the factory.
      */
     public static IResource createResource(final ResourceType type, final int x, final int y) {
         if (type == ResourceType.WATER) {
             return new Water(x, y);
         }
-        else {
+        else if (type == ResourceType.TREE) {
             return new Tree(x, y);
         }
+        throw new UnsupportedOperationException();
     }
 
 }
