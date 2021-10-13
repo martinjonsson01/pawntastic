@@ -65,10 +65,6 @@ class MoveAction implements IAction {
             path.remove();
         }
 
-        if (path.isEmpty()) {
-            System.out.println("something's fucky");
-        }
-
         performer.setDestination(path.element());
     }
 

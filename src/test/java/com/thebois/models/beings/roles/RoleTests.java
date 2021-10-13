@@ -97,6 +97,37 @@ public class RoleTests {
     }
 
     @Test
+    public void obtainNextTaskReturnsFirstGeneratedTaskWhenAllInFirstBatchAreCompleted() {
+        // Arrange
+        final IAction flipper = mock(IAction.class);
+        // Behaves as if completed first time, and as if not completed second time.
+        when(flipper.isCompleted(any())).thenReturn(true).thenReturn(false);
+        final IAction secondCompleted = mockTask(true);
+        final IAction thirdCompleted = mockTask(true);
+        final AbstractRole role = mockTestRole(flipper, secondCompleted, thirdCompleted);
+        final ITaskPerformer performer = mock(ITaskPerformer.class);
+
+        // Act
+        final IAction action = role.obtainNextTask(performer);
+
+        // Assert
+        assertThat(action).isSameAs(flipper);
+    }
+
+    private IAction mockTask(final boolean completed) {
+        final IAction task = mock(IAction.class);
+        when(task.isCompleted(any())).thenReturn(completed);
+        return task;
+    }
+
+    private AbstractRole mockTestRole(final IAction... params) {
+        final List<IAction> tasks = List.of(params);
+        final List<IActionGenerator> taskGenerators =
+            tasks.stream().map(task -> (IActionGenerator) () -> task).collect(Collectors.toList());
+        return new TestRole(taskGenerators);
+    }
+
+    @Test
     public void obtainNextTaskReturnsTasksInOrderWhenTasksAreCompletedInSequence() {
         // Arrange
         final IAction first = mockTask(false);
@@ -117,19 +148,6 @@ public class RoleTests {
         // Assert
         final List<IAction> actualTasks = List.of(actualFirst, actualSecond, actualThird);
         assertThat(actualTasks).containsExactly(first, second, third);
-    }
-
-    private IAction mockTask(final boolean completed) {
-        final IAction task = mock(IAction.class);
-        when(task.isCompleted(any())).thenReturn(completed);
-        return task;
-    }
-
-    private AbstractRole mockTestRole(final IAction... params) {
-        final List<IAction> tasks = List.of(params);
-        final List<IActionGenerator> taskGenerators =
-            tasks.stream().map(task -> (IActionGenerator) () -> task).collect(Collectors.toList());
-        return new TestRole(taskGenerators);
     }
 
     @Test

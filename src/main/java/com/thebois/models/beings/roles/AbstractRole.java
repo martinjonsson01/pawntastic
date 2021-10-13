@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
 
+import com.thebois.abstractions.IDeepClonable;
 import com.thebois.models.beings.ITaskPerformer;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionGenerator;
-import com.thebois.abstractions.IDeepClonable;
 
 /**
  * Represents an assignment to a specific work task.
@@ -69,12 +69,12 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
      * @return The current task that needs to be completed.
      */
     public IAction obtainNextTask(final ITaskPerformer performer) {
-        if (tasks.isEmpty()) tasks.addAll(getTaskGenerators());
-
         if (currentTask == null || currentTask.isCompleted(performer)) {
             // Take actions from queue until one is found that is not completed.
             IAction newTask;
             do {
+                if (tasks.isEmpty()) tasks.addAll(getTaskGenerators());
+
                 final IActionGenerator actionable = tasks.remove();
                 newTask = actionable.generate();
             } while (newTask.isCompleted(performer));
