@@ -1,7 +1,5 @@
 package com.thebois.models;
 
-import java.util.Optional;
-
 import com.thebois.models.world.World;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.terrains.Grass;
@@ -23,11 +21,11 @@ public class MockWorld extends World {
     }
 
     @Override
-    protected Optional<IResource>[][] setUpResources(final int seed) {
-        final Optional<IResource>[][] resourceMatrix = new Optional[seed][seed];
+    protected IResource[][] setUpResources(final int seed) {
+        final IResource[][] resourceMatrix = new IResource[seed][seed];
         for (int y = 0; y < seed; y++) {
             for (int x = 0; x < seed; x++) {
-                resourceMatrix[y][x] = Optional.empty();
+                resourceMatrix[y][x] = null;
             }
         }
         return resourceMatrix;

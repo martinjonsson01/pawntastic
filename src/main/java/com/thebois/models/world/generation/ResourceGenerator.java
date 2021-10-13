@@ -2,7 +2,6 @@ package com.thebois.models.world.generation;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import com.thebois.models.world.generation.patterns.IGenerationPattern;
 import com.thebois.models.world.generation.patterns.LargeChunks;
@@ -49,33 +48,33 @@ public class ResourceGenerator extends AbstractGenerator {
     /**
      * Generates a Resource Matrix with the given world size.
      *
+     * <p>
+     * Some elements maybe be null, be careful when reading from matrix.
+     * </p>
+     *
      * @param worldSize The size of the world.
      *
      * @return The resource matrix.
      */
-    public Optional<IResource>[][] generateResourceMatrix(final int worldSize) {
-        final Optional<IResource>[][] resourceMatrix = new Optional[worldSize][worldSize];
-        MatrixUtils.populateElements(resourceMatrix, (x, y) -> Optional.empty());
+    public IResource[][] generateResourceMatrix(final int worldSize) {
+        final IResource[][] resourceMatrix = new IResource[worldSize][worldSize];
+        MatrixUtils.populateElements(resourceMatrix, (x, y) -> null);
 
         // Add all resource types to the world.
         for (final ResourceType type : ResourceType.values()) {
             setGenerationPattern(RESOURCE_PATTERN.get(type));
-            MatrixUtils.populateElements(
-                resourceMatrix,
-                (x, y) -> generateResource(resourceMatrix, type, x, y));
+            MatrixUtils.populateElements(resourceMatrix,
+                                         (x, y) -> generateResource(resourceMatrix, type, x, y));
         }
         return resourceMatrix;
     }
 
-    private Optional<IResource> generateResource(
-        final Optional<IResource>[][] resourceMatrix,
-        final ResourceType type,
-        final int x,
-        final int y) {
-        if (resourceMatrix[y][x].isEmpty()) {
+    private IResource generateResource(
+        final IResource[][] resourceMatrix, final ResourceType type, final int x, final int y) {
+        if (resourceMatrix[y][x] == null) {
             final float height = sample(x, y);
             if (height >= RESOURCE_THRESHOLD.get(type)) {
-                return Optional.of(ResourceFactory.createResource(type, x, y));
+                return ResourceFactory.createResource(type, x, y);
             }
         }
         // Keep resource if position is occupied.

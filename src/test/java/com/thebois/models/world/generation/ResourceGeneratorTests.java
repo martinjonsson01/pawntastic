@@ -1,7 +1,6 @@
 package com.thebois.models.world.generation;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
@@ -39,8 +38,8 @@ public class ResourceGeneratorTests {
         // Arrange
         final ResourceGenerator generator1 = new ResourceGenerator(seed1);
         final ResourceGenerator generator2 = new ResourceGenerator(seed2);
-        final Optional<IResource>[][] matrix1;
-        final Optional<IResource>[][] matrix2;
+        final IResource[][] matrix1;
+        final IResource[][] matrix2;
         final boolean isEqual;
 
         // Act
@@ -59,8 +58,8 @@ public class ResourceGeneratorTests {
         // Arrange
         final ResourceGenerator generator1 = new ResourceGenerator(seed);
         final ResourceGenerator generator2 = new ResourceGenerator(seed);
-        final Optional<IResource>[][] matrix1;
-        final Optional<IResource>[][] matrix2;
+        final IResource[][] matrix1;
+        final IResource[][] matrix2;
         final boolean isEqual;
 
         // Act
@@ -77,12 +76,12 @@ public class ResourceGeneratorTests {
     public void generatedResourceMatrixIsNotEmpty() {
         // Arrange
         final ResourceGenerator generator = new ResourceGenerator(0);
-        final Optional<IResource>[][] matrix;
+        final IResource[][] matrix;
         final AtomicBoolean moreThanZeroResources = new AtomicBoolean(false);
         // Act
         matrix = generator.generateResourceMatrix(100);
         MatrixUtils.forEachElement(matrix, maybeResource -> {
-            if (maybeResource.isPresent()) {
+            if (maybeResource != null) {
                 moreThanZeroResources.set(true);
             }
         });
@@ -95,17 +94,17 @@ public class ResourceGeneratorTests {
     public void generatedResourceMatrixContainsAtLeastTwoDifferentTypeResources() {
         // Arrange
         final ResourceGenerator generator = new ResourceGenerator(0);
-        final Optional<IResource>[][] matrix;
+        final IResource[][] matrix;
         final AtomicBoolean containsWater = new AtomicBoolean(false);
         final AtomicBoolean containsTree = new AtomicBoolean(false);
         // Act
         matrix = generator.generateResourceMatrix(100);
         MatrixUtils.forEachElement(matrix, maybeResource -> {
-            if (maybeResource.isPresent()) {
-                if (maybeResource.get().getType().equals(ResourceType.TREE)) {
+            if (maybeResource != null) {
+                if (maybeResource.getType().equals(ResourceType.TREE)) {
                     containsTree.set(true);
                 }
-                if (maybeResource.get().getType().equals(ResourceType.WATER)) {
+                if (maybeResource.getType().equals(ResourceType.WATER)) {
                     containsWater.set(true);
                 }
             }

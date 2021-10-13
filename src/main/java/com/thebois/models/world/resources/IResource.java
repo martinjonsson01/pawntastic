@@ -1,6 +1,6 @@
 package com.thebois.models.world.resources;
 
-import com.thebois.models.IDeepClonable;
+import com.thebois.abstractions.IDeepClonable;
 import com.thebois.models.world.ITile;
 
 /**
