@@ -1,18 +1,23 @@
 package com.thebois.models.world;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import com.thebois.ColonyManagement;
+import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.world.generation.ResourceGenerator;
+import com.thebois.models.world.generation.TerrainGenerator;
+import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.terrains.ITerrain;
 import com.thebois.utils.MatrixUtils;
 
 /**
@@ -21,39 +26,45 @@ import com.thebois.utils.MatrixUtils;
 public class World implements IWorld, IFinder {
 
     private final ITerrain[][] terrainMatrix;
-    private final Optional<IStructure>[][] structureMatrix;
-    private final int worldSize;
+    private final IStructure[][] structureMatrix;
+    private final IResource[][] resourceMatrix;
     private final ITile[][] canonicalMatrix;
+    private final int worldSize;
     private final Random random;
 
     /**
      * Initiates the world with the given size.
      *
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
+     * @param seed      The seed used to generate the world.
      * @param random    A generator of random numbers.
      */
-    public World(final int worldSize, final Random random) {
+    public World(final int worldSize, final int seed, final Random random) {
         this.worldSize = worldSize;
         this.random = random;
-        RoleFactory.setWorld(this);
-
-        terrainMatrix = new ITerrain[worldSize][worldSize];
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
-                terrainMatrix[y][x] = new Grass(x, y);
-            }
-        }
-        // Structures
-        // noinspection unchecked
-        structureMatrix = new Optional[worldSize][worldSize];
-        for (int y = 0; y < structureMatrix.length; y++) {
-            for (int x = 0; x < structureMatrix[y].length; x++) {
-                structureMatrix[y][x] = Optional.empty();
-            }
-        }
-
+        terrainMatrix = setUpTerrain(seed);
+        structureMatrix = setUpStructures();
+        resourceMatrix = setUpResources(seed);
         canonicalMatrix = new ITile[worldSize][worldSize];
         updateCanonicalMatrix();
+    }
+
+    private IStructure[][] setUpStructures() {
+        final IStructure[][] newStructureMatrix = new IStructure[worldSize][worldSize];
+        for (final IStructure[] matrix : newStructureMatrix) {
+            Arrays.fill(matrix, null);
+        }
+        return newStructureMatrix;
+    }
+
+    protected ITerrain[][] setUpTerrain(final int seed) {
+        final TerrainGenerator terrainGenerator = new TerrainGenerator(seed);
+        return terrainGenerator.generateTerrainMatrix(worldSize);
+    }
+
+    protected IResource[][] setUpResources(final int seed) {
+        final ResourceGenerator resourceGenerator = new ResourceGenerator(seed);
+        return resourceGenerator.generateResourceMatrix(worldSize);
     }
 
     /**
@@ -72,14 +83,24 @@ public class World implements IWorld, IFinder {
             final int posX = (int) position.getPosX();
             canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
         });
+        // Replace terrain with any possible resource.
+        MatrixUtils.forEachElement(resourceMatrix, maybeResource -> {
+            if (maybeResource != null) {
+                final Position position = maybeResource.getPosition();
+                final int posY = (int) position.getPosY();
+                final int posX = (int) position.getPosX();
+                canonicalMatrix[posY][posX] = maybeResource.deepClone();
+            }
+        });
         // Replace terrain with any possible structure.
-        MatrixUtils.forEachElement(structureMatrix,
-                                   maybeStructure -> maybeStructure.ifPresent(structure -> {
-                                       final Position position = structure.getPosition();
-                                       final int posY = (int) position.getPosY();
-                                       final int posX = (int) position.getPosX();
-                                       canonicalMatrix[posY][posX] = structure.deepClone();
-                                   }));
+        MatrixUtils.forEachElement(structureMatrix, structure -> {
+            if (structure != null) {
+                final Position position = structure.getPosition();
+                final int posY = (int) position.getPosY();
+                final int posX = (int) position.getPosX();
+                canonicalMatrix[posY][posX] = structure.deepClone();
+            }
+        });
     }
 
     /**
@@ -93,9 +114,16 @@ public class World implements IWorld, IFinder {
         final List<Position> emptyPositions = new ArrayList<>();
         MatrixUtils.forEachElement(canonicalMatrix, tile -> {
             if (emptyPositions.size() >= count) return;
-            emptyPositions.add(tile.getPosition());
+            if (isPositionEmpty(tile.getPosition())) {
+                emptyPositions.add(tile.getPosition());
+            }
         });
         return emptyPositions;
+    }
+
+    private boolean isPositionEmpty(final Position position) {
+        return canonicalMatrix[(int) position.getPosY()][(int) position.getPosX()].getCost()
+               < Float.MAX_VALUE;
     }
 
     /**
@@ -123,15 +151,34 @@ public class World implements IWorld, IFinder {
     }
 
     /**
-     * Returns the structures in a Collection as the interface IStructures.
+     * Returns the structures in a Collection as the interface IStructure.
      *
      * @return The list to be returned.
      */
     public Collection<IStructure> getStructures() {
         final Collection<IStructure> copy = new ArrayList<>();
-        for (final Optional<IStructure>[] matrix : structureMatrix) {
-            for (final Optional<IStructure> structure : matrix) {
-                structure.ifPresent(iStructure -> copy.add(iStructure.deepClone()));
+        for (final IStructure[] matrix : structureMatrix) {
+            for (final IStructure structure : matrix) {
+                if (structure != null) {
+                    copy.add(structure.deepClone());
+                }
+            }
+        }
+        return copy;
+    }
+
+    /**
+     * Returns the resources in a Collection as the interface IResource.
+     *
+     * @return The list to be returned.
+     */
+    public Collection<IResource> getResources() {
+        final Collection<IResource> copy = new ArrayList<>();
+        for (final IResource[] matrix : resourceMatrix) {
+            for (final IResource maybeResource : matrix) {
+                if (maybeResource != null) {
+                    copy.add(maybeResource.deepClone());
+                }
             }
         }
         return copy;
@@ -142,7 +189,7 @@ public class World implements IWorld, IFinder {
      *
      * @param position The position where the structure should be built.
      *
-     * @return Whether or not the structure was built.
+     * @return Whether the structure was built.
      */
     public boolean createStructure(final Position position) {
         return createStructure((int) position.getPosX(), (int) position.getPosY());
@@ -154,12 +201,12 @@ public class World implements IWorld, IFinder {
      * @param posX The X coordinate where the structure should be built.
      * @param posY The Y coordinate where the structure should be built.
      *
-     * @return Whether or not the structure was built.
+     * @return Whether the structure was built.
      */
     public boolean createStructure(final int posX, final int posY) {
         final Position position = new Position(posX, posY);
         if (isPositionPlaceable(position)) {
-            structureMatrix[posY][posX] = Optional.of(new House(position));
+            structureMatrix[posY][posX] = new House(position);
 
             updateCanonicalMatrix();
             postObstacleEvent(posX, posY);
@@ -177,12 +224,12 @@ public class World implements IWorld, IFinder {
         if (posIntX < 0 || posIntX >= structureMatrix[posIntY].length) {
             return false;
         }
-        return structureMatrix[posIntY][posIntX].isEmpty();
+        return isPositionEmpty(position);
     }
 
     private void postObstacleEvent(final int posX, final int posY) {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(posX, posY);
-        ColonyManagement.BUS.post(obstacleEvent);
+        Pawntastic.BUS.post(obstacleEvent);
     }
 
     @Override
@@ -200,7 +247,7 @@ public class World implements IWorld, IFinder {
         for (int neighbourY = startY; neighbourY <= endY; neighbourY++) {
             for (int neighbourX = startX; neighbourX <= endX; neighbourX++) {
                 final ITile neighbour = canonicalMatrix[neighbourY][neighbourX];
-                if (tile.equals(neighbour)) continue;
+                if (position.equals(neighbour.getPosition())) continue;
                 if (isDiagonalTo(tile, neighbour)) continue;
                 tiles.add(neighbour);
             }

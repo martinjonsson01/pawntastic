@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-import com.thebois.ColonyManagement;
+import com.thebois.Pawntastic;
 import com.thebois.controllers.IController;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.world.World;
@@ -46,8 +46,12 @@ public class WorldController implements IController<GameView> {
                                                                                 tileSize);
         final TerrainController terrainController = new TerrainController(world, tileSize);
         final ColonyController colonyController = new ColonyController(colony, tileSize);
+        final ResourceController resourceController = new ResourceController(world, tileSize);
 
-        controllers = List.of(terrainController, structureController, colonyController);
+        controllers = List.of(terrainController,
+                              resourceController,
+                              structureController,
+                              colonyController);
         inputProcessors = List.of(structureController);
 
         gameView = createGameView(world, colony, tileSize, font);
@@ -55,10 +59,11 @@ public class WorldController implements IController<GameView> {
     }
 
     private GameView createGameView(
-        final World world, final Colony colony, final float tileSize, final BitmapFont font) {
+        final World world,
+        final Colony colony, final float tileSize, final BitmapFont font) {
         final List<IView> views =
             controllers.stream().map(IController::getView).collect(Collectors.toList());
-        if (ColonyManagement.DEBUG) {
+        if (Pawntastic.DEBUG) {
             views.addAll(createDebugViews(world, colony, tileSize, font));
         }
         return new GameView(views, tileSize);

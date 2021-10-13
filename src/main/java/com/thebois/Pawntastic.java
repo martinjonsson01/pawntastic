@@ -15,8 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.google.common.eventbus.EventBus;
 
-import com.thebois.controllers.info.InfoController;
 import com.thebois.controllers.game.WorldController;
+import com.thebois.controllers.info.InfoController;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
@@ -29,7 +29,7 @@ import com.thebois.views.ViewportWrapper;
 /**
  * The main representation of the game.
  */
-public class ColonyManagement extends Game {
+public class Pawntastic extends Game {
 
     /**
      * The global event bus that most events pass through.
@@ -106,7 +106,7 @@ public class ColonyManagement extends Game {
 
     private void createModels() {
         final Random random = new Random();
-        world = new World(WORLD_SIZE, random);
+        world = new World(WORLD_SIZE, 0, random);
 
         final IPathFinder pathFinder = new AstarPathFinder(world);
         ActionFactory.setPathFinder(pathFinder);

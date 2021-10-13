@@ -2,6 +2,8 @@ package com.thebois.models;
 
 import java.util.Objects;
 
+import com.thebois.abstractions.IDeepClonable;
+
 /**
  * A two-dimensional location.
  */
