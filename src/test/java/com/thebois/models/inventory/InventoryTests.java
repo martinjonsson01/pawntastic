@@ -1,6 +1,10 @@
 package com.thebois.models.inventory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Stack;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -184,6 +188,48 @@ public class InventoryTests {
 
         // Assert
         assertThat(inventory.hasItem(ItemType.LOG, 2)).isTrue();
+    }
+
+    private static Stream<Arguments> calculatedDifferenceEqualToExpectedSource() {
+        return Stream.of(Arguments.of(
+            List.of(new Rock(), new Rock(), new Rock(), new Log(), new Log(), new Log()),
+            List.of(new Rock()),
+            new ArrayList<>(Arrays.asList(ItemType.LOG,
+                                          ItemType.LOG,
+                                          ItemType.LOG,
+                                          ItemType.ROCK,
+                                          ItemType.ROCK))),
+        Arguments.of(
+            List.of(new Rock(), new Rock()),
+            List.of(new Rock()),
+            new ArrayList<>(List.of(ItemType.ROCK)))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("calculatedDifferenceEqualToExpectedSource")
+    public void calculatedDifferenceEqualToExpected(
+        final Collection<IItem> listA,
+        final Collection<IItem> listB,
+        final ArrayList<ItemType> expectedDifference) {
+        // Arrange
+
+        final Stack<IItem> itemsA = new Stack<>();
+        final Stack<IItem> itemsB = new Stack<>();
+        itemsA.addAll(listA);
+        itemsB.addAll(listB);
+
+        final IInventory inventoryA = new Inventory();
+        final IInventory inventoryB = new Inventory();
+
+        inventoryA.addMultiple(itemsA);
+        inventoryB.addMultiple(itemsB);
+
+        // Act
+        final ArrayList<ItemType> difference = inventoryA.calculateDifference(inventoryB);
+
+        // Assert
+        assertThat(difference.containsAll(expectedDifference)).isTrue();
     }
 
 }

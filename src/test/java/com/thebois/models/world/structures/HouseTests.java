@@ -125,8 +125,9 @@ public class HouseTests {
             Arguments.of(10, 10, 1f),
             Arguments.of(20, 20, 1f),
             Arguments.of(0, 0, 0f),
-            Arguments.of(5, 5, 0.2f),
-            Arguments.of(10, 0, 0.2f));
+            Arguments.of(5, 5, 0.5f),
+            Arguments.of(20, 0, 0.5f),
+            Arguments.of(10, 0, 0.5f));
     }
 
     @ParameterizedTest
