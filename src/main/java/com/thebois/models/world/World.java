@@ -15,10 +15,10 @@ import com.thebois.models.Position;
 import com.thebois.models.world.generation.ResourceGenerator;
 import com.thebois.models.world.generation.TerrainGenerator;
 import com.thebois.models.world.resources.IResource;
+import com.thebois.models.world.resources.ResourceType;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.terrains.ITerrain;
-import com.thebois.models.world.structures.StructureType;
 import com.thebois.utils.MatrixUtils;
 
 /**
@@ -50,17 +50,17 @@ public class World implements IWorld, IFinder, IResourceFinder {
         updateCanonicalMatrix();
     }
 
+    protected ITerrain[][] setUpTerrain(final int seed) {
+        final TerrainGenerator terrainGenerator = new TerrainGenerator(seed);
+        return terrainGenerator.generateTerrainMatrix(worldSize);
+    }
+
     private IStructure[][] setUpStructures() {
         final IStructure[][] newStructureMatrix = new IStructure[worldSize][worldSize];
         for (final IStructure[] matrix : newStructureMatrix) {
             Arrays.fill(matrix, null);
         }
         return newStructureMatrix;
-    }
-
-    protected ITerrain[][] setUpTerrain(final int seed) {
-        final TerrainGenerator terrainGenerator = new TerrainGenerator(seed);
-        return terrainGenerator.generateTerrainMatrix(worldSize);
     }
 
     protected IResource[][] setUpResources(final int seed) {
@@ -162,23 +162,6 @@ public class World implements IWorld, IFinder, IResourceFinder {
             for (final IStructure structure : matrix) {
                 if (structure != null) {
                     copy.add(structure.deepClone());
-                }
-            }
-        }
-        return copy;
-    }
-
-    /**
-     * Returns the resources in a Collection as the interface IResource.
-     *
-     * @return The list to be returned.
-     */
-    public Collection<IResource> getResources() {
-        final Collection<IResource> copy = new ArrayList<>();
-        for (final IResource[] matrix : resourceMatrix) {
-            for (final IResource maybeResource : matrix) {
-                if (maybeResource != null) {
-                    copy.add(maybeResource.deepClone());
                 }
             }
         }
@@ -303,11 +286,29 @@ public class World implements IWorld, IFinder, IResourceFinder {
     }
 
     @Override
-    public Optional<IStructure> getNearbyOfType(final Position origin, final StructureType type) {
-        return getStructures()
+    public Optional<IResource> getNearbyOfType(final Position origin, final ResourceType type) {
+        return getResources()
             .stream()
+            .filter(resource -> resource.getType().equals(type))
             .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
                                            origin.distanceTo(o2.getPosition())));
+    }
+
+    /**
+     * Returns the resources in a Collection as the interface IResource.
+     *
+     * @return The list to be returned.
+     */
+    public Collection<IResource> getResources() {
+        final Collection<IResource> copy = new ArrayList<>();
+        for (final IResource[] matrix : resourceMatrix) {
+            for (final IResource maybeResource : matrix) {
+                if (maybeResource != null) {
+                    copy.add(maybeResource.deepClone());
+                }
+            }
+        }
+        return copy;
     }
 
 }

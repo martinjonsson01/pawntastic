@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.world.IWorld;
 
 /**
@@ -12,12 +13,17 @@ import com.thebois.models.world.IWorld;
 public final class RoleFactory {
 
     private static IWorld world;
+    private static IResourceFinder resourceFinder;
 
     private RoleFactory() {
     }
 
     public static void setWorld(final IWorld world) {
         RoleFactory.world = world;
+    }
+
+    public static void setResourceFinder(final IResourceFinder finder) {
+        RoleFactory.resourceFinder = finder;
     }
 
     /**
@@ -60,7 +66,10 @@ public final class RoleFactory {
      * @return A new lumberjack role.
      */
     public static AbstractRole lumberjack() {
-        return new LumberjackRole();
+        Objects.requireNonNull(
+            resourceFinder,
+            "Resource Finder can not be null. Call RoleFactory.setResourceFinder to set it.");
+        return new LumberjackRole(resourceFinder);
     }
 
     /**
@@ -114,9 +123,8 @@ public final class RoleFactory {
      * @return A new randomly moving idle role.
      */
     public static AbstractRole idle() {
-        Objects.requireNonNull(
-            world,
-            "World can not be null. Call RoleFactory.setWorld to set it.");
+        Objects.requireNonNull(world,
+                               "World can not be null. Call RoleFactory.setWorld to set it.");
         return new IdleRole(world);
     }
 

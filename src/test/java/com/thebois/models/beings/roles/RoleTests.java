@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.beings.ITaskPerformer;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionGenerator;
@@ -23,10 +24,11 @@ import static org.mockito.Mockito.*;
 public class RoleTests {
 
     public static Stream<Arguments> getEqualRoles() {
-        final LumberjackRole sameLumberjack = new LumberjackRole();
+        final IResourceFinder resourceFinder = mock(IResourceFinder.class);
+        final LumberjackRole sameLumberjack = new LumberjackRole(resourceFinder);
         return Stream.of(
             Arguments.of(sameLumberjack, sameLumberjack),
-            Arguments.of(new LumberjackRole(), new LumberjackRole()),
+            Arguments.of(new LumberjackRole(resourceFinder), new LumberjackRole(resourceFinder)),
             Arguments.of(new FarmerRole(), new FarmerRole()),
             Arguments.of(new GuardRole(), new GuardRole()),
             Arguments.of(new FisherRole(), new FisherRole()),
@@ -35,17 +37,19 @@ public class RoleTests {
     }
 
     public static Stream<Arguments> getUnequalRoles() {
+        final IResourceFinder resourceFinder = mock(IResourceFinder.class);
         return Stream.of(
-            Arguments.of(new LumberjackRole(), new FarmerRole()),
-            Arguments.of(new FarmerRole(), new LumberjackRole()),
+            Arguments.of(new LumberjackRole(resourceFinder), new FarmerRole()),
+            Arguments.of(new FarmerRole(), new LumberjackRole(resourceFinder)),
             Arguments.of(new FisherRole(), new BuilderRole()),
             Arguments.of(new BuilderRole(), new FisherRole()),
             Arguments.of(new BuilderRole(), null));
     }
 
     public static Stream<Arguments> getRoleAndNames() {
+        final IResourceFinder resourceFinder = mock(IResourceFinder.class);
         return Stream.of(
-            Arguments.of(new LumberjackRole(), "Lumberjack"),
+            Arguments.of(new LumberjackRole(resourceFinder), "Lumberjack"),
             Arguments.of(new FarmerRole(), "Farmer"),
             Arguments.of(new GuardRole(), "Guard"));
     }
@@ -53,11 +57,13 @@ public class RoleTests {
     @BeforeEach
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
+        RoleFactory.setResourceFinder(mock(IResourceFinder.class));
     }
 
     @AfterEach
     public void teardown() {
         RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
     }
 
     @ParameterizedTest

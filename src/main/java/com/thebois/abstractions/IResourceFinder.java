@@ -3,8 +3,8 @@ package com.thebois.abstractions;
 import java.util.Optional;
 
 import com.thebois.models.Position;
-import com.thebois.models.world.structures.IStructure;
-import com.thebois.models.world.structures.StructureType;
+import com.thebois.models.world.resources.IResource;
+import com.thebois.models.world.resources.ResourceType;
 
 /**
  * Represents a locator of resources.
@@ -19,6 +19,6 @@ public interface IResourceFinder {
      *
      * @return The nearby resource of the given type, otherwise empty.
      */
-    Optional<IStructure> getNearbyOfType(Position origin, StructureType type);
+    Optional<IResource> getNearbyOfType(Position origin, ResourceType type);
 
 }

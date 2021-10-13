@@ -20,9 +20,10 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.world.resources.IResource;
+import com.thebois.models.world.resources.ResourceType;
+import com.thebois.models.world.resources.Tree;
 import com.thebois.models.world.resources.Water;
 import com.thebois.models.world.structures.IStructure;
-import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.Dirt;
 import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
@@ -89,42 +90,26 @@ public class WorldTests {
     @Test
     public void getNearbyOfTypeResourceReturnsEmptyWhenNothingNearby() {
         // Arrange
-        final IResourceFinder finder = createWorld(10);
+        final IResourceFinder finder = new MockWorld(10, 0, mock(Random.class));
         final Position origin = new Position();
 
         // Act
-        final Optional<IStructure> maybeResource = finder.getNearbyOfType(origin,
-                                                                          StructureType.HOUSE);
+        final Optional<IResource> maybeResource = finder.getNearbyOfType(origin, ResourceType.TREE);
 
         // Assert
         assertThat(maybeResource).isEmpty();
     }
 
-    private World createWorld(final int size) {
-        return createWorld(size, 0);
-    }
-
-    private World createWorld(final int size, final int seed) {
-        return createWorld(size, seed, mock(Random.class));
-    }
-
-    private World createWorld(final int size, final int seed, final Random random) {
-        return new World(size, seed, random);
-    }
-
     @Test
     public void getNearbyOfTypeResourceReturnsItWhenSingleNearby() {
         // Arrange
-        final World world = createWorld(10);
-        world.createStructure(5, 5);
-        final IStructure expectedResource =
-            world.getStructures().stream().findFirst().orElseThrow();
+        final World world = new ResourceTestWorld(mock(Random.class));
+        final IResource expectedResource = world.getResources().stream().findFirst().orElseThrow();
         final Position origin = new Position();
         final IResourceFinder finder = world;
 
         // Act
-        final Optional<IStructure> maybeResource = finder.getNearbyOfType(origin,
-                                                                          StructureType.HOUSE);
+        final Optional<IResource> maybeResource = finder.getNearbyOfType(origin, ResourceType.TREE);
 
         // Assert
         assertThat(maybeResource).hasValue(expectedResource);
@@ -133,21 +118,16 @@ public class WorldTests {
     @Test
     public void getNearbyOfTypeResourceReturnsClosestWhenMultipleNearby() {
         // Arrange
-        final World world = createWorld(10);
-        final Position expectedResourcePosition = new Position(9, 6);
-        world.createStructure(expectedResourcePosition);
-        world.createStructure(3, 4);
-        world.createStructure(5, 5);
-        final IStructure expectedResource =
-            world.getStructures().stream().filter(resource -> resource
-                .getPosition()
-                .equals(expectedResourcePosition)).findFirst().orElseThrow();
-        final Position origin = new Position(9, 9);
+        final World world = new ResourceTestWorld(mock(Random.class));
+        final Position expectedResourcePosition = new Position(9, 9);
+        final IResource expectedResource = world.getResources().stream().filter(resource -> resource
+            .getPosition()
+            .equals(expectedResourcePosition)).findFirst().orElseThrow();
+        final Position from = new Position(8, 8);
         final IResourceFinder finder = world;
 
         // Act
-        final Optional<IStructure> maybeResource = finder.getNearbyOfType(origin,
-                                                                          StructureType.HOUSE);
+        final Optional<IResource> maybeResource = finder.getNearbyOfType(from, ResourceType.TREE);
 
         // Assert
         assertThat(maybeResource).hasValue(expectedResource);
@@ -198,6 +178,47 @@ public class WorldTests {
     }
 
     @Test
+    public void worldFind() {
+        // Arrange
+        final World world = createWorld(2);
+
+        // Act
+        final Object worldObject = world.find();
+
+        // Assert
+        assertThat(worldObject).isEqualTo(null);
+    }
+
+    private World createWorld(final int size) {
+        return createWorld(size, 0);
+    }
+
+    private World createWorld(final int size, final int seed) {
+        return createWorld(size, seed, mock(Random.class));
+    }
+
+    private World createWorld(final int size, final int seed, final Random random) {
+        return new World(size, seed, random);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getTileAndNeighbours")
+    public void getNeighboursOfReturnsExpectedNeighbours(
+        final ITile tile, final Iterable<Position> expectedNeighbours) {
+        // Arrange
+        final World world = createWorld(3, 15);
+
+        // Act
+        final Iterable<ITile> actualNeighbours = world.getNeighboursOf(tile);
+        final Collection<Position> positions = new ArrayList<>();
+        for (final ITile actualNeighbour : actualNeighbours) {
+            positions.add(actualNeighbour.getPosition());
+        }
+        // Assert
+        assertThat(positions).containsExactlyInAnyOrderElementsOf(expectedNeighbours);
+    }
+
+    @Test
     public void worldInitiated() {
         // Arrange
         final Collection<ITerrain> expectedTerrainTiles = mockDirtTiles();
@@ -216,35 +237,6 @@ public class WorldTests {
         terrainTiles.add(new Dirt(1, 0));
         terrainTiles.add(new Dirt(1, 1));
         return terrainTiles;
-    }
-
-    @Test
-    public void worldFind() {
-        // Arrange
-        final World world = createWorld(2);
-
-        // Act
-        final Object worldObject = world.find();
-
-        // Assert
-        assertThat(worldObject).isEqualTo(null);
-    }
-
-    @ParameterizedTest
-    @MethodSource("getTileAndNeighbours")
-    public void getNeighboursOfReturnsExpectedNeighbours(
-        final ITile tile, final Iterable<Position> expectedNeighbours) {
-        // Arrange
-        final World world = createWorld(3, 15);
-
-        // Act
-        final Iterable<ITile> actualNeighbours = world.getNeighboursOf(tile);
-        final Collection<Position> positions = new ArrayList<>();
-        for (final ITile actualNeighbour : actualNeighbours) {
-            positions.add(actualNeighbour.getPosition());
-        }
-        // Assert
-        assertThat(positions).containsExactlyInAnyOrderElementsOf(expectedNeighbours);
     }
 
     @Test
@@ -442,6 +434,40 @@ public class WorldTests {
 
         // Assert
         assertThat(actualResources).containsExactlyInAnyOrderElementsOf(expectedResources);
+    }
+
+    private static class ResourceTestWorld extends World {
+
+        private static final int SIZE = 10;
+
+        ResourceTestWorld(final Random random) {
+            super(SIZE, SIZE, random);
+        }
+
+        @Override
+        protected ITerrain[][] setUpTerrain(final int seed) {
+            final ITerrain[][] terrainMatrix = new ITerrain[SIZE][SIZE];
+            for (int y = 0; y < SIZE; y++) {
+                for (int x = 0; x < SIZE; x++) {
+                    terrainMatrix[y][x] = new Grass(x, y);
+                }
+            }
+            return terrainMatrix;
+        }
+
+        @Override
+        protected IResource[][] setUpResources(final int seed) {
+            final IResource[][] resourceMatrix = new IResource[SIZE][SIZE];
+            for (int y = 0; y < SIZE; y++) {
+                for (int x = 0; x < SIZE; x++) {
+                    resourceMatrix[y][x] = null;
+                }
+            }
+            resourceMatrix[0][0] = new Tree(0, 0);
+            resourceMatrix[SIZE - 1][SIZE - 1] = new Tree(SIZE - 1, SIZE - 1);
+            return resourceMatrix;
+        }
+
     }
 
 }

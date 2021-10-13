@@ -10,6 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
@@ -23,7 +24,7 @@ public class RoleFactoryTests {
             Arguments.of(RoleType.FARMER, new FarmerRole()),
             Arguments.of(RoleType.FISHER, new FisherRole()),
             Arguments.of(RoleType.GUARD, new GuardRole()),
-            Arguments.of(RoleType.LUMBERJACK, new LumberjackRole()),
+            Arguments.of(RoleType.LUMBERJACK, new LumberjackRole(mock(IResourceFinder.class))),
             Arguments.of(RoleType.MINER, new MinerRole()),
             Arguments.of(RoleType.IDLE, new IdleRole(mock(IWorld.class))));
     }
@@ -31,11 +32,13 @@ public class RoleFactoryTests {
     @BeforeEach
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
+        RoleFactory.setResourceFinder(mock(IResourceFinder.class));
     }
 
     @AfterEach
     public void teardown() {
         RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
     }
 
     @Test
@@ -45,7 +48,7 @@ public class RoleFactoryTests {
 
         // Assert
         assertThat(roles).contains(
-            new LumberjackRole(),
+            new LumberjackRole(mock(IResourceFinder.class)),
             new BuilderRole(),
             new FarmerRole(),
             new FisherRole(),

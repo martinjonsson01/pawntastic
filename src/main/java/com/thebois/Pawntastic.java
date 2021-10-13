@@ -109,6 +109,7 @@ public class Pawntastic extends Game {
         final Random random = new Random();
         world = new World(WORLD_SIZE, 0, random);
         RoleFactory.setWorld(world);
+        RoleFactory.setResourceFinder(world);
 
         final IPathFinder pathFinder = new AstarPathFinder(world);
         ActionFactory.setPathFinder(pathFinder);

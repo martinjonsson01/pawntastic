@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.ITaskPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
@@ -21,14 +22,16 @@ public class LumberjackRoleTests {
     @BeforeEach
     public void setup() {
         mockWorld = mock(IWorld.class);
-        RoleFactory.setWorld(mockWorld);
         ActionFactory.setPathFinder(mock(IPathFinder.class));
+        RoleFactory.setWorld(mockWorld);
+        RoleFactory.setResourceFinder(mock(IResourceFinder.class));
     }
 
     @AfterEach
     public void teardown() {
-        RoleFactory.setWorld(null);
         ActionFactory.setPathFinder(null);
+        RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
     }
 
     /* @Test

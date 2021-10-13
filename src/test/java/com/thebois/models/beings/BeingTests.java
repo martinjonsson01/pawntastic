@@ -11,7 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.thebois.models.MockWorld;
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 public class BeingTests {
 
     public static Stream<Arguments> getEqualBeings() {
-        RoleFactory.setWorld(mock(IWorld.class));
+        mockFactoryDependencies();
         final AbstractBeing beingA = createBeing(0, 0, RoleType.BUILDER);
         final AbstractBeing beingB = createBeing(0, 0, RoleType.BUILDER);
         final AbstractBeing beingC = createBeing(0, 0, RoleType.BUILDER);
@@ -42,6 +42,12 @@ public class BeingTests {
                          Arguments.of(beingB, beingA),
                          Arguments.of(beingB, beingC),
                          Arguments.of(beingA, beingC));
+    }
+
+    private static void mockFactoryDependencies() {
+        ActionFactory.setPathFinder(mock(IPathFinder.class));
+        RoleFactory.setWorld(mock(IWorld.class));
+        RoleFactory.setResourceFinder(mock(IResourceFinder.class));
     }
 
     private static AbstractBeing createBeing(
@@ -61,7 +67,7 @@ public class BeingTests {
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
-        RoleFactory.setWorld(mock(IWorld.class));
+        mockFactoryDependencies();
         return Stream.of(Arguments.of(createBeing(0, 0, RoleType.FARMER),
                                       createBeing(0, 0, RoleType.FISHER)),
                          Arguments.of(createBeing(0, 0, RoleType.LUMBERJACK),
@@ -78,14 +84,14 @@ public class BeingTests {
 
     @BeforeEach
     public void setup() {
-        RoleFactory.setWorld(mock(IWorld.class));
-        ActionFactory.setPathFinder(mock(IPathFinder.class));
+        mockFactoryDependencies();
     }
 
     @AfterEach
     public void teardown() {
         ActionFactory.setPathFinder(null);
         RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
     }
 
     @ParameterizedTest
