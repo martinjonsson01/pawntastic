@@ -128,8 +128,10 @@ public class RoleTests {
 
     private AbstractRole mockTestRole(final IAction... params) {
         final List<IAction> tasks = List.of(params);
-        final List<IActionGenerator> taskGenerators =
-            tasks.stream().map(task -> (IActionGenerator) () -> task).collect(Collectors.toList());
+        final List<IActionGenerator> taskGenerators = tasks
+            .stream()
+            .map(task -> (IActionGenerator) performer -> task)
+            .collect(Collectors.toList());
         return new TestRole(taskGenerators);
     }
 

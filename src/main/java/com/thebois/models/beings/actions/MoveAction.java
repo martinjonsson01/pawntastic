@@ -49,6 +49,11 @@ class MoveAction implements IAction {
     }
 
     @Override
+    public String toString() {
+        return "MoveAction{" + "destination=" + destination + '}';
+    }
+
+    @Override
     public void perform(final ITaskPerformer performer) {
         if (isCompleted(performer)) return;
 

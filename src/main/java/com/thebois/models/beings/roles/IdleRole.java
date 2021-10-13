@@ -3,8 +3,8 @@ package com.thebois.models.beings.roles;
 import java.util.Collection;
 import java.util.List;
 
-import com.thebois.models.beings.actions.IActionGenerator;
 import com.thebois.models.beings.actions.ActionFactory;
+import com.thebois.models.beings.actions.IActionGenerator;
 import com.thebois.models.world.IWorld;
 
 /**
@@ -35,7 +35,7 @@ class IdleRole extends AbstractRole {
     }
 
     private IActionGenerator getRandomMove() {
-        return () -> ActionFactory.createMoveTo(world.getRandomVacantSpot().getPosition());
+        return performer -> ActionFactory.createMoveTo(world.getRandomVacantSpot().getPosition());
     }
 
 }

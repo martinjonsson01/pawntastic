@@ -244,7 +244,7 @@ public class BeingTests {
         protected Collection<IActionGenerator> getTaskGenerators() {
             final IAction nothingTask = mock(IAction.class);
             when(nothingTask.isCompleted(any())).thenReturn(false);
-            return List.of(() -> nothingTask);
+            return List.of(performer -> nothingTask);
         }
 
     }

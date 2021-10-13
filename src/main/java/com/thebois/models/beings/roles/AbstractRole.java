@@ -76,7 +76,7 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
                 if (tasks.isEmpty()) tasks.addAll(getTaskGenerators());
 
                 final IActionGenerator actionable = tasks.remove();
-                newTask = actionable.generate();
+                newTask = actionable.generate(performer);
             } while (newTask.isCompleted(performer));
 
             this.currentTask = newTask;

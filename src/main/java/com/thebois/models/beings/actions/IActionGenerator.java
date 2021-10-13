@@ -1,5 +1,7 @@
 package com.thebois.models.beings.actions;
 
+import com.thebois.models.beings.ITaskPerformer;
+
 /**
  * Represents a generator of actions.
  * <p>
@@ -10,10 +12,12 @@ package com.thebois.models.beings.actions;
 public interface IActionGenerator {
 
     /**
-     * Gets the action.
+     * Generates an action.
+     *
+     * @param performer The entity who will perform the generated action.
      *
      * @return The generated action.
      */
-    IAction generate();
+    IAction generate(ITaskPerformer performer);
 
 }
