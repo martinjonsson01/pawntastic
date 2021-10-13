@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -71,11 +70,11 @@ public class ResourceGeneratorTests {
         assertThat(isEqual).isTrue();
     }
 
-    @Test
-    public void generatedResourceMatrixContainsAllKindsOfResources() {
+    @ParameterizedTest
+    @MethodSource("getWorldSizeAndOneSeed")
+    public void generatedResourceMatrixContainsAllKindsOfResources(
+        final int worldSize, final int seed) {
         // Arrange
-        final int worldSize = 50;
-        final int seed = 0;
         final ResourceGenerator generator = new ResourceGenerator(worldSize, seed);
         final IResource[][] matrix;
         final AtomicInteger actualNumberOfResources = new AtomicInteger(0);
