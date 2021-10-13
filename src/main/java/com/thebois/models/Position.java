@@ -3,6 +3,8 @@ package com.thebois.models;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.thebois.abstractions.IDeepClonable;
+
 /**
  * A two-dimensional location.
  */
