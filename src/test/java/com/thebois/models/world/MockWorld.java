@@ -1,6 +1,5 @@
 package com.thebois.models.world;
 
-import com.thebois.models.world.World;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
