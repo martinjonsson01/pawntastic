@@ -1,7 +1,7 @@
 package com.thebois.models.world.terrains;
 
 /**
- * A factory that creates terrain view.
+ * A factory that creates terrain tiles.
  */
 public final class TerrainFactory {
 
@@ -10,7 +10,7 @@ public final class TerrainFactory {
     }
 
     /**
-     * Generate a terrain with given type at given position.
+     * Generate a terrain with given type at the given position.
      *
      * @param type What type of terrain.
      * @param x    X position for terrain.

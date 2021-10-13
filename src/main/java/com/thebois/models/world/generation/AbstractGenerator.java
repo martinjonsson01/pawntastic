@@ -12,7 +12,7 @@ public abstract class AbstractGenerator {
     private final int worldSize;
 
     /**
-     * Template for generators used to generate the world.
+     * Creates an AbstractGenerator with a World Size and Seed used for generation.
      *
      * @param worldSize The size of the world to generate.
      * @param seed      The seed used to generate the world.

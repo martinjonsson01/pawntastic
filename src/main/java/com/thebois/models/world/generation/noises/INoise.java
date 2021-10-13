@@ -1,15 +1,15 @@
 package com.thebois.models.world.generation.noises;
 
 /**
- * Generator used to generate value with given X and Y value.
+ * Generator used to generate a value with given X and Y value.
  */
 public interface INoise {
 
     /**
      * Generates a float value with given values.
      *
-     * @param x X coordinate.
-     * @param y Y coordinate.
+     * @param x X value used to sample.
+     * @param y Y value used to sample.
      *
      * @return The float value.
      */

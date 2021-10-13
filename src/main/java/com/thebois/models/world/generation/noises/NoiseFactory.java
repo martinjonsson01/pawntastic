@@ -1,7 +1,7 @@
 package com.thebois.models.world.generation.noises;
 
 /**
- * Factory that creates noises that generates different kind of patterns.
+ * Factory that creates noises used for generation.
  */
 public final class NoiseFactory {
 
@@ -36,7 +36,7 @@ public final class NoiseFactory {
     }
 
     /**
-     * Creates a Noise that generates isolated units.
+     * Creates a Noise that generates very small chunks.
      *
      * @return The noise to sample with.
      */
@@ -49,10 +49,11 @@ public final class NoiseFactory {
     }
 
     /**
-     * Creates a Noise that generates small chunks.
+     * Creates a Noise that has one chunk filling the whole map.
      *
      * <p>
-     * Sample method on the noise will only return 0.
+     * Sample method on the noise will only return 0, no matter what values are given in the sample
+     * method.
      * </P>
      *
      * @return The noise to sample with.

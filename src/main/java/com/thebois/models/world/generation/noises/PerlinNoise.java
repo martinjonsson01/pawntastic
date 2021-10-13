@@ -71,16 +71,6 @@ public class PerlinNoise implements INoise {
         return (float) (total * amplitude);
     }
 
-    /**
-     * Create a perlin noise by interpolating noise using Perlin noise algorithm.
-     *
-     * @param coordinateX X coordinate for the noise map, should not be integer as that will return
-     *                    same perlin noise.
-     * @param coordinateY Y coordinate for the noise map, should not be integer as that will return
-     *                    same perlin noise.
-     *
-     * @return The Perlin noise
-     */
     private double interpolateNoise(final double coordinateX, final double coordinateY) {
         // Convert to integers
         final int integerX = (int) coordinateX;
@@ -119,25 +109,33 @@ public class PerlinNoise implements INoise {
 
     private double smoothNoise(final int coordinateX, final int coordinateY) {
         // Corners
-        final float corner1 = noise(coordinateX - 1, coordinateY - 1);
-        final float corner2 = noise(coordinateX - 1, coordinateY + 1);
-        final float corner3 = noise(coordinateX + 1, coordinateY - 1);
-        final float corner4 = noise(coordinateX + 1, coordinateY + 1);
-
-        final double corners = (corner1 + corner2 + corner3 + corner4) / 16;
+        final double corners = smoothenValueForCorners(coordinateX, coordinateY);
 
         // Sides
-        final float side1 = noise(coordinateX - 1, coordinateY);
-        final float side2 = noise(coordinateX + 1, coordinateY);
-        final float side3 = noise(coordinateX, coordinateY - 1);
-        final float side4 = noise(coordinateX, coordinateY + 1);
-
-        final float sides = (side1 + side2 + side3 + side4) / 8;
+        final float sides = smoothenValueForSides(coordinateX, coordinateY);
 
         // Center
         final float center = noise(coordinateX, coordinateY) / 4;
 
         return center + sides + corners;
+    }
+
+    private float smoothenValueForSides(final int coordinateX, final int coordinateY) {
+        final float side1 = noise(coordinateX - 1, coordinateY);
+        final float side2 = noise(coordinateX + 1, coordinateY);
+        final float side3 = noise(coordinateX, coordinateY - 1);
+        final float side4 = noise(coordinateX, coordinateY + 1);
+
+        return (side1 + side2 + side3 + side4) / 8;
+    }
+
+    private double smoothenValueForCorners(final int coordinateX, final int coordinateY) {
+        final float corner1 = noise(coordinateX - 1, coordinateY - 1);
+        final float corner2 = noise(coordinateX - 1, coordinateY + 1);
+        final float corner3 = noise(coordinateX + 1, coordinateY - 1);
+        final float corner4 = noise(coordinateX + 1, coordinateY + 1);
+
+        return (corner1 + corner2 + corner3 + corner4) / 16;
     }
 
     /**
