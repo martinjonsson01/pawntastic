@@ -27,13 +27,4 @@ public interface IFinder {
      */
     Optional<IStructure> findNearestIncompleteStructure(Position position);
 
-    /**
-     * Returns the IStructure at position.
-     *
-     * @param position The position to check.
-     *
-     * @return The found IStructure at the specified position.
-     */
-    Optional<IStructure> getStructureAt(Position position);
-
 }

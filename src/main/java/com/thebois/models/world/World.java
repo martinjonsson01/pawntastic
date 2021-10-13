@@ -209,13 +209,6 @@ public class World implements IWorld, IFinder {
     }
 
     @Override
-    public Optional<IStructure> getStructureAt(final Position position) {
-        final int row = Math.round(position.getPosY());
-        final int col = Math.round(position.getPosX());
-        return this.structureMatrix[row][col];
-    }
-
-    @Override
     public Iterable<ITile> getNeighboursOf(final ITile tile) {
         final ArrayList<ITile> tiles = new ArrayList<>(8);
         final Position position = tile.getPosition();
