@@ -32,19 +32,39 @@ public final class TextureUtils {
     }
 
     /**
-     * Creates a new instance of a square shaped texture with the given sideLength length.
+     * Creates a new instance of a square shaped texture with the side length.
      *
-     * @param sideLength The radius of the circle texture, in pixels.
+     * @param sideLength The size of the square texture, in pixels.
      *
      * @return The square texture.
      */
     public static Texture createSquareTexture(final float sideLength) {
-        final int roundedSideLength = Math.round(sideLength);
-        final Pixmap pixmap = new Pixmap(roundedSideLength,
-                                         roundedSideLength,
-                                         Pixmap.Format.RGBA8888);
+        final int roundedTileSize = (int) sideLength;
+        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
-        pixmap.fillRectangle(0, 0, roundedSideLength, roundedSideLength);
+        pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);
+        final Texture squareTexture = new Texture(pixmap);
+        pixmap.dispose();
+        return squareTexture;
+    }
+
+    /**
+     * Creates a new instance of a triangle shaped texture with the side length.
+     *
+     * @param sideLength The size of the triangle texture, in pixels.
+     *
+     * @return The trinagle texture.
+     */
+    public static Texture createTriangleTexture(final float sideLength) {
+        final int roundedTileSize = (int) sideLength;
+        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fillTriangle(roundedTileSize / 2,
+                            0,
+                            0,
+                            roundedTileSize,
+                            roundedTileSize,
+                            roundedTileSize);
         final Texture squareTexture = new Texture(pixmap);
         pixmap.dispose();
         return squareTexture;

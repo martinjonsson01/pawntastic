@@ -17,11 +17,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
-import com.thebois.models.beings.pathfinding.AstarPathFinder;
-import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.world.resources.IResource;
+import com.thebois.models.world.resources.Water;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.structures.StructureType;
+import com.thebois.models.world.terrains.Dirt;
+import com.thebois.models.world.terrains.Grass;
+import com.thebois.models.world.terrains.ITerrain;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -30,15 +33,22 @@ public class WorldTests {
 
     /* For a 3x3 world */
     public static Stream<Arguments> getTileAndNeighbours() {
-        return Stream.of(Arguments.of(mockTile(0, 0), List.of(mockTile(0, 1), mockTile(1, 0))),
-                         Arguments.of(mockTile(2, 0), List.of(mockTile(2, 1), mockTile(1, 0))),
-                         Arguments.of(mockTile(0, 2), List.of(mockTile(0, 1), mockTile(1, 2))),
-                         Arguments.of(mockTile(2, 2), List.of(mockTile(2, 1), mockTile(1, 2))),
-                         Arguments.of(mockTile(1, 1),
-                                      List.of(mockTile(1, 0),
-                                              mockTile(0, 1),
-                                              mockTile(2, 1),
-                                              mockTile(1, 2))));
+        return Stream.of(Arguments.of(mockTile(0, 0),
+                                      List.of(mockPosition(0, 1), mockPosition(1, 0))),
+                         Arguments.of(mockTile(2, 0),
+                                      List.of(mockPosition(2, 1), mockPosition(1, 0))),
+                         Arguments.of(mockTile(0, 2),
+                                      List.of(mockPosition(0, 1), mockPosition(1, 2))),
+                         Arguments.of(mockTile(2, 2),
+                                      List.of(mockPosition(2, 1), mockPosition(1, 2))),
+                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
+                                                              mockPosition(0, 1),
+                                                              mockPosition(2, 1),
+                                                              mockPosition(1, 2))));
+    }
+
+    private static Position mockPosition(final int positionX, final int positionY) {
+        return new Position(positionX, positionY);
     }
 
     private static ITile mockTile(final int positionX, final int positionY) {
@@ -88,11 +98,15 @@ public class WorldTests {
     }
 
     private World createWorld(final int size) {
-        return createWorld(size, mock(Random.class));
+        return createWorld(size, 0);
     }
 
-    private World createWorld(final int size, final Random random) {
-        return new World(size, random);
+    private World createWorld(final int size, final int seed) {
+        return createWorld(size, seed, mock(Random.class));
+    }
+
+    private World createWorld(final int size, final int seed, final Random random) {
+        return new World(size, seed, random);
     }
 
     @Test
@@ -142,7 +156,7 @@ public class WorldTests {
         final Random mockRandom = mock(Random.class);
         final int randomCoordinate = 1;
         when(mockRandom.nextInt(anyInt())).thenReturn(randomCoordinate);
-        final IWorld world = createWorld(3, mockRandom);
+        final IWorld world = createWorld(3, 0, mockRandom);
         final Position expectedSpot = new Position(randomCoordinate, randomCoordinate);
 
         // Act
@@ -165,7 +179,7 @@ public class WorldTests {
                                                       (int) secondBlockedRandomSpot.getPosY(),
                                                       (int) thirdEmptyRandomSpot.getPosX(),
                                                       (int) thirdEmptyRandomSpot.getPosY());
-        final World world = createWorld(3, mockRandom);
+        final World world = createWorld(3, 0, mockRandom);
         world.createStructure(firstBlockedRandomSpot);
         world.createStructure(secondBlockedRandomSpot);
 
@@ -179,23 +193,31 @@ public class WorldTests {
     @Test
     public void worldInitiated() {
         // Arrange
-        final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = createWorld(2);
+        final Collection<ITerrain> expectedTerrainTiles = mockDirtTiles();
+        final World world = createWorld(2, 15);
 
         // Act
         final Collection<ITerrain> terrainTiles = world.getTerrainTiles();
-
         // Assert
         assertThat(terrainTiles).containsAll(expectedTerrainTiles);
     }
 
-    private Collection<ITerrain> mockTerrainTiles() {
+    private Collection<ITerrain> mockDirtTiles() {
         final ArrayList<ITerrain> terrainTiles = new ArrayList<>();
-        terrainTiles.add(new Grass(0, 0));
-        terrainTiles.add(new Grass(0, 1));
-        terrainTiles.add(new Grass(1, 0));
-        terrainTiles.add(new Grass(1, 1));
+        terrainTiles.add(new Dirt(0, 0));
+        terrainTiles.add(new Dirt(0, 1));
+        terrainTiles.add(new Dirt(1, 0));
+        terrainTiles.add(new Dirt(1, 1));
         return terrainTiles;
+    }
+
+    private Collection<Position> mockPositions() {
+        final ArrayList<Position> positions = new ArrayList<>();
+        positions.add(new Position(0, 0));
+        positions.add(new Position(0, 1));
+        positions.add(new Position(1, 0));
+        positions.add(new Position(1, 1));
+        return positions;
     }
 
     @Test
@@ -213,22 +235,28 @@ public class WorldTests {
     @ParameterizedTest
     @MethodSource("getTileAndNeighbours")
     public void getNeighboursOfReturnsExpectedNeighbours(
-        final ITile tile, final Iterable<ITile> expectedNeighbours) {
+        final ITile tile, final Iterable<Position> expectedNeighbours) {
         // Arrange
-        final IWorld world = createWorld(3);
+        final World world = createWorld(3, 15);
 
         // Act
         final Iterable<ITile> actualNeighbours = world.getNeighboursOf(tile);
-
+        final Collection<Position> positions = new ArrayList<>();
+        for (final ITile actualNeighbour : actualNeighbours) {
+            positions.add(actualNeighbour.getPosition());
+        }
         // Assert
-        assertThat(actualNeighbours).containsExactlyInAnyOrderElementsOf(expectedNeighbours);
+        assertThat(positions).containsExactlyInAnyOrderElementsOf(expectedNeighbours);
     }
 
     @Test
     public void getTileAtReturnsTileAtGivenPosition() {
         // Arrange
-        final Collection<ITerrain> expectedTerrainTiles = mockTerrainTiles();
-        final World world = createWorld(2);
+        // World should contain:
+        // Dirt Dirt
+        // Dirt Dirt
+        final Collection<ITerrain> expectedTerrainTiles = mockDirtTiles();
+        final World world = createWorld(2, 15);
 
         for (final ITile tile : expectedTerrainTiles) {
             // Act
@@ -265,7 +293,7 @@ public class WorldTests {
     @Test
     public void numberOfStructuresIncreasesIfStructureSuccessfullyPlaced() {
         // Arrange
-        final World world = createWorld(2);
+        final World world = createWorld(2, 15);
         final Position position = new Position(1, 1);
         final Collection<IStructure> structures;
         final boolean isBuilt;
@@ -282,7 +310,7 @@ public class WorldTests {
     @MethodSource("getPositionOutSideOfWorld")
     public void structureFailedToBePlaced(final Position placementPosition) {
         // Arrange
-        final World world = createWorld(2);
+        final World world = createWorld(2, 0);
         final Collection<IStructure> structures;
         final boolean isBuilt;
 
@@ -333,15 +361,80 @@ public class WorldTests {
     public void instantiateWithPawnCountCreatesOnlyAsManyBeingsAsFitInTheWorld() {
         // Arrange
         final int pawnFitCount = 4;
-        final World world = createWorld(2);
+        final World world = createWorld(2, 15);
         final Iterable<Position> vacantPositions = world.findEmptyPositions(5);
-        final IPathFinder pathFinder = new AstarPathFinder(world);
 
         // Act
         final Colony colony = new Colony(vacantPositions);
 
         // Assert
         assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
+    }
+
+    @Test
+    public void findEmptyPositionsReturnsCorrectAmountOfEmptyPositions() {
+        // Arrange
+        // Instantiate a world filled with dirt.
+        final World world = createWorld(2, 15);
+        final Iterable<Position> expectedPositions = mockPositions();
+        final Iterable<Position> actualPositions;
+
+        // Act
+        actualPositions = world.findEmptyPositions(4);
+
+        // Assert
+        assertThat(actualPositions).containsExactlyInAnyOrderElementsOf(expectedPositions);
+    }
+
+    @Test
+    public void findEmptyPositionsReturnsEmptyIfNoEmptyPositionsWasFound() {
+        // Arrange
+        // Instantiate a world filled with water.
+        final World world = createWorld(2);
+        final Iterable<Position> expectedPositions = new ArrayList<>();
+        final Iterable<Position> actualPositions;
+        // Act
+        actualPositions = world.findEmptyPositions(4);
+
+        // Assert
+        assertThat(actualPositions).containsExactlyInAnyOrderElementsOf(expectedPositions);
+    }
+
+    @Test
+    public void findEmptyPositionsReturnsEarlyIfAmountOfEmptyPositionsHaveBeenMet() {
+        // Arrange
+        // Instantiate a world filled with dirt.
+        final World world = createWorld(2, 15);
+        final ArrayList<Position> positions = new ArrayList<>();
+        positions.add(new Position(0, 0));
+        positions.add(new Position(0, 1));
+        positions.add(new Position(1, 0));
+        final Iterable<Position> actualPositions;
+
+        // Act
+        actualPositions = world.findEmptyPositions(3);
+
+        // Assert
+        assertThat(actualPositions).containsExactlyInAnyOrderElementsOf(positions);
+    }
+
+    @Test
+    public void getResourcesActuallyReturnsResources() {
+        // Arrange
+        // Instantiate a world filled with water.
+        final World world = createWorld(2);
+        final Collection<IResource> expectedResources = new ArrayList<>();
+        expectedResources.add(new Water(0, 0));
+        expectedResources.add(new Water(1, 0));
+        expectedResources.add(new Water(0, 1));
+        expectedResources.add(new Water(1, 1));
+        final Collection<IResource> actualResources;
+
+        // Act
+        actualResources = world.getResources();
+
+        // Assert
+        assertThat(actualResources).containsExactlyInAnyOrderElementsOf(expectedResources);
     }
 
 }

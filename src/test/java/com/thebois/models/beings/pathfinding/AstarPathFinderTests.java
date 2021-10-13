@@ -11,11 +11,12 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.models.MockWorld;
 import com.thebois.models.Position;
-import com.thebois.models.world.Grass;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.World;
+import com.thebois.models.world.terrains.Grass;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -46,7 +47,7 @@ public class AstarPathFinderTests {
     @MethodSource("getPositionsAndDestinations")
     public void pathContainsDestinationLast(final Position start, final Position destination) {
         // Arrange
-        final IWorld world = new World(30, mock(Random.class));
+        final IWorld world = new World(30, 0, mock(Random.class));
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act
@@ -92,7 +93,7 @@ public class AstarPathFinderTests {
      * @return The mocked world.
      */
     private IWorld mock3x3WorldWithObstacles() {
-        final World world = new World(3, mock(Random.class));
+        final World world = new MockWorld(3, 0, mock(Random.class));
 
         world.createStructure(1, 0);
         world.createStructure(1, 1);
@@ -124,7 +125,7 @@ public class AstarPathFinderTests {
     public void pathReturnsPositionsThatLeadToDestination(
         final Position from, final Position destination) {
         // Arrange
-        final IWorld world = new World(30, mock(Random.class));
+        final IWorld world = new MockWorld(30, 0, mock(Random.class));
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act
@@ -138,8 +139,9 @@ public class AstarPathFinderTests {
     @MethodSource("getPositionsAndDestinations")
     public void pathReturnsEnoughPositionsToCoverDistance(
         final Position from, final Position destination) {
+
         // Arrange
-        final IWorld world = new World(30, mock(Random.class));
+        final IWorld world = new MockWorld(30, 0, mock(Random.class));
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act

@@ -1,39 +1,39 @@
-package com.thebois.models.world;
+package com.thebois.models.world.terrains;
 
 import com.thebois.models.Position;
 
 /**
- * The default world tile.
+ * Dirt tile.
  */
-public class Grass extends AbstractTerrain {
+public class Dirt extends AbstractTerrain {
 
     /**
-     * Instantiates a new grass terrain tile.
+     * Instantiates a new dirt terrain tile.
      *
      * @param posX The x-coordinate of the tile
      * @param posY The y-coordinate of the tile
      */
-    public Grass(final float posX, final float posY) {
+    public Dirt(float posX, float posY) {
         super(posX, posY);
     }
 
     /**
-     * Instantiates a new grass terrain tile.
+     * Instantiates a new dirt terrain tile.
      *
      * @param position The position of the tile.
      */
-    public Grass(final Position position) {
+    public Dirt(final Position position) {
         super(position);
     }
 
     @Override
     public TerrainType getType() {
-        return TerrainType.GRASS;
+        return TerrainType.DIRT;
     }
 
     @Override
-    public Grass deepClone() {
-        return new Grass(getPosition());
+    public Dirt deepClone() {
+        return new Dirt(getPosition());
     }
 
     @Override

@@ -22,6 +22,20 @@ public class StructureTests {
     }
 
     @Test
+    public void structureDoesNotEqualOtherClass() {
+        // Arrange
+        final AbstractStructure structure = new House(1, 1);
+        final Object object = new Object();
+        final boolean isEqual;
+
+        // Act
+        isEqual = structure.equals(object);
+
+        // Assert
+        assertThat(isEqual).isFalse();
+    }
+
+    @Test
     public void structureEqualItSelfIsTrue() {
         // Arrange
         final AbstractStructure structure = new House(1, 1);
@@ -37,9 +51,10 @@ public class StructureTests {
     @Test
     public void structureEqualIsTrueIfSamePositionAndType() {
         // Arrange
-        final Position position = new Position(1, 1);
-        final AbstractStructure structure1 = new House(position);
-        final AbstractStructure structure2 = new House(position);
+        final Position position1 = new Position(1, 1);
+        final Position position2 = new Position(1, 1);
+        final AbstractStructure structure1 = new House(position1);
+        final AbstractStructure structure2 = new House(position2);
         final boolean isEqual;
 
         // Act
