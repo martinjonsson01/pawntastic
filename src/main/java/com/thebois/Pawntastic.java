@@ -21,6 +21,7 @@ import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.world.World;
 import com.thebois.views.GameScreen;
 import com.thebois.views.IProjector;
@@ -107,11 +108,21 @@ public class Pawntastic extends Game {
     private void createModels() {
         final Random random = new Random();
         world = new World(WORLD_SIZE, 0, random);
+        RoleFactory.setWorld(world);
 
         final IPathFinder pathFinder = new AstarPathFinder(world);
         ActionFactory.setPathFinder(pathFinder);
 
         colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS));
+    }
+
+    private void initInputProcessors() {
+        final InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(gameScreen.getInputProcessor());
+        for (final InputProcessor inputProcessor : worldController.getInputProcessors()) {
+            multiplexer.addProcessor(inputProcessor);
+        }
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     private void generateFont() {
@@ -143,15 +154,6 @@ public class Pawntastic extends Game {
         colony.update();
         worldController.update();
         infoController.update();
-    }
-
-    private void initInputProcessors() {
-        final InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(gameScreen.getInputProcessor());
-        for (final InputProcessor inputProcessor : worldController.getInputProcessors()) {
-            multiplexer.addProcessor(inputProcessor);
-        }
-        Gdx.input.setInputProcessor(multiplexer);
     }
 
 }

@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.abstractions.IResourceFinder;
+import com.thebois.models.MockWorld;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.roles.RoleFactory;
@@ -41,18 +42,20 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
-                                                              mockPosition(0, 1),
-                                                              mockPosition(2, 1),
-                                                              mockPosition(1, 2))));
-    }
-
-    private static Position mockPosition(final int positionX, final int positionY) {
-        return new Position(positionX, positionY);
+                         Arguments.of(
+                             mockTile(1, 1),
+                             List.of(mockPosition(1, 0),
+                                     mockPosition(0, 1),
+                                     mockPosition(2, 1),
+                                     mockPosition(1, 2))));
     }
 
     private static ITile mockTile(final int positionX, final int positionY) {
         return new Grass(positionX, positionY);
+    }
+
+    private static Position mockPosition(final int positionX, final int positionY) {
+        return new Position(positionX, positionY);
     }
 
     public static Stream<Arguments> getPositionOutSideOfWorld() {
@@ -156,7 +159,7 @@ public class WorldTests {
         final Random mockRandom = mock(Random.class);
         final int randomCoordinate = 1;
         when(mockRandom.nextInt(anyInt())).thenReturn(randomCoordinate);
-        final IWorld world = createWorld(3, 0, mockRandom);
+        final IWorld world = createTestWorld(3, mockRandom);
         final Position expectedSpot = new Position(randomCoordinate, randomCoordinate);
 
         // Act
@@ -164,6 +167,10 @@ public class WorldTests {
 
         // Assert
         assertThat(vacantSpot).isEqualTo(expectedSpot);
+    }
+
+    private World createTestWorld(final int size, final Random random) {
+        return new MockWorld(size, 0, random);
     }
 
     @Test
@@ -179,7 +186,7 @@ public class WorldTests {
                                                       (int) secondBlockedRandomSpot.getPosY(),
                                                       (int) thirdEmptyRandomSpot.getPosX(),
                                                       (int) thirdEmptyRandomSpot.getPosY());
-        final World world = createWorld(3, 0, mockRandom);
+        final World world = createTestWorld(3, mockRandom);
         world.createStructure(firstBlockedRandomSpot);
         world.createStructure(secondBlockedRandomSpot);
 
@@ -209,15 +216,6 @@ public class WorldTests {
         terrainTiles.add(new Dirt(1, 0));
         terrainTiles.add(new Dirt(1, 1));
         return terrainTiles;
-    }
-
-    private Collection<Position> mockPositions() {
-        final ArrayList<Position> positions = new ArrayList<>();
-        positions.add(new Position(0, 0));
-        positions.add(new Position(0, 1));
-        positions.add(new Position(1, 0));
-        positions.add(new Position(1, 1));
-        return positions;
     }
 
     @Test
@@ -384,6 +382,15 @@ public class WorldTests {
 
         // Assert
         assertThat(actualPositions).containsExactlyInAnyOrderElementsOf(expectedPositions);
+    }
+
+    private Collection<Position> mockPositions() {
+        final ArrayList<Position> positions = new ArrayList<>();
+        positions.add(new Position(0, 0));
+        positions.add(new Position(0, 1));
+        positions.add(new Position(1, 0));
+        positions.add(new Position(1, 1));
+        return positions;
     }
 
     @Test
