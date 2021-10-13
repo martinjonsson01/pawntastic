@@ -99,7 +99,7 @@ abstract class AbstractStructure implements IStructure {
         }
         else {
             final float totalDelivered =
-                this.deliveredItems.calculateDifference(this.allNeededItems).size();
+                this.deliveredItems.size();
             final float totalNeeded = this.allNeededItems.size();
 
             return totalDelivered / totalNeeded;

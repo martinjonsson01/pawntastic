@@ -98,11 +98,13 @@ public class Inventory implements IInventory {
         final ArrayList<ItemType> itemDifference = new ArrayList<>();
 
         for (final IItem item : this.items) {
-            final int difference =
-                this.numberOf(item.getType()) - inventory.numberOf(item.getType());
+            if (!itemDifference.contains(item.getType())) {
+                final int difference =
+                    this.numberOf(item.getType()) - inventory.numberOf(item.getType());
 
-            for (int i = 0; i < difference; i++) {
-                itemDifference.add(item.getType());
+                for (int i = 0; i < difference; i++) {
+                    itemDifference.add(item.getType());
+                }
             }
         }
 
