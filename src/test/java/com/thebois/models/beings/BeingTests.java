@@ -17,7 +17,8 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.Log;
+import com.thebois.models.inventory.items.Rock;
 import com.thebois.models.world.World;
 import com.thebois.models.world.structures.IStructure;
 
@@ -298,8 +299,8 @@ public class BeingTests {
     @Test
     public void doesPawnWalkToNearestUnBuiltBuilding() {
         // Arrange
-        final Position positionA = new Position(10, 0);
-        final Position positionB = new Position(30, 0);
+        final Position positionA = new Position(15, 0);
+        final Position positionB = new Position(10, 0);
         final Position startPosition = new Position(20, 0);
 
         final Position correctDestination = new Position(11, 1);
@@ -308,13 +309,15 @@ public class BeingTests {
         final IPathFinder pathFinder = new AstarPathFinder(world);
 
         world.createStructure(positionA);
-        world.createStructure(positionB);
 
-//        for (int i = 0; i < 10; i++) {
-//            world.getStructureAt(positionB).get().deliverItem(new Rock());
-//            world.getStructureAt(positionB).get().deliverItem(new Log());
-//
-//        }
+        for (int i = 0; i < 10; i++) {
+            for (final IStructure structure : world.getStructures()) {
+                structure.deliverItem(new Log());
+                structure.deliverItem(new Rock());
+            }
+        }
+
+        world.createStructure(positionB);
 
         final Pawn testPawn = new Pawn(
             startPosition,
@@ -327,7 +330,7 @@ public class BeingTests {
         testPawn.update();
 
         // Assert
-        assertThat(testPawn.getFinalDestination().get()).isEqualTo(correctDestination);
+        assertThat(testPawn.getFinalDestination().orElseThrow()).isEqualTo(correctDestination);
     }
 
     @Test
@@ -349,13 +352,12 @@ public class BeingTests {
         world.createStructure(positionA);
         world.createStructure(positionB);
 
-//        for (int i = 0; i < 10; i++) {
-//            world.getStructureAt(positionB).get().deliverItem(new Rock());
-//            world.getStructureAt(positionB).get().deliverItem(new Log());
-//            world.getStructureAt(positionA).get().deliverItem(new Rock());
-//            world.getStructureAt(positionA).get().deliverItem(new Log());
-//
-//        }
+        for (int i = 0; i < 10; i++) {
+            for (final IStructure structure : world.getStructures()) {
+                structure.deliverItem(new Log());
+                structure.deliverItem(new Rock());
+            }
+        }
 
         final Pawn testPawn = new Pawn(
             startPosition,
@@ -368,7 +370,7 @@ public class BeingTests {
         testPawn.update();
 
         // Assert
-        assertThat(testPawn.getFinalDestination().get()).isEqualTo(correctDestination);
+        assertThat(testPawn.getFinalDestination().orElseThrow()).isEqualTo(correctDestination);
     }
 
     @Test
@@ -391,12 +393,12 @@ public class BeingTests {
         world.createStructure(positionA);
         world.createStructure(positionB);
 
-//        for (int i = 0; i < 10; i++) {
-//            world.getStructureAt(positionB).get().deliverItem(new Rock());
-//            world.getStructureAt(positionB).get().deliverItem(new Log());
-//            world.getStructureAt(positionA).get().deliverItem(new Rock());
-//            world.getStructureAt(positionA).get().deliverItem(new Log());
-//        }
+        for (int i = 0; i < 10; i++) {
+            for (final IStructure structure : world.getStructures()) {
+                structure.deliverItem(new Log());
+                structure.deliverItem(new Rock());
+            }
+        }
 
         final Pawn testPawn = new Pawn(startPosition,
                                        new Position(),
@@ -411,84 +413,7 @@ public class BeingTests {
         testPawn.update();
 
         // Assert
-        assertThat(testPawn.getFinalDestination().get()).isEqualTo(correctDestination);
-    }
-
-    @Test
-    public void deliverItemsToCloseStructure() {
-        // Arrange
-        final Position positionA = new Position(10, 0);
-        final Position startPosition = new Position(11, 0);
-
-        final World world = new World(50);
-        final IPathFinder pathFinder = new AstarPathFinder(world);
-
-        final Random mockRandom = Mockito.mock(Random.class);
-        when(mockRandom.nextInt(anyInt())).thenReturn(0);
-        when(mockRandom.nextInt(anyInt())).thenReturn(0);
-
-        world.createStructure(positionA);
-
-//        final IStructure structureAtA = world.getStructureAt(positionA).get();
-
-        final Pawn testPawn = new Pawn(startPosition,
-                                       new Position(),
-                                       mockRandom,
-                                       pathFinder,
-                                       world);
-
-        // Act
-//        final float initialBuiltRatio = structureAtA.getBuiltRatio();
-//        testPawn.update();
-//
-//        // Assert
-//        assertThat(initialBuiltRatio).isLessThan(structureAtA.getBuiltRatio());
-    }
-
-    @Test
-    public void findNewUnBuiltStructure() {
-        // Arrange
-        final Position positionA = new Position(10, 0);
-        final Position positionB = new Position(20, 0);
-        final Position startPosition = new Position(11, 0);
-
-        final World world = new World(50);
-        final IPathFinder pathFinder = new AstarPathFinder(world);
-
-        final Random mockRandom = Mockito.mock(Random.class);
-        when(mockRandom.nextInt(anyInt())).thenReturn(0);
-
-        world.createStructure(positionA);
-        world.createStructure(positionB);
-
-//        final IStructure structureAtA = world.getStructureAt(positionA).get();
-//        final IStructure structureAtB = world.getStructureAt(positionB).get();
-
-//        for (int i = 0; i < 9; i++) {
-//            structureAtA.deliverItem(new Log());
-//            structureAtA.deliverItem(new Rock());
-//
-//            structureAtB.deliverItem(new Log());
-//            structureAtB.deliverItem(new Rock());
-//        }
-
-        final Pawn testPawn = new Pawn(startPosition,
-                                       new Position(),
-                                       mockRandom,
-                                       pathFinder,
-                                       world);
-
-        // Act
-//        final float initialBuiltRatio = structureAtA.getBuiltRatio();
-        // deliver items to structureAtA
-        testPawn.update();
-        // update to find new un-built structure
-        testPawn.update();
-
-        testPawn.getFinalDestination();
-
-        // Assert
-//        assertThat(initialBuiltRatio).isLessThan(structureAtA.getBuiltRatio());
+        assertThat(testPawn.getFinalDestination().orElseThrow()).isEqualTo(correctDestination);
     }
 
     @Test

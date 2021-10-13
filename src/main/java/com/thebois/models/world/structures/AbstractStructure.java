@@ -113,7 +113,7 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public IItem dismantle(final ItemType retrieving) {
-        if (getNeededItems().contains(retrieving)) {
+        if (deliveredItems.hasItem(retrieving)) {
             return deliveredItems.take(retrieving);
         }
         return null;
