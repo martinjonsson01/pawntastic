@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
-import com.thebois.models.MockWorld;
+import com.thebois.models.world.MockWorld;
 import com.thebois.models.Position;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
