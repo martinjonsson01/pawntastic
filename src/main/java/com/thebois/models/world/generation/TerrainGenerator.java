@@ -11,14 +11,14 @@ import com.thebois.models.world.terrains.TerrainType;
 import com.thebois.utils.MatrixUtils;
 
 /**
- * Generator used to generate tiles for the world.
+ * Generator used to generate terrain tiles for the world.
  */
 public class TerrainGenerator extends AbstractGenerator {
 
     private final Map<TerrainType, INoise> terrainNoise;
 
     /**
-     * Instantiate a Terrain Generator with pre-made settings used for generating values.
+     * Instantiate a Terrain Generator with pre-made settings used for generating terrain.
      *
      * @param worldSize The world size of the world.
      * @param seed      The seed used to generate the world.

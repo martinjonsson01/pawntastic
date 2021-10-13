@@ -1,7 +1,7 @@
 package com.thebois.models.world.generation.noises;
 
 /**
- * Generator used to generate a value with given X and Y value.
+ * Noise used to generate a value with given X and Y value.
  */
 public interface INoise {
 

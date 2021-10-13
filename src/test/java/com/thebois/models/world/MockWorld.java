@@ -12,7 +12,7 @@ public class MockWorld extends World {
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
      */
     public MockWorld(final int worldSize) {
-        super(worldSize, worldSize);
+        super(worldSize, 0);
     }
 
     @Override

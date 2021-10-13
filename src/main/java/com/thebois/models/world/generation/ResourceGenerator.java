@@ -18,7 +18,7 @@ public class ResourceGenerator extends AbstractGenerator {
     private final Map<ResourceType, INoise> resourceNoise;
 
     /**
-     * Instantiate a Resource Generator with pre-made settings used for generating values.
+     * Instantiate a Resource Generator with pre-made settings used for generating resources.
      *
      * @param worldSize The size of the world.
      * @param seed      The seed used to generate resources in the world.
