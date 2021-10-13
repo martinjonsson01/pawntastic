@@ -18,8 +18,8 @@ public class MockWorld extends World {
     @Override
     protected IResource[][] setUpResources(final int worldSize, final int seed) {
         final IResource[][] resourceMatrix = new IResource[worldSize][worldSize];
-        for (int y = 0; y < seed; y++) {
-            for (int x = 0; x < seed; x++) {
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
                 resourceMatrix[y][x] = null;
             }
         }
@@ -29,8 +29,8 @@ public class MockWorld extends World {
     @Override
     protected ITerrain[][] setUpTerrain(final int worldSize, final int seed) {
         final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
-        for (int y = 0; y < seed; y++) {
-            for (int x = 0; x < seed; x++) {
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
                 terrainMatrix[y][x] = new Grass(x, y);
             }
         }
