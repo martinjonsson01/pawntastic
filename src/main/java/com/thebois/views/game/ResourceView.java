@@ -20,16 +20,7 @@ public class ResourceView implements IView {
     private static final Color WATER_COLOR = Color.valueOf("#1E90FF");
     private static final Color TREE_COLOR = Color.valueOf("#006400");
     private static final Color ROCK_COLOR = Color.valueOf("#808080");
-    private static final Map<ResourceType, Color> RESOURCE_COLOR;
     private final Map<ResourceType, Texture> resourceTextureMap;
-
-    static {
-        RESOURCE_COLOR = new HashMap<>();
-        RESOURCE_COLOR.put(ResourceType.WATER, WATER_COLOR);
-        RESOURCE_COLOR.put(ResourceType.TREE, TREE_COLOR);
-        RESOURCE_COLOR.put(ResourceType.ROCK, ROCK_COLOR);
-    }
-
     private final float tileSize;
     private Iterable<IResource> resourceTiles = new ArrayList<>();
 
@@ -41,9 +32,12 @@ public class ResourceView implements IView {
     public ResourceView(final float tileSize) {
         this.tileSize = tileSize;
         resourceTextureMap = new HashMap<>();
-        resourceTextureMap.put(ResourceType.WATER, TextureUtils.createSquareTexture(tileSize));
-        resourceTextureMap.put(ResourceType.TREE, TextureUtils.createTriangleTexture(tileSize));
-        resourceTextureMap.put(ResourceType.ROCK, TextureUtils.createTriangleTexture(tileSize));
+        resourceTextureMap.put(ResourceType.WATER,
+                               TextureUtils.createSquareTexture(tileSize, WATER_COLOR));
+        resourceTextureMap.put(ResourceType.TREE,
+                               TextureUtils.createTriangleTexture(tileSize, TREE_COLOR));
+        resourceTextureMap.put(ResourceType.ROCK,
+                               TextureUtils.createTriangleTexture(tileSize, ROCK_COLOR));
     }
 
     /**
@@ -58,13 +52,12 @@ public class ResourceView implements IView {
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         for (final IResource resource : resourceTiles) {
-            batch.setColor(RESOURCE_COLOR.get(resource.getType()));
-            batch.draw(
-                resourceTextureMap.get(resource.getType()),
-                offsetX + resource.getPosition().getPosX() * tileSize,
-                offsetY + resource.getPosition().getPosY() * tileSize,
-                tileSize,
-                tileSize);
+            batch.setColor(Color.WHITE);
+            batch.draw(resourceTextureMap.get(resource.getType()),
+                       offsetX + resource.getPosition().getPosX() * tileSize,
+                       offsetY + resource.getPosition().getPosY() * tileSize,
+                       tileSize,
+                       tileSize);
         }
     }
 
