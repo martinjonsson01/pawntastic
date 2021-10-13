@@ -13,7 +13,7 @@ public class Dirt extends AbstractTerrain {
      * @param posX The x-coordinate of the tile
      * @param posY The y-coordinate of the tile
      */
-    public Dirt(float posX, float posY) {
+    public Dirt(final float posX, final float posY) {
         super(posX, posY);
     }
 
