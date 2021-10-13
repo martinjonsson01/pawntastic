@@ -25,7 +25,7 @@ import com.thebois.models.inventory.items.ItemType;
  */
 public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInventory {
 
-    private final IInventory inventory = new Inventory();
+    private final IInventory colonyInventory = new Inventory();
 
     /**
      * Creates a colony and fills it with pawns in the provided open positions.
@@ -45,8 +45,8 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
         setBeings(pawns);
     }
 
-    public IInventory getInventory() {
-        return inventory;
+    public IInventory getColonyInventory() {
+        return colonyInventory;
     }
 
     @Override
@@ -135,37 +135,52 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
 
     @Override
     public void add(final IItem item) {
-        inventory.add(item);
+        colonyInventory.add(item);
     }
 
     @Override
     public void addMultiple(final List<IItem> stack) {
-        inventory.addMultiple(stack);
+        colonyInventory.addMultiple(stack);
     }
 
     @Override
     public IItem take(final ItemType itemType) {
-        return inventory.take(itemType);
+        return colonyInventory.take(itemType);
     }
 
     @Override
     public ArrayList<IItem> takeAmount(final ItemType itemType, final int amount) {
-        return inventory.takeAmount(itemType, amount);
+        return colonyInventory.takeAmount(itemType, amount);
     }
 
     @Override
     public boolean hasItem(final ItemType itemType) {
-        return inventory.hasItem(itemType);
+        return colonyInventory.hasItem(itemType);
     }
 
     @Override
     public boolean hasItem(final ItemType itemType, final int amount) {
-        return inventory.hasItem(itemType, amount);
+        return colonyInventory.hasItem(itemType, amount);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return colonyInventory.isEmpty();
+    }
+
+    @Override
+    public int size() {
+        return colonyInventory.size();
     }
 
     @Override
     public int numberOf(final ItemType itemType) {
-        return inventory.numberOf(itemType);
+        return colonyInventory.numberOf(itemType);
+    }
+
+    @Override
+    public ArrayList<ItemType> calculateDifference(final IInventory inventory) {
+        return colonyInventory.calculateDifference(inventory);
     }
 
 }

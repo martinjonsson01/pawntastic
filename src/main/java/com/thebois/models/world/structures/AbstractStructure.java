@@ -119,12 +119,4 @@ abstract class AbstractStructure implements IStructure {
         return null;
     }
 
-    protected void setAllNeededItems(final IInventory allNeededItems) {
-        this.allNeededItems = allNeededItems;
-    }
-
-    protected void setDeliveredItems(final IInventory deliveredItems) {
-        this.deliveredItems = deliveredItems;
-    }
-
 }

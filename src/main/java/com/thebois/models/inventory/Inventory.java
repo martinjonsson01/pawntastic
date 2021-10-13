@@ -78,6 +78,11 @@ public class Inventory implements IInventory {
     }
 
     @Override
+    public int size() {
+        return items.size();
+    }
+
+    @Override
     public int numberOf(final ItemType itemType) {
         int count = 0;
         for (final IItem item : items) {
