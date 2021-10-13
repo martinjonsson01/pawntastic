@@ -11,7 +11,11 @@ public enum ResourceType {
     /**
      * Tree Resource.
      */
-    TREE(0.5f, 31);
+    TREE(0.5f, 31),
+    /**
+     * Rock Resource.
+     */
+    ROCK(0.5f, 27);
     private final float threshold;
     private final int seedPermutation;
 

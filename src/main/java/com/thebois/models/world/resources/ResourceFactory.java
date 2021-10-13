@@ -28,6 +28,9 @@ public final class ResourceFactory {
         else if (type == ResourceType.TREE) {
             return new Tree(x, y);
         }
+        else if (type == ResourceType.ROCK) {
+            return new Rock(x, y);
+        }
         throw new UnsupportedOperationException();
     }
 

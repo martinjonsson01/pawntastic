@@ -36,4 +36,19 @@ public class ResourceFactoryTests {
         assertThat(actualWater).isEqualTo(expectedWater);
     }
 
+    @Test
+    public void createResourceWithRockEnumReturnsRockResource() {
+        // Arrange
+        final int x = 0;
+        final int y = 0;
+        final IResource expectedRock = new Rock(x, y);
+        final IResource actualRock;
+
+        // Act
+        actualRock = ResourceFactory.createResource(ResourceType.ROCK, x, y);
+
+        // Assert
+        assertThat(actualRock).isEqualTo(expectedRock);
+    }
+
 }

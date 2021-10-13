@@ -36,12 +36,10 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(
-                             mockTile(1, 1),
-                             List.of(mockPosition(1, 0),
-                                     mockPosition(0, 1),
-                                     mockPosition(2, 1),
-                                     mockPosition(1, 2))));
+                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
+                                                              mockPosition(0, 1),
+                                                              mockPosition(2, 1),
+                                                              mockPosition(1, 2))));
     }
 
     private static Position mockPosition(final int positionX, final int positionY) {
@@ -239,7 +237,6 @@ public class WorldTests {
     @Test
     public void findEmptyPositionsReturnsPositionWithNoResourcesOn() {
         // Arrange
-        // Instantiate a world filled with dirt.
         final World world = new World(10, 15);
         final Collection<IResource> resources = world.getResources();
         final Collection<Position> occupiedPositions = new ArrayList<>();
@@ -263,7 +260,6 @@ public class WorldTests {
         final int amountOfWantedPositions = 5;
         final World world = new World(worldSize, seed);
         final Iterable<Position> emptyPositions;
-        // Fill world with Structures
         fillWorldWithStructures(worldSize, world);
 
         // Act
@@ -284,7 +280,6 @@ public class WorldTests {
     @Test
     public void findEmptyPositionsReturnsEarlyIfAmountOfEmptyPositionsHaveBeenMet() {
         // Arrange
-        // Instantiate a world filled with dirt.
         final World world = new World(2, 15);
         final int numberOfWantedPositions = 3;
         final int numberOfEmptyPositions;
@@ -300,7 +295,6 @@ public class WorldTests {
     @Test
     public void getTerrainsReturnsTerrainEvenIfStructuresAreOnTopOfTerrain() {
         // Arrange
-        // Instantiate a world filled with dirt.
         final int worldSize = 15;
         final int seed = 0;
         final World world = new World(worldSize, seed);

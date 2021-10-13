@@ -28,6 +28,7 @@ public class ResourceGenerator extends AbstractGenerator {
         resourceNoise = new HashMap<>();
         resourceNoise.put(ResourceType.WATER, NoiseFactory.createLargeChunksNoise());
         resourceNoise.put(ResourceType.TREE, NoiseFactory.createSmallChunksNoise());
+        resourceNoise.put(ResourceType.ROCK, NoiseFactory.createIsolatedUnitsNoise());
     }
 
     /**

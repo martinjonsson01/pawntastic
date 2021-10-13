@@ -19,6 +19,7 @@ public class ResourceView implements IView {
 
     private static final Color WATER_COLOR = Color.valueOf("#1E90FF");
     private static final Color TREE_COLOR = Color.valueOf("#006400");
+    private static final Color ROCK_COLOR = Color.valueOf("#808080");
     private static final Map<ResourceType, Color> RESOURCE_COLOR;
     private final Map<ResourceType, Texture> resourceTextureMap;
 
@@ -26,6 +27,7 @@ public class ResourceView implements IView {
         RESOURCE_COLOR = new HashMap<>();
         RESOURCE_COLOR.put(ResourceType.WATER, WATER_COLOR);
         RESOURCE_COLOR.put(ResourceType.TREE, TREE_COLOR);
+        RESOURCE_COLOR.put(ResourceType.ROCK, ROCK_COLOR);
     }
 
     private final float tileSize;
@@ -41,6 +43,7 @@ public class ResourceView implements IView {
         resourceTextureMap = new HashMap<>();
         resourceTextureMap.put(ResourceType.WATER, TextureUtils.createSquareTexture(tileSize));
         resourceTextureMap.put(ResourceType.TREE, TextureUtils.createTriangleTexture(tileSize));
+        resourceTextureMap.put(ResourceType.ROCK, TextureUtils.createTriangleTexture(tileSize));
     }
 
     /**
