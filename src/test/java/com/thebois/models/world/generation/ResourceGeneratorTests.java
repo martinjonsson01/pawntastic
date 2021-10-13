@@ -36,15 +36,15 @@ public class ResourceGeneratorTests {
     public void generatingResourcesReturnDifferentMatrixIfSeedIsDifferent(
         final int worldSize, final int seed1, final int seed2) {
         // Arrange
-        final ResourceGenerator generator1 = new ResourceGenerator(seed1);
-        final ResourceGenerator generator2 = new ResourceGenerator(seed2);
+        final ResourceGenerator generator1 = new ResourceGenerator(worldSize, seed1);
+        final ResourceGenerator generator2 = new ResourceGenerator(worldSize, seed2);
         final IResource[][] matrix1;
         final IResource[][] matrix2;
         final boolean isEqual;
 
         // Act
-        matrix1 = generator1.generateResourceMatrix(worldSize);
-        matrix2 = generator2.generateResourceMatrix(worldSize);
+        matrix1 = generator1.generateResourceMatrix();
+        matrix2 = generator2.generateResourceMatrix();
         isEqual = Arrays.deepEquals(matrix1, matrix2);
         // Assert
         // Assert did not have an IsNotDeepEqual()
@@ -56,15 +56,15 @@ public class ResourceGeneratorTests {
     public void generatingResourcesReturnSameMatrixIfSeedIsSame(
         final int worldSize, final int seed) {
         // Arrange
-        final ResourceGenerator generator1 = new ResourceGenerator(seed);
-        final ResourceGenerator generator2 = new ResourceGenerator(seed);
+        final ResourceGenerator generator1 = new ResourceGenerator(worldSize, seed);
+        final ResourceGenerator generator2 = new ResourceGenerator(worldSize, seed);
         final IResource[][] matrix1;
         final IResource[][] matrix2;
         final boolean isEqual;
 
         // Act
-        matrix1 = generator1.generateResourceMatrix(worldSize);
-        matrix2 = generator2.generateResourceMatrix(worldSize);
+        matrix1 = generator1.generateResourceMatrix();
+        matrix2 = generator2.generateResourceMatrix();
         isEqual = Arrays.deepEquals(matrix1, matrix2);
 
         // Assert
@@ -72,14 +72,16 @@ public class ResourceGeneratorTests {
         assertThat(isEqual).isTrue();
     }
 
-    @Test
-    public void generatedResourceMatrixIsNotEmpty() {
+    @ParameterizedTest
+    @MethodSource("getWorldSizeAndOneSeed")
+    public void generatedResourceMatrixContainsAtLeast1OfEachResource(
+        final int worldSize, final int seed) {
         // Arrange
-        final ResourceGenerator generator = new ResourceGenerator(0);
+        final ResourceGenerator generator = new ResourceGenerator(worldSize, seed);
         final IResource[][] matrix;
         final AtomicBoolean moreThanZeroResources = new AtomicBoolean(false);
         // Act
-        matrix = generator.generateResourceMatrix(50);
+        matrix = generator.generateResourceMatrix();
         MatrixUtils.forEachElement(matrix, maybeResource -> {
             if (maybeResource != null) {
                 moreThanZeroResources.set(true);
@@ -93,12 +95,14 @@ public class ResourceGeneratorTests {
     @Test
     public void generatedResourceMatrixContainsAtLeastTwoDifferentTypeResources() {
         // Arrange
-        final ResourceGenerator generator = new ResourceGenerator(0);
+        final int worldSize = 50;
+        final int seed = 0;
+        final ResourceGenerator generator = new ResourceGenerator(worldSize, seed);
         final IResource[][] matrix;
         final AtomicBoolean containsWater = new AtomicBoolean(false);
         final AtomicBoolean containsTree = new AtomicBoolean(false);
         // Act
-        matrix = generator.generateResourceMatrix(50);
+        matrix = generator.generateResourceMatrix();
         MatrixUtils.forEachElement(matrix, maybeResource -> {
             if (maybeResource != null) {
                 if (maybeResource.getType().equals(ResourceType.TREE)) {

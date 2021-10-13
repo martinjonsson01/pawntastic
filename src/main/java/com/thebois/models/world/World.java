@@ -36,9 +36,9 @@ public class World implements IWorld, IFinder {
      */
     public World(final int worldSize, final int seed) {
         this.worldSize = worldSize;
-        terrainMatrix = setUpTerrain(seed);
+        terrainMatrix = setUpTerrain(worldSize, seed);
         structureMatrix = setUpStructures();
-        resourceMatrix = setUpResources(seed);
+        resourceMatrix = setUpResources(worldSize, seed);
         canonicalMatrix = new ITile[worldSize][worldSize];
         updateCanonicalMatrix();
     }
@@ -51,14 +51,12 @@ public class World implements IWorld, IFinder {
         return newStructureMatrix;
     }
 
-    protected ITerrain[][] setUpTerrain(final int seed) {
-        final TerrainGenerator terrainGenerator = new TerrainGenerator(seed);
-        return terrainGenerator.generateTerrainMatrix(worldSize);
+    protected ITerrain[][] setUpTerrain(final int size, final int seed) {
+        return new TerrainGenerator(worldSize, seed).generateTerrainMatrix();
     }
 
-    protected IResource[][] setUpResources(final int seed) {
-        final ResourceGenerator resourceGenerator = new ResourceGenerator(seed);
-        return resourceGenerator.generateResourceMatrix(worldSize);
+    protected IResource[][] setUpResources(final int size, final int seed) {
+        return new ResourceGenerator(worldSize, seed).generateResourceMatrix();
     }
 
     /**

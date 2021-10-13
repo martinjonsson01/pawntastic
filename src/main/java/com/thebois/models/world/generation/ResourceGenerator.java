@@ -17,17 +17,20 @@ public class ResourceGenerator extends AbstractGenerator {
 
     private final Map<ResourceType, INoise> resourceNoise;
     private final int seed;
+    private final int worldSize;
 
     /**
      * Instantiate a Resource Generator with pre-made settings used for generating values.
      *
-     * @param seed The seed used to generate resources in the world.
+     * @param worldSize The size of the world.
+     * @param seed      The seed used to generate resources in the world.
      */
-    public ResourceGenerator(final int seed) {
+    public ResourceGenerator(final int worldSize, final int seed) {
         resourceNoise = new HashMap<>();
         resourceNoise.put(ResourceType.WATER, NoiseFactory.createLargeChunksNoise());
         resourceNoise.put(ResourceType.TREE, NoiseFactory.createSmallChunksNoise());
         this.seed = seed;
+        this.worldSize = worldSize;
     }
 
     /**
@@ -37,11 +40,9 @@ public class ResourceGenerator extends AbstractGenerator {
      * Some elements maybe be null, be careful when reading from matrix.
      * </p>
      *
-     * @param worldSize The size of the world.
-     *
      * @return The resource matrix.
      */
-    public IResource[][] generateResourceMatrix(final int worldSize) {
+    public IResource[][] generateResourceMatrix() {
         final IResource[][] resourceMatrix = new IResource[worldSize][worldSize];
         MatrixUtils.populateElements(resourceMatrix, (x, y) -> null);
 

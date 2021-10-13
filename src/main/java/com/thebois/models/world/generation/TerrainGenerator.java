@@ -17,14 +17,17 @@ public class TerrainGenerator extends AbstractGenerator {
 
     private final Map<TerrainType, INoise> terrainNoise;
     private final int seed;
+    private final int worldSize;
 
     /**
      * Instantiate a Terrain Generator with pre-made settings used for generating values.
      *
-     * @param seed The seed used to generate the world.
+     * @param worldSize The world size of the world.
+     * @param seed      The seed used to generate the world.
      */
-    public TerrainGenerator(final int seed) {
+    public TerrainGenerator(final int worldSize, final int seed) {
         this.seed = seed;
+        this.worldSize = worldSize;
         terrainNoise = new HashMap<>();
         terrainNoise.put(TerrainType.SAND, NoiseFactory.createLargeChunksNoise());
         terrainNoise.put(TerrainType.GRASS, NoiseFactory.createFillMapNoise());
@@ -34,11 +37,9 @@ public class TerrainGenerator extends AbstractGenerator {
     /**
      * Generates a Terrain Matrix with the given world size.
      *
-     * @param worldSize The size of the world.
-     *
      * @return The terrain matrix.
      */
-    public ITerrain[][] generateTerrainMatrix(final int worldSize) {
+    public ITerrain[][] generateTerrainMatrix() {
         final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
 
         for (final TerrainType terrainType : TerrainType.values()) {
