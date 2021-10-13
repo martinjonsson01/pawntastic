@@ -1,7 +1,7 @@
 package com.thebois.models.world.generation;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -11,17 +11,16 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
-import com.thebois.utils.MatrixUtils;
 
 import static org.assertj.core.api.Assertions.*;
 
 public class ResourceGeneratorTests {
 
     public static Stream<Arguments> getWorldSizeAndOneSeed() {
-        return Stream.of(Arguments.of(2, 4),
-                         Arguments.of(50, 40),
+        return Stream.of(Arguments.of(50, 40),
+                         Arguments.of(17, 72),
                          Arguments.of(25, 5),
-                         Arguments.of(10, 100));
+                         Arguments.of(15, 100));
     }
 
     public static Stream<Arguments> getWorldSizeAndTwoSeeds() {
@@ -72,50 +71,38 @@ public class ResourceGeneratorTests {
         assertThat(isEqual).isTrue();
     }
 
-    @ParameterizedTest
-    @MethodSource("getWorldSizeAndOneSeed")
-    public void generatedResourceMatrixContainsAtLeast1OfEachResource(
-        final int worldSize, final int seed) {
-        // Arrange
-        final ResourceGenerator generator = new ResourceGenerator(worldSize, seed);
-        final IResource[][] matrix;
-        final AtomicBoolean moreThanZeroResources = new AtomicBoolean(false);
-        // Act
-        matrix = generator.generateResourceMatrix();
-        MatrixUtils.forEachElement(matrix, maybeResource -> {
-            if (maybeResource != null) {
-                moreThanZeroResources.set(true);
-            }
-        });
-
-        // Assert
-        assertThat(moreThanZeroResources).isTrue();
-    }
-
     @Test
-    public void generatedResourceMatrixContainsAtLeastTwoDifferentTypeResources() {
+    public void generatedResourceMatrixContainsAllKindsOfResources() {
         // Arrange
         final int worldSize = 50;
         final int seed = 0;
         final ResourceGenerator generator = new ResourceGenerator(worldSize, seed);
         final IResource[][] matrix;
-        final AtomicBoolean containsWater = new AtomicBoolean(false);
-        final AtomicBoolean containsTree = new AtomicBoolean(false);
+        final AtomicInteger actualNumberOfResources = new AtomicInteger(0);
+        final int expectedNumberOfResources = ResourceType.values().length;
         // Act
         matrix = generator.generateResourceMatrix();
-        MatrixUtils.forEachElement(matrix, maybeResource -> {
-            if (maybeResource != null) {
-                if (maybeResource.getType().equals(ResourceType.TREE)) {
-                    containsTree.set(true);
-                }
-                if (maybeResource.getType().equals(ResourceType.WATER)) {
-                    containsWater.set(true);
+        for (final ResourceType type : ResourceType.values()) {
+            if (containsResource(matrix, type)) {
+                actualNumberOfResources.incrementAndGet();
+            }
+        }
+        // Assert
+        assertThat(actualNumberOfResources.get()).isEqualTo(expectedNumberOfResources);
+    }
+
+    private boolean containsResource(
+        final IResource[][] matrix, final ResourceType typeToSearchFor) {
+        for (final IResource[] iResources : matrix) {
+            for (final IResource iResource : iResources) {
+                if (iResource != null) {
+                    if (iResource.getType() == typeToSearchFor) {
+                        return true;
+                    }
                 }
             }
-        });
-
-        // Assert
-        assertThat(containsTree.get() & containsWater.get()).isTrue();
+        }
+        return false;
     }
 
 }
