@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.models.beings.Colony;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.Log;
@@ -230,6 +231,45 @@ public class InventoryTests {
 
         // Assert
         assertThat(difference.containsAll(expectedDifference)).isTrue();
+    }
+
+    private static Stream<Arguments> emptyReturnsCorrectValueSource() {
+        return Stream.of(
+            Arguments.of(new ArrayList<>(List.of(new Rock(), new Rock())), false),
+            Arguments.of(new ArrayList<>(List.of()), true)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("emptyReturnsCorrectValueSource")
+    public void emptyReturnsCorrectValue(
+        final ArrayList<IItem> items,
+        final boolean expectedResult) {
+        // Arrange
+        final IInventory inventory = new Inventory();
+        inventory.addMultiple(items);
+
+        // Assert
+        assertThat(inventory.isEmpty()).isEqualTo(expectedResult);
+    }
+
+    private static Stream<Arguments> sizeReturnsCorrectValueSource() {
+        return Stream.of(
+            Arguments.of(new Inventory(), new ArrayList<>(List.of(new Rock(), new Rock())), 2),
+            Arguments.of(new Inventory(), new ArrayList<>(List.of()), 0)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("sizeReturnsCorrectValueSource")
+    public void sizeReturnsCorrectValue(final IInventory inventory,
+        final ArrayList<IItem> items,
+        final int expectedSize) {
+        // Arrange
+        inventory.addMultiple(items);
+
+        // Assert
+        assertThat(inventory.size()).isEqualTo(expectedSize);
     }
 
 }

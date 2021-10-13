@@ -22,4 +22,19 @@ public class ItemTests {
         assertThat(itemType).isEqualTo(expectedType.getType());
     }
 
+    public static Stream<Arguments> isEqualSource() {
+        return Stream.of(
+            Arguments.of(new Log(), new Log(), true),
+            Arguments.of(new Log(), new Rock(), false),
+            Arguments.of(new Rock(), new Rock(), true));
+    }
+
+    @ParameterizedTest
+    @MethodSource("isEqualSource")
+    public void isEqual(final IItem itemA, final IItem itemB, final boolean expectedResult) {
+
+        // Assert
+        assertThat(itemA.equals(itemB)).isEqualTo(expectedResult);
+    }
+
 }
