@@ -21,4 +21,15 @@ public class DoNothingAction implements IAction {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        return o instanceof DoNothingAction;
+    }
+
 }

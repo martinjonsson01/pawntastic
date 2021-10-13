@@ -39,4 +39,33 @@ public class DoNothingActionTests {
         assertThat(isCompleted).isFalse();
     }
 
+    @Test
+    public void doNothingActionIsEqualToOtherInstanceOfDoNothing() {
+        // Arrange
+        final IAction firstInstance = ActionFactory.createDoNothing();
+        final IAction secondInstance = ActionFactory.createDoNothing();
+
+        // Assert
+        assertThat(firstInstance).isEqualTo(secondInstance);
+    }
+
+    @Test
+    public void doNothingActionIsEqualToItself() {
+        // Arrange
+        final IAction firstInstance = ActionFactory.createDoNothing();
+
+        // Assert
+        assertThat(firstInstance).isEqualTo(firstInstance);
+    }
+
+    @Test
+    public void doNothingActionHasSameHashCodeAsOtherInstanceOfDoNothing() {
+        // Arrange
+        final IAction firstInstance = ActionFactory.createDoNothing();
+        final IAction secondInstance = ActionFactory.createDoNothing();
+
+        // Assert
+        assertThat(firstInstance.hashCode()).isEqualTo(secondInstance.hashCode());
+    }
+
 }
