@@ -121,21 +121,23 @@ public class PerlinNoise implements INoise {
     }
 
     private float smoothenValueForSides(final int coordinateX, final int coordinateY) {
+        final int smoothenFactor = 8;
         final float side1 = noise(coordinateX - 1, coordinateY);
         final float side2 = noise(coordinateX + 1, coordinateY);
         final float side3 = noise(coordinateX, coordinateY - 1);
         final float side4 = noise(coordinateX, coordinateY + 1);
 
-        return (side1 + side2 + side3 + side4) / 8;
+        return (side1 + side2 + side3 + side4) / smoothenFactor;
     }
 
     private double smoothenValueForCorners(final int coordinateX, final int coordinateY) {
+        final int smoothenFactor = 16;
         final float corner1 = noise(coordinateX - 1, coordinateY - 1);
         final float corner2 = noise(coordinateX - 1, coordinateY + 1);
         final float corner3 = noise(coordinateX + 1, coordinateY - 1);
         final float corner4 = noise(coordinateX + 1, coordinateY + 1);
 
-        return (corner1 + corner2 + corner3 + corner4) / 16;
+        return (corner1 + corner2 + corner3 + corner4) / smoothenFactor;
     }
 
     /**
