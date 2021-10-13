@@ -1,5 +1,6 @@
 package com.thebois.models.world.terrains;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -49,6 +50,18 @@ public class TerrainFactoryTests {
 
         // Assert
         assertThat(actualDirt).isEqualTo(expectedDirt);
+    }
+
+    @Test
+    public void createTerrainWithNullAsEnumThrowsUnsupportedOperationException() {
+        // Arrange
+        final int x = 0;
+        final int y = 0;
+
+        // Assert
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            TerrainFactory.createTerrain(null, x, y);
+        });
     }
 
 }

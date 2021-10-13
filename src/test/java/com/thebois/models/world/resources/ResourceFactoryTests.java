@@ -1,5 +1,6 @@
 package com.thebois.models.world.resources;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -49,6 +50,18 @@ public class ResourceFactoryTests {
 
         // Assert
         assertThat(actualRock).isEqualTo(expectedRock);
+    }
+
+    @Test
+    public void createResourceWithNullAsEnumThrowsUnsupportedOperationException() {
+        // Arrange
+        final int x = 0;
+        final int y = 0;
+
+        // Assert
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            ResourceFactory.createResource(null, x, y);
+        });
     }
 
 }
