@@ -260,7 +260,7 @@ public class World implements IWorld, IFinder {
         if (posX < 0 || posY < 0 || posX >= worldSize || posY >= worldSize) {
             throw new IndexOutOfBoundsException("Given position is outside of the world.");
         }
-        return terrainMatrix[posY][posX];
+        return canonicalMatrix[posY][posX];
     }
 
     private boolean isDiagonalTo(final ITile tile, final ITile neighbour) {

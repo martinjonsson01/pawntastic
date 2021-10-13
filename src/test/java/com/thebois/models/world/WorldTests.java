@@ -36,10 +36,12 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
-                                                              mockPosition(0, 1),
-                                                              mockPosition(2, 1),
-                                                              mockPosition(1, 2))));
+                         Arguments.of(
+                             mockTile(1, 1),
+                             List.of(mockPosition(1, 0),
+                                     mockPosition(0, 1),
+                                     mockPosition(2, 1),
+                                     mockPosition(1, 2))));
     }
 
     private static Position mockPosition(final int positionX, final int positionY) {
@@ -66,18 +68,6 @@ public class WorldTests {
                          Arguments.of(new Position(0, -1)),
                          Arguments.of(new Position(0, 3)),
                          Arguments.of(new Position(-1, 3)));
-    }
-
-    @Test
-    public void worldInitiated() {
-        // Arrange
-        final Collection<ITerrain> expectedTerrainTiles = mockDirtTiles();
-        final World world = new World(2, 15);
-
-        // Act
-        final Collection<ITerrain> terrainTiles = world.getTerrainTiles();
-        // Assert
-        assertThat(terrainTiles).containsAll(expectedTerrainTiles);
     }
 
     private Collection<ITerrain> mockDirtTiles() {
@@ -131,19 +121,16 @@ public class WorldTests {
     @Test
     public void getTileAtReturnsTileAtGivenPosition() {
         // Arrange
-        // World should contain:
-        // Dirt Dirt
-        // Dirt Dirt
-        final Collection<ITerrain> expectedTerrainTiles = mockDirtTiles();
-        final World world = new World(2, 15);
+        final Collection<Position> expectedTilePositions = mockPositions();
+        final Collection<Position> actualTilePositions = new ArrayList<>();
+        final World world = new World(2, 0);
 
-        for (final ITile tile : expectedTerrainTiles) {
-            // Act
-            final ITile tileAtPosition = world.getTileAt(tile.getPosition());
-
-            // Assert
-            assertThat(tileAtPosition).isEqualTo(tile);
+        // Act
+        for (final Position position : expectedTilePositions) {
+            actualTilePositions.add(world.getTileAt(position).getPosition());
         }
+        // Assert
+        assertThat(actualTilePositions).containsExactlyInAnyOrderElementsOf(expectedTilePositions);
     }
 
     @ParameterizedTest

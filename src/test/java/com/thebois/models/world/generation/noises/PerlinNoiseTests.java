@@ -1,4 +1,4 @@
-package com.thebois.utils;
+package com.thebois.models.world.generation.noises;
 
 import java.util.stream.Stream;
 
@@ -102,7 +102,7 @@ public class PerlinNoiseTests {
     public void perlinNoiseDifferentResultWithDifferentValues(
         final float posX1, final float posY1, final float posX2, final float posY2) {
         // Arrange
-        final PerlinNoise perlinNoise = new PerlinNoise();
+        final PerlinNoise perlinNoise = new PerlinNoise(1, 1, 1, 1);
         perlinNoise.setSeed(0);
         final float heightValue1;
         final float heightValue2;

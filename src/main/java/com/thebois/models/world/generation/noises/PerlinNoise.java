@@ -1,16 +1,16 @@
-package com.thebois.utils;
-
-import com.thebois.models.world.generation.patterns.IGenerationPattern;
-import com.thebois.models.world.generation.patterns.LargeChunks;
+package com.thebois.models.world.generation.noises;
 
 /**
  * Generator used to generate Perlin Noise.
  */
-public class PerlinNoise {
+public class PerlinNoise implements INoise {
 
-    private IGenerationPattern settings;
     private int currentOctave;
-    private int seed;
+    private final int octaves;
+    private final float amplitude;
+    private final double frequency;
+    private final double persistence;
+    private int seed = 0;
     private final int[] primeNumberArray = {
         15731,
         789221,
@@ -30,12 +30,21 @@ public class PerlinNoise {
     /**
      * Instantiate a Perlin Noise Generator with given arguments.
      *
-     * @param settings The settings used to generate the perlin noise.
-     * @param seed     A number used to generate the random table.
+     * @param octaves     Number of octaves used for generating perlin noise, A number equal or
+     *                    greater than 1.
+     * @param amplitude   The amplitude used to amplify the resulting noise.
+     * @param frequency   Used to decide how big the square should be.
+     * @param persistence Used to decide much the noise should change per addition.
      */
     public PerlinNoise(
-        final IGenerationPattern settings, final int seed) {
-        setSettings(settings);
+        final int octaves,
+        final float amplitude,
+        final double frequency,
+        final double persistence) {
+        this.octaves = octaves;
+        this.amplitude = amplitude;
+        this.frequency = frequency;
+        this.persistence = persistence;
         setSeed(seed);
     }
 
@@ -43,7 +52,7 @@ public class PerlinNoise {
      * Instantiate a Perlin Noise Generator.
      */
     public PerlinNoise() {
-        this(new LargeChunks(), 0);
+        this(0, 0, 0, 0);
     }
 
     /**
@@ -56,10 +65,6 @@ public class PerlinNoise {
      */
     public float sample(final float coordinateX, final float coordinateY) {
         double total = 0;
-        final int octaves = settings.getOctave();
-        final double persistence = settings.getPersistence();
-        final double frequency = settings.getFrequency();
-        final double amplitude = settings.getAmplitude();
         for (int i = 0; i < octaves; i++) {
             currentOctave = i;
             final double octaveAmplification = Math.pow(persistence, i);
@@ -175,10 +180,6 @@ public class PerlinNoise {
 
     public void setSeed(final int seed) {
         this.seed = seed;
-    }
-
-    public void setSettings(final IGenerationPattern settings) {
-        this.settings = settings;
     }
 
 }
