@@ -32,9 +32,11 @@ public class PerlinNoise implements INoise {
      *
      * @param octaves     Number of octaves used for generating perlin noise, A number equal or
      *                    greater than 1.
-     * @param amplitude   The amplitude used to amplify the resulting noise.
+     * @param amplitude   The amplitude used to amplify the resulting noise. The value should be not
+     *                    be 0.
      * @param frequency   Used to decide how big the square should be.
-     * @param persistence Used to decide much the noise should change per addition.
+     * @param persistence Used to decide much the noise should change per addition. The value should
+     *                    not be 0 if octave is greater than 1;
      */
     public PerlinNoise(
         final int octaves,
@@ -45,14 +47,6 @@ public class PerlinNoise implements INoise {
         this.amplitude = amplitude;
         this.frequency = frequency;
         this.persistence = persistence;
-        setSeed(seed);
-    }
-
-    /**
-     * Instantiate a Perlin Noise Generator.
-     */
-    public PerlinNoise() {
-        this(0, 0, 0, 0);
     }
 
     /**

@@ -19,14 +19,14 @@ public class ResourceGeneratorTests {
 
     public static Stream<Arguments> getWorldSizeAndOneSeed() {
         return Stream.of(Arguments.of(2, 4),
-                         Arguments.of(100, 40),
+                         Arguments.of(50, 40),
                          Arguments.of(25, 5),
                          Arguments.of(10, 100));
     }
 
     public static Stream<Arguments> getWorldSizeAndTwoSeeds() {
         return Stream.of(Arguments.of(2, 4, 8),
-                         Arguments.of(100, 40, 5234),
+                         Arguments.of(50, 40, 5234),
                          Arguments.of(25, 5, 615523),
                          Arguments.of(10, 100, 0));
     }
@@ -79,7 +79,7 @@ public class ResourceGeneratorTests {
         final IResource[][] matrix;
         final AtomicBoolean moreThanZeroResources = new AtomicBoolean(false);
         // Act
-        matrix = generator.generateResourceMatrix(100);
+        matrix = generator.generateResourceMatrix(50);
         MatrixUtils.forEachElement(matrix, maybeResource -> {
             if (maybeResource != null) {
                 moreThanZeroResources.set(true);
@@ -98,7 +98,7 @@ public class ResourceGeneratorTests {
         final AtomicBoolean containsWater = new AtomicBoolean(false);
         final AtomicBoolean containsTree = new AtomicBoolean(false);
         // Act
-        matrix = generator.generateResourceMatrix(100);
+        matrix = generator.generateResourceMatrix(50);
         MatrixUtils.forEachElement(matrix, maybeResource -> {
             if (maybeResource != null) {
                 if (maybeResource.getType().equals(ResourceType.TREE)) {
