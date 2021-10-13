@@ -36,6 +36,19 @@ public final class NoiseFactory {
     }
 
     /**
+     * Creates a Noise that generates isolated units.
+     *
+     * @return The noise to sample with.
+     */
+    public static INoise createIsolatedUnitsNoise() {
+        final float frequency = 0.5f;
+        final float persistence = 1.0f;
+        final int octave = 4;
+        final float amplitude = 1.0f;
+        return new PerlinNoise(octave, amplitude, frequency, persistence);
+    }
+
+    /**
      * Creates a Noise that generates small chunks.
      *
      * <p>
