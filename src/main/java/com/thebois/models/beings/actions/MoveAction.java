@@ -65,6 +65,10 @@ class MoveAction implements IAction {
             path.remove();
         }
 
+        if (path.isEmpty()) {
+            System.out.println("something's fucky");
+        }
+
         performer.setDestination(path.element());
     }
 
@@ -104,6 +108,12 @@ class MoveAction implements IAction {
 
         final Collection<Position> recalculatedPathSegment = pathFinder.path(pathNodeBeforeObstacle,
                                                                              destination);
+
+        // If not possible to find another path to the destination.
+        if (recalculatedPathSegment.isEmpty()) {
+            canReachDestination = false;
+            return;
+        }
 
         final int originalSegmentEndIndex = Math.max(0, nodeBeforeObstacleIndex - 1);
         final Collection<Position> originalPathSegment = path.subList(0, originalSegmentEndIndex);

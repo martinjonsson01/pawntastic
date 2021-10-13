@@ -142,6 +142,32 @@ public class MoveActionTests {
     }
 
     @Test
+    public void actionIsCompletedWhenNewObstacleBlocksAllPossiblePathsToDestination() {
+        // Arrange
+        final Position start = new Position(0, 0);
+        final Position end = new Position(3, 3);
+
+        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        when(performer.getPosition()).thenReturn(start);
+
+        final List<Position> workingPath = List.of(new Position(1, 1), new Position(2, 2), end);
+        final List<Position> noPath = List.of();
+        when(pathFinder.path(any(), any())).thenReturn(workingPath).thenReturn(noPath);
+
+        final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
+
+        final IAction task = ActionFactory.createMoveTo(end);
+
+        // Act
+        task.perform(performer);
+        Pawntastic.BUS.post(obstacleEvent);
+        final boolean completed = task.isCompleted(performer);
+
+        // Assert
+        assertThat(completed).isTrue();
+    }
+
+    @Test
     public void entirePathIsRecalculatedWhenObstacleIsInWayAtStartOfPath() {
         // Arrange
         final Position start = new Position(0, 0);
