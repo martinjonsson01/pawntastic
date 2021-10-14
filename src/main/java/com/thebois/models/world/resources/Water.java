@@ -1,6 +1,7 @@
 package com.thebois.models.world.resources;
 
 import com.thebois.models.Position;
+import com.thebois.models.inventory.items.IItem;
 
 /**
  * Resource of type water.
@@ -32,8 +33,8 @@ public class Water extends AbstractResource {
     }
 
     @Override
-    public void harvest() {
-
+    public IItem harvest() {
+        return null;
     }
 
     @Override

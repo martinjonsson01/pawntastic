@@ -2,9 +2,24 @@ package com.thebois.models.world.resources;
 
 import org.junit.jupiter.api.Test;
 
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class TreeTests {
+
+    @Test
+    public void harvestReturnsLog() {
+        // Arrange
+        final Tree tree = new Tree(0, 0);
+
+        // Act
+        final IItem item = tree.harvest();
+
+        // Assert
+        assertThat(item.getType()).isEqualTo(ItemType.LOG);
+    }
 
     @Test
     public void getTypeFromTreeResource() {

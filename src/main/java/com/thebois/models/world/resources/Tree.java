@@ -1,6 +1,8 @@
 package com.thebois.models.world.resources;
 
 import com.thebois.models.Position;
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.Log;
 
 /**
  * Resource of type tree.
@@ -42,8 +44,8 @@ public class Tree extends AbstractResource {
     }
 
     @Override
-    public void harvest() {
-
+    public IItem harvest() {
+        return new Log();
     }
 
 }
