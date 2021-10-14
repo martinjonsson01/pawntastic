@@ -133,9 +133,7 @@ public class World implements IWorld, IFinder {
     public Collection<ITerrain> getTerrainTiles() {
         final Collection<ITerrain> copy = new ArrayList<>();
         MatrixUtils.forEachElement(terrainMatrix, maybeTerrain -> {
-            if (maybeTerrain != null) {
-                copy.add(maybeTerrain.deepClone());
-            }
+            copy.add(maybeTerrain.deepClone());
         });
         return copy;
     }

@@ -1,55 +1,37 @@
 package com.thebois.models.world.terrains;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.*;
 
 public class TerrainFactoryTests {
 
-    @Test
-    public void createTerrainWithGrassEnumReturnsGrassTerrain() {
-        // Arrange
-        final int x = 0;
-        final int y = 0;
-        final ITerrain expectedGrass = new Grass(x, y);
-        final ITerrain actualGrass;
-
-        // Act
-        actualGrass = TerrainFactory.createTerrain(TerrainType.GRASS, x, y);
-
-        // Assert
-        assertThat(actualGrass).isEqualTo(expectedGrass);
+    public static Stream<Arguments> getTerrainTypeAndExpectedTerrain() {
+        return Stream.of(
+            Arguments.of(TerrainType.GRASS, new Grass(0, 0)),
+            Arguments.of(TerrainType.SAND, new Sand(0, 0)),
+            Arguments.of(TerrainType.DIRT, new Dirt(0, 0)));
     }
 
-    @Test
-    public void createTerrainWithSandEnumReturnsSandTerrain() {
+    @ParameterizedTest
+    @MethodSource("getTerrainTypeAndExpectedTerrain")
+    public void factoryCreatesCorrectTerrainWithGivenEnum(
+        final TerrainType type, final ITerrain expectedResource) {
         // Arrange
         final int x = 0;
         final int y = 0;
-        final ITerrain expectedSand = new Sand(x, y);
-        final ITerrain actualSand;
 
         // Act
-        actualSand = TerrainFactory.createTerrain(TerrainType.SAND, x, y);
+        final ITerrain actualResource = TerrainFactory.createTerrain(type, x, y);
 
         // Assert
-        assertThat(actualSand).isEqualTo(expectedSand);
-    }
-
-    @Test
-    public void createTerrainWithDirtEnumReturnsDirtTerrain() {
-        // Arrange
-        final int x = 0;
-        final int y = 0;
-        final ITerrain expectedDirt = new Dirt(x, y);
-        final ITerrain actualDirt;
-
-        // Act
-        actualDirt = TerrainFactory.createTerrain(TerrainType.DIRT, x, y);
-
-        // Assert
-        assertThat(actualDirt).isEqualTo(expectedDirt);
+        assertThat(actualResource).isEqualTo(expectedResource);
     }
 
     @Test
