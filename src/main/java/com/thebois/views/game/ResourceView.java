@@ -1,26 +1,17 @@
 package com.thebois.views.game;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import com.thebois.models.world.resources.IResource;
-import com.thebois.models.world.resources.ResourceType;
-import com.thebois.views.TextureUtils;
 
 /**
  * View that renders the resources that exist in the world.
  */
 public class ResourceView implements IView {
 
-    private static final Color WATER_COLOR = Color.valueOf("#1E90FF");
-    private static final Color TREE_COLOR = Color.valueOf("#006400");
-    private static final Color ROCK_COLOR = Color.valueOf("#808080");
-    private final Map<ResourceType, Texture> resourceTextureMap;
     private final float tileSize;
     private Iterable<IResource> resourceTiles = new ArrayList<>();
 
@@ -31,13 +22,6 @@ public class ResourceView implements IView {
      */
     public ResourceView(final float tileSize) {
         this.tileSize = tileSize;
-        resourceTextureMap = new HashMap<>();
-        resourceTextureMap.put(ResourceType.WATER,
-                               TextureUtils.createSquareTexture((int) tileSize, WATER_COLOR));
-        resourceTextureMap.put(ResourceType.TREE,
-                               TextureUtils.createTriangleTexture((int) tileSize, TREE_COLOR));
-        resourceTextureMap.put(ResourceType.ROCK,
-                               TextureUtils.createTriangleTexture((int) tileSize, ROCK_COLOR));
     }
 
     /**
@@ -52,18 +36,23 @@ public class ResourceView implements IView {
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         for (final IResource resource : resourceTiles) {
+            final ViewableResource viewableResource =
+                ViewableResource.valueByType(resource.getType());
             batch.setColor(Color.WHITE);
-            batch.draw(resourceTextureMap.get(resource.getType()),
-                       offsetX + resource.getPosition().getPosX() * tileSize,
-                       offsetY + resource.getPosition().getPosY() * tileSize,
-                       tileSize,
-                       tileSize);
+            batch.draw(
+                viewableResource.getTexture(),
+                offsetX + resource.getPosition().getPosX() * tileSize,
+                offsetY + resource.getPosition().getPosY() * tileSize,
+                tileSize,
+                tileSize);
         }
     }
 
     @Override
     public void dispose() {
-        resourceTextureMap.values().forEach(Texture::dispose);
+        for (final ViewableResource resource : ViewableResource.values()) {
+            resource.getTexture().dispose();
+        }
     }
 
 }
