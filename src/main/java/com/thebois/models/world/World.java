@@ -66,30 +66,24 @@ public class World implements IWorld, IFinder {
      */
     private void updateCanonicalMatrix() {
         // Fill with terrain.
-        MatrixUtils.forEachElement(terrainMatrix, tile -> {
+        replaceTilesInCanonicalMatrix(terrainMatrix);
+        // Replace with any possible resource.
+        replaceTilesInCanonicalMatrix(resourceMatrix);
+        // Replace with any possible structure.
+        replaceTilesInCanonicalMatrix(structureMatrix);
+    }
+
+    private void replaceTilesInCanonicalMatrix(final ITile[][] tiles) {
+        MatrixUtils.forEachElement(tiles, this::replaceTileInCanonicalMatrix);
+    }
+
+    private void replaceTileInCanonicalMatrix(final ITile tile) {
+        if (tile != null) {
             final Position position = tile.getPosition();
             final int posY = (int) position.getPosY();
             final int posX = (int) position.getPosX();
-            canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
-        });
-        // Replace terrain with any possible resource.
-        MatrixUtils.forEachElement(resourceMatrix, maybeResource -> {
-            if (maybeResource != null) {
-                final Position position = maybeResource.getPosition();
-                final int posY = (int) position.getPosY();
-                final int posX = (int) position.getPosX();
-                canonicalMatrix[posY][posX] = maybeResource.deepClone();
-            }
-        });
-        // Replace terrain with any possible structure.
-        MatrixUtils.forEachElement(structureMatrix, structure -> {
-            if (structure != null) {
-                final Position position = structure.getPosition();
-                final int posY = (int) position.getPosY();
-                final int posX = (int) position.getPosX();
-                canonicalMatrix[posY][posX] = structure.deepClone();
-            }
-        });
+            canonicalMatrix[posY][posX] = tile;
+        }
     }
 
     /**
@@ -132,9 +126,8 @@ public class World implements IWorld, IFinder {
      */
     public Collection<ITerrain> getTerrainTiles() {
         final Collection<ITerrain> copy = new ArrayList<>();
-        MatrixUtils.forEachElement(terrainMatrix, maybeTerrain -> {
-            copy.add(maybeTerrain.deepClone());
-        });
+        MatrixUtils.forEachElement(terrainMatrix,
+                                   maybeTerrain -> copy.add(maybeTerrain.deepClone()));
         return copy;
     }
 
