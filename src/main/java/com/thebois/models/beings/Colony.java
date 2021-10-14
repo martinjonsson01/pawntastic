@@ -33,7 +33,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
         final Collection<IBeing> pawns = new ArrayList<>();
         for (final Position vacantPosition : vacantPositions) {
             final AbstractRole role = RoleFactory.idle();
-            pawns.add(new Pawn(vacantPosition, role));
+            pawns.add(new Pawn(vacantPosition, this, role));
         }
         setBeings(pawns);
     }

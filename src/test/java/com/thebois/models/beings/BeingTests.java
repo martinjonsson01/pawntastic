@@ -20,6 +20,7 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.inventory.IInventory;
 import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
@@ -63,7 +64,7 @@ public class BeingTests {
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
-        return new Pawn(currentPosition.deepClone(), role);
+        return new Pawn(currentPosition.deepClone(), mock(IInventory.class), role);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
