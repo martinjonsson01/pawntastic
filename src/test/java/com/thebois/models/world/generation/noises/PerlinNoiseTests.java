@@ -52,12 +52,10 @@ public class PerlinNoiseTests {
         final float posX, final float posY) {
         // Arrange
         final PerlinNoise perlinNoise = new PerlinNoise(1, 1, 1, 1);
-        final float heightValue1;
-        final float heightValue2;
 
         // Act
-        heightValue1 = perlinNoise.sample(posX, posY);
-        heightValue2 = perlinNoise.sample(posX, posY);
+        final float heightValue1 = perlinNoise.sample(posX, posY);
+        final float heightValue2 = perlinNoise.sample(posX, posY);
 
         // Assert
         assertThat(heightValue1).isEqualTo(heightValue2);
@@ -71,12 +69,10 @@ public class PerlinNoiseTests {
         final PerlinNoise perlinNoise = new PerlinNoise(octave, amplitude, frequency, persistence);
         final int x = 1;
         final int y = 1;
-        final float heightValue1;
-        final float heightValue2;
 
         // Act
-        heightValue1 = perlinNoise.sample(x, y);
-        heightValue2 = perlinNoise.sample(x, y);
+        final float heightValue1 = perlinNoise.sample(x, y);
+        final float heightValue2 = perlinNoise.sample(x, y);
 
         // Assert
         assertThat(heightValue1).isEqualTo(heightValue2);
@@ -88,12 +84,10 @@ public class PerlinNoiseTests {
         final float posX1, final float posY1, final float posX2, final float posY2) {
         // Arrange
         final PerlinNoise perlinNoise = new PerlinNoise(1, 1, 1, 1);
-        final float heightValue1;
-        final float heightValue2;
 
         // Act
-        heightValue1 = perlinNoise.sample(posX1, posY1);
-        heightValue2 = perlinNoise.sample(posX2, posY2);
+        final float heightValue1 = perlinNoise.sample(posX1, posY1);
+        final float heightValue2 = perlinNoise.sample(posX2, posY2);
 
         // Assert
         assertThat(heightValue1).isNotEqualTo(heightValue2);
@@ -108,13 +102,11 @@ public class PerlinNoiseTests {
         final int seed1 = 0;
         final int seed2 = 1;
         perlinNoise.setSeed(seed1);
-        final float heightValue1;
-        final float heightValue2;
 
         // Act
-        heightValue1 = perlinNoise.sample(x, y);
+        final float heightValue1 = perlinNoise.sample(x, y);
         perlinNoise.setSeed(seed2);
-        heightValue2 = perlinNoise.sample(x, y);
+        final float heightValue2 = perlinNoise.sample(x, y);
 
         // Assert
         assertThat(heightValue1).isNotEqualTo(heightValue2);
@@ -127,12 +119,10 @@ public class PerlinNoiseTests {
         // Arrange
         final PerlinNoise perlinNoise1 = new PerlinNoise(1, 1, 1, 1);
         final PerlinNoise perlinNoise2 = new PerlinNoise(2, 2, 2, 2);
-        final float heightValue1;
-        final float heightValue2;
 
         // Act
-        heightValue1 = perlinNoise1.sample(x, y);
-        heightValue2 = perlinNoise2.sample(x, y);
+        final float heightValue1 = perlinNoise1.sample(x, y);
+        final float heightValue2 = perlinNoise2.sample(x, y);
 
         // Assert
         assertThat(heightValue1).isNotEqualTo(heightValue2);
@@ -143,11 +133,10 @@ public class PerlinNoiseTests {
     public void perlinNoiseReturnsZeroIfAmplitudeIs0(final float x, final float y) {
         // Arrange
         final PerlinNoise perlinNoise = new PerlinNoise(1, 0, 1, 1);
-        final float heightValue;
         final float expectedHeightValue = 0;
 
         // Act
-        heightValue = perlinNoise.sample(x, y);
+        final float heightValue = perlinNoise.sample(x, y);
 
         // Assert
         assertThat(heightValue).isEqualTo(expectedHeightValue);
@@ -158,11 +147,10 @@ public class PerlinNoiseTests {
     public void perlinNoiseReturnsZeroIfOctaveIs0(final float x, final float y) {
         // Arrange
         final PerlinNoise perlinNoise = new PerlinNoise(0, 1, 1, 1);
-        final float heightValue;
         final float expectedHeightValue = 0;
 
         // Act
-        heightValue = perlinNoise.sample(x, y);
+        final float heightValue = perlinNoise.sample(x, y);
 
         // Assert
         assertThat(heightValue).isEqualTo(expectedHeightValue);
@@ -173,10 +161,9 @@ public class PerlinNoiseTests {
     public void perlinNoiseReturnsNotZeroIfFrequencyIs0(final float x, final float y) {
         // Arrange
         final PerlinNoise perlinNoise = new PerlinNoise(1, 1, 0, 1);
-        final float heightValue;
 
         // Act
-        heightValue = perlinNoise.sample(x, y);
+        final float heightValue = perlinNoise.sample(x, y);
 
         // Assert
         assertThat(heightValue).isNotEqualTo(0);
@@ -187,10 +174,9 @@ public class PerlinNoiseTests {
     public void perlinNoiseReturnsNotZeroIfPersistenceIs0(final float x, final float y) {
         // Arrange
         final PerlinNoise perlinNoise = new PerlinNoise(1, 1, 1, 0);
-        final float heightValue;
 
         // Act
-        heightValue = perlinNoise.sample(x, y);
+        final float heightValue = perlinNoise.sample(x, y);
 
         // Assert
         assertThat(heightValue).isNotEqualTo(0);
@@ -203,12 +189,10 @@ public class PerlinNoiseTests {
         // Arrange
         final PerlinNoise perlinNoise1 = new PerlinNoise(3, 1, 1, 0);
         final PerlinNoise perlinNoise2 = new PerlinNoise(2, 1, 1, 0);
-        final float heightValue1;
-        final float heightValue2;
 
         // Act
-        heightValue1 = perlinNoise1.sample(x, y);
-        heightValue2 = perlinNoise2.sample(x, y);
+        final float heightValue1 = perlinNoise1.sample(x, y);
+        final float heightValue2 = perlinNoise2.sample(x, y);
 
         // Assert
         assertThat(heightValue1).isEqualTo(heightValue2);

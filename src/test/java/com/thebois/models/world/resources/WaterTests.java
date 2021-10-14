@@ -10,10 +10,9 @@ public class WaterTests {
     public void getTypeFromWaterResource() {
         // Arrange
         final Water water = new Water(1, 1);
-        final ResourceType resourceType;
 
         // Act
-        resourceType = water.getType();
+        final ResourceType resourceType = water.getType();
 
         // Assert
         assertThat(resourceType).isEqualTo(ResourceType.WATER);
@@ -23,10 +22,9 @@ public class WaterTests {
     public void getDeepCloneShouldBeEqualToOriginal() {
         // Arrange
         final Water water = new Water(1, 1);
-        final IResource deepClone;
 
         // Act
-        deepClone = water.deepClone();
+        final IResource deepClone = water.deepClone();
 
         // Assert
         assertThat(deepClone).isEqualTo(water);
@@ -37,10 +35,9 @@ public class WaterTests {
         // Arrange
         final Water water = new Water(1, 1);
         final float expectedValue = Float.MAX_VALUE;
-        final float actualValue;
 
         // Act
-        actualValue = water.getCost();
+        final float actualValue = water.getCost();
 
         // Assert
         assertThat(actualValue).isEqualTo(expectedValue);

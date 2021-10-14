@@ -38,10 +38,9 @@ public class ResourceTests {
     public void resourceIsEqualToItself() {
         // Arrange
         final IResource resource = new Water(1, 1);
-        final boolean isEqual;
 
         // Act
-        isEqual = resource.equals(resource);
+        final boolean isEqual = resource.equals(resource);
 
         // Assert
         assertThat(isEqual).isTrue();
@@ -51,10 +50,9 @@ public class ResourceTests {
     public void resourceIsNotEqualToNull() {
         // Arrange
         final IResource resource = new Water(1, 1);
-        final boolean isEqual;
 
         // Act
-        isEqual = resource.equals(null);
+        final boolean isEqual = resource.equals(null);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -65,10 +63,9 @@ public class ResourceTests {
         // Arrange
         final IResource resource = new Water(1, 1);
         final Object object = new Object();
-        final boolean isEqual;
 
         // Act
-        isEqual = resource.equals(object);
+        final boolean isEqual = resource.equals(object);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -81,10 +78,9 @@ public class ResourceTests {
         final Position position2 = new Position(2, 2);
         final IResource resource1 = new Water(position1);
         final IResource resource2 = new Water(position2);
-        final boolean isEqual;
 
         // Act
-        isEqual = resource1.equals(resource2);
+        final boolean isEqual = resource1.equals(resource2);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -96,10 +92,9 @@ public class ResourceTests {
         final Position position = new Position(1, 1);
         final IResource resource1 = new Water(position);
         final IResource resource2 = new Tree(position);
-        final boolean isEqual;
 
         // Act
-        isEqual = resource1.equals(resource2);
+        final boolean isEqual = resource1.equals(resource2);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -111,10 +106,9 @@ public class ResourceTests {
         final Position position = new Position(1, 1);
         final IResource resource1 = new Water(position);
         final IResource resource2 = new Water(position);
-        final boolean isEqual;
 
         // Act
-        isEqual = resource1.equals(resource2);
+        final boolean isEqual = resource1.equals(resource2);
 
         // Assert
         assertThat(isEqual).isTrue();
@@ -126,10 +120,9 @@ public class ResourceTests {
         final Position position = new Position(1, 1);
         final IResource resource1 = new Water(position);
         final IResource resource2 = new Water(position);
-        final boolean isEqual;
 
         // Act
-        isEqual = resource1.hashCode() == resource2.hashCode();
+        final boolean isEqual = resource1.hashCode() == resource2.hashCode();
 
         // Assert
         assertThat(isEqual).isTrue();

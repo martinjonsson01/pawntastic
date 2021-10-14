@@ -55,14 +55,11 @@ public class ResourceGeneratorTests {
         // Arrange
         final ResourceGenerator generator1 = new ResourceGenerator(worldSize, seed);
         final ResourceGenerator generator2 = new ResourceGenerator(worldSize, seed);
-        final IResource[][] matrix1;
-        final IResource[][] matrix2;
-        final boolean isEqual;
 
         // Act
-        matrix1 = generator1.generateResourceMatrix();
-        matrix2 = generator2.generateResourceMatrix();
-        isEqual = Arrays.deepEquals(matrix1, matrix2);
+        final IResource[][] matrix1 = generator1.generateResourceMatrix();
+        final IResource[][] matrix2 = generator2.generateResourceMatrix();
+        final boolean isEqual = Arrays.deepEquals(matrix1, matrix2);
 
         // Assert
         assertThat(matrix1).isDeepEqualTo(matrix2);
@@ -75,16 +72,17 @@ public class ResourceGeneratorTests {
         final int worldSize, final int seed) {
         // Arrange
         final ResourceGenerator generator = new ResourceGenerator(worldSize, seed);
-        final IResource[][] matrix;
         int actualNumberOfResources = 0;
         final int expectedNumberOfResources = ResourceType.values().length;
+
         // Act
-        matrix = generator.generateResourceMatrix();
+        final IResource[][] matrix = generator.generateResourceMatrix();
         for (final ResourceType type : ResourceType.values()) {
             if (containsResource(matrix, type)) {
                 actualNumberOfResources++;
             }
         }
+
         // Assert
         assertThat(actualNumberOfResources).isEqualTo(expectedNumberOfResources);
     }

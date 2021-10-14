@@ -10,10 +10,9 @@ public class RockTests {
     public void getTypeFromRockResource() {
         // Arrange
         final Rock rock = new Rock(1, 1);
-        final ResourceType resourceType;
 
         // Act
-        resourceType = rock.getType();
+        final ResourceType resourceType = rock.getType();
 
         // Assert
         assertThat(resourceType).isEqualTo(ResourceType.ROCK);
@@ -23,10 +22,9 @@ public class RockTests {
     public void getDeepCloneShouldBeEqualToOriginal() {
         // Arrange
         final Rock rock = new Rock(1, 1);
-        final IResource deepClone;
 
         // Act
-        deepClone = rock.deepClone();
+        final IResource deepClone = rock.deepClone();
 
         // Assert
         assertThat(deepClone).isEqualTo(rock);
@@ -37,10 +35,9 @@ public class RockTests {
         // Arrange
         final Rock rock = new Rock(1, 1);
         final float expectedValue = Float.MAX_VALUE;
-        final float actualValue;
 
         // Act
-        actualValue = rock.getCost();
+        final float actualValue = rock.getCost();
 
         // Assert
         assertThat(actualValue).isEqualTo(expectedValue);
