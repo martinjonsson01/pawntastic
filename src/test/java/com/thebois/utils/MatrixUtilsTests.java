@@ -64,7 +64,7 @@ public class MatrixUtilsTests {
     public void matrixToCollection(final String[][] matrix,
                                        final Collection<String> expectedElements) {
         // Act
-        final Collection<String> stringCollection = MatrixUtils.matrixToCollection(matrix);
+        final Collection<String> stringCollection = MatrixUtils.toCollection(matrix);
 
         // Assert
         assertThat(stringCollection).isEqualTo(expectedElements);

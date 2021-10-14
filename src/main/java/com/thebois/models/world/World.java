@@ -112,7 +112,7 @@ public class World implements IWorld, IFinder {
      * @return The list to be returned.
      */
     public Collection<IStructure> getStructures() {
-        return MatrixUtils.matrixToCollection(this.structureMatrix);
+        return MatrixUtils.toCollection(this.structureMatrix);
     }
 
     /**

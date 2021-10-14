@@ -21,7 +21,7 @@ public final class MatrixUtils {
      *
      * @return Returns the matrix in collection form.
      */
-    public static <TElement> Collection<TElement> matrixToCollection(
+    public static <TElement> Collection<TElement> toCollection(
         final TElement[][] matrix) {
         final Collection<TElement> matrixCollection = new ArrayList<>();
         MatrixUtils.forEachElement(matrix, element -> {
