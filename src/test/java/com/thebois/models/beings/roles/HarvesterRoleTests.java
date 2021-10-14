@@ -19,7 +19,7 @@ import com.thebois.models.world.resources.ResourceType;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class LumberjackRoleTests {
+public class HarvesterRoleTests {
 
     private IWorld mockWorld;
     private IResourceFinder finder;
@@ -43,7 +43,7 @@ public class LumberjackRoleTests {
     @Test
     public void obtainNextActionIsDoNothingWhenNoTreeExists() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final AbstractRole role = createRole();
         final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(new Position());
         when(finder.getNearbyOfType(any(), eq(ResourceType.TREE))).thenReturn(Optional.empty());
@@ -56,10 +56,14 @@ public class LumberjackRoleTests {
         assertThat(actual).isEqualTo(expectedAction);
     }
 
+    private AbstractRole createRole() {
+        return new TestHarvesterRole(finder, mockWorld);
+    }
+
     @Test
     public void obtainNextActionIsMoveToBesidesTreeWhenTreeExists() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final AbstractRole role = createRole();
         final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(new Position(0, 0));
         final Position treePosition = new Position(5, 3);
@@ -91,7 +95,7 @@ public class LumberjackRoleTests {
     @Test
     public void obtainNextActionIsDoNothingWhenTreeExistsButHasNoVacantNeighbours() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final AbstractRole role = createRole();
         final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(new Position(0, 0));
         final Position treePosition = new Position(5, 3);
@@ -110,7 +114,7 @@ public class LumberjackRoleTests {
     @Test
     public void obtainNextActionIsHarvestWhenPerformerNextToTree() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final AbstractRole role = createRole();
 
         final ITaskPerformer performer = mock(ITaskPerformer.class);
         final Position treePosition = new Position(5, 3);
@@ -133,7 +137,7 @@ public class LumberjackRoleTests {
     @Test
     public void obtainNextActionIsDoNothingWhenPerformerNextToTreeButTreeIsGone() {
         // Arrange
-        final AbstractRole role = RoleFactory.lumberjack();
+        final AbstractRole role = createRole();
 
         final ITaskPerformer performer = mock(ITaskPerformer.class);
         final Position treePosition = new Position(5, 3);
@@ -156,6 +160,22 @@ public class LumberjackRoleTests {
 
         // Assert
         assertThat(actual).isEqualTo(expected);
+    }
+
+    /**
+     * A harvester role stub-implementation that harvests trees, much like a lumberjack.
+     */
+    private static final class TestHarvesterRole extends AbstractHarvesterRole {
+
+        TestHarvesterRole(final IResourceFinder finder, final IWorld world) {
+            super(finder, world, ResourceType.TREE);
+        }
+
+        @Override
+        public RoleType getType() {
+            return null;
+        }
+
     }
 
 }
