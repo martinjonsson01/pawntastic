@@ -16,7 +16,7 @@ class MinerRole extends AbstractHarvesterRole {
      * @param world  The world in which the resources are located.
      */
     MinerRole(final IResourceFinder finder, final IWorld world) {
-        super(finder, world, ResourceType.ROCK);
+        super(finder, world, ResourceType.STONE);
     }
 
     @Override

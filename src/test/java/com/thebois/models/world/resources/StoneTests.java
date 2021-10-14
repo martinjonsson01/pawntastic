@@ -7,15 +7,15 @@ import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class RockTests {
+public class StoneTests {
 
     @Test
     public void harvestReturnsRockItem() {
         // Arrange
-        final Rock rock = new Rock(1, 1);
+        final Stone stone = new Stone(1, 1);
 
         // Act
-        final IItem item = rock.harvest();
+        final IItem item = stone.harvest();
 
         // Assert
         assertThat(item.getType()).isEqualTo(ItemType.ROCK);
@@ -24,35 +24,35 @@ public class RockTests {
     @Test
     public void getTypeFromRockResource() {
         // Arrange
-        final Rock rock = new Rock(1, 1);
+        final Stone stone = new Stone(1, 1);
 
         // Act
-        final ResourceType resourceType = rock.getType();
+        final ResourceType resourceType = stone.getType();
 
         // Assert
-        assertThat(resourceType).isEqualTo(ResourceType.ROCK);
+        assertThat(resourceType).isEqualTo(ResourceType.STONE);
     }
 
     @Test
     public void getDeepCloneShouldBeEqualToOriginal() {
         // Arrange
-        final Rock rock = new Rock(1, 1);
+        final Stone stone = new Stone(1, 1);
 
         // Act
-        final IResource deepClone = rock.deepClone();
+        final IResource deepClone = stone.deepClone();
 
         // Assert
-        assertThat(deepClone).isEqualTo(rock);
+        assertThat(deepClone).isEqualTo(stone);
     }
 
     @Test
     public void getCostIsFloatMax() {
         // Arrange
-        final Rock rock = new Rock(1, 1);
+        final Stone stone = new Stone(1, 1);
         final float expectedValue = Float.MAX_VALUE;
 
         // Act
-        final float actualValue = rock.getCost();
+        final float actualValue = stone.getCost();
 
         // Assert
         assertThat(actualValue).isEqualTo(expectedValue);

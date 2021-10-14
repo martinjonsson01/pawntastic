@@ -6,9 +6,9 @@ import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
 
 /**
- * Resource of type rock.
+ * A large stone on the ground.
  */
-public class Rock extends AbstractResource {
+public class Stone extends AbstractResource {
 
     /**
      * Instantiate a new rock resource at given position.
@@ -16,7 +16,7 @@ public class Rock extends AbstractResource {
      * @param x X coordinate for the rock resource.
      * @param y Y coordinate for the rock resource.
      */
-    public Rock(final float x, final float y) {
+    public Stone(final float x, final float y) {
         this(new Position(x, y));
     }
 
@@ -25,13 +25,13 @@ public class Rock extends AbstractResource {
      *
      * @param position The position where the rock resource should be created.
      */
-    public Rock(final Position position) {
+    public Stone(final Position position) {
         super(position);
     }
 
     @Override
     public IResource deepClone() {
-        return new Rock(getPosition());
+        return new Stone(getPosition());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Rock extends AbstractResource {
 
     @Override
     public ResourceType getType() {
-        return ResourceType.ROCK;
+        return ResourceType.STONE;
     }
 
     @Override

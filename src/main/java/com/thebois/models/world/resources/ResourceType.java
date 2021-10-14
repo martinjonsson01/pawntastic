@@ -5,17 +5,17 @@ package com.thebois.models.world.resources;
  */
 public enum ResourceType {
     /**
-     * Water Resource.
+     * A body of water.
      */
     WATER(0.5f, 0),
     /**
-     * Tree Resource.
+     * A natural tree.
      */
     TREE(0.5f, 31),
     /**
-     * Rock Resource.
+     * A large stone on the ground.
      */
-    ROCK(0.5f, 27);
+    STONE(0.5f, 27);
     private final float threshold;
     private final int seedPermutation;
 
