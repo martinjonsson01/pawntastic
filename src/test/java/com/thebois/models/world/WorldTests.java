@@ -23,7 +23,6 @@ import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
 import com.thebois.models.world.resources.Tree;
 import com.thebois.models.world.structures.IStructure;
-import com.thebois.models.world.terrains.Dirt;
 import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
 
@@ -42,10 +41,12 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
-                                                              mockPosition(0, 1),
-                                                              mockPosition(2, 1),
-                                                              mockPosition(1, 2))));
+                         Arguments.of(
+                             mockTile(1, 1),
+                             List.of(mockPosition(1, 0),
+                                     mockPosition(0, 1),
+                                     mockPosition(2, 1),
+                                     mockPosition(1, 2))));
     }
 
     private static ITile mockTile(final int positionX, final int positionY) {
@@ -279,15 +280,6 @@ public class WorldTests {
         }
         // Assert
         assertThat(positions).containsExactlyInAnyOrderElementsOf(expectedNeighbours);
-    }
-
-    private Collection<ITerrain> mockDirtTiles() {
-        final ArrayList<ITerrain> terrainTiles = new ArrayList<>();
-        terrainTiles.add(new Dirt(0, 0));
-        terrainTiles.add(new Dirt(0, 1));
-        terrainTiles.add(new Dirt(1, 0));
-        terrainTiles.add(new Dirt(1, 1));
-        return terrainTiles;
     }
 
     @Test
