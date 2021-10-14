@@ -1,6 +1,7 @@
 package com.thebois.models.beings;
 
 import com.thebois.models.Position;
+import com.thebois.models.inventory.items.IItem;
 
 /**
  * An internal interface that represents a performer of actions.
@@ -20,5 +21,12 @@ public interface ITaskPerformer {
      * @return The current location
      */
     Position getPosition();
+
+    /**
+     * Gives an item.
+     *
+     * @param item The item to give.
+     */
+    void addItem(IItem item);
 
 }
