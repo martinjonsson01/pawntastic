@@ -1,5 +1,7 @@
 package com.thebois.models.beings.actions;
 
+import java.util.Objects;
+
 import com.thebois.models.beings.ITaskPerformer;
 import com.thebois.models.world.resources.IResource;
 
@@ -29,6 +31,19 @@ public class HarvestAction implements IAction {
     @Override
     public boolean isCompleted(final ITaskPerformer performer) {
         return harvested;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(resource, harvested);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HarvestAction)) return false;
+        final HarvestAction that = (HarvestAction) o;
+        return harvested == that.harvested && resource.equals(that.resource);
     }
 
 }
