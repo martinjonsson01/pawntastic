@@ -41,23 +41,37 @@ class LumberjackRole extends AbstractRole {
     @Override
     protected Collection<IActionGenerator> getTaskGenerators() {
         return List.of(this::createMoveToTree,
-                       performer -> ActionFactory.createMoveTo(new Position(2, 2)),
+                       this::createHarvestTree,
                        performer -> ActionFactory.createMoveTo(new Position(2, 2)));
     }
 
     private IAction createMoveToTree(final ITaskPerformer performer) {
-        final Position position = performer.getPosition();
-        final Optional<IResource> maybeTree = finder.getNearbyOfType(position, ResourceType.TREE);
+        final Optional<IResource> maybeTree = findNearbyTree(performer);
         if (maybeTree.isEmpty()) return ActionFactory.createDoNothing();
 
         final IResource tree = maybeTree.get();
 
+        final Position position = performer.getPosition();
         final Optional<Position> closestSpotNextToTree = world.getClosestNeighbourOf(tree,
                                                                                      position);
 
         if (closestSpotNextToTree.isEmpty()) return ActionFactory.createDoNothing();
 
         return ActionFactory.createMoveTo(closestSpotNextToTree.get());
+    }
+
+    private IAction createHarvestTree(final ITaskPerformer performer) {
+        final Optional<IResource> maybeTree = findNearbyTree(performer);
+        if (maybeTree.isEmpty()) return ActionFactory.createDoNothing();
+
+        final IResource tree = maybeTree.get();
+
+        return ActionFactory.createHarvest(tree);
+    }
+
+    private Optional<IResource> findNearbyTree(final ITaskPerformer performer) {
+        final Position position = performer.getPosition();
+        return finder.getNearbyOfType(position, ResourceType.TREE);
     }
 
 }

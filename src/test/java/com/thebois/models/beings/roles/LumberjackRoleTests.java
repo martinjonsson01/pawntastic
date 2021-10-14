@@ -107,18 +107,55 @@ public class LumberjackRoleTests {
         assertThat(actual).isEqualTo(expectedAction);
     }
 
-    /* @Test
-    public void obtainNextActionIsHarvestActionWhenMovedToTree() {
+    @Test
+    public void obtainNextActionIsHarvestWhenPerformerNextToTree() {
         // Arrange
         final AbstractRole role = RoleFactory.lumberjack();
+
         final ITaskPerformer performer = mock(ITaskPerformer.class);
-        when(performer.getPosition()).thenReturn(new Position());
-        final IAction moveAction = ActionFactory.createMoveTo(new Position());
+        final Position treePosition = new Position(5, 3);
+        final Position besidesPosition = new Position(4, 3);
+        when(performer.getPosition()).thenReturn(besidesPosition);
+
+        final IResource tree = mockTree(treePosition);
+        when(mockWorld.getClosestNeighbourOf(tree, performer.getPosition())).thenReturn(Optional.of(
+            besidesPosition));
+
+        final IAction expected = ActionFactory.createHarvest(tree);
 
         // Act
-        final IAction action = role.obtainNextTask(performer);
+        final IAction actual = role.obtainNextTask(performer);
 
         // Assert
-        assertThat(action).isInstanceOf(moveAction.getClass());
-    }*/
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void obtainNextActionIsDoNothingWhenPerformerNextToTreeButTreeIsGone() {
+        // Arrange
+        final AbstractRole role = RoleFactory.lumberjack();
+
+        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final Position treePosition = new Position(5, 3);
+        final Position besidesPosition = new Position(4, 3);
+        when(performer.getPosition()).thenReturn(besidesPosition);
+
+        final IResource tree = mockTree(treePosition);
+        when(mockWorld.getClosestNeighbourOf(tree, performer.getPosition())).thenReturn(Optional.of(
+            besidesPosition));
+
+        // Simulate tree getting removed by only returning it the first time.
+        when(finder.getNearbyOfType(any(), eq(ResourceType.TREE)))
+            .thenReturn(Optional.of(tree))
+            .thenReturn(Optional.empty());
+
+        final IAction expected = ActionFactory.createDoNothing();
+
+        // Act
+        final IAction actual = role.obtainNextTask(performer);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
 }
