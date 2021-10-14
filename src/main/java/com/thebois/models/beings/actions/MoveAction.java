@@ -32,7 +32,6 @@ class MoveAction implements IAction {
     MoveAction(final Position destination, final IPathFinder pathFinder) {
         this.destination = destination;
         this.pathFinder = pathFinder;
-        Pawntastic.BUS.register(this);
     }
 
     @Override
@@ -70,6 +69,7 @@ class MoveAction implements IAction {
             path.remove();
         }
 
+        Pawntastic.BUS.register(this);
         performer.setDestination(path.element());
     }
 
