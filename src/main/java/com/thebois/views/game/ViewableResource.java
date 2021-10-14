@@ -11,7 +11,7 @@ import com.thebois.models.world.resources.ResourceType;
 import com.thebois.views.TextureUtils;
 
 /**
- * Viewable Resource that correspond to TerrainType but has view related information.
+ * Viewable Resource that correspond to ResourceType but has view related information.
  */
 public enum ViewableResource {
     /**
@@ -49,7 +49,7 @@ public enum ViewableResource {
     }
 
     /**
-     * Get ViewableResource with given ResourceType.
+     * Gets a graphical representation of a given type of resource.
      *
      * @param wantedType The ResourceType.
      *
