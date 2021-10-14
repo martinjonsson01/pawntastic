@@ -41,7 +41,7 @@ public class TerrainFactoryTests {
         final int y = 0;
 
         // Assert
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+        Assertions.assertThrows(NullPointerException.class, () -> {
             TerrainFactory.createTerrain(null, x, y);
         });
     }

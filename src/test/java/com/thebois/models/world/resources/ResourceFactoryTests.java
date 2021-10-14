@@ -35,7 +35,7 @@ public class ResourceFactoryTests {
     }
 
     @Test
-    public void createTerrainWithNullAsEnumThrowsUnsupportedOperationException() {
+    public void createResourceWithNullAsEnumThrowsUnsupportedOperationException() {
         // Arrange
         final int x = 0;
         final int y = 0;

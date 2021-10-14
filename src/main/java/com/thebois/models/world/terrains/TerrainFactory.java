@@ -18,20 +18,14 @@ public final class TerrainFactory {
      *
      * @return The created terrain.
      *
-     * @throws UnsupportedOperationException If the type of terrain wanted to be created have not
-     *                                       been implemented in the factory.
+     * @throws NullPointerException If the type of resource is null.
      */
     public static ITerrain createTerrain(final TerrainType type, final int x, final int y) {
-        if (type == TerrainType.DIRT) {
-            return new Dirt(x, y);
-        }
-        else if (type == TerrainType.SAND) {
-            return new Sand(x, y);
-        }
-        else if (type == TerrainType.GRASS) {
-            return new Grass(x, y);
-        }
-        throw new UnsupportedOperationException();
+        return switch (type) {
+            case GRASS -> new Grass(x, y);
+            case SAND -> new Sand(x, y);
+            case DIRT -> new Dirt(x, y);
+        };
     }
 
 }
