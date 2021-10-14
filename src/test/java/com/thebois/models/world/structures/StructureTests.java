@@ -51,10 +51,9 @@ public class StructureTests {
     @Test
     public void structureEqualIsTrueIfSamePositionAndType() {
         // Arrange
-        final Position position1 = new Position(1, 1);
-        final Position position2 = new Position(1, 1);
-        final AbstractStructure structure1 = new House(position1);
-        final AbstractStructure structure2 = new House(position2);
+        final Position position = new Position(1, 1);
+        final AbstractStructure structure1 = new House(position);
+        final AbstractStructure structure2 = new House(position);
         final boolean isEqual;
 
         // Act
