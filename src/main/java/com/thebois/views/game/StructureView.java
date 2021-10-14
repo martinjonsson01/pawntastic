@@ -12,7 +12,6 @@ import com.thebois.views.TextureUtils;
  */
 public final class StructureView implements IView {
 
-    static final float HALF_CONSTANT = 0.5f;
     private final float tileSize;
     private Iterable<IStructure> structures;
     private final Color houseColor = Color.valueOf("#CD853F");
@@ -42,15 +41,15 @@ public final class StructureView implements IView {
                 offsetX + structure.getPosition().getPosX() * tileSize,
                 offsetY + structure.getPosition().getPosY() * tileSize,
                 tileSize,
-                tileSize * HALF_CONSTANT);
+                tileSize / 2);
             // Draws roof
             batch.setColor(Color.BLACK);
             batch.draw(
                 ceilingTexture,
                 offsetX + structure.getPosition().getPosX() * tileSize,
-                offsetY + (structure.getPosition().getPosY() + HALF_CONSTANT) * tileSize,
+                offsetY + structure.getPosition().getPosY() * tileSize + tileSize / 2,
                 tileSize,
-                tileSize * HALF_CONSTANT);
+                tileSize / 2);
         }
     }
 
