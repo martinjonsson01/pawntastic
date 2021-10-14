@@ -104,7 +104,8 @@ public final class RoleFactory {
      * @return A new fisher role.
      */
     public static AbstractRole fisher() {
-        return new FisherRole();
+        assertDependenciesNotNull();
+        return new FisherRole(resourceFinder, world);
     }
 
     /**

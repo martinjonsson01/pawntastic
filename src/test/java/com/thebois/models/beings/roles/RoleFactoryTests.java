@@ -19,18 +19,20 @@ import static org.mockito.Mockito.*;
 public class RoleFactoryTests {
 
     public static Stream<Arguments> getRoleTypes() {
-        return Stream.of(
-            Arguments.of(RoleType.BUILDER, new BuilderRole()),
-            Arguments.of(RoleType.FARMER, new FarmerRole()),
-            Arguments.of(RoleType.FISHER, new FisherRole()),
-            Arguments.of(RoleType.GUARD, new GuardRole()),
-            Arguments.of(
-                RoleType.LUMBERJACK,
-                new LumberjackRole(mock(IResourceFinder.class), mock(IWorld.class))),
-            Arguments.of(
-                RoleType.MINER,
-                new MinerRole(mock(IResourceFinder.class), mock(IWorld.class))),
-            Arguments.of(RoleType.IDLE, new IdleRole(mock(IWorld.class))));
+        return Stream.of(Arguments.of(RoleType.BUILDER, new BuilderRole()),
+                         Arguments.of(RoleType.FARMER, new FarmerRole()),
+                         Arguments.of(RoleType.FISHER,
+                                      new FisherRole(
+                                          mock(IResourceFinder.class),
+                                          mock(IWorld.class))),
+                         Arguments.of(RoleType.GUARD, new GuardRole()),
+                         Arguments.of(RoleType.LUMBERJACK,
+                                      new LumberjackRole(mock(IResourceFinder.class),
+                                                         mock(IWorld.class))),
+                         Arguments.of(RoleType.MINER,
+                                      new MinerRole(mock(IResourceFinder.class),
+                                                    mock(IWorld.class))),
+                         Arguments.of(RoleType.IDLE, new IdleRole(mock(IWorld.class))));
     }
 
     @BeforeEach
@@ -51,14 +53,14 @@ public class RoleFactoryTests {
         final Collection<AbstractRole> roles = RoleFactory.all();
 
         // Assert
-        assertThat(roles).contains(
-            new LumberjackRole(mock(IResourceFinder.class), mock(IWorld.class)),
-            new BuilderRole(),
-            new FarmerRole(),
-            new FisherRole(),
-            new MinerRole(mock(IResourceFinder.class), mock(IWorld.class)),
-            new GuardRole(),
-            new IdleRole(mock(IWorld.class)));
+        assertThat(roles).contains(new LumberjackRole(mock(IResourceFinder.class),
+                                                      mock(IWorld.class)),
+                                   new BuilderRole(),
+                                   new FarmerRole(),
+                                   new FisherRole(mock(IResourceFinder.class), mock(IWorld.class)),
+                                   new MinerRole(mock(IResourceFinder.class), mock(IWorld.class)),
+                                   new GuardRole(),
+                                   new IdleRole(mock(IWorld.class)));
     }
 
     @ParameterizedTest
