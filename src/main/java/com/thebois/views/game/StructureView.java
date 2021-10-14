@@ -14,7 +14,6 @@ public final class StructureView implements IView {
 
     private final float tileSize;
     private Iterable<IStructure> structures;
-    private final Color houseColor = new Color(0.4f, 0.2f, 0f, 1);
     private final Texture houseTexture;
 
     /**
@@ -42,7 +41,10 @@ public final class StructureView implements IView {
 
     // Houses get different colors based on built status
     private Color getHouseColor(final IStructure structure) {
-        return Color.valueOf("1B52AB").lerp(Color.valueOf("3B2916"), structure.getBuiltRatio());
+        final Color bluePrintColor = Color.valueOf("3B2916");
+        final Color houseColor = Color.valueOf("1B52AB");
+
+        return houseColor.lerp(bluePrintColor, structure.getBuiltRatio());
     }
 
     /**
