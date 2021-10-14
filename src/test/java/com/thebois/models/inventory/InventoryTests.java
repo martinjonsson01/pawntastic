@@ -9,8 +9,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
-import com.thebois.models.inventory.items.Log;
 import com.thebois.models.inventory.items.Rock;
 
 import static org.assertj.core.api.Assertions.*;
@@ -29,9 +29,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            inventory.take(itemType);
-        });
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                                                 () -> inventory.take(itemType));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
@@ -43,11 +42,10 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(new Log());
-        inventory.add(new Log());
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            inventory.take(ItemType.ROCK);
-        });
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                                                 () -> inventory.take(ItemType.ROCK));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
@@ -60,7 +58,7 @@ public class InventoryTests {
 
         // Act
         inventory.add(new Rock());
-        inventory.add(new Log());
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
         final IItem item = inventory.take(ItemType.LOG);
 
         // Assert
@@ -85,8 +83,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(new Log());
-        inventory.add(new Log());
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
 
         final int count = inventory.numberOf(ItemType.LOG);
 
@@ -100,8 +98,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(new Log());
-        inventory.add(new Log());
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
 
         final int count = inventory.numberOf(ItemType.ROCK);
 
@@ -115,8 +113,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(new Log());
-        inventory.add(new Log());
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
 
         final ArrayList<IItem> result = inventory.takeAmount(ItemType.LOG, 2);
 
@@ -132,12 +130,12 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(new Log());
-        inventory.add(new Log());
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            inventory.takeAmount(ItemType.ROCK, 2);
-        });
+        final Exception exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> inventory.takeAmount(ItemType.ROCK, 2));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo(
@@ -150,8 +148,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(new Log());
-        inventory.add(new Log());
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.add(ItemFactory.fromType(ItemType.LOG));
 
         final boolean result = inventory.hasItem(ItemType.LOG, 2);
 
@@ -176,8 +174,8 @@ public class InventoryTests {
         // Arrange
         final Inventory inventory = new Inventory();
         final ArrayList<IItem> items = new ArrayList<>();
-        items.add(new Log());
-        items.add(new Log());
+        items.add(ItemFactory.fromType(ItemType.LOG));
+        items.add(ItemFactory.fromType(ItemType.LOG));
 
         // Act
         inventory.addMultiple(items);

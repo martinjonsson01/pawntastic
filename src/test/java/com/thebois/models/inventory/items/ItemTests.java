@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.*;
 public class ItemTests {
 
     public static Stream<Arguments> getItemTypesAndItemClass() {
-        return Stream.of(Arguments.of(ItemType.LOG, new Log()),
+        return Stream.of(Arguments.of(ItemType.LOG, ItemFactory.fromType(ItemType.LOG)),
                          Arguments.of(ItemType.ROCK, new Rock()));
     }
 
