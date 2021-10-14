@@ -111,8 +111,9 @@ public class World implements IWorld, IFinder {
     }
 
     private boolean isPositionEmpty(final Position position) {
-        return canonicalMatrix[(int) position.getPosY()][(int) position.getPosX()].getCost()
-               < Float.MAX_VALUE;
+        final int x = (int) position.getPosX();
+        final int y = (int) position.getPosY();
+        return canonicalMatrix[y][x].getCost() < Float.MAX_VALUE;
     }
 
     /**

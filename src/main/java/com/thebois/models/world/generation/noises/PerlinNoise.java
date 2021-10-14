@@ -11,7 +11,7 @@ public class PerlinNoise implements INoise {
     private final double frequency;
     private final double persistence;
     private int seed = 0;
-    private final int[] primeNumberArray = {
+    private final int[] primeNumbers = {
         15731,
         789221,
         1376312589,
@@ -156,11 +156,11 @@ public class PerlinNoise implements INoise {
         final int variable2 = 13;
         final int variable3 = 0x7fffffff;
         final int variable4 = 1073741824;
-        final int resetValue = primeNumberArray.length / 3;
+        final int resetValue = primeNumbers.length / 3;
 
-        final int primeNumber1 = primeNumberArray[currentOctave % resetValue];
-        final int primeNumber2 = primeNumberArray[1 + currentOctave % resetValue];
-        final int primeNumber3 = primeNumberArray[2 + currentOctave % resetValue];
+        final int primeNumber1 = primeNumbers[currentOctave % resetValue];
+        final int primeNumber2 = primeNumbers[1 + currentOctave % resetValue];
+        final int primeNumber3 = primeNumbers[2 + currentOctave % resetValue];
 
         temporaryValue1 = coordinateX + coordinateY * variable1;
         temporaryValue1 = (temporaryValue1 << variable2) ^ temporaryValue1;
