@@ -54,7 +54,7 @@ public enum ViewableTerrain {
     }
 
     /**
-     * Get ViewableTerrain with given TerrainType.
+     * Gets a viewable representation of a given terrain type.
      *
      * @param wantedType The TerrainType.
      *
