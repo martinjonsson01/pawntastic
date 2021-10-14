@@ -17,10 +17,7 @@ public final class ItemFactory {
      * @return The created item.
      */
     public static IItem fromType(final ItemType type) {
-        return switch (type) {
-            case LOG -> new Log();
-            case ROCK -> new Rock();
-        };
+        return new Item(type);
     }
 
 }
