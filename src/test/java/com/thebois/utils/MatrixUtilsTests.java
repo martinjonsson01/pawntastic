@@ -2,7 +2,6 @@ package com.thebois.utils;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -62,10 +61,8 @@ public class MatrixUtilsTests {
 
     @ParameterizedTest
     @MethodSource("getMatricesToTest")
-    public void matrixToCollectionTest(final String[][] matrix,
+    public void matrixToCollection(final String[][] matrix,
                                        final Collection<String> expectedElements) {
-        // Arrange
-
         // Act
         final Collection<String> stringCollection = MatrixUtils.matrixToCollection(matrix);
 
@@ -85,12 +82,9 @@ public class MatrixUtilsTests {
 
     @ParameterizedTest
     @MethodSource("getCorrectCoordinatesToTest")
-    public void testMatrixSpiralSearch(final String[][] stringMatrix, final int startX,
+    public void matrixSpiralSearch(final String[][] stringMatrix, final int startX,
                                          final int startY,
                                          final String expectedString) {
-
-        // Arrange
-
         // Act
         final String foundString = MatrixUtils.matrixSpiralSearch(
             stringMatrix,

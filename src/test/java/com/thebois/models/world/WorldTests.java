@@ -217,25 +217,6 @@ public class WorldTests {
         assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
     }
 
-    private boolean matrixEquals(final ITile[][] worldMatrix1, final ITile[][] worldMatrix2) {
-        for (int y = 0; y < worldMatrix2.length; y++) {
-            final ITile[] row = worldMatrix2[y];
-            for (int x = 0; x < row.length; x++) {
-                if (worldMatrix1[y][x] != null) {
-                    if (!worldMatrix1[y][x].equals(worldMatrix2[y][x])) {
-                        return false;
-                    }
-                }
-                else {
-                    if (worldMatrix2[y][x] != null) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
     private static Stream<Arguments> getCorrectCoordinatesToTest() {
         return Stream.of(Arguments.of(0, 0, 2, 2),
                          Arguments.of(5, 5, 10, 10),
@@ -247,7 +228,7 @@ public class WorldTests {
 
     @ParameterizedTest
     @MethodSource("getCorrectCoordinatesToTest")
-    public void testFindNearestStructure(final int startX,
+    public void findNearestStructureReturnsCorrect(final int startX,
                                          final int startY,
                                          final int endX,
                                          final int endY) {
@@ -262,12 +243,8 @@ public class WorldTests {
             startY));
 
         // Assert
-        if (foundStructure.isPresent()) {
-            assertThat(foundStructure.get().getPosition()).isEqualTo(new Position(endX, endY));
-        }
-        else {
-            assertThat(foundStructure.isEmpty()).isEqualTo(false);
-        }
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(endX, endY));
+
     }
 
     private static Stream<Arguments> getInCorrectCoordinatesToTest() {
@@ -281,7 +258,7 @@ public class WorldTests {
 
     @ParameterizedTest
     @MethodSource("getInCorrectCoordinatesToTest")
-    public void testNotEqualsFindNearestStructure(final int startX,
+    public void findNearestStructureReturnsIncorrect(final int startX,
                                          final int startY,
                                          final int endX,
                                          final int endY) {
@@ -292,24 +269,23 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> foundStructure = world.findNearestStructure(new Position(
-            startX, startY));
+            startX,
+            startY));
 
         // Assert
-        if (foundStructure.isPresent()) {
-            assertThat(foundStructure.get().getPosition()).isNotEqualTo(new Position(endX, endY));
-        }
-        else {
-            assertThat(foundStructure.isEmpty()).isEqualTo(true);
-        }
+        assertThat(foundStructure.orElseThrow().getPosition()).isNotEqualTo(new Position(
+            endX,
+            endY));
     }
 
     @Test
-    public void noNearestStructure() {
+    public void returnsNoNearestStructure() {
         // Arrange
         final World world = new World(50);
 
         // Act
-        final Optional<IStructure> structure = world.findNearestStructure(new Position(20f, 20f));
+        final Optional<IStructure> structure = world.findNearestStructure(
+            new Position(20f, 20f));
 
         // Assert
         assertThat(structure.isPresent()).isFalse();
@@ -326,7 +302,9 @@ public class WorldTests {
 
     @ParameterizedTest
     @MethodSource("getPositionsAndSizeToTest")
-    public void testGetStructureCollection(final Collection<Position> positions, final int amount) {
+    public void getStructureCollectionIsCorrectSize(
+        final Collection<Position> positions,
+        final int size) {
         // Arrange
         final World world = new World(50);
 
@@ -336,7 +314,7 @@ public class WorldTests {
         }
 
         // Assert
-        assertThat(world.getStructures().size()).isEqualTo(amount);
+        assertThat(world.getStructures().size()).isEqualTo(size);
     }
 
 }
