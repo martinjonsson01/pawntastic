@@ -45,7 +45,7 @@ public class Pawn extends AbstractBeing {
         super.update();
 
         if (closestStructure == null || closestStructure.isCompleted()) {
-            closestStructure = findClosestStructure();
+            closestStructure = findNearestIncompleteStructure();
         }
 
         if (closestStructure != null) {
@@ -65,7 +65,7 @@ public class Pawn extends AbstractBeing {
         setPath(newPath);
     }
 
-    protected IStructure findClosestStructure() {
+    protected IStructure findNearestIncompleteStructure() {
         final Optional<IStructure> structure =
             getFinder().findNearestIncompleteStructure(this.getPosition());
         return structure.orElse(null);

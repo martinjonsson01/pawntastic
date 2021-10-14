@@ -165,17 +165,7 @@ public class World implements IWorld, IFinder {
 
     @Override
     public Optional<IStructure> findNearestStructure(final Position position) {
-        final int searchRow = Math.round(position.getPosY());
-        final int searchCol = Math.round(position.getPosX());
-
-        final int maxSearchRadius = this.worldSize / 2;
-
-        final Collection<IStructure> foundStructures = MatrixUtils.matrixSpiralSearch(
-            this.structureMatrix,
-            searchRow,
-            searchCol,
-            maxSearchRadius,
-            1);
+        final Collection<IStructure> foundStructures = getClosestStructures(position, 1);
 
         if (foundStructures.iterator().hasNext()) {
             return Optional.of(foundStructures.iterator().next());
@@ -187,24 +177,26 @@ public class World implements IWorld, IFinder {
 
     @Override
     public Optional<IStructure> findNearestIncompleteStructure(final Position position) {
-        final int searchRow = Math.round(position.getPosY());
-        final int searchCol = Math.round(position.getPosX());
-
-        final int maxSearchRadius = this.worldSize;
-
-        final Collection<IStructure> foundStructures =
-            MatrixUtils.matrixSpiralSearch(this.structureMatrix,
-                                           searchRow,
-                                           searchCol,
-                                           maxSearchRadius,
-                                           10);
-
+        final Collection<IStructure> foundStructures = getClosestStructures(position, 10);
         for (final IStructure structure : foundStructures) {
             if (!structure.isCompleted()) {
                 return Optional.of(structure);
             }
         }
         return Optional.empty();
+    }
+
+    private Collection<IStructure> getClosestStructures(
+        final Position position,
+        final int maxFoundElements) {
+        final int searchRow = Math.round(position.getPosY());
+        final int searchCol = Math.round(position.getPosX());
+
+        return MatrixUtils.matrixSpiralSearch(this.structureMatrix,
+                                              searchRow,
+                                              searchCol,
+                                              this.worldSize,
+                                              maxFoundElements);
     }
 
     @Override
