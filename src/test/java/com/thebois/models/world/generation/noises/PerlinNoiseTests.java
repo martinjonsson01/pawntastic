@@ -48,7 +48,7 @@ public class PerlinNoiseTests {
 
     @ParameterizedTest
     @MethodSource("getPositions")
-    public void perlinNoiseSameResultWithSameValues(
+    public void perlinNoiseSameResultWithSameSamplePosition(
         final float posX, final float posY) {
         // Arrange
         final PerlinNoise perlinNoise = new PerlinNoise(1, 1, 1, 1);
@@ -65,7 +65,7 @@ public class PerlinNoiseTests {
 
     @ParameterizedTest
     @MethodSource("getPerlinNoiseSettingsParameters")
-    public void perlinNoiseSameResultWithSameValues(
+    public void perlinNoiseSameResultWithSameParameters(
         final int octave, final float amplitude, final float frequency, final float persistence) {
         // Arrange
         final PerlinNoise perlinNoise = new PerlinNoise(octave, amplitude, frequency, persistence);
