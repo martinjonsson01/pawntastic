@@ -1,8 +1,10 @@
 package com.thebois.models.beings;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.models.IFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -296,41 +299,39 @@ public class BeingTests {
 
     }
 
+
+
     @Test
-    public void doesPawnWalkToNearestUnBuiltBuilding() {
+    public void pawnWalkToNearestUnBuiltStructure() {
         // Arrange
-        final Position positionA = new Position(15, 0);
-        final Position positionB = new Position(10, 0);
-        final Position startPosition = new Position(20, 0);
+        final Position positionA = new Position(10, 0);
+        final Position positionB = new Position(11, 0);
+        final Position positionC = new Position(12, 0);
+        final Position housePosition = new Position(13, 0);
 
-        final Position correctDestination = new Position(11, 1);
+        final Stack<Position> path = new Stack<>();
+        path.addAll(Arrays.asList(positionA, positionB, positionC));
 
-        final World world = new World(50);
-        final IPathFinder pathFinder = new AstarPathFinder(world);
+        final IStructure mockStructure = Mockito.mock(IStructure.class);
 
-        world.createStructure(positionA);
+        final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
+        final IFinder mockFinder = Mockito.mock(IFinder.class);
 
-        for (int i = 0; i < 10; i++) {
-            for (final IStructure structure : world.getStructures()) {
-                structure.deliverItem(new Log());
-                structure.deliverItem(new Rock());
-            }
-        }
+        when(mockPathFinder.path(any(), any())).thenReturn(path);
+        when(mockStructure.getPosition()).thenReturn(housePosition);
+        when(mockFinder.findNearestIncompleteStructure(any())).thenReturn(Optional.of(mockStructure));
 
-        world.createStructure(positionB);
-
-        final Pawn testPawn = new Pawn(
-            startPosition,
-            new Position(),
-            new Random(),
-            pathFinder,
-            world);
+        final Pawn pawn = new Pawn(new Position(),
+                                       new Position(),
+                                       null,
+                                       mockPathFinder,
+                                       mockFinder);
 
         // Act
-        testPawn.update();
+        pawn.update();
 
         // Assert
-        assertThat(testPawn.getFinalDestination().orElseThrow()).isEqualTo(correctDestination);
+        verify(mockPathFinder, times(1)).path(any(), Mockito.eq(positionC));
     }
 
     @Test
@@ -381,7 +382,7 @@ public class BeingTests {
         final Position positionB = new Position(30, 0);
         final Position positionC = new Position(40, 0);
 
-        final Position correctDestination = new Position(41, 1);
+        final Position correctDestination = new Position(39, 0);
 
         final World world = new World(50);
         final IPathFinder pathFinder = new AstarPathFinder(world);
@@ -414,6 +415,117 @@ public class BeingTests {
 
         // Assert
         assertThat(testPawn.getFinalDestination().orElseThrow()).isEqualTo(correctDestination);
+    }
+
+    @Test
+    public void doNotTryToFindNewClosestStructureWhenIncomplete() {
+        // Arrange
+        final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
+        final IFinder mockFinder = Mockito.mock(IFinder.class);
+
+        final IStructure mockStructure = Mockito.mock(IStructure.class);
+
+        final Position expectedPosition = new Position(10f, 20f);
+
+        when(mockFinder.findNearestIncompleteStructure(any()))
+            .thenReturn(Optional.of(mockStructure));
+
+        when(mockStructure.getPosition()).thenReturn(expectedPosition);
+
+        final Pawn pawn = new Pawn(new Position(),
+                                   new Position(),
+                                   new Random(),
+                                   mockPathFinder,
+                                   mockFinder);
+
+        // Act
+        pawn.update();
+        pawn.update();
+
+        // Assert
+        final int callsExpected = 1;
+        verify(mockFinder, times(callsExpected)).findNearestIncompleteStructure(any());
+    }
+
+    @Test
+    public void tryFindNewClosestStructureWhenComplete() {
+        // Arrange
+        final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
+        final IFinder mockFinder = Mockito.mock(IFinder.class);
+
+        final IStructure mockStructureA = Mockito.mock(IStructure.class);
+        final IStructure mockStructureB = Mockito.mock(IStructure.class);
+
+        final Position expectedPosition = new Position(10f, 20f);
+        final Position positionA = new Position(10f, 20f);
+        final Position positionB = new Position(0f, 5f);
+
+        when(mockFinder.findNearestIncompleteStructure(any()))
+            .thenReturn(Optional.of(mockStructureA)).thenReturn(Optional.of(mockStructureB));
+
+        when(mockStructureA.getPosition()).thenReturn(positionA);
+        when(mockStructureB.getPosition()).thenReturn(positionB);
+
+        when(mockStructureA.isCompleted()).thenReturn(true);
+
+        final Pawn pawn = new Pawn(new Position(),
+                                   new Position(),
+                                   new Random(),
+                                   mockPathFinder,
+                                   mockFinder);
+
+        // Act
+        // Finds A
+        pawn.update();
+        // Discard A, find B
+        pawn.update();
+
+        // Assert
+        final int callsExpected = 2;
+        verify(mockFinder, times(callsExpected)).findNearestIncompleteStructure(any());
+    }
+
+    @Test
+    public void destinationIsNotEqualToNeighborOfClosestStructure() {
+        // Arrange
+        final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
+        final IFinder mockFinder = Mockito.mock(IFinder.class);
+
+        final IStructure mockStructure = Mockito.mock(IStructure.class);
+
+        final Position structurePosition = new Position(10f, 20f);
+        final Position positionA = new Position(0f, 0f);
+        final Position positionB = new Position(1f, 1f);
+        final Position positionC = new Position(2f, 2f);
+        final Position positionD = new Position(3f, 3f);
+
+        when(mockFinder.findNearestIncompleteStructure(any()))
+            .thenReturn(Optional.of(mockStructure));
+
+        when(mockPathFinder.path(any(), any())).thenReturn(List.of(
+            positionA,
+            positionB,
+            positionC,
+            positionD));
+
+        when(mockStructure.getPosition()).thenReturn(structurePosition);
+
+        when(mockStructure.isCompleted()).thenReturn(false);
+
+        final Pawn pawn = new Pawn(new Position(),
+                                   new Position(),
+                                   new Random(),
+                                   mockPathFinder,
+                                   mockFinder);
+        // Act
+        // Finds A
+        pawn.update();
+        // Discard A, find B
+        pawn.update();
+
+        // Assert
+        final int callsExpected = 3;
+        verify(mockPathFinder, times(callsExpected)).path(any(), any());
     }
 
     @Test

@@ -47,10 +47,12 @@ public class Pawn extends AbstractBeing {
         if (closestStructure == null || closestStructure.isCompleted()) {
             closestStructure = findClosestStructure();
         }
+
         if (closestStructure != null) {
             setFinalDestination(closestStructure.getPosition());
             deliverItemToStructure(closestStructure);
         }
+
         if (getDestination().isEmpty()) setRandomDestination();
     }
 

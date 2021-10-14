@@ -188,7 +188,9 @@ public abstract class AbstractBeing implements IBeing {
             final float y = destination.getPosY() + positionOffsets[i][1];
             lastPosition = new Position(x, y);
 
-            nearestNeighbor = lastPosition;
+            if (getPosition().distanceTo(nearestNeighbor) > getPosition().distanceTo(lastPosition)) {
+                nearestNeighbor = lastPosition;
+            }
         }
         return nearestNeighbor;
     }
