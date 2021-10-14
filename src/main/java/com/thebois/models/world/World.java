@@ -1,7 +1,6 @@
 package com.thebois.models.world;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -45,9 +44,7 @@ public class World implements IWorld, IFinder {
 
     private IStructure[][] setUpStructures() {
         final IStructure[][] newStructureMatrix = new IStructure[worldSize][worldSize];
-        for (final IStructure[] matrix : newStructureMatrix) {
-            Arrays.fill(matrix, null);
-        }
+        MatrixUtils.populateElements(newStructureMatrix, (x, y) -> null);
         return newStructureMatrix;
     }
 
@@ -132,13 +129,13 @@ public class World implements IWorld, IFinder {
      *
      * @return ITile[][]
      */
-    public ArrayList<ITerrain> getTerrainTiles() {
-        final ArrayList<ITerrain> copy = new ArrayList<>();
-        for (final ITerrain[] matrix : terrainMatrix) {
-            for (final ITerrain iTerrain : matrix) {
-                copy.add(iTerrain.deepClone());
+    public Collection<ITerrain> getTerrainTiles() {
+        final Collection<ITerrain> copy = new ArrayList<>();
+        MatrixUtils.forEachElement(terrainMatrix, maybeTerrain -> {
+            if (maybeTerrain != null) {
+                copy.add(maybeTerrain.deepClone());
             }
-        }
+        });
         return copy;
     }
 
@@ -149,13 +146,11 @@ public class World implements IWorld, IFinder {
      */
     public Collection<IStructure> getStructures() {
         final Collection<IStructure> copy = new ArrayList<>();
-        for (final IStructure[] matrix : structureMatrix) {
-            for (final IStructure structure : matrix) {
-                if (structure != null) {
-                    copy.add(structure.deepClone());
-                }
+        MatrixUtils.forEachElement(structureMatrix, maybeStructure -> {
+            if (maybeStructure != null) {
+                copy.add(maybeStructure.deepClone());
             }
-        }
+        });
         return copy;
     }
 
@@ -166,13 +161,11 @@ public class World implements IWorld, IFinder {
      */
     public Collection<IResource> getResources() {
         final Collection<IResource> copy = new ArrayList<>();
-        for (final IResource[] matrix : resourceMatrix) {
-            for (final IResource maybeResource : matrix) {
-                if (maybeResource != null) {
-                    copy.add(maybeResource.deepClone());
-                }
+        MatrixUtils.forEachElement(resourceMatrix, maybeResource -> {
+            if (maybeResource != null) {
+                copy.add(maybeResource.deepClone());
             }
-        }
+        });
         return copy;
     }
 

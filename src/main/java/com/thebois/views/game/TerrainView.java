@@ -1,6 +1,7 @@
 package com.thebois.views.game;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class TerrainView implements IView {
     }
 
     private final float tileSize;
-    private ArrayList<ITerrain> terrainTiles = new ArrayList<>();
+    private Collection<ITerrain> terrainTiles = new ArrayList<>();
     private final Texture tileTexture;
 
     /**
@@ -48,7 +49,7 @@ public class TerrainView implements IView {
      *
      * @param updatedTerrainTiles Matrix of the world.
      */
-    public void update(final ArrayList<ITerrain> updatedTerrainTiles) {
+    public void update(final Collection<ITerrain> updatedTerrainTiles) {
         this.terrainTiles = updatedTerrainTiles;
     }
 
