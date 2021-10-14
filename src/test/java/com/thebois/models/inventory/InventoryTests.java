@@ -179,12 +179,9 @@ public class InventoryTests {
     public void addMultipleItemsToInventory() {
         // Arrange
         final Inventory inventory = new Inventory();
-        final ArrayList<IItem> items = new ArrayList<>();
-        items.add(new Log());
-        items.add(new Log());
 
         // Act
-        inventory.addMultiple(items);
+        inventory.addMultiple(List.of(new Log(), new Log()));
 
         // Assert
         assertThat(inventory.hasItem(ItemType.LOG, 2)).isTrue();
@@ -194,36 +191,30 @@ public class InventoryTests {
         return Stream.of(Arguments.of(
             List.of(new Rock(), new Rock(), new Rock(), new Log(), new Log(), new Log()),
             List.of(new Rock()),
-            new ArrayList<>(Arrays.asList(ItemType.LOG,
-                                          ItemType.LOG,
-                                          ItemType.LOG,
-                                          ItemType.ROCK,
-                                          ItemType.ROCK))),
+            List.of(ItemType.LOG,
+                          ItemType.LOG,
+                          ItemType.LOG,
+                          ItemType.ROCK,
+                          ItemType.ROCK)),
         Arguments.of(
             List.of(new Rock(), new Rock()),
             List.of(new Rock()),
-            new ArrayList<>(List.of(ItemType.ROCK)))
+            List.of(ItemType.ROCK))
         );
     }
 
     @ParameterizedTest
     @MethodSource("calculatedDifferenceEqualToExpectedSource")
     public void calculatedDifferenceEqualToExpected(
-        final Collection<IItem> listA,
-        final Collection<IItem> listB,
-        final ArrayList<ItemType> expectedDifference) {
+        final List<IItem> listA,
+        final List<IItem> listB,
+        final List<ItemType> expectedDifference) {
         // Arrange
-
-        final Stack<IItem> itemsA = new Stack<>();
-        final Stack<IItem> itemsB = new Stack<>();
-        itemsA.addAll(listA);
-        itemsB.addAll(listB);
-
         final IInventory inventoryA = new Inventory();
         final IInventory inventoryB = new Inventory();
 
-        inventoryA.addMultiple(itemsA);
-        inventoryB.addMultiple(itemsB);
+        inventoryA.addMultiple(listA);
+        inventoryB.addMultiple(listB);
 
         // Act
         final ArrayList<ItemType> difference = inventoryA.calculateDifference(inventoryB);
@@ -234,15 +225,15 @@ public class InventoryTests {
 
     private static Stream<Arguments> emptyReturnsCorrectValueSource() {
         return Stream.of(
-            Arguments.of(new ArrayList<>(List.of(new Rock(), new Rock())), false),
-            Arguments.of(new ArrayList<>(List.of()), true)
+            Arguments.of(List.of(new Rock(), new Rock()), false),
+            Arguments.of(List.of(), true)
         );
     }
 
     @ParameterizedTest
     @MethodSource("emptyReturnsCorrectValueSource")
     public void emptyReturnsCorrectValue(
-        final ArrayList<IItem> items,
+        final List<IItem> items,
         final boolean expectedResult) {
         // Arrange
         final IInventory inventory = new Inventory();
@@ -254,15 +245,15 @@ public class InventoryTests {
 
     private static Stream<Arguments> sizeReturnsCorrectValueSource() {
         return Stream.of(
-            Arguments.of(new Inventory(), new ArrayList<>(List.of(new Rock(), new Rock())), 2),
-            Arguments.of(new Inventory(), new ArrayList<>(List.of()), 0)
+            Arguments.of(new Inventory(), List.of(new Rock(), new Rock()), 2),
+            Arguments.of(new Inventory(), List.of(), 0)
         );
     }
 
     @ParameterizedTest
     @MethodSource("sizeReturnsCorrectValueSource")
     public void sizeReturnsCorrectValue(final IInventory inventory,
-        final ArrayList<IItem> items,
+        final List<IItem> items,
         final int expectedSize) {
         // Arrange
         inventory.addMultiple(items);
