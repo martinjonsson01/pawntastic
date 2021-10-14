@@ -11,5 +11,13 @@ public enum ItemType {
     /**
      * Rocks are collected from stones.
      */
-    ROCK
+    ROCK,
+    /**
+     * Fish can be caught from water.
+     */
+    FISH,
+    /**
+     * Wheat is harvested from wheat fields.
+     */
+    WHEAT
 }
