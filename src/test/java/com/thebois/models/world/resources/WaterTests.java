@@ -2,9 +2,24 @@ package com.thebois.models.world.resources;
 
 import org.junit.jupiter.api.Test;
 
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class WaterTests {
+
+    @Test
+    public void harvestReturnsFishItem() {
+        // Arrange
+        final Water water = new Water(1, 1);
+
+        // Act
+        final IItem item = water.harvest();
+
+        // Assert
+        assertThat(item.getType()).isEqualTo(ItemType.FISH);
+    }
 
     @Test
     public void getTypeFromWaterResource() {
