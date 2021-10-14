@@ -66,7 +66,7 @@ abstract class AbstractStructure implements IStructure {
     }
 
     @Override
-    public boolean deliverItem(final IItem deliveredItem) {
+    public boolean tryDeliverItem(final IItem deliveredItem) {
         if (getNeededItems().contains(deliveredItem.getType())) {
             deliveredItems.add(deliveredItem);
             return true;
@@ -88,7 +88,7 @@ abstract class AbstractStructure implements IStructure {
     }
 
     @Override
-    public IItem dismantle(final ItemType retrieving) {
+    public IItem tryDismantle(final ItemType retrieving) {
         if (deliveredItems.hasItem(retrieving)) {
             return deliveredItems.take(retrieving);
         }

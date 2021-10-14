@@ -82,8 +82,8 @@ public class Pawn extends AbstractBeing {
 
     protected void deliverItemToStructure(final IStructure structure) {
         if (structure.getPosition().distanceTo(this.getPosition()) < 2f) {
-            structure.deliverItem(new Rock());
-            structure.deliverItem(new Log());
+            structure.tryDeliverItem(new Rock());
+            structure.tryDeliverItem(new Log());
         }
     }
 

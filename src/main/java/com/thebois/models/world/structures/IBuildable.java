@@ -24,7 +24,7 @@ public interface IBuildable {
      *
      * @return Returns whether the delivery was successful or not.
      */
-    boolean deliverItem(IItem deliveredItem);
+    boolean tryDeliverItem(IItem deliveredItem);
 
     /**
      * Returns a value between 0 and 1 that denotes the ratio of completion.
@@ -36,16 +36,16 @@ public interface IBuildable {
     /**
      * Returns true if construction is completed.
      *
-     * @return Returns whether the IBuildable is built or not.
+     * @return Returns whether construction is completed or not.
      */
     boolean isCompleted();
 
     /**
-     * Method for removing selected IItems from the IBuildable object.
+     * Method for removing specified item.
      *
-     * @param retrieving IItem to be retrieved from the object.
+     * @param retrieving Item to be retrieved from the object.
      *
-     * @return Returns whether the retrieval was successful or not.
+     * @return Returns the retrieved item.
      */
-    IItem dismantle(ItemType retrieving);
+    IItem tryDismantle(ItemType retrieving);
 }

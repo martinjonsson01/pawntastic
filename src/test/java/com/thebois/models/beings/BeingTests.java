@@ -284,7 +284,7 @@ public class BeingTests {
         final World world = Mockito.mock(World.class);
         final IStructure structure = Mockito.mock(IStructure.class);
 
-        when(structure.deliverItem(any())).thenReturn(true);
+        when(structure.tryDeliverItem(any())).thenReturn(true);
 
         when(structure.getPosition()).thenReturn(new Position());
         when(world.findNearestIncompleteStructure(any())).thenReturn(Optional.of(structure));
@@ -295,7 +295,7 @@ public class BeingTests {
         pawn.update();
 
         // Assert
-        verify(structure, atLeastOnce()).deliverItem(any());
+        verify(structure, atLeastOnce()).tryDeliverItem(any());
     }
 
     @Test
@@ -319,8 +319,8 @@ public class BeingTests {
 
         for (int i = 0; i < 10; i++) {
             for (final IStructure structure : world.getStructures()) {
-                structure.deliverItem(new Log());
-                structure.deliverItem(new Rock());
+                structure.tryDeliverItem(new Log());
+                structure.tryDeliverItem(new Rock());
             }
         }
 
@@ -415,8 +415,8 @@ public class BeingTests {
 
         for (int i = 0; i < 10; i++) {
             for (final IStructure structure : world.getStructures()) {
-                structure.deliverItem(new Log());
-                structure.deliverItem(new Rock());
+                structure.tryDeliverItem(new Log());
+                structure.tryDeliverItem(new Rock());
             }
         }
 

@@ -76,13 +76,13 @@ public class HouseTests {
         final House house = new House(new Position());
 
         for (int i = 0; i < totalLogs; i++) {
-            house.deliverItem(new Log());
+            house.tryDeliverItem(new Log());
         }
         for (int i = 0; i < totalRocks; i++) {
-            house.deliverItem(new Rock());
+            house.tryDeliverItem(new Rock());
         }
         // Act
-        final boolean deliveryResult = house.deliverItem(itemToDeliver);
+        final boolean deliveryResult = house.tryDeliverItem(itemToDeliver);
 
         // Assert
         assertThat(deliveryResult).isEqualTo(expectedResult);
@@ -108,13 +108,13 @@ public class HouseTests {
         final House house = new House(new Position());
 
         for (int i = 0; i < totalLogs; i++) {
-            house.deliverItem(new Log());
+            house.tryDeliverItem(new Log());
         }
         for (int i = 0; i < totalRocks; i++) {
-            house.deliverItem(new Rock());
+            house.tryDeliverItem(new Rock());
         }
         // Act
-        final IItem retrieveItem = house.dismantle(itemTypeToRetrieve);
+        final IItem retrieveItem = house.tryDismantle(itemTypeToRetrieve);
 
         // Assert
         assertThat(retrieveItem).isEqualTo(expectedItem);
@@ -139,10 +139,10 @@ public class HouseTests {
         final House house = new House(new Position());
 
         for (int i = 0; i < totalLogs; i++) {
-            house.deliverItem(new Log());
+            house.tryDeliverItem(new Log());
         }
         for (int i = 0; i < totalRocks; i++) {
-            house.deliverItem(new Rock());
+            house.tryDeliverItem(new Rock());
         }
 
         // Act
@@ -170,10 +170,10 @@ public class HouseTests {
         final House house = new House(new Position());
 
         for (int i = 0; i < totalLogs; i++) {
-            house.deliverItem(new Log());
+            house.tryDeliverItem(new Log());
         }
         for (int i = 0; i < totalRocks; i++) {
-            house.deliverItem(new Rock());
+            house.tryDeliverItem(new Rock());
         }
 
         // Act
