@@ -56,7 +56,7 @@ public class HouseTests {
         assertThat(structure.getType()).isEqualTo(StructureType.HOUSE);
     }
 
-    private static Stream<Arguments> tryDeliverItemsSource() {
+    private static Stream<Arguments> tryDeliverItemReturnsExpectedValueSource() {
         return Stream.of(
             Arguments.of(10, 10, new Rock(), false),
             Arguments.of(10, 10, new Log(), false),
@@ -66,8 +66,8 @@ public class HouseTests {
     }
 
     @ParameterizedTest
-    @MethodSource("tryDeliverItemsSource")
-    public void tryDeliverItem(
+    @MethodSource("tryDeliverItemReturnsExpectedValueSource")
+    public void tryDeliverItemReturnsExpectedValue(
         final int totalLogs,
         final int totalRocks,
         final IItem itemToDeliver,
@@ -88,7 +88,7 @@ public class HouseTests {
         assertThat(deliveryResult).isEqualTo(expectedResult);
     }
 
-    private static Stream<Arguments> tryDismantleHouseSource() {
+    private static Stream<Arguments> houseReturnsExpectedItemWhenDismantledSource() {
         return Stream.of(
             Arguments.of(10, 10, ItemType.LOG, new Log()),
             Arguments.of(10, 10, ItemType.LOG, new Log()),
@@ -98,8 +98,8 @@ public class HouseTests {
     }
 
     @ParameterizedTest
-    @MethodSource("tryDismantleHouseSource")
-    public void tryDismantleHouse(
+    @MethodSource("houseReturnsExpectedItemWhenDismantledSource")
+    public void houseReturnsExpectedItemWhenDismantled(
         final int totalLogs,
         final int totalRocks,
         final ItemType itemTypeToRetrieve,
@@ -120,7 +120,7 @@ public class HouseTests {
         assertThat(retrieveItem).isEqualTo(expectedItem);
     }
 
-    private static Stream<Arguments> isBuiltRatioEqualToExpectedSource() {
+    private static Stream<Arguments> whenItemsAreDeliveredBuiltRatioIsEqualToExpectedSource() {
         return Stream.of(
             Arguments.of(10, 10, 1f),
             Arguments.of(20, 20, 1f),
@@ -131,8 +131,8 @@ public class HouseTests {
     }
 
     @ParameterizedTest
-    @MethodSource("isBuiltRatioEqualToExpectedSource")
-    public void isBuiltRatioEqualToExpected(
+    @MethodSource("whenItemsAreDeliveredBuiltRatioIsEqualToExpectedSource")
+    public void whenItemsAreDeliveredBuiltRatioIsEqualToExpected(
         final int totalLogs, final int totalRocks, final float expectedRatio) {
 
         // Arrange
@@ -152,7 +152,7 @@ public class HouseTests {
         assertThat(ratio).isEqualTo(expectedRatio);
     }
 
-    private static Stream<Arguments> neededItemsEqualToExpectedSource() {
+    private static Stream<Arguments> whenStructureHasReceivedItemsNeededItemsAreEqualToExpectedSource() {
         return Stream.of(
             Arguments.of(8, 10, List.of(ItemType.LOG, ItemType.LOG)),
             Arguments.of(10, 10, List.of()),
@@ -161,8 +161,8 @@ public class HouseTests {
     }
 
     @ParameterizedTest
-    @MethodSource("neededItemsEqualToExpectedSource")
-    public void neededItemsEqualToExpected(
+    @MethodSource("whenStructureHasReceivedItemsNeededItemsAreEqualToExpectedSource")
+    public void whenStructureHasReceivedItemsNeededItemsAreEqualToExpected(
         final int totalLogs,
         final int totalRocks,
         final Collection<ItemType> expectedNeededItems) {

@@ -369,13 +369,13 @@ public class BeingTests {
     @ParameterizedTest
     @MethodSource("pawnWalkToNearestUnBuiltStructureSource")
     public void pawnWalkToNearestUnBuiltStructure(
-        final Position positionA, final Position positionB, final Position expectedPosition,
+        final Position firstDestination, final Position secondDestination, final Position expectedPosition,
         final Position housePosition) {
         // Arrange
         final Stack<Position> path = new Stack<>();
         path.add(expectedPosition);
-        path.add(positionB);
-        path.add(positionA);
+        path.add(secondDestination);
+        path.add(firstDestination);
 
         final IStructure mockStructure = Mockito.mock(IStructure.class);
         when(mockStructure.getPosition()).thenReturn(housePosition);
@@ -560,11 +560,13 @@ public class BeingTests {
         final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final AbstractBeingGroup colony = new Colony(vacantPositions, pathFinder, new World(10));
+        final IFinder finder = Mockito.mock(IFinder.class);
+
 
         final IBeing being = new Pawn(new Position(0, 0),
                                       new Position(1, 1),
                                       new Random(),
-                                      pathFinder, new World(10));
+                                      pathFinder, finder);
 
         // Act
         final int before = colony.getBeings().size();
