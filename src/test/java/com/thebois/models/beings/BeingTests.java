@@ -278,7 +278,7 @@ public class BeingTests {
     }
 
     @Test
-    public void doesPawnDeliverItem() {
+    public void updateDeliversItemsToStructureWhenNearby() {
         // Arrange
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final World world = Mockito.mock(World.class);
@@ -299,7 +299,7 @@ public class BeingTests {
     }
 
     @Test
-    public void allStructuresCompleted() {
+    public void whenAllStructuresAreCompletePawnPicksRandomDestination() {
         // Arrange
         final Position positionA = new Position(10, 0);
         final Position startPosition = new Position(20, 0);
@@ -394,7 +394,7 @@ public class BeingTests {
     }
 
     @Test
-    public void allStructuresCompletedNewPlaced() {
+    public void pawnFindsANewStructureWhenNewStructureIsPlaced() {
         // Arrange
         final Position positionA = new Position(10, 0);
         final Position startPosition = new Position(20, 0);
@@ -437,7 +437,7 @@ public class BeingTests {
     }
 
     @Test
-    public void doNotTryToFindNewClosestStructureWhenIncomplete() {
+    public void pawnDoNotTryToFindNewClosestStructureWhenStillIncomplete() {
         // Arrange
         final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
         final IFinder mockFinder = Mockito.mock(IFinder.class);
@@ -467,7 +467,7 @@ public class BeingTests {
     }
 
     @Test
-    public void tryFindNewClosestStructureWhenComplete() {
+    public void pawnTriesTpFindNewClosestStructureWhenNearestIsCompleted() {
         // Arrange
         final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
         final IFinder mockFinder = Mockito.mock(IFinder.class);
@@ -504,7 +504,7 @@ public class BeingTests {
     }
 
     @Test
-    public void destinationIsNotEqualToNeighborOfClosestStructure() {
+    public void pawnLooksForANewPawnWhenDestinationIsNotEqualToNeighborOfClosestStructure() {
         // Arrange
         final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
         final IFinder mockFinder = Mockito.mock(IFinder.class);
