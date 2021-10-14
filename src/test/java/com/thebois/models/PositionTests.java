@@ -68,10 +68,9 @@ public class PositionTests {
     public void positionEqualsToItSelfIsTrue() {
         // Arrange
         final Position position = new Position(123, 123);
-        final boolean isEqual;
 
         // Act
-        isEqual = position.equals(position);
+        final boolean isEqual = position.equals(position);
 
         // Assert
         assertThat(isEqual).isTrue();
@@ -81,10 +80,9 @@ public class PositionTests {
     public void positionEqualNullIsFalse() {
         // Arrange
         final Position position = new Position(123, 123);
-        final boolean isEqual;
 
         // Act
-        isEqual = position.equals(null);
+        final boolean isEqual = position.equals(null);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -94,10 +92,9 @@ public class PositionTests {
     public void positionEqualOtherObjectIsFalse() {
         // Arrange
         final Position position = new Position(123, 123);
-        final boolean isEqual;
 
         // Act
-        isEqual = position.equals(new House(1, 1));
+        final boolean isEqual = position.equals(new House(1, 1));
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -108,10 +105,9 @@ public class PositionTests {
         // Arrange
         final Position position1 = new Position(123, 123);
         final Position position2 = new Position(123, 123);
-        final boolean isEqual;
 
         // Act
-        isEqual = position1.equals(position2);
+        final boolean isEqual = position1.equals(position2);
 
         // Assert
         assertThat(isEqual).isTrue();
@@ -122,10 +118,9 @@ public class PositionTests {
         // Arrange
         final Position position1 = new Position(1, 1);
         final Position position2 = new Position(2, 1);
-        final boolean isEqual;
 
         // Act
-        isEqual = position1.equals(position2);
+        final boolean isEqual = position1.equals(position2);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -136,10 +131,9 @@ public class PositionTests {
         // Arrange
         final Position position1 = new Position(1, 1);
         final Position position2 = new Position(1, 2);
-        final boolean isEqual;
 
         // Act
-        isEqual = position1.equals(position2);
+        final boolean isEqual = position1.equals(position2);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -150,10 +144,9 @@ public class PositionTests {
         // Arrange
         final Position position1 = new Position(1, 1);
         final Position position2 = new Position(1, 1);
-        final boolean isEqual;
 
         // Act
-        isEqual = position1.hashCode() == position2.hashCode();
+        final boolean isEqual = position1.hashCode() == position2.hashCode();
 
         // Assert
         assertThat(isEqual).isTrue();
@@ -164,10 +157,9 @@ public class PositionTests {
         // Arrange
         final Position position1 = new Position(1, 1);
         final Position position2 = new Position(2, 2);
-        final boolean isEqual;
 
         // Act
-        isEqual = position1.hashCode() == position2.hashCode();
+        final boolean isEqual = position1.hashCode() == position2.hashCode();
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -175,9 +167,8 @@ public class PositionTests {
 
     @ParameterizedTest
     @MethodSource("getPositionsAndDistances")
-    public void distanceToReturnsCorrectDistance(final Position first,
-                                                 final Position second,
-                                                 final float expectedDistance) {
+    public void distanceToReturnsCorrectDistance(
+        final Position first, final Position second, final float expectedDistance) {
         // Act
         final float actualDistance = first.distanceTo(second);
 
@@ -187,9 +178,8 @@ public class PositionTests {
 
     @ParameterizedTest
     @MethodSource("getPositionsAndManhattanDistances")
-    public void manhattanDistanceToReturnsCorrectDistance(final Position first,
-                                                          final Position second,
-                                                          final int expectedDistance) {
+    public void manhattanDistanceToReturnsCorrectDistance(
+        final Position first, final Position second, final int expectedDistance) {
         // Act
         final int actualDistance = first.manhattanDistanceTo(second);
 

@@ -23,9 +23,9 @@ public class SandTests {
         // Arrange
         final Sand sand = new Sand(0f, 0f);
         final float expectedCost = 0;
-        final float actualCost;
-        //
-        actualCost = sand.getCost();
+
+        // Act
+        final float actualCost = sand.getCost();
 
         // Assert
         assertThat(actualCost).isEqualTo(expectedCost);

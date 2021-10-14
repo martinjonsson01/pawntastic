@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,14 +16,12 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.abstractions.IResourceFinder;
-import com.thebois.models.MockWorld;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
 import com.thebois.models.world.resources.Tree;
-import com.thebois.models.world.resources.Water;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.terrains.Dirt;
 import com.thebois.models.world.terrains.Grass;
@@ -43,12 +42,10 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(
-                             mockTile(1, 1),
-                             List.of(mockPosition(1, 0),
-                                     mockPosition(0, 1),
-                                     mockPosition(2, 1),
-                                     mockPosition(1, 2))));
+                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
+                                                              mockPosition(0, 1),
+                                                              mockPosition(2, 1),
+                                                              mockPosition(1, 2))));
     }
 
     private static ITile mockTile(final int positionX, final int positionY) {
@@ -136,7 +133,7 @@ public class WorldTests {
     }
 
     private World createTestWorld(final int size, final Random random) {
-        return new MockWorld(size, 0, random);
+        return new TestWorld(size, random);
     }
 
     @Test
@@ -160,7 +157,7 @@ public class WorldTests {
     @Test
     public void getNearbyOfTypeResourceReturnsEmptyWhenNothingNearby() {
         // Arrange
-        final IResourceFinder finder = new MockWorld(10, 0, mock(Random.class));
+        final IResourceFinder finder = createTestWorld(10, mock(Random.class));
         final Position origin = new Position();
 
         // Act
@@ -284,18 +281,6 @@ public class WorldTests {
         assertThat(positions).containsExactlyInAnyOrderElementsOf(expectedNeighbours);
     }
 
-    @Test
-    public void worldInitiated() {
-        // Arrange
-        final Collection<ITerrain> expectedTerrainTiles = mockDirtTiles();
-        final World world = createWorld(2, 15);
-
-        // Act
-        final Collection<ITerrain> terrainTiles = world.getTerrainTiles();
-        // Assert
-        assertThat(terrainTiles).containsAll(expectedTerrainTiles);
-    }
-
     private Collection<ITerrain> mockDirtTiles() {
         final ArrayList<ITerrain> terrainTiles = new ArrayList<>();
         terrainTiles.add(new Dirt(0, 0));
@@ -308,19 +293,25 @@ public class WorldTests {
     @Test
     public void getTileAtReturnsTileAtGivenPosition() {
         // Arrange
-        // World should contain:
-        // Dirt Dirt
-        // Dirt Dirt
-        final Collection<ITerrain> expectedTerrainTiles = mockDirtTiles();
-        final World world = createWorld(2, 15);
+        final Collection<Position> expectedTilePositions = mockPositions();
+        final Collection<Position> actualTilePositions = new ArrayList<>();
+        final World world = createWorld(2);
 
-        for (final ITile tile : expectedTerrainTiles) {
-            // Act
-            final ITile tileAtPosition = world.getTileAt(tile.getPosition());
-
-            // Assert
-            assertThat(tileAtPosition).isEqualTo(tile);
+        // Act
+        for (final Position position : expectedTilePositions) {
+            actualTilePositions.add(world.getTileAt(position).getPosition());
         }
+        // Assert
+        assertThat(actualTilePositions).containsExactlyInAnyOrderElementsOf(expectedTilePositions);
+    }
+
+    private Collection<Position> mockPositions() {
+        final ArrayList<Position> positions = new ArrayList<>();
+        positions.add(new Position(0, 0));
+        positions.add(new Position(0, 1));
+        positions.add(new Position(1, 0));
+        positions.add(new Position(1, 1));
+        return positions;
     }
 
     @ParameterizedTest
@@ -351,11 +342,10 @@ public class WorldTests {
         // Arrange
         final World world = createWorld(2, 15);
         final Position position = new Position(1, 1);
-        final Collection<IStructure> structures;
-        final boolean isBuilt;
+
         // Act
-        isBuilt = world.createStructure(position);
-        structures = world.getStructures();
+        final boolean isBuilt = world.createStructure(position);
+        final Collection<IStructure> structures = world.getStructures();
 
         // Assert
         assertThat(isBuilt).isTrue();
@@ -366,13 +356,11 @@ public class WorldTests {
     @MethodSource("getPositionOutSideOfWorld")
     public void structureFailedToBePlaced(final Position placementPosition) {
         // Arrange
-        final World world = createWorld(2, 0);
-        final Collection<IStructure> structures;
-        final boolean isBuilt;
+        final World world = createWorld(2);
 
         // Act
-        isBuilt = world.createStructure(placementPosition);
-        structures = world.getStructures();
+        final boolean isBuilt = world.createStructure(placementPosition);
+        final Collection<IStructure> structures = world.getStructures();
 
         // Assert
         assertThat(isBuilt).isFalse();
@@ -385,12 +373,11 @@ public class WorldTests {
         final World world = createWorld(2);
         final Position position1 = new Position(2, 2);
         final Position position2 = new Position(-1, -1);
-        final Collection<IStructure> structures;
 
         // Act
         world.createStructure(position1);
         world.createStructure(position2);
-        structures = world.getStructures();
+        final Collection<IStructure> structures = world.getStructures();
 
         // Assert
         assertThat(structures.size()).isEqualTo(0);
@@ -428,93 +415,85 @@ public class WorldTests {
     }
 
     @Test
-    public void findEmptyPositionsReturnsCorrectAmountOfEmptyPositions() {
+    public void findEmptyPositionsReturnsPositionWithNoResourcesOn() {
         // Arrange
-        // Instantiate a world filled with dirt.
-        final World world = createWorld(2, 15);
-        final Iterable<Position> expectedPositions = mockPositions();
-        final Iterable<Position> actualPositions;
+        final World world = createWorld(10, 15);
+        final Collection<IResource> resources = world.getResources();
+        final Collection<Position> occupiedPositions = new ArrayList<>();
+        for (final IResource resource : resources) {
+            occupiedPositions.add(resource.getPosition());
+        }
 
         // Act
-        actualPositions = world.findEmptyPositions(4);
+        final Iterable<Position> emptyPositions = world.findEmptyPositions(4);
 
         // Assert
-        assertThat(actualPositions).containsExactlyInAnyOrderElementsOf(expectedPositions);
-    }
-
-    private Collection<Position> mockPositions() {
-        final ArrayList<Position> positions = new ArrayList<>();
-        positions.add(new Position(0, 0));
-        positions.add(new Position(0, 1));
-        positions.add(new Position(1, 0));
-        positions.add(new Position(1, 1));
-        return positions;
+        assertThat(emptyPositions).doesNotContainAnyElementsOf(occupiedPositions);
     }
 
     @Test
     public void findEmptyPositionsReturnsEmptyIfNoEmptyPositionsWasFound() {
         // Arrange
-        // Instantiate a world filled with water.
-        final World world = createWorld(2);
-        final Iterable<Position> expectedPositions = new ArrayList<>();
-        final Iterable<Position> actualPositions;
+        final int worldSize = 10;
+        final int amountOfWantedPositions = 5;
+        final World world = createWorld(worldSize);
+        fillWorldWithStructures(worldSize, world);
+
         // Act
-        actualPositions = world.findEmptyPositions(4);
+        final Iterable<Position> emptyPositions = world.findEmptyPositions(amountOfWantedPositions);
 
         // Assert
-        assertThat(actualPositions).containsExactlyInAnyOrderElementsOf(expectedPositions);
+        assertThat(emptyPositions).isEmpty();
+    }
+
+    private void fillWorldWithStructures(final int worldSize, final World world) {
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
+                world.createStructure(x, y);
+            }
+        }
     }
 
     @Test
     public void findEmptyPositionsReturnsEarlyIfAmountOfEmptyPositionsHaveBeenMet() {
         // Arrange
-        // Instantiate a world filled with dirt.
         final World world = createWorld(2, 15);
-        final ArrayList<Position> positions = new ArrayList<>();
-        positions.add(new Position(0, 0));
-        positions.add(new Position(0, 1));
-        positions.add(new Position(1, 0));
-        final Iterable<Position> actualPositions;
+        final int numberOfWantedPositions = 3;
 
         // Act
-        actualPositions = world.findEmptyPositions(3);
+        final int numberOfEmptyPositions = Lists.newArrayList(world.findEmptyPositions(
+            numberOfWantedPositions)).size();
 
         // Assert
-        assertThat(actualPositions).containsExactlyInAnyOrderElementsOf(positions);
+        assertThat(numberOfEmptyPositions).isEqualTo(numberOfWantedPositions);
     }
 
     @Test
-    public void getResourcesActuallyReturnsResources() {
+    public void getTerrainsReturnsTerrainEvenIfStructuresAreOnTopOfTerrain() {
         // Arrange
-        // Instantiate a world filled with water.
-        final World world = createWorld(2);
-        final Collection<IResource> expectedResources = new ArrayList<>();
-        expectedResources.add(new Water(0, 0));
-        expectedResources.add(new Water(1, 0));
-        expectedResources.add(new Water(0, 1));
-        expectedResources.add(new Water(1, 1));
-        final Collection<IResource> actualResources;
+        final int worldSize = 15;
+        final World world = createWorld(worldSize);
+        fillWorldWithStructures(worldSize, world);
+        final int expectedNumberOfTerrainTiles = worldSize * worldSize;
 
         // Act
-        actualResources = world.getResources();
+        final int actualNumberOfTerrainTiles = world.getTerrainTiles().size();
 
         // Assert
-        assertThat(actualResources).containsExactlyInAnyOrderElementsOf(expectedResources);
+        assertThat(actualNumberOfTerrainTiles).isEqualTo(expectedNumberOfTerrainTiles);
     }
 
     private static class ResourceTestWorld extends World {
 
-        private static final int SIZE = 10;
-
         ResourceTestWorld(final Random random) {
-            super(SIZE, SIZE, random);
+            super(10, 0, random);
         }
 
         @Override
-        protected ITerrain[][] setUpTerrain(final int seed) {
-            final ITerrain[][] terrainMatrix = new ITerrain[SIZE][SIZE];
-            for (int y = 0; y < SIZE; y++) {
-                for (int x = 0; x < SIZE; x++) {
+        protected ITerrain[][] setUpTerrain(final int worldSize, final int seed) {
+            final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
+            for (int y = 0; y < worldSize; y++) {
+                for (int x = 0; x < worldSize; x++) {
                     terrainMatrix[y][x] = new Grass(x, y);
                 }
             }
@@ -522,15 +501,15 @@ public class WorldTests {
         }
 
         @Override
-        protected IResource[][] setUpResources(final int seed) {
-            final IResource[][] resourceMatrix = new IResource[SIZE][SIZE];
-            for (int y = 0; y < SIZE; y++) {
-                for (int x = 0; x < SIZE; x++) {
+        protected IResource[][] setUpResources(final int worldSize, final int seed) {
+            final IResource[][] resourceMatrix = new IResource[worldSize][worldSize];
+            for (int y = 0; y < worldSize; y++) {
+                for (int x = 0; x < worldSize; x++) {
                     resourceMatrix[y][x] = null;
                 }
             }
             resourceMatrix[0][0] = new Tree(0, 0);
-            resourceMatrix[SIZE - 1][SIZE - 1] = new Tree(SIZE - 1, SIZE - 1);
+            resourceMatrix[worldSize - 1][worldSize - 1] = new Tree(worldSize - 1, worldSize - 1);
             return resourceMatrix;
         }
 

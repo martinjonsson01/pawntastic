@@ -11,10 +11,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
-import com.thebois.models.MockWorld;
 import com.thebois.models.Position;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
+import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
 import com.thebois.models.world.terrains.Grass;
 
@@ -36,13 +36,6 @@ public class AstarPathFinderTests {
         return new Position(positionX, positionY);
     }
 
-    private ITile mockObstacle(final int positionX, final int positionY) {
-        final ITile mockTile = Mockito.mock(ITile.class);
-        when(mockTile.getPosition()).thenReturn(new Position(positionX, positionY));
-        when(mockTile.getCost()).thenReturn(100f);
-        return mockTile;
-    }
-
     @ParameterizedTest
     @MethodSource("getPositionsAndDestinations")
     public void pathContainsDestinationLast(final Position start, final Position destination) {
@@ -62,13 +55,13 @@ public class AstarPathFinderTests {
     }
 
     private World createTestWorld(final int size, final Random random) {
-        return new MockWorld(size, 0, random);
+        return new TestWorld(size, random);
     }
 
     @Test
     public void pathAvoidsTilesWithHighCost() {
         // Arrange
-        final IWorld world = mock3x3WorldWithObstacles();
+        final IWorld world = testWorld3x3WithObstacles();
         final IPathFinder cut = new AstarPathFinder(world);
         final Position start = new Position(0, 0);
         final Position destination = new Position(2, 2);
@@ -100,7 +93,7 @@ public class AstarPathFinderTests {
      *
      * @return The mocked world.
      */
-    private IWorld mock3x3WorldWithObstacles() {
+    private IWorld testWorld3x3WithObstacles() {
         final World world = createTestWorld(3);
 
         world.createStructure(1, 0);

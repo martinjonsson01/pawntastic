@@ -4,40 +4,40 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class WaterTests {
+public class RockTests {
 
     @Test
-    public void getTypeFromWaterResource() {
+    public void getTypeFromRockResource() {
         // Arrange
-        final Water water = new Water(1, 1);
+        final Rock rock = new Rock(1, 1);
 
         // Act
-        final ResourceType resourceType = water.getType();
+        final ResourceType resourceType = rock.getType();
 
         // Assert
-        assertThat(resourceType).isEqualTo(ResourceType.WATER);
+        assertThat(resourceType).isEqualTo(ResourceType.ROCK);
     }
 
     @Test
     public void getDeepCloneShouldBeEqualToOriginal() {
         // Arrange
-        final Water water = new Water(1, 1);
+        final Rock rock = new Rock(1, 1);
 
         // Act
-        final IResource deepClone = water.deepClone();
+        final IResource deepClone = rock.deepClone();
 
         // Assert
-        assertThat(deepClone).isEqualTo(water);
+        assertThat(deepClone).isEqualTo(rock);
     }
 
     @Test
     public void getCostIsFloatMax() {
         // Arrange
-        final Water water = new Water(1, 1);
+        final Rock rock = new Rock(1, 1);
         final float expectedValue = Float.MAX_VALUE;
 
         // Act
-        final float actualValue = water.getCost();
+        final float actualValue = rock.getCost();
 
         // Assert
         assertThat(actualValue).isEqualTo(expectedValue);

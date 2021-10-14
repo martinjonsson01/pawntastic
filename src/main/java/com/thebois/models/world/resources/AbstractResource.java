@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.thebois.models.Position;
 
 /**
- * Abstract implementation of IResource.
+ * A resource tile in the world, containing harvestable materials.
  */
 public abstract class AbstractResource implements IResource {
 
@@ -23,11 +23,11 @@ public abstract class AbstractResource implements IResource {
     /**
      * Instantiate a resource with given position.
      *
-     * @param posX X coordinate for the resource.
-     * @param posY Y Coordinate for the resource
+     * @param x X coordinate for the resource.
+     * @param y Y Coordinate for the resource
      */
-    public AbstractResource(final float posX, final float posY) {
-        this.position = new Position(posX, posY);
+    public AbstractResource(final float x, final float y) {
+        this(new Position(x, y));
     }
 
     @Override
@@ -36,10 +36,10 @@ public abstract class AbstractResource implements IResource {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final AbstractResource that = (AbstractResource) o;
+    public boolean equals(final Object obejct) {
+        if (this == obejct) return true;
+        if (obejct == null || getClass() != obejct.getClass()) return false;
+        final AbstractResource that = (AbstractResource) obejct;
         return Objects.equals(position, that.position);
     }
 

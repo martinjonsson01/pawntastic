@@ -12,7 +12,6 @@ import com.thebois.views.TextureUtils;
  */
 public final class StructureView implements IView {
 
-    static final float HALF_CONSTANT = 0.5f;
     private final float tileSize;
     private Iterable<IStructure> structures;
     private final Color houseColor = Color.valueOf("#CD853F");
@@ -35,23 +34,36 @@ public final class StructureView implements IView {
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         batch.setColor(houseColor);
         for (final IStructure structure : structures) {
-            // Draws Main house
-            batch.setColor(houseColor);
-            batch.draw(
-                houseTexture,
-                offsetX + structure.getPosition().getPosX() * tileSize,
-                offsetY + structure.getPosition().getPosY() * tileSize,
-                tileSize,
-                tileSize * HALF_CONSTANT);
-            // Draws roof
-            batch.setColor(Color.BLACK);
-            batch.draw(
-                ceilingTexture,
-                offsetX + structure.getPosition().getPosX() * tileSize,
-                offsetY + (structure.getPosition().getPosY() + HALF_CONSTANT) * tileSize,
-                tileSize,
-                tileSize * HALF_CONSTANT);
+            drawHouse(batch, offsetX, offsetY, structure);
         }
+    }
+
+    private void drawHouse(
+        final Batch batch, final float offsetX, final float offsetY, final IStructure structure) {
+        drawBase(batch, offsetX, offsetY, structure);
+        drawRoof(batch, offsetX, offsetY, structure);
+    }
+
+    private void drawRoof(
+        final Batch batch, final float offsetX, final float offsetY, final IStructure structure) {
+        batch.setColor(Color.BLACK);
+        batch.draw(
+            ceilingTexture,
+            offsetX + structure.getPosition().getPosX() * tileSize,
+            offsetY + structure.getPosition().getPosY() * tileSize + tileSize / 2,
+            tileSize,
+            tileSize / 2);
+    }
+
+    private void drawBase(
+        final Batch batch, final float offsetX, final float offsetY, final IStructure structure) {
+        batch.setColor(houseColor);
+        batch.draw(
+            houseTexture,
+            offsetX + structure.getPosition().getPosX() * tileSize,
+            offsetY + structure.getPosition().getPosY() * tileSize,
+            tileSize,
+            tileSize / 2);
     }
 
     /**

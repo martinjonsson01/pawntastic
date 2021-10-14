@@ -20,11 +20,11 @@ public class Water extends AbstractResource {
     /**
      * Instantiate a new water resource at given position.
      *
-     * @param posX X coordinate for the water resource.
-     * @param posY Y coordinate for the water resource.
+     * @param x X coordinate for the water resource.
+     * @param y Y coordinate for the water resource.
      */
-    public Water(final float posX, final float posY) {
-        super(posX, posY);
+    public Water(final float x, final float y) {
+        this(new Position(x, y));
     }
 
     @Override

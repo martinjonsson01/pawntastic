@@ -12,10 +12,9 @@ public class StructureTests {
     public void structureDoesNotEqualNull() {
         // Arrange
         final AbstractStructure structure = new House(1, 1);
-        final boolean isEqual;
 
         // Act
-        isEqual = structure.equals(null);
+        final boolean isEqual = structure.equals(null);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -26,10 +25,9 @@ public class StructureTests {
         // Arrange
         final AbstractStructure structure = new House(1, 1);
         final Object object = new Object();
-        final boolean isEqual;
 
         // Act
-        isEqual = structure.equals(object);
+        final boolean isEqual = structure.equals(object);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -39,10 +37,9 @@ public class StructureTests {
     public void structureEqualItSelfIsTrue() {
         // Arrange
         final AbstractStructure structure = new House(1, 1);
-        final boolean isEqual;
 
         // Act
-        isEqual = structure.equals(structure);
+        final boolean isEqual = structure.equals(structure);
 
         // Assert
         assertThat(isEqual).isTrue();
@@ -51,14 +48,12 @@ public class StructureTests {
     @Test
     public void structureEqualIsTrueIfSamePositionAndType() {
         // Arrange
-        final Position position1 = new Position(1, 1);
-        final Position position2 = new Position(1, 1);
-        final AbstractStructure structure1 = new House(position1);
-        final AbstractStructure structure2 = new House(position2);
-        final boolean isEqual;
+        final Position position = new Position(1, 1);
+        final AbstractStructure structure1 = new House(position);
+        final AbstractStructure structure2 = new House(position);
 
         // Act
-        isEqual = structure1.equals(structure2);
+        final boolean isEqual = structure1.equals(structure2);
 
         // Assert
         assertThat(isEqual).isTrue();
@@ -71,10 +66,9 @@ public class StructureTests {
         final Position position2 = new Position(2, 2);
         final AbstractStructure structure1 = new House(position1);
         final AbstractStructure structure2 = new House(position2);
-        final boolean isEqual;
 
         // Act
-        isEqual = structure1.equals(structure2);
+        final boolean isEqual = structure1.equals(structure2);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -86,10 +80,9 @@ public class StructureTests {
         final Position position = new Position(1, 1);
         final AbstractStructure structure1 = new House(position);
         final AbstractStructure structure2 = new House(position);
-        final boolean isEqual;
 
         // Act
-        isEqual = structure1.hashCode() == structure2.hashCode();
+        final boolean isEqual = structure1.hashCode() == structure2.hashCode();
 
         // Assert
         assertThat(isEqual).isTrue();
@@ -102,10 +95,9 @@ public class StructureTests {
         final Position position2 = new Position(2, 2);
         final AbstractStructure structure1 = new House(position1);
         final AbstractStructure structure2 = new House(position2);
-        final boolean isEqual;
 
         // Act
-        isEqual = structure1.hashCode() == structure2.hashCode();
+        final boolean isEqual = structure1.hashCode() == structure2.hashCode();
 
         // Assert
         assertThat(isEqual).isFalse();

@@ -1,7 +1,6 @@
 package com.thebois.models.world;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -43,29 +42,25 @@ public class World implements IWorld, IFinder, IResourceFinder {
     public World(final int worldSize, final int seed, final Random random) {
         this.worldSize = worldSize;
         this.random = random;
-        terrainMatrix = setUpTerrain(seed);
+        terrainMatrix = setUpTerrain(worldSize, seed);
         structureMatrix = setUpStructures();
-        resourceMatrix = setUpResources(seed);
+        resourceMatrix = setUpResources(worldSize, seed);
         canonicalMatrix = new ITile[worldSize][worldSize];
         updateCanonicalMatrix();
     }
 
-    protected ITerrain[][] setUpTerrain(final int seed) {
-        final TerrainGenerator terrainGenerator = new TerrainGenerator(seed);
-        return terrainGenerator.generateTerrainMatrix(worldSize);
-    }
-
     private IStructure[][] setUpStructures() {
         final IStructure[][] newStructureMatrix = new IStructure[worldSize][worldSize];
-        for (final IStructure[] matrix : newStructureMatrix) {
-            Arrays.fill(matrix, null);
-        }
+        MatrixUtils.populateElements(newStructureMatrix, (x, y) -> null);
         return newStructureMatrix;
     }
 
-    protected IResource[][] setUpResources(final int seed) {
-        final ResourceGenerator resourceGenerator = new ResourceGenerator(seed);
-        return resourceGenerator.generateResourceMatrix(worldSize);
+    protected ITerrain[][] setUpTerrain(final int size, final int seed) {
+        return new TerrainGenerator(worldSize, seed).generateTerrainMatrix();
+    }
+
+    protected IResource[][] setUpResources(final int size, final int seed) {
+        return new ResourceGenerator(worldSize, seed).generateResourceMatrix();
     }
 
     /**
@@ -78,30 +73,24 @@ public class World implements IWorld, IFinder, IResourceFinder {
      */
     private void updateCanonicalMatrix() {
         // Fill with terrain.
-        MatrixUtils.forEachElement(terrainMatrix, tile -> {
+        replaceTilesInCanonicalMatrix(terrainMatrix);
+        // Replace with any possible resource.
+        replaceTilesInCanonicalMatrix(resourceMatrix);
+        // Replace with any possible structure.
+        replaceTilesInCanonicalMatrix(structureMatrix);
+    }
+
+    private void replaceTilesInCanonicalMatrix(final ITile[][] tiles) {
+        MatrixUtils.forEachElement(tiles, this::replaceTileInCanonicalMatrix);
+    }
+
+    private void replaceTileInCanonicalMatrix(final ITile tile) {
+        if (tile != null) {
             final Position position = tile.getPosition();
             final int posY = (int) position.getPosY();
             final int posX = (int) position.getPosX();
-            canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
-        });
-        // Replace terrain with any possible resource.
-        MatrixUtils.forEachElement(resourceMatrix, maybeResource -> {
-            if (maybeResource != null) {
-                final Position position = maybeResource.getPosition();
-                final int posY = (int) position.getPosY();
-                final int posX = (int) position.getPosX();
-                canonicalMatrix[posY][posX] = maybeResource.deepClone();
-            }
-        });
-        // Replace terrain with any possible structure.
-        MatrixUtils.forEachElement(structureMatrix, structure -> {
-            if (structure != null) {
-                final Position position = structure.getPosition();
-                final int posY = (int) position.getPosY();
-                final int posX = (int) position.getPosX();
-                canonicalMatrix[posY][posX] = structure.deepClone();
-            }
-        });
+            canonicalMatrix[posY][posX] = tile;
+        }
     }
 
     /**
@@ -123,8 +112,9 @@ public class World implements IWorld, IFinder, IResourceFinder {
     }
 
     private boolean isPositionEmpty(final Position position) {
-        return canonicalMatrix[(int) position.getPosY()][(int) position.getPosX()].getCost()
-               < Float.MAX_VALUE;
+        final int x = (int) position.getPosX();
+        final int y = (int) position.getPosY();
+        return canonicalMatrix[y][x].getCost() < Float.MAX_VALUE;
     }
 
     /**
@@ -141,13 +131,10 @@ public class World implements IWorld, IFinder, IResourceFinder {
      *
      * @return ITile[][]
      */
-    public ArrayList<ITerrain> getTerrainTiles() {
-        final ArrayList<ITerrain> copy = new ArrayList<>();
-        for (final ITerrain[] matrix : terrainMatrix) {
-            for (final ITerrain iTerrain : matrix) {
-                copy.add(iTerrain.deepClone());
-            }
-        }
+    public Collection<ITerrain> getTerrainTiles() {
+        final Collection<ITerrain> copy = new ArrayList<>();
+        MatrixUtils.forEachElement(terrainMatrix,
+                                   maybeTerrain -> copy.add(maybeTerrain.deepClone()));
         return copy;
     }
 
@@ -158,13 +145,26 @@ public class World implements IWorld, IFinder, IResourceFinder {
      */
     public Collection<IStructure> getStructures() {
         final Collection<IStructure> copy = new ArrayList<>();
-        for (final IStructure[] matrix : structureMatrix) {
-            for (final IStructure structure : matrix) {
-                if (structure != null) {
-                    copy.add(structure.deepClone());
-                }
+        MatrixUtils.forEachElement(structureMatrix, maybeStructure -> {
+            if (maybeStructure != null) {
+                copy.add(maybeStructure.deepClone());
             }
-        }
+        });
+        return copy;
+    }
+
+    /**
+     * Returns the resources in a Collection as the interface IResource.
+     *
+     * @return The list to be returned.
+     */
+    public Collection<IResource> getResources() {
+        final Collection<IResource> copy = new ArrayList<>();
+        MatrixUtils.forEachElement(resourceMatrix, maybeResource -> {
+            if (maybeResource != null) {
+                copy.add(maybeResource.deepClone());
+            }
+        });
         return copy;
     }
 
@@ -225,23 +225,6 @@ public class World implements IWorld, IFinder, IResourceFinder {
                                            origin.distanceTo(o2.getPosition())));
     }
 
-    /**
-     * Returns the resources in a Collection as the interface IResource.
-     *
-     * @return The list to be returned.
-     */
-    public Collection<IResource> getResources() {
-        final Collection<IResource> copy = new ArrayList<>();
-        for (final IResource[] matrix : resourceMatrix) {
-            for (final IResource maybeResource : matrix) {
-                if (maybeResource != null) {
-                    copy.add(maybeResource.deepClone());
-                }
-            }
-        }
-        return copy;
-    }
-
     @Override
     public Collection<ITile> getNeighboursOf(final ITile tile) {
         final ArrayList<ITile> tiles = new ArrayList<>(8);
@@ -276,7 +259,7 @@ public class World implements IWorld, IFinder, IResourceFinder {
         if (posX < 0 || posY < 0 || posX >= worldSize || posY >= worldSize) {
             throw new IndexOutOfBoundsException("Given position is outside of the world.");
         }
-        return terrainMatrix[posY][posX];
+        return canonicalMatrix[posY][posX];
     }
 
     @Override

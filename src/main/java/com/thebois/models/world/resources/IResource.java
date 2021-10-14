@@ -12,7 +12,7 @@ public interface IResource extends ITile, IDeepClonable<IResource> {
     /**
      * Get the resource type.
      *
-     * @return The Resource type for the resource.
+     * @return The type of resource.
      */
     ResourceType getType();
 

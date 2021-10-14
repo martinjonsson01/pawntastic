@@ -1,17 +1,17 @@
-package com.thebois.utils;
-
-import com.thebois.models.world.generation.patterns.IGenerationPattern;
-import com.thebois.models.world.generation.patterns.LargeChunks;
+package com.thebois.models.world.generation.noises;
 
 /**
  * Generator used to generate Perlin Noise.
  */
-public class PerlinNoise {
+public class PerlinNoise implements INoise {
 
-    private IGenerationPattern settings;
     private int currentOctave;
-    private int seed;
-    private final int[] primeNumberArray = {
+    private final int octaves;
+    private final float amplitude;
+    private final double frequency;
+    private final double persistence;
+    private int seed = 0;
+    private final int[] primeNumbers = {
         15731,
         789221,
         1376312589,
@@ -30,20 +30,24 @@ public class PerlinNoise {
     /**
      * Instantiate a Perlin Noise Generator with given arguments.
      *
-     * @param settings The settings used to generate the perlin noise.
-     * @param seed     A number used to generate the random table.
+     * @param octaves     Number of octaves used for generating perlin noise, A number equal to or
+     *                    greater than 1.
+     * @param amplitude   The amplitude used to amplify the resulting noise. The value should not be
+     *                    0.
+     * @param frequency   This value decides how zoomed in the sample value should be on the noise
+     *                    map.
+     * @param persistence Used to decide much the noise should change per addition. The value should
+     *                    not be 0 if octave is greater than 1.
      */
     public PerlinNoise(
-        final IGenerationPattern settings, final int seed) {
-        setSettings(settings);
-        setSeed(seed);
-    }
-
-    /**
-     * Instantiate a Perlin Noise Generator.
-     */
-    public PerlinNoise() {
-        this(new LargeChunks(), 0);
+        final int octaves,
+        final float amplitude,
+        final double frequency,
+        final double persistence) {
+        this.octaves = octaves;
+        this.amplitude = amplitude;
+        this.frequency = frequency;
+        this.persistence = persistence;
     }
 
     /**
@@ -54,12 +58,9 @@ public class PerlinNoise {
      *
      * @return The Perlin Noise value.
      */
+    @Override
     public float sample(final float coordinateX, final float coordinateY) {
         double total = 0;
-        final int octaves = settings.getOctave();
-        final double persistence = settings.getPersistence();
-        final double frequency = settings.getFrequency();
-        final double amplitude = settings.getAmplitude();
         for (int i = 0; i < octaves; i++) {
             currentOctave = i;
             final double octaveAmplification = Math.pow(persistence, i);
@@ -72,16 +73,6 @@ public class PerlinNoise {
         return (float) (total * amplitude);
     }
 
-    /**
-     * Create a perlin noise by interpolating noise using Perlin noise algorithm.
-     *
-     * @param coordinateX X coordinate for the noise map, should not be integer as that will return
-     *                    same perlin noise.
-     * @param coordinateY Y coordinate for the noise map, should not be integer as that will return
-     *                    same perlin noise.
-     *
-     * @return The Perlin noise
-     */
     private double interpolateNoise(final double coordinateX, final double coordinateY) {
         // Convert to integers
         final int integerX = (int) coordinateX;
@@ -120,25 +111,35 @@ public class PerlinNoise {
 
     private double smoothNoise(final int coordinateX, final int coordinateY) {
         // Corners
-        final float corner1 = noise(coordinateX - 1, coordinateY - 1);
-        final float corner2 = noise(coordinateX - 1, coordinateY + 1);
-        final float corner3 = noise(coordinateX + 1, coordinateY - 1);
-        final float corner4 = noise(coordinateX + 1, coordinateY + 1);
-
-        final double corners = (corner1 + corner2 + corner3 + corner4) / 16;
+        final double corners = smoothenValueForCorners(coordinateX, coordinateY);
 
         // Sides
-        final float side1 = noise(coordinateX - 1, coordinateY);
-        final float side2 = noise(coordinateX + 1, coordinateY);
-        final float side3 = noise(coordinateX, coordinateY - 1);
-        final float side4 = noise(coordinateX, coordinateY + 1);
-
-        final float sides = (side1 + side2 + side3 + side4) / 8;
+        final float sides = smoothenValueForSides(coordinateX, coordinateY);
 
         // Center
         final float center = noise(coordinateX, coordinateY) / 4;
 
         return center + sides + corners;
+    }
+
+    private float smoothenValueForSides(final int coordinateX, final int coordinateY) {
+        final int smoothenFactor = 8;
+        final float side1 = noise(coordinateX - 1, coordinateY);
+        final float side2 = noise(coordinateX + 1, coordinateY);
+        final float side3 = noise(coordinateX, coordinateY - 1);
+        final float side4 = noise(coordinateX, coordinateY + 1);
+
+        return (side1 + side2 + side3 + side4) / smoothenFactor;
+    }
+
+    private double smoothenValueForCorners(final int coordinateX, final int coordinateY) {
+        final int smoothenFactor = 16;
+        final float corner1 = noise(coordinateX - 1, coordinateY - 1);
+        final float corner2 = noise(coordinateX - 1, coordinateY + 1);
+        final float corner3 = noise(coordinateX + 1, coordinateY - 1);
+        final float corner4 = noise(coordinateX + 1, coordinateY + 1);
+
+        return (corner1 + corner2 + corner3 + corner4) / smoothenFactor;
     }
 
     /**
@@ -157,11 +158,11 @@ public class PerlinNoise {
         final int variable2 = 13;
         final int variable3 = 0x7fffffff;
         final int variable4 = 1073741824;
-        final int resetValue = primeNumberArray.length / 3;
+        final int resetValue = primeNumbers.length / 3;
 
-        final int primeNumber1 = primeNumberArray[currentOctave % resetValue];
-        final int primeNumber2 = primeNumberArray[1 + currentOctave % resetValue];
-        final int primeNumber3 = primeNumberArray[2 + currentOctave % resetValue];
+        final int primeNumber1 = primeNumbers[currentOctave % resetValue];
+        final int primeNumber2 = primeNumbers[1 + currentOctave % resetValue];
+        final int primeNumber3 = primeNumbers[2 + currentOctave % resetValue];
 
         temporaryValue1 = coordinateX + coordinateY * variable1;
         temporaryValue1 = (temporaryValue1 << variable2) ^ temporaryValue1;
@@ -173,12 +174,9 @@ public class PerlinNoise {
         return 1.0f - temporaryValue1 / (float) variable4;
     }
 
+    @Override
     public void setSeed(final int seed) {
         this.seed = seed;
-    }
-
-    public void setSettings(final IGenerationPattern settings) {
-        this.settings = settings;
     }
 
 }

@@ -1,7 +1,7 @@
 package com.thebois.models.world.terrains;
 
 /**
- * A factory that creates terrain view.
+ * A factory that creates terrain tiles.
  */
 public final class TerrainFactory {
 
@@ -10,24 +10,22 @@ public final class TerrainFactory {
     }
 
     /**
-     * Generate a terrain with given type at given position.
+     * Generate a terrain with given type at the given position.
      *
      * @param type What type of terrain.
      * @param x    X position for terrain.
      * @param y    Y position for terrain.
      *
      * @return The created terrain.
+     *
+     * @throws NullPointerException If the type of resource is null.
      */
     public static ITerrain createTerrain(final TerrainType type, final int x, final int y) {
-        if (type == TerrainType.DIRT) {
-            return new Dirt(x, y);
-        }
-        else if (type == TerrainType.SAND) {
-            return new Sand(x, y);
-        }
-        else {
-            return new Grass(x, y);
-        }
+        return switch (type) {
+            case GRASS -> new Grass(x, y);
+            case SAND -> new Sand(x, y);
+            case DIRT -> new Dirt(x, y);
+        };
     }
 
 }

@@ -172,6 +172,10 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
+                            <excludes>
+                                <exclude>com/thebois/**/ResourceFactory.class</exclude>
+                                <exclude>com/thebois/**/TerrainFactory.class</exclude>
+                            </excludes>
                             <rules>
                                 <rule>
                                     <includes>

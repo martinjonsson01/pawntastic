@@ -6,7 +6,7 @@ import com.thebois.views.game.IView;
 import com.thebois.views.game.ResourceView;
 
 /**
- * Controller that gets resource data from the world and passes it to the view that renders it.
+ * Controller collects resource data from the world and passes it to the Resource View.
  */
 public class ResourceController implements IController<IView> {
 
