@@ -2,6 +2,8 @@ package com.thebois.models.world.resources;
 
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -30,6 +32,18 @@ public class ResourceFactoryTests {
 
         // Assert
         assertThat(actualResource).isEqualTo(expectedResource);
+    }
+
+    @Test
+    public void createTerrainWithNullAsEnumThrowsUnsupportedOperationException() {
+        // Arrange
+        final int x = 0;
+        final int y = 0;
+
+        // Assert
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            ResourceFactory.createResource(null, x, y);
+        });
     }
 
 }
