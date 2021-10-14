@@ -1,7 +1,6 @@
 package com.thebois.models.world.generation;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -77,17 +76,17 @@ public class TerrainGeneratorTest {
         // Arrange
         final TerrainGenerator generator = new TerrainGenerator(worldSize, seed);
         final ITerrain[][] matrix;
-        final AtomicInteger actualNumberOfTerrains = new AtomicInteger(0);
+        int actualNumberOfTerrains = 0;
         final int expectedNumberOfResources = TerrainType.values().length;
         // Act
         matrix = generator.generateTerrainMatrix();
         for (final TerrainType type : TerrainType.values()) {
             if (containsTerrain(matrix, type)) {
-                actualNumberOfTerrains.incrementAndGet();
+                actualNumberOfTerrains++;
             }
         }
         // Assert
-        assertThat(actualNumberOfTerrains.get()).isEqualTo(expectedNumberOfResources);
+        assertThat(actualNumberOfTerrains).isEqualTo(expectedNumberOfResources);
     }
 
     private boolean containsTerrain(

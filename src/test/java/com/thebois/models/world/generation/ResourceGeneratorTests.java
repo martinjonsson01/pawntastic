@@ -1,7 +1,6 @@
 package com.thebois.models.world.generation;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -77,17 +76,17 @@ public class ResourceGeneratorTests {
         // Arrange
         final ResourceGenerator generator = new ResourceGenerator(worldSize, seed);
         final IResource[][] matrix;
-        final AtomicInteger actualNumberOfResources = new AtomicInteger(0);
+        int actualNumberOfResources = 0;
         final int expectedNumberOfResources = ResourceType.values().length;
         // Act
         matrix = generator.generateResourceMatrix();
         for (final ResourceType type : ResourceType.values()) {
             if (containsResource(matrix, type)) {
-                actualNumberOfResources.incrementAndGet();
+                actualNumberOfResources++;
             }
         }
         // Assert
-        assertThat(actualNumberOfResources.get()).isEqualTo(expectedNumberOfResources);
+        assertThat(actualNumberOfResources).isEqualTo(expectedNumberOfResources);
     }
 
     private boolean containsResource(
