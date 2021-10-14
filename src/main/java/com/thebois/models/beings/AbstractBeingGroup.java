@@ -3,15 +3,12 @@ package com.thebois.models.beings;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.thebois.models.IFinder;
-
 /**
  * An abstract implementation of IBeingGroup.
  */
 public abstract class AbstractBeingGroup implements IBeingGroup {
 
     private Collection<IBeing> beings = new ArrayList<>();
-    private IFinder finder;
 
     /**
      * Adds a being to the internal collection of beings.
@@ -39,13 +36,4 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
     protected void setBeings(final Collection<IBeing> beings) {
         this.beings = beings;
     }
-
-    protected IFinder getFinder() {
-        return this.finder;
-    }
-
-    protected void setFinder(final IFinder finder) {
-        this.finder = finder;
-    }
-
 }

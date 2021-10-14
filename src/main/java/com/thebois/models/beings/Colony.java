@@ -36,16 +36,15 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
      */
     public Colony(final Iterable<Position> vacantPositions, final IPathFinder pathFinder,
                   final IFinder finder) {
-        setFinder(finder);
         final Collection<IBeing> pawns = new ArrayList<>();
         final Random random = new Random();
         for (final Position vacantPosition : vacantPositions) {
-            pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder, getFinder()));
+            pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder, finder));
         }
         setBeings(pawns);
     }
 
-    public IInventory getColonyInventory() {
+    public IInventory getInventory() {
         return colonyInventory;
     }
 

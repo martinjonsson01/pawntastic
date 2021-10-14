@@ -248,7 +248,7 @@ public class ColonyTests {
         items.add(new Log());
 
         // Act
-        final IInventory inventory = colony.getColonyInventory();
+        final IInventory inventory = colony.getInventory();
         final boolean colonyResult = colony.hasItem(ItemType.LOG, 2);
         final boolean inventoryResult = inventory.hasItem(ItemType.LOG, 2);
 

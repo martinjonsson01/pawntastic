@@ -6,6 +6,6 @@
 
 <suppressions>
     <suppress checks="ClassDataAbstractionCoupling" files="Pawntastic"/>
-    <suppress files="[\\/]test[\\/]" checks="[a-zA-Z0-9]*"/>
+    <suppress checks="[a-zA-Z0-9]*" files="[\\/]test[\\/]"/>
     <suppress checks="NoWhitespaceAfter" files="MatrixUtilsTests" />
 </suppressions>
