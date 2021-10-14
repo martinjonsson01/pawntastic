@@ -33,11 +33,11 @@ public class ResourceView implements IView {
         this.tileSize = tileSize;
         resourceTextureMap = new HashMap<>();
         resourceTextureMap.put(ResourceType.WATER,
-                               TextureUtils.createSquareTexture(tileSize, WATER_COLOR));
+                               TextureUtils.createSquareTexture((int) tileSize, WATER_COLOR));
         resourceTextureMap.put(ResourceType.TREE,
-                               TextureUtils.createTriangleTexture(tileSize, TREE_COLOR));
+                               TextureUtils.createTriangleTexture((int) tileSize, TREE_COLOR));
         resourceTextureMap.put(ResourceType.ROCK,
-                               TextureUtils.createTriangleTexture(tileSize, ROCK_COLOR));
+                               TextureUtils.createTriangleTexture((int) tileSize, ROCK_COLOR));
     }
 
     /**

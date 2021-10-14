@@ -26,8 +26,8 @@ public final class StructureView implements IView {
     public StructureView(final float tileSize) {
         this.tileSize = tileSize;
 
-        houseTexture = TextureUtils.createSquareTexture(tileSize);
-        ceilingTexture = TextureUtils.createTriangleTexture(tileSize);
+        houseTexture = TextureUtils.createSquareTexture((int) tileSize);
+        ceilingTexture = TextureUtils.createTriangleTexture((int) tileSize);
     }
 
     @Override

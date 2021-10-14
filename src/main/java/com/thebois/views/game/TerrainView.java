@@ -41,7 +41,7 @@ public class TerrainView implements IView {
      */
     public TerrainView(final float tileSize) {
         this.tileSize = tileSize;
-        tileTexture = TextureUtils.createSquareTexture(tileSize);
+        tileTexture = TextureUtils.createSquareTexture((int) tileSize);
     }
 
     /**
