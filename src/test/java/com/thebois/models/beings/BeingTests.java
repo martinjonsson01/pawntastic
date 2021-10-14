@@ -320,7 +320,6 @@ public class BeingTests {
 
         final Random mockRandom = Mockito.mock(Random.class);
         when(mockRandom.nextInt(anyInt())).thenReturn(0);
-        when(mockRandom.nextInt(anyInt())).thenReturn(0);
 
         world.createStructure(positionA);
         world.createStructure(positionB);
