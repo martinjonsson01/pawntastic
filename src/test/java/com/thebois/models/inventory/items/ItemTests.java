@@ -12,7 +12,7 @@ public class ItemTests {
 
     public static Stream<Arguments> getItemTypesAndItemClass() {
         return Stream.of(Arguments.of(ItemType.LOG, ItemFactory.fromType(ItemType.LOG)),
-                         Arguments.of(ItemType.ROCK, new Rock()));
+                         Arguments.of(ItemType.ROCK, ItemFactory.fromType(ItemType.ROCK)));
     }
 
     @ParameterizedTest
