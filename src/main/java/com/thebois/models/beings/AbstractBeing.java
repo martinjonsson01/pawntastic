@@ -160,9 +160,9 @@ public abstract class AbstractBeing implements IBeing {
         return Optional.of(path.peek().deepClone());
     }
 
-    protected Optional<Position> getFinalDestination() {
-        if (path.isEmpty()) return Optional.empty();
-        return Optional.of(path.firstElement().deepClone());
+    protected Position getFinalDestination() {
+        if (path.isEmpty()) return null;
+        return path.firstElement().deepClone();
     }
 
     protected IPathFinder getPathFinder() {
@@ -188,10 +188,12 @@ public abstract class AbstractBeing implements IBeing {
             final float y = destination.getPosY() + positionOffsets[i][1];
             lastPosition = new Position(x, y);
 
-            if (getPosition().distanceTo(nearestNeighbor) > getPosition().distanceTo(lastPosition)) {
+            if (getPosition().distanceTo(nearestNeighbor)
+                > getPosition().distanceTo(lastPosition)) {
                 nearestNeighbor = lastPosition;
             }
         }
         return nearestNeighbor;
     }
+
 }

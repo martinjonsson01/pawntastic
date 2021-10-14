@@ -1,6 +1,5 @@
 package com.thebois.models.beings;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.List;
 import java.util.Random;
@@ -31,14 +30,15 @@ import static org.mockito.Mockito.*;
 public class BeingTests {
 
     public static Stream<Arguments> getPositionsAndDestinations() {
-        return Stream.of(Arguments.of(new Position(0, 0), new Position(0, 0)),
-                         Arguments.of(new Position(0, 0), new Position(1, 1)),
-                         Arguments.of(new Position(0, 0), new Position(1, 0)),
-                         Arguments.of(new Position(0, 0), new Position(99, 99)),
-                         Arguments.of(new Position(0, 0), new Position(-1, -1)),
-                         Arguments.of(new Position(0, 0), new Position(-99, -99)),
-                         Arguments.of(new Position(123, 456), new Position(0, 0)),
-                         Arguments.of(new Position(456, 789), new Position(0, 0)));
+        return Stream.of(
+            Arguments.of(new Position(0, 0), new Position(0, 0)),
+            Arguments.of(new Position(0, 0), new Position(1, 1)),
+            Arguments.of(new Position(0, 0), new Position(1, 0)),
+            Arguments.of(new Position(0, 0), new Position(99, 99)),
+            Arguments.of(new Position(0, 0), new Position(-1, -1)),
+            Arguments.of(new Position(0, 0), new Position(-99, -99)),
+            Arguments.of(new Position(123, 456), new Position(0, 0)),
+            Arguments.of(new Position(456, 789), new Position(0, 0)));
     }
 
     public static Stream<Arguments> getEqualBeings() {
@@ -296,42 +296,6 @@ public class BeingTests {
 
         // Assert
         verify(structure, atLeastOnce()).deliverItem(any());
-
-    }
-
-
-
-    @Test
-    public void pawnWalkToNearestUnBuiltStructure() {
-        // Arrange
-        final Position positionA = new Position(10, 0);
-        final Position positionB = new Position(11, 0);
-        final Position positionC = new Position(12, 0);
-        final Position housePosition = new Position(13, 0);
-
-        final Stack<Position> path = new Stack<>();
-        path.addAll(Arrays.asList(positionA, positionB, positionC));
-
-        final IStructure mockStructure = Mockito.mock(IStructure.class);
-
-        final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
-
-        when(mockPathFinder.path(any(), any())).thenReturn(path);
-        when(mockStructure.getPosition()).thenReturn(housePosition);
-        when(mockFinder.findNearestIncompleteStructure(any())).thenReturn(Optional.of(mockStructure));
-
-        final Pawn pawn = new Pawn(new Position(),
-                                       new Position(),
-                                       null,
-                                       mockPathFinder,
-                                       mockFinder);
-
-        // Act
-        pawn.update();
-
-        // Assert
-        verify(mockPathFinder, times(1)).path(any(), Mockito.eq(positionC));
     }
 
     @Test
@@ -371,7 +335,62 @@ public class BeingTests {
         testPawn.update();
 
         // Assert
-        assertThat(testPawn.getFinalDestination().orElseThrow()).isEqualTo(correctDestination);
+        assertThat(testPawn.getFinalDestination()).isEqualTo(correctDestination);
+    }
+
+    private static Stream<Arguments> pawnWalkToNearestUnBuiltStructureSource() {
+        return Stream.of(
+            Arguments.of(
+                new Position(5f, 0f),
+                new Position(6f, 0f),
+                new Position(7f, 0f),
+                new Position(8f, 0f)),
+            Arguments.of(
+                new Position(0f, 2f),
+                new Position(0f, 3f),
+                new Position(0f, 4f),
+                new Position(0f, 5f)),
+            Arguments.of(
+                new Position(2f, 2f),
+                new Position(3f, 3f),
+                new Position(4f, 4f),
+                new Position(5f, 5f))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("pawnWalkToNearestUnBuiltStructureSource")
+    public void pawnWalkToNearestUnBuiltStructure(
+        final Position positionA, final Position positionB, final Position expectedPosition,
+        final Position housePosition) {
+        // Arrange
+        final Stack<Position> path = new Stack<>();
+        path.add(expectedPosition);
+        path.add(positionB);
+        path.add(positionA);
+
+        final IStructure mockStructure = Mockito.mock(IStructure.class);
+        when(mockStructure.getPosition()).thenReturn(housePosition);
+
+        final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
+        when(mockPathFinder.path(any(), any())).thenReturn(path);
+
+        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        when(mockFinder.findNearestIncompleteStructure(any()))
+            .thenReturn(Optional.of(mockStructure));
+
+        final Pawn pawn = new Pawn(new Position(),
+                                   new Position(),
+                                   null,
+                                   mockPathFinder,
+                                   mockFinder);
+
+        // Act
+        pawn.update();
+        pawn.update();
+
+        // Assert
+        assertThat(pawn.getFinalDestination().equals(expectedPosition)).isEqualTo(true);
     }
 
     @Test
@@ -414,7 +433,7 @@ public class BeingTests {
         testPawn.update();
 
         // Assert
-        assertThat(testPawn.getFinalDestination().orElseThrow()).isEqualTo(correctDestination);
+        assertThat(testPawn.getFinalDestination()).isEqualTo(correctDestination);
     }
 
     @Test
@@ -456,7 +475,6 @@ public class BeingTests {
         final IStructure mockStructureA = Mockito.mock(IStructure.class);
         final IStructure mockStructureB = Mockito.mock(IStructure.class);
 
-        final Position expectedPosition = new Position(10f, 20f);
         final Position positionA = new Position(10f, 20f);
         final Position positionB = new Position(0f, 5f);
 

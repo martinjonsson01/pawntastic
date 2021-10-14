@@ -1,7 +1,6 @@
 package com.thebois.models.world.structures;
 
 import java.util.Collection;
-import java.util.Objects;
 
 import com.thebois.models.Position;
 import com.thebois.models.inventory.IInventory;
@@ -16,7 +15,7 @@ abstract class AbstractStructure implements IStructure {
 
     private Position position;
     private StructureType structureType;
-    private IInventory allNeededItems = new Inventory();
+    private IInventory allNeededItems;
     private IInventory deliveredItems = new Inventory();
 
     /**
