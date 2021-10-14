@@ -1,6 +1,7 @@
 package com.thebois.models.world;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,7 @@ import com.thebois.utils.MatrixUtils;
 public class World implements IWorld, IFinder {
 
     private final ITerrain[][] terrainMatrix;
-    private final Optional<IStructure>[][] structureMatrix;
+    private final IStructure[][] structureMatrix;
     private final int worldSize;
     private final ITile[][] canonicalMatrix;
 
@@ -38,12 +39,9 @@ public class World implements IWorld, IFinder {
             }
         }
         // Structures
-        // noinspection unchecked
-        structureMatrix = new Optional[worldSize][worldSize];
-        for (int y = 0; y < structureMatrix.length; y++) {
-            for (int x = 0; x < structureMatrix[y].length; x++) {
-                structureMatrix[y][x] = Optional.empty();
-            }
+        structureMatrix = new IStructure[worldSize][worldSize];
+        for (final IStructure[] matrix : structureMatrix) {
+            Arrays.fill(matrix, null);
         }
 
         canonicalMatrix = new ITile[worldSize][worldSize];
@@ -67,13 +65,14 @@ public class World implements IWorld, IFinder {
             canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
         });
         // Replace terrain with any possible structure.
-        MatrixUtils.forEachElement(structureMatrix,
-                                   maybeStructure -> maybeStructure.ifPresent(structure -> {
-                                       final Position position = structure.getPosition();
-                                       final int posY = (int) position.getPosY();
-                                       final int posX = (int) position.getPosX();
-                                       canonicalMatrix[posY][posX] = structure.deepClone();
-                                   }));
+        MatrixUtils.forEachElement(structureMatrix, structure -> {
+            if (structure != null) {
+                final Position position = structure.getPosition();
+                final int posY = (int) position.getPosY();
+                final int posX = (int) position.getPosX();
+                canonicalMatrix[posY][posX] = structure.deepClone();
+            }
+        });
     }
 
     /**
@@ -121,7 +120,7 @@ public class World implements IWorld, IFinder {
      *
      * @param position The position where the structure should be built.
      *
-     * @return Whether or not the structure was built.
+     * @return Whether the structure was built.
      */
     public boolean createStructure(final Position position) {
         return createStructure((int) position.getPosX(), (int) position.getPosY());
@@ -133,12 +132,12 @@ public class World implements IWorld, IFinder {
      * @param posX The X coordinate where the structure should be built.
      * @param posY The Y coordinate where the structure should be built.
      *
-     * @return Whether or not the structure was built.
+     * @return Whether the structure was built.
      */
     public boolean createStructure(final int posX, final int posY) {
         final Position position = new Position(posX, posY);
         if (isPositionPlaceable(position)) {
-            structureMatrix[posY][posX] = Optional.of(new House(position));
+            structureMatrix[posY][posX] = new House(position);
 
             updateCanonicalMatrix();
             postObstacleEvent(posX, posY);
@@ -156,7 +155,7 @@ public class World implements IWorld, IFinder {
         if (posIntX < 0 || posIntX >= structureMatrix[posIntY].length) {
             return false;
         }
-        return structureMatrix[posIntY][posIntX].isEmpty();
+        return structureMatrix[posIntY][posIntX] == null;
     }
 
     private void postObstacleEvent(final int posX, final int posY) {
