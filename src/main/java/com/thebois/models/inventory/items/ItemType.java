@@ -15,5 +15,9 @@ public enum ItemType {
     /**
      * Fish can be caught from water.
      */
-    FISH
+    FISH,
+    /**
+     * Wheat is harvested from wheat fields.
+     */
+    WHEAT
 }
