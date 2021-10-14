@@ -17,9 +17,9 @@ public class ItemTests {
 
     @ParameterizedTest
     @MethodSource("getItemTypesAndItemClass")
-    public void getTypeReturnsCorrectItemType(final ItemType itemType, final IItem expectedType) {
+    public void getTypeReturnsCorrectItemType(final ItemType itemType, final IItem item) {
         // Assert
-        assertThat(itemType).isEqualTo(expectedType.getType());
+        assertThat(itemType).isEqualTo(item.getType());
     }
 
 }
