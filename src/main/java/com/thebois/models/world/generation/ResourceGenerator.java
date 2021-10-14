@@ -11,7 +11,7 @@ import com.thebois.models.world.resources.ResourceType;
 import com.thebois.utils.MatrixUtils;
 
 /**
- * Generates resources for the world.
+ * Generator that uses noise to generate resources.
  */
 public class ResourceGenerator extends AbstractGenerator {
 

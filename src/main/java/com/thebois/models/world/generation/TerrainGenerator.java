@@ -11,7 +11,7 @@ import com.thebois.models.world.terrains.TerrainType;
 import com.thebois.utils.MatrixUtils;
 
 /**
- * Generator used to generate terrain tiles for the world.
+ * Generator that uses noise to generate terrain.
  */
 public class TerrainGenerator extends AbstractGenerator {
 

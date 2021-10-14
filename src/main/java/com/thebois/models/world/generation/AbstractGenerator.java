@@ -3,7 +3,7 @@ package com.thebois.models.world.generation;
 import com.thebois.models.world.generation.noises.INoise;
 
 /**
- * Generates values using noise.
+ * Generator that uses noise.
  */
 public abstract class AbstractGenerator {
 
