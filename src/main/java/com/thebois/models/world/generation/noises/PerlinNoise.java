@@ -30,13 +30,14 @@ public class PerlinNoise implements INoise {
     /**
      * Instantiate a Perlin Noise Generator with given arguments.
      *
-     * @param octaves     Number of octaves used for generating perlin noise, A number equal or
+     * @param octaves     Number of octaves used for generating perlin noise, A number equal to or
      *                    greater than 1.
-     * @param amplitude   The amplitude used to amplify the resulting noise. The value should be not
-     *                    be 0.
-     * @param frequency   Used to decide how big the square should be.
+     * @param amplitude   The amplitude used to amplify the resulting noise. The value should not be
+     *                    0.
+     * @param frequency   This value decides how zoomed in the sample value should be on the noise
+     *                    map.
      * @param persistence Used to decide much the noise should change per addition. The value should
-     *                    not be 0 if octave is greater than 1;
+     *                    not be 0 if octave is greater than 1.
      */
     public PerlinNoise(
         final int octaves,

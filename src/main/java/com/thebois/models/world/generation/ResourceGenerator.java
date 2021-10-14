@@ -11,7 +11,7 @@ import com.thebois.models.world.resources.ResourceType;
 import com.thebois.utils.MatrixUtils;
 
 /**
- * Generator used to generate resources for the world.
+ * Generates resources for the world.
  */
 public class ResourceGenerator extends AbstractGenerator {
 

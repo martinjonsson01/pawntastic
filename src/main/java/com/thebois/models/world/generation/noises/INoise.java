@@ -6,7 +6,7 @@ package com.thebois.models.world.generation.noises;
 public interface INoise {
 
     /**
-     * Generates a float value with given values.
+     * Generates a float value from given values.
      *
      * @param x X value used to sample.
      * @param y Y value used to sample.

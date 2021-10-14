@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.thebois.models.Position;
 
 /**
- * Abstract implementation of IResource.
+ * A resource tile in the world, containing harvestable materials.
  */
 public abstract class AbstractResource implements IResource {
 

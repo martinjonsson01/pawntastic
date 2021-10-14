@@ -13,7 +13,7 @@ import com.thebois.models.world.resources.ResourceType;
 import com.thebois.views.TextureUtils;
 
 /**
- * View that renders the resources that exits in the world.
+ * View that renders the resources that exist in the world.
  */
 public class ResourceView implements IView {
 

@@ -3,7 +3,7 @@ package com.thebois.models.world.generation;
 import com.thebois.models.world.generation.noises.INoise;
 
 /**
- * Generates noise with given settings.
+ * Generates values using noise.
  */
 public abstract class AbstractGenerator {
 
@@ -12,7 +12,7 @@ public abstract class AbstractGenerator {
     private final int worldSize;
 
     /**
-     * Creates an AbstractGenerator with a World Size and Seed used for generation.
+     * Instantiate with a World Size and Seed used for generation.
      *
      * @param worldSize The size of the world to generate.
      * @param seed      The seed used to generate the world.
