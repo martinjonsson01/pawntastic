@@ -21,6 +21,7 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
@@ -58,13 +59,22 @@ public class BeingTests {
     }
 
     private static AbstractBeing createBeing() {
-        final AbstractRole role = RoleFactory.idle();
-        return createBeing(new Position(), role);
+        return createBeing(mock(IInventory.class));
     }
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
-        return new Pawn(currentPosition.deepClone(), mock(IInventory.class), role);
+        return createBeing(currentPosition, mock(IInventory.class), role);
+    }
+
+    private static AbstractBeing createBeing(final IInventory inventory) {
+        final AbstractRole role = RoleFactory.idle();
+        return createBeing(new Position(), inventory, role);
+    }
+
+    private static AbstractBeing createBeing(
+        final Position currentPosition, final IInventory inventory, final AbstractRole role) {
+        return new Pawn(currentPosition.deepClone(), inventory, role);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
@@ -112,6 +122,20 @@ public class BeingTests {
         final Position actualPosition = being.getPosition();
         final float distanceToDestinationAfter = actualPosition.distanceTo(being.getDestination());
         assertThat(distanceToDestinationAfter).isLessThan(distanceToDestinationBefore);
+    }
+
+    @Test
+    public void addItemCallsInjectedInventory() {
+        // Arrange
+        final IInventory inventory = mock(IInventory.class);
+        final ITaskPerformer being = createBeing(inventory);
+        final IItem item = mock(IItem.class);
+
+        // Act
+        being.addItem(item);
+
+        // Assert
+        verify(inventory, times(1)).add(item);
     }
 
     @Test
