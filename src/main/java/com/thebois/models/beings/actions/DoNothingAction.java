@@ -22,6 +22,11 @@ public class DoNothingAction implements IAction {
     }
 
     @Override
+    public boolean canPerform(final ITaskPerformer performer) {
+        return false;
+    }
+
+    @Override
     public int hashCode() {
         return 0;
     }

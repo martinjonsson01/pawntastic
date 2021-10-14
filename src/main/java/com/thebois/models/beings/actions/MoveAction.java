@@ -78,6 +78,11 @@ class MoveAction implements IAction {
         return !canReachDestination || performer.getPosition().equals(destination);
     }
 
+    @Override
+    public boolean canPerform(final ITaskPerformer performer) {
+        return false;
+    }
+
     private void calculatePathFrom(final Position start) {
         final Collection<Position> newPath = pathFinder.path(start, destination);
         setPath(newPath);

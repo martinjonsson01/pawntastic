@@ -77,7 +77,7 @@ public class MoveActionTests {
     }
 
     @Test
-    public void performCompletesTaskWhenDestinationIsUnreachable() {
+    public void canPerformReturnsTrueWhenDestinationIsReachable() {
         // Arrange
         final Position start = new Position(0, 0);
         final Position end = new Position(3, 3);
@@ -96,6 +96,27 @@ public class MoveActionTests {
 
         // Assert
         assertThat(isCompleted).isTrue();
+    }
+
+    @Test
+    public void performCompletesTaskWhenDestinationIsUnreachable() {
+        // Arrange
+        final Position start = new Position(0, 0);
+        final Position end = new Position(3, 3);
+
+        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        when(performer.getPosition()).thenReturn(start);
+
+        final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), end);
+        when(pathFinder.path(start, end)).thenReturn(path);
+
+        final IAction task = ActionFactory.createMoveTo(end);
+
+        // Act
+        final boolean canPerform = task.canPerform(performer);
+
+        // Assert
+        assertThat(canPerform).isTrue();
     }
 
     @Test

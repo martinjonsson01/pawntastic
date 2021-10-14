@@ -34,6 +34,11 @@ public class HarvestAction implements IAction {
     }
 
     @Override
+    public boolean canPerform(final ITaskPerformer performer) {
+        return false;
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(resource, harvested);
     }
