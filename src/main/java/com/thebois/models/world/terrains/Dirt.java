@@ -10,11 +10,11 @@ public class Dirt extends AbstractTerrain {
     /**
      * Instantiates a new dirt terrain tile.
      *
-     * @param posX The x-coordinate of the tile
-     * @param posY The y-coordinate of the tile
+     * @param x The x-coordinate of the tile
+     * @param y The y-coordinate of the tile
      */
-    public Dirt(final float posX, final float posY) {
-        super(posX, posY);
+    public Dirt(final float x, final float y) {
+        this(new Position(x, y));
     }
 
     /**

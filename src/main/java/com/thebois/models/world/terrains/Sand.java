@@ -14,7 +14,7 @@ public class Sand extends AbstractTerrain {
      * @param y The Y position of the tile.
      */
     public Sand(final float x, final float y) {
-        super(x, y);
+        this(new Position(x, y));
     }
 
     /**
@@ -23,7 +23,7 @@ public class Sand extends AbstractTerrain {
      * @param position The position of the terrain tile.
      */
     public Sand(final Position position) {
-        this(position.getPosX(), position.getPosY());
+        super(position);
     }
 
     @Override

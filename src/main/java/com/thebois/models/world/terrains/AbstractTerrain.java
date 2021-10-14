@@ -15,10 +15,6 @@ public abstract class AbstractTerrain implements ITerrain {
         this.position = position;
     }
 
-    protected AbstractTerrain(final float posX, final float posY) {
-        this.position = new Position(posX, posY);
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(position);
