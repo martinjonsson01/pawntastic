@@ -40,7 +40,7 @@ public class Pawntastic extends Game {
     /**
      * Global variable used to check if game is run in debug mode.
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     /**
      * Number of tiles per axis in the world.
      */
