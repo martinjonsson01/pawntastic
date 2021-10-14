@@ -27,7 +27,9 @@ public class RoleFactoryTests {
             Arguments.of(
                 RoleType.LUMBERJACK,
                 new LumberjackRole(mock(IResourceFinder.class), mock(IWorld.class))),
-            Arguments.of(RoleType.MINER, new MinerRole()),
+            Arguments.of(
+                RoleType.MINER,
+                new MinerRole(mock(IResourceFinder.class), mock(IWorld.class))),
             Arguments.of(RoleType.IDLE, new IdleRole(mock(IWorld.class))));
     }
 
@@ -54,7 +56,7 @@ public class RoleFactoryTests {
             new BuilderRole(),
             new FarmerRole(),
             new FisherRole(),
-            new MinerRole(),
+            new MinerRole(mock(IResourceFinder.class), mock(IWorld.class)),
             new GuardRole(),
             new IdleRole(mock(IWorld.class)));
     }

@@ -66,9 +66,7 @@ public final class RoleFactory {
      * @return A new lumberjack role.
      */
     public static AbstractRole lumberjack() {
-        Objects.requireNonNull(
-            resourceFinder,
-            "Resource Finder can not be null. Call RoleFactory.setResourceFinder to set it.");
+        assertDependenciesNotNull();
         return new LumberjackRole(resourceFinder, world);
     }
 
@@ -96,7 +94,8 @@ public final class RoleFactory {
      * @return A new miner role.
      */
     public static AbstractRole miner() {
-        return new MinerRole();
+        assertDependenciesNotNull();
+        return new MinerRole(resourceFinder, world);
     }
 
     /**
@@ -123,9 +122,16 @@ public final class RoleFactory {
      * @return A new randomly moving idle role.
      */
     public static AbstractRole idle() {
+        assertDependenciesNotNull();
+        return new IdleRole(world);
+    }
+
+    private static void assertDependenciesNotNull() {
         Objects.requireNonNull(world,
                                "World can not be null. Call RoleFactory.setWorld to set it.");
-        return new IdleRole(world);
+        Objects.requireNonNull(
+            resourceFinder,
+            "Resource Finder can not be null. Call RoleFactory.setResourceFinder to set it.");
     }
 
 }
