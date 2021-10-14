@@ -273,9 +273,7 @@ public class WorldTests {
             startY));
 
         // Assert
-        assertThat(foundStructure.orElseThrow().getPosition()).isNotEqualTo(new Position(
-            endX,
-            endY));
+        assertThat(foundStructure.isEmpty()).isTrue();
     }
 
     @Test

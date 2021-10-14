@@ -324,7 +324,7 @@ public class BeingTests {
             }
         }
 
-        final Pawn testPawn = new Pawn(
+        final Pawn pawn = new Pawn(
             startPosition,
             new Position(),
             mockRandom,
@@ -332,10 +332,10 @@ public class BeingTests {
             world);
 
         // Act
-        testPawn.update();
+        pawn.update();
 
         // Assert
-        assertThat(testPawn.getFinalDestination()).isEqualTo(correctDestination);
+        assertThat(pawn.getFinalDestination()).isEqualTo(correctDestination);
     }
 
     private static Stream<Arguments> pawnWalkToNearestUnBuiltStructureSource() {
