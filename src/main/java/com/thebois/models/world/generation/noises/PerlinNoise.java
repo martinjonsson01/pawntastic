@@ -58,6 +58,7 @@ public class PerlinNoise implements INoise {
      *
      * @return The Perlin Noise value.
      */
+    @Override
     public float sample(final float coordinateX, final float coordinateY) {
         double total = 0;
         for (int i = 0; i < octaves; i++) {
@@ -173,6 +174,7 @@ public class PerlinNoise implements INoise {
         return 1.0f - temporaryValue1 / (float) variable4;
     }
 
+    @Override
     public void setSeed(final int seed) {
         this.seed = seed;
     }
