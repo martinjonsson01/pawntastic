@@ -40,9 +40,7 @@ class LumberjackRole extends AbstractRole {
 
     @Override
     protected Collection<IActionGenerator> getTaskGenerators() {
-        return List.of(this::createMoveToTree,
-                       this::createHarvestTree,
-                       performer -> ActionFactory.createMoveTo(new Position(2, 2)));
+        return List.of(this::createMoveToTree, this::createHarvestTree);
     }
 
     private IAction createMoveToTree(final ITaskPerformer performer) {
