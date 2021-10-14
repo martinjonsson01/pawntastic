@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.world.resources.IResource;
 
 /**
  * Creates actions.
@@ -20,7 +21,7 @@ public final class ActionFactory {
     }
 
     /**
-     * Creates an action of moving to a destination.
+     * Creates a movement to a destination.
      *
      * @param destination The location to move to.
      *
@@ -39,6 +40,17 @@ public final class ActionFactory {
      */
     public static IAction createDoNothing() {
         return new DoNothingAction();
+    }
+
+    /**
+     * Creates a harvesting of a given resource.
+     *
+     * @param resource What to harvest from.
+     *
+     * @return The action of harvesting.
+     */
+    public static IAction createHarvest(final IResource resource) {
+        return new HarvestAction(resource);
     }
 
 }
