@@ -29,16 +29,14 @@ public class MatrixUtilsTests {
 
     public static Stream<Arguments> getMatricesToTest() {
         return Stream.of(
-            Arguments.of(new Optional[][] {
-                { Optional.of("1"), Optional.empty(), Optional.of("3") },
-                { Optional.empty(), Optional.empty(), Optional.of("6") },
-                { Optional.of("7"), Optional.of("8"), Optional.of("9") },
+            Arguments.of(new String[][] {
+                { "1", null, "3" },
+                { null, null, "6" },
+                { "7", "8", "9" },
                 }, List.of("1", "3", "6", "7", "8", "9")),
 
-            Arguments.of(new Optional[][] {
-                { Optional.of("1"), Optional.of("1") },
-                { Optional.of("1"), Optional.of("1") },
-                { Optional.of("7"), Optional.of("8") },
+            Arguments.of(new String[][] {
+                { "1", "1" }, { "1", "1" }, { "7", "8" },
                 }, List.of("1", "1", "1", "1", "7", "8")));
     }
 
@@ -64,7 +62,7 @@ public class MatrixUtilsTests {
 
     @ParameterizedTest
     @MethodSource("getMatricesToTest")
-    public void matrixToCollectionTest(final Optional<String>[][] matrix,
+    public void matrixToCollectionTest(final String[][] matrix,
                                        final Collection<String> expectedElements) {
         // Arrange
 
@@ -76,10 +74,8 @@ public class MatrixUtilsTests {
     }
 
     private static Stream<Arguments> getCorrectCoordinatesToTest() {
-        final Optional<String>[][] stringOptionalMatrix = new Optional[][] {
-            { Optional.of("1"), Optional.empty(), Optional.of("3") },
-            { Optional.empty(), Optional.empty(), Optional.of("6") },
-            { Optional.of("7"), Optional.of("8"), Optional.of("9") },
+        final String[][] stringOptionalMatrix = new String[][] {
+            { "1", null, "3" }, { null, null, "6" }, { "7", "8", "9" },
             };
 
         return Stream.of(Arguments.of(stringOptionalMatrix, 0, 0, "1"),
@@ -89,7 +85,7 @@ public class MatrixUtilsTests {
 
     @ParameterizedTest
     @MethodSource("getCorrectCoordinatesToTest")
-    public void testMatrixSpiralSearch(final Optional<String>[][] stringMatrix, final int startX,
+    public void testMatrixSpiralSearch(final String[][] stringMatrix, final int startX,
                                          final int startY,
                                          final String expectedString) {
 

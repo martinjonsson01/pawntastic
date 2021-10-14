@@ -23,9 +23,13 @@ public final class MatrixUtils {
      * @return Returns the matrix in collection form.
      */
     public static <TElement> Collection<TElement> matrixToCollection(
-        final Optional<TElement>[][] matrix) {
+        final TElement[][] matrix) {
         final Collection<TElement> matrixCollection = new ArrayList<>();
-        MatrixUtils.forEachElement(matrix, element -> element.ifPresent(matrixCollection::add));
+        MatrixUtils.forEachElement(matrix, element -> {
+            if (element != null) {
+                matrixCollection.add(element);
+            }
+        });
         return matrixCollection;
     }
 
@@ -64,7 +68,7 @@ public final class MatrixUtils {
      * @return First found present Optional element of type TType.
      */
     public static <TType> Collection<TType> matrixSpiralSearch(
-        final Optional<TType>[][] matrix,
+        final TType[][] matrix,
         final int startRow,
         final int startCol,
         final int maxSearchRadius,
@@ -84,7 +88,9 @@ public final class MatrixUtils {
                     final int searchRow = startRow + ints[0] * searchRadius;
                     final int searchCol = startCol + ints[1] * searchRadius;
 
-                    matrix[searchRow][searchCol].ifPresent(foundElements::add);
+                    if (matrix[searchRow][searchCol] != null) {
+                        foundElements.add(matrix[searchRow][searchCol]);
+                    }
                 }
                 catch (final ArrayIndexOutOfBoundsException exception) {
                     // Since there is a search limit, we can let the method loop outside of matrix
