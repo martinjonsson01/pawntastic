@@ -94,13 +94,13 @@ public class Inventory implements IInventory {
     }
 
     @Override
-    public ArrayList<ItemType> calculateDifference(final IInventory inventory) {
+    public ArrayList<ItemType> calculateDifference(final IInventory otherInventory) {
         final ArrayList<ItemType> itemDifference = new ArrayList<>();
 
         for (final IItem item : this.items) {
             if (!itemDifference.contains(item.getType())) {
                 final int difference =
-                    this.numberOf(item.getType()) - inventory.numberOf(item.getType());
+                    this.numberOf(item.getType()) - otherInventory.numberOf(item.getType());
 
                 for (int i = 0; i < difference; i++) {
                     itemDifference.add(item.getType());

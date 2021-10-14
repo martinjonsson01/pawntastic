@@ -94,10 +94,10 @@ public interface IInventory {
     /**
      * Calculates and returns a list of the differing IItems between two inventories.
      *
-     * @param inventory The inventory to check against.
+     * @param otherInventory The inventory to check against.
      *
      * @return A list of differing items.
      */
-    ArrayList<ItemType> calculateDifference(IInventory inventory);
+    ArrayList<ItemType> calculateDifference(IInventory otherInventory);
 
 }
