@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.inventory.IInventory;
@@ -34,11 +35,13 @@ public class ColonyTests {
     @BeforeEach
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
+        RoleFactory.setResourceFinder(mock(IResourceFinder.class));
     }
 
     @AfterEach
     public void teardown() {
         RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
     }
 
     @Test
@@ -71,6 +74,11 @@ public class ColonyTests {
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
+    }
+
+    private Colony mockColony() {
+        final List<Position> positions = new ArrayList<>();
+        return new Colony(positions);
     }
 
     @Test
@@ -126,11 +134,6 @@ public class ColonyTests {
 
         // Assert
         assertThat(count).isEqualTo(0);
-    }
-
-    private Colony mockColony() {
-        final List<Position> positions = new ArrayList<>();
-        return new Colony(positions);
     }
 
     @Test

@@ -41,12 +41,10 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(
-                             mockTile(1, 1),
-                             List.of(mockPosition(1, 0),
-                                     mockPosition(0, 1),
-                                     mockPosition(2, 1),
-                                     mockPosition(1, 2))));
+                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
+                                                              mockPosition(0, 1),
+                                                              mockPosition(2, 1),
+                                                              mockPosition(1, 2))));
     }
 
     private static ITile mockTile(final int positionX, final int positionY) {
@@ -94,11 +92,13 @@ public class WorldTests {
     @BeforeEach
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
+        RoleFactory.setResourceFinder(mock(IResourceFinder.class));
     }
 
     @AfterEach
     public void teardown() {
         RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
     }
 
     @ParameterizedTest
