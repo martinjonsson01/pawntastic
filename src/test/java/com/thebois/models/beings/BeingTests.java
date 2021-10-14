@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
-import com.thebois.models.world.MockWorld;
+import com.thebois.models.world.TestWorld;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -188,7 +188,7 @@ public class BeingTests {
         final Position from = new Position();
         final Position destination = new Position(2, 2);
         final Position obstaclePosition = new Position(1, 1);
-        final World world = new MockWorld(3);
+        final World world = new TestWorld(3);
         final IPathFinder pathFinder = new AstarPathFinder(world);
         final IBeing being = new Pawn(from, destination, new Random(), pathFinder);
 
