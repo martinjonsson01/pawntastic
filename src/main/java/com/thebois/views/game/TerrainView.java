@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import com.thebois.Pawntastic;
 import com.thebois.models.world.terrains.ITerrain;
 
 /**
@@ -13,15 +14,11 @@ import com.thebois.models.world.terrains.ITerrain;
 public class TerrainView implements IView {
 
     private Collection<ITerrain> terrainTiles = new ArrayList<>();
-    private final float tileSize;
 
     /**
      * Creates the WorldView with a tileSize.
-     *
-     * @param tileSize The size of a single tile, in pixels.
      */
-    public TerrainView(final float tileSize) {
-        this.tileSize = tileSize;
+    public TerrainView() {
     }
 
     /**
@@ -41,10 +38,10 @@ public class TerrainView implements IView {
             batch.setColor(viewableTerrain.getColor());
             batch.draw(
                 viewableTerrain.getTexture(),
-                offsetX + terrain.getPosition().getPosX() * tileSize,
-                offsetY + terrain.getPosition().getPosY() * tileSize,
-                tileSize,
-                tileSize);
+                offsetX + terrain.getPosition().getPosX() * Pawntastic.getTileSize(),
+                offsetY + terrain.getPosition().getPosY() * Pawntastic.getTileSize(),
+                Pawntastic.getTileSize(),
+                Pawntastic.getTileSize());
         }
     }
 

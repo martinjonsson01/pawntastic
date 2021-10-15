@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import com.thebois.Pawntastic;
 import com.thebois.models.world.resources.IResource;
 
 /**
@@ -12,16 +13,12 @@ import com.thebois.models.world.resources.IResource;
  */
 public class ResourceView implements IView {
 
-    private final float tileSize;
     private Iterable<IResource> resourceTiles = new ArrayList<>();
 
     /**
      * Creates the Resource view.
-     *
-     * @param tileSize The size of a single tile, in pixels.
      */
-    public ResourceView(final float tileSize) {
-        this.tileSize = tileSize;
+    public ResourceView() {
     }
 
     /**
@@ -41,10 +38,10 @@ public class ResourceView implements IView {
             batch.setColor(Color.WHITE);
             batch.draw(
                 viewableResource.getTexture(),
-                offsetX + resource.getPosition().getPosX() * tileSize,
-                offsetY + resource.getPosition().getPosY() * tileSize,
-                tileSize,
-                tileSize);
+                offsetX + resource.getPosition().getPosX() * Pawntastic.getTileSize(),
+                offsetY + resource.getPosition().getPosY() * Pawntastic.getTileSize(),
+                Pawntastic.getTileSize(),
+                Pawntastic.getTileSize());
         }
     }
 

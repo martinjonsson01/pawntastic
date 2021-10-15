@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import com.thebois.Pawntastic;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.views.TextureUtils;
 
@@ -12,7 +13,6 @@ import com.thebois.views.TextureUtils;
  */
 public final class StructureView implements IView {
 
-    private final float tileSize;
     private Iterable<IStructure> structures;
     private final Color houseColor = Color.valueOf("#CD853F");
     private final Texture houseTexture;
@@ -20,14 +20,10 @@ public final class StructureView implements IView {
 
     /**
      * Creates an instance of a Structure view.
-     *
-     * @param tileSize The size of a single world tile in screen space.
      */
-    public StructureView(final float tileSize) {
-        this.tileSize = tileSize;
-
-        houseTexture = TextureUtils.createSquareTexture((int) tileSize);
-        ceilingTexture = TextureUtils.createTriangleTexture((int) tileSize);
+    public StructureView() {
+        houseTexture = TextureUtils.createSquareTexture();
+        ceilingTexture = TextureUtils.createTriangleTexture();
     }
 
     @Override
@@ -49,10 +45,12 @@ public final class StructureView implements IView {
         batch.setColor(Color.BLACK);
         batch.draw(
             ceilingTexture,
-            offsetX + structure.getPosition().getPosX() * tileSize,
-            offsetY + structure.getPosition().getPosY() * tileSize + tileSize / 2,
-            tileSize,
-            tileSize / 2);
+            offsetX + structure.getPosition().getPosX() * Pawntastic.getTileSize(),
+            offsetY
+            + structure.getPosition().getPosY() * Pawntastic.getTileSize()
+            + Pawntastic.getTileSize() / 2f,
+            Pawntastic.getTileSize(),
+            Pawntastic.getTileSize() / 2f);
     }
 
     private void drawBase(
@@ -60,10 +58,10 @@ public final class StructureView implements IView {
         batch.setColor(houseColor);
         batch.draw(
             houseTexture,
-            offsetX + structure.getPosition().getPosX() * tileSize,
-            offsetY + structure.getPosition().getPosY() * tileSize,
-            tileSize,
-            tileSize / 2);
+            offsetX + structure.getPosition().getPosX() * Pawntastic.getTileSize(),
+            offsetY + structure.getPosition().getPosY() * Pawntastic.getTileSize(),
+            Pawntastic.getTileSize(),
+            Pawntastic.getTileSize() / 2f);
     }
 
     /**

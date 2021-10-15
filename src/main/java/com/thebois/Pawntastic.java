@@ -45,10 +45,8 @@ public class Pawntastic extends Game {
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int PAWN_POSITIONS = 50;
-    /**
-     * The tile size of the tiles in the world.
-     */
-    public static final float TILE_SIZE = Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH) / WORLD_SIZE;
+    private static final int TILE_SIZE = (int) Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH)
+                                         / WORLD_SIZE;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
@@ -61,6 +59,15 @@ public class Pawntastic extends Game {
     // Controllers
     private WorldController worldController;
     private InfoController infoController;
+
+    /**
+     * Gets the size of a single tile in world space.
+     *
+     * @return The tile size.
+     */
+    public static int getTileSize() {
+        return TILE_SIZE;
+    }
 
     @Override
     public void create() {
@@ -77,7 +84,7 @@ public class Pawntastic extends Game {
         final IProjector projector = new ViewportWrapper(viewport);
 
         // Controllers
-        this.worldController = new WorldController(world, colony, projector, TILE_SIZE, font);
+        this.worldController = new WorldController(world, colony, projector, font);
         this.infoController = new InfoController(colony, uiSkin);
 
         // Screens
