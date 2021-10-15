@@ -1,0 +1,32 @@
+package com.thebois.models.world.structures;
+
+import java.util.stream.Stream;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.assertj.core.api.Assertions.*;
+
+public class StructureFactoryTests {
+
+    public static Stream<Arguments> getStructureTypeAndExpectedStructure() {
+        return Stream.of(Arguments.of(StructureType.HOUSE, new House(0, 0)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getStructureTypeAndExpectedStructure")
+    public void factoryCreatesCorrectStructureWithGivenEnum(
+        final StructureType type, final IStructure expectedStructure) {
+        // Arrange
+        final int x = 0;
+        final int y = 0;
+
+        // Act
+        final IStructure actualStructure = StructureFactory.createStructure(type, x, y);
+
+        // Assert
+        assertThat(actualStructure).isEqualTo(expectedStructure);
+    }
+
+}
