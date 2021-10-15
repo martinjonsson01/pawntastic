@@ -2,11 +2,13 @@ package com.thebois.models.beings.actions;
 
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.models.Position;
 import com.thebois.models.beings.ITaskPerformer;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.resources.IResource;
@@ -15,6 +17,10 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class HarvestActionTests {
+
+    private ITaskPerformer performer;
+    private IResource resource;
+    private IAction action;
 
     public static Stream<Arguments> getEqualHarvests() {
         final IResource sameResource = mock(IResource.class);
@@ -37,14 +43,44 @@ public class HarvestActionTests {
                          Arguments.of(sameResourceNotHarvested, sameResourceHarvested));
     }
 
+    @BeforeEach
+    public void setup() {
+        performer = mock(ITaskPerformer.class);
+        resource = mock(IResource.class);
+        action = ActionFactory.createHarvest(resource);
+    }
+
+    @Test
+    public void canPerformReturnsFalseWhenFarAwayFromResource() {
+        // Arrange
+        when(performer.getPosition()).thenReturn(new Position(10, 10));
+        when(resource.getPosition()).thenReturn(new Position(1, 0));
+
+        // Act
+        final boolean canPerform = action.canPerform(performer);
+
+        // Assert
+        assertThat(canPerform).isFalse();
+    }
+
+    @Test
+    public void canPerformReturnsTrueWhenNextToResource() {
+        // Arrange
+        when(performer.getPosition()).thenReturn(new Position(0, 0));
+        when(resource.getPosition()).thenReturn(new Position(1, 0));
+
+        // Act
+        final boolean canPerform = action.canPerform(performer);
+
+        // Assert
+        assertThat(canPerform).isTrue();
+    }
+
     @Test
     public void performAddsHarvestedResourceToPerformer() {
         // Arrange
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
-        final IResource resource = mock(IResource.class);
         final IItem resourceItem = mock(IItem.class);
         when(resource.harvest()).thenReturn(resourceItem);
-        final IAction action = ActionFactory.createHarvest(resource);
 
         // Act
         action.perform(performer);
@@ -56,11 +92,8 @@ public class HarvestActionTests {
     @Test
     public void isCompletedIsFalseBeforePerforming() {
         // Arrange
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
-        final IResource resource = mock(IResource.class);
         final IItem resourceItem = mock(IItem.class);
         when(resource.harvest()).thenReturn(resourceItem);
-        final IAction action = ActionFactory.createHarvest(resource);
 
         // Act
         final boolean completed = action.isCompleted(performer);
@@ -72,11 +105,8 @@ public class HarvestActionTests {
     @Test
     public void isCompletedIsFalseAfterPerforming() {
         // Arrange
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
-        final IResource resource = mock(IResource.class);
         final IItem resourceItem = mock(IItem.class);
         when(resource.harvest()).thenReturn(resourceItem);
-        final IAction action = ActionFactory.createHarvest(resource);
 
         action.perform(performer);
 

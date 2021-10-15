@@ -35,7 +35,7 @@ public class HarvestAction implements IAction {
 
     @Override
     public boolean canPerform(final ITaskPerformer performer) {
-        return false;
+        return resource.getPosition().distanceTo(performer.getPosition()) <= 1.0f;
     }
 
     @Override
