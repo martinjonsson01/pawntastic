@@ -14,8 +14,8 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
-import com.thebois.models.inventory.items.Log;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.terrains.Grass;
 
@@ -56,12 +56,17 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            colony.take(itemType);
-        });
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                                                 () -> colony.take(itemType));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
+    }
+
+    private Colony mockColony() {
+        final List<Position> positions = new ArrayList<>();
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        return new Colony(positions, pathFinder);
     }
 
     @Test
@@ -70,7 +75,7 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(new Log());
+        colony.add(ItemFactory.fromType(ItemType.LOG));
         final IItem item = colony.take(ItemType.LOG);
 
         // Assert
@@ -95,8 +100,8 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(new Log());
-        colony.add(new Log());
+        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.add(ItemFactory.fromType(ItemType.LOG));
 
         final int count = colony.numberOf(ItemType.LOG);
 
@@ -110,19 +115,13 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(new Log());
-        colony.add(new Log());
+        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.add(ItemFactory.fromType(ItemType.LOG));
 
         final int count = colony.numberOf(ItemType.ROCK);
 
         // Assert
         assertThat(count).isEqualTo(0);
-    }
-
-    private Colony mockColony() {
-        final List<Position> positions = new ArrayList<>();
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        return new Colony(positions, pathFinder);
     }
 
     @Test
@@ -131,8 +130,8 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(new Log());
-        colony.add(new Log());
+        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.add(ItemFactory.fromType(ItemType.LOG));
 
         final ArrayList<IItem> result = colony.takeAmount(ItemType.LOG, 2);
 
@@ -148,12 +147,11 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(new Log());
-        colony.add(new Log());
+        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.add(ItemFactory.fromType(ItemType.LOG));
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            colony.takeAmount(ItemType.ROCK, 2);
-        });
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                                                 () -> colony.takeAmount(ItemType.ROCK, 2));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo(
@@ -166,7 +164,7 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(new Log());
+        colony.add(ItemFactory.fromType(ItemType.LOG));
         final boolean result = colony.hasItem(ItemType.LOG);
 
         assertThat(result).isTrue();
@@ -189,8 +187,8 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(new Log());
-        colony.add(new Log());
+        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.add(ItemFactory.fromType(ItemType.LOG));
 
         final boolean result = colony.hasItem(ItemType.LOG, 2);
 
@@ -216,7 +214,7 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(new Log());
+        colony.add(ItemFactory.fromType(ItemType.LOG));
         final boolean result = colony.hasItem(ItemType.LOG, 2);
 
         // Assert
@@ -228,8 +226,8 @@ public class ColonyTests {
         // Arrange
         final Colony colony = mockColony();
         final ArrayList<IItem> items = new ArrayList<>();
-        items.add(new Log());
-        items.add(new Log());
+        items.add(ItemFactory.fromType(ItemType.LOG));
+        items.add(ItemFactory.fromType(ItemType.LOG));
 
         // Act
         colony.addMultiple(items);
@@ -242,9 +240,6 @@ public class ColonyTests {
     public void getInventoryReturnsTheColonyInventory() {
         // Arrange
         final Colony colony = mockColony();
-        final ArrayList<IItem> items = new ArrayList<>();
-        items.add(new Log());
-        items.add(new Log());
 
         // Act
         final IInventory inventory = colony.getInventory();
