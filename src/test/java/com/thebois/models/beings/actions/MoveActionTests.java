@@ -99,7 +99,7 @@ public class MoveActionTests {
     }
 
     @Test
-    public void performCompletesTaskWhenDestinationIsUnreachable() {
+    public void canPerformIsTrueWhenDestinationIsReachable() {
         // Arrange
         final Position start = new Position(0, 0);
         final Position end = new Position(3, 3);
@@ -117,6 +117,27 @@ public class MoveActionTests {
 
         // Assert
         assertThat(canPerform).isTrue();
+    }
+
+    @Test
+    public void canPerformIsFalseWhenDestinationIsUnreachable() {
+        // Arrange
+        final Position start = new Position(0, 0);
+        final Position end = new Position(3, 3);
+
+        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        when(performer.getPosition()).thenReturn(start);
+
+        final List<Position> path = List.of();
+        when(pathFinder.path(start, end)).thenReturn(path);
+
+        final IAction task = ActionFactory.createMoveTo(end);
+
+        // Act
+        final boolean canPerform = task.canPerform(performer);
+
+        // Assert
+        assertThat(canPerform).isFalse();
     }
 
     @Test
@@ -213,7 +234,7 @@ public class MoveActionTests {
     }
 
     @Test
-    public void pathIsNotRecalculatedWhenObstacleIsOutOfWay() {
+    public void pathIsNotRecalculatedWhenObstacleIsPlacedAndThereIsNoPath() {
         // Arrange
         final Position start = new Position(0, 0);
         final Position end = new Position(3, 3);
@@ -221,10 +242,10 @@ public class MoveActionTests {
         final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(start);
 
-        final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), end);
-        when(pathFinder.path(start, end)).thenReturn(path);
+        final List<Position> path = List.of();
+        when(pathFinder.path(any(), any())).thenReturn(path);
 
-        final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(0, 1);
+        final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
 
         final IAction task = ActionFactory.createMoveTo(end);
 
@@ -233,7 +254,7 @@ public class MoveActionTests {
         Pawntastic.BUS.post(obstacleEvent);
 
         // Assert
-        verify(pathFinder, times(1)).path(start, end);
+        verify(pathFinder, times(1)).path(any(), any());
     }
 
     @Test

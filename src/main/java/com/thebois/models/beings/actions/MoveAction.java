@@ -80,7 +80,7 @@ class MoveAction implements IAction {
 
     @Override
     public boolean canPerform(final ITaskPerformer performer) {
-        return false;
+        return canReachDestination;
     }
 
     private void calculatePathFrom(final Position start) {
@@ -100,8 +100,6 @@ class MoveAction implements IAction {
      */
     @Subscribe
     public void onObstaclePlaced(final ObstaclePlacedEvent event) {
-        if (path.isEmpty()) return;
-
         if (path.contains(event.getPosition())) {
             recalculatePathAroundObstacle(event.getPosition());
         }
