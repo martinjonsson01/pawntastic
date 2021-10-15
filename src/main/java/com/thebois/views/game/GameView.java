@@ -23,7 +23,7 @@ public class GameView extends Widget implements Disposable {
      */
     public GameView(final Collection<IView> views) {
         this.views = views;
-        this.worldScreenSize = Pawntastic.getTileSize() * Pawntastic.WORLD_SIZE;
+        this.worldScreenSize = Pawntastic.getTileSize() * Pawntastic.getWorldSize();
     }
 
     @Override

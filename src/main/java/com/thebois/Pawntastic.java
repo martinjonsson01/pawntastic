@@ -36,10 +36,7 @@ public class Pawntastic extends Game {
      * Global variable used to check if game is run in debug mode.
      */
     public static final boolean DEBUG = false;
-    /**
-     * Number of tiles per axis in the world.
-     */
-    public static final int WORLD_SIZE = 50;
+    private static final int WORLD_SIZE = 50;
     /* These two decide the aspect ratio that will be preserved. */
     private static final float VIEWPORT_WIDTH = 1300;
     private static final float VIEWPORT_HEIGHT = 1000;
@@ -67,6 +64,15 @@ public class Pawntastic extends Game {
      */
     public static int getTileSize() {
         return TILE_SIZE;
+    }
+
+    /**
+     * Gets the number of tiles per axis in the world.
+     *
+     * @return The number of tiles.
+     */
+    public static int getWorldSize() {
+        return WORLD_SIZE;
     }
 
     @Override
