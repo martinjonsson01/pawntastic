@@ -16,7 +16,7 @@ import com.thebois.models.beings.actions.IActionGenerator;
 public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
 
     private final Queue<IActionGenerator> tasks = new LinkedList<>();
-    private IAction currentTask;
+    private IAction currentAction;
 
     @Override
     public int hashCode() {
@@ -69,25 +69,31 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
      * @return The current task that needs to be completed.
      */
     public IAction obtainNextTask(final ITaskPerformer performer) {
-        if (currentTask == null || currentTask.isCompleted(performer)) {
-            // Take actions from queue until one is found that is not completed.
-            IAction newTask;
-            do {
-                if (tasks.isEmpty()) tasks.addAll(getTaskGenerators());
-
-                final IActionGenerator actionable = tasks.remove();
-                newTask = actionable.generate(performer);
-            } while (newTask.isCompleted(performer));
-
-            currentTask = newTask;
+        if (needsNewAction(performer)) {
+            currentAction = getNextUncompletedAction(performer);
         }
 
-        if (!currentTask.canPerform(performer)) {
-            // Can always perform idle actions.
-            currentTask = RoleFactory.idle().obtainNextTask(performer);
+        if (!currentAction.canPerform(performer)) {
+            currentAction = RoleFactory.idle().obtainNextTask(performer);
         }
 
-        return currentTask;
+        return currentAction;
+    }
+
+    private boolean needsNewAction(final ITaskPerformer performer) {
+        return currentAction == null || currentAction.isCompleted(performer);
+    }
+
+    private IAction getNextUncompletedAction(final ITaskPerformer performer) {
+        // Take actions from queue until one is found that is not completed.
+        IAction newAction;
+        do {
+            if (tasks.isEmpty()) tasks.addAll(getTaskGenerators());
+
+            final IActionGenerator actionable = tasks.remove();
+            newAction = actionable.generate(performer);
+        } while (newAction.isCompleted(performer));
+        return newAction;
     }
 
     /**
