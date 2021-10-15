@@ -55,7 +55,7 @@ public class WorldController implements IController<GameView> {
         final Colony colony, final BitmapFont font) {
         final List<IView> views =
             controllers.stream().map(IController::getView).collect(Collectors.toList());
-        if (Pawntastic.DEBUG) {
+        if (Pawntastic.getDebugMode()) {
             views.addAll(createDebugViews(colony, font));
         }
         return new GameView(views);

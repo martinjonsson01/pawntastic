@@ -32,10 +32,7 @@ public class Pawntastic extends Game {
      */
     public static final EventBus BUS = new EventBus();
     /* Toggles debug-mode. */
-    /**
-     * Global variable used to check if game is run in debug mode.
-     */
-    public static final boolean DEBUG = false;
+    private static final boolean DEBUG = false;
     private static final int WORLD_SIZE = 50;
     /* These two decide the aspect ratio that will be preserved. */
     private static final float VIEWPORT_WIDTH = 1300;
@@ -73,6 +70,15 @@ public class Pawntastic extends Game {
      */
     public static int getWorldSize() {
         return WORLD_SIZE;
+    }
+
+    /**
+     * Gets a boolean whether or not the game is run in debug mode or not.
+     *
+     * @return Whether or not the game is running in debug mode.
+     */
+    public static boolean getDebugMode() {
+        return DEBUG;
     }
 
     @Override
