@@ -79,6 +79,11 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
                 newTask = actionable.generate(performer);
             } while (newTask.isCompleted(performer));
 
+            if (!newTask.canPerform(performer)) {
+                // Can always perform idle actions.
+                return RoleFactory.idle().obtainNextTask(performer);
+            }
+
             this.currentTask = newTask;
         }
 
