@@ -27,10 +27,7 @@ import com.thebois.views.ViewportWrapper;
  */
 public class Pawntastic extends Game {
 
-    /**
-     * The global event bus that most events pass through.
-     */
-    public static final EventBus BUS = new EventBus();
+    private static final EventBus BUS = new EventBus();
     /* Toggles debug-mode. */
     private static final boolean DEBUG = false;
     private static final int WORLD_SIZE = 50;
@@ -79,6 +76,15 @@ public class Pawntastic extends Game {
      */
     public static boolean getDebugMode() {
         return DEBUG;
+    }
+
+    /**
+     * Gets the global event bus that most events pass through.
+     *
+     * @return The event bus.
+     */
+    public static EventBus getEventBus() {
+        return BUS;
     }
 
     @Override
