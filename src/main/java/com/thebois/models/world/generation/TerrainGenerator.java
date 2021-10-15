@@ -1,10 +1,5 @@
 package com.thebois.models.world.generation;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.thebois.models.world.generation.noises.INoise;
-import com.thebois.models.world.generation.noises.NoiseFactory;
 import com.thebois.models.world.terrains.ITerrain;
 import com.thebois.models.world.terrains.TerrainFactory;
 import com.thebois.models.world.terrains.TerrainType;
@@ -15,8 +10,6 @@ import com.thebois.utils.MatrixUtils;
  */
 public class TerrainGenerator extends AbstractGenerator {
 
-    private final Map<TerrainType, INoise> terrainNoise;
-
     /**
      * Instantiate a Terrain Generator with pre-made settings used for generating terrain.
      *
@@ -25,10 +18,6 @@ public class TerrainGenerator extends AbstractGenerator {
      */
     public TerrainGenerator(final int worldSize, final int seed) {
         super(worldSize, seed);
-        terrainNoise = new HashMap<>();
-        terrainNoise.put(TerrainType.SAND, NoiseFactory.createLargeChunksNoise());
-        terrainNoise.put(TerrainType.GRASS, NoiseFactory.createFillMapNoise());
-        terrainNoise.put(TerrainType.DIRT, NoiseFactory.createLargeChunksNoise());
     }
 
     /**
@@ -40,7 +29,7 @@ public class TerrainGenerator extends AbstractGenerator {
         final ITerrain[][] terrainMatrix = new ITerrain[getWorldSize()][getWorldSize()];
 
         for (final TerrainType terrainType : TerrainType.values()) {
-            setNoise(terrainNoise.get(terrainType));
+            setNoise(terrainType.getNoise());
             final int newSeed = getSeed() + terrainType.getSeedPermutation();
             setSeed(newSeed);
             MatrixUtils.populateElements(terrainMatrix,
