@@ -192,10 +192,33 @@ public class RoleTests {
     }
 
     @Test
+    public void obtainNextActionReturnsIdleActionWhenPreviouslyPerformableBecomesUnperformable() {
+        // Arrange
+        final IAction switchPerformableAction = MockFactory.createAction(false, true);
+        when(switchPerformableAction.canPerform(any())).thenReturn(true).thenReturn(false);
+        final AbstractRole role = mockTestRole(switchPerformableAction);
+        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        when(performer.getPosition()).thenReturn(new Position(0, 0));
+
+        final ITile randomTile = mock(ITile.class);
+        when(randomTile.getPosition()).thenReturn(new Position(10, 10));
+        when(world.getRandomVacantSpot()).thenReturn(randomTile);
+        final AbstractRole idleRole = RoleFactory.idle();
+        final IAction idleAction = idleRole.obtainNextTask(performer);
+
+        // Act
+        role.obtainNextTask(performer);
+        final IAction actualAction = role.obtainNextTask(performer);
+
+        // Assert
+        assertThat(actualAction).isEqualTo(idleAction);
+    }
+
+    @Test
     public void obtainNextActionReturnsIdleRoleActionWhenNotAbleToPerform() {
         // Arrange
-        final IAction unperformableTask = MockFactory.createAction(false, false);
-        final AbstractRole role = mockTestRole(unperformableTask);
+        final IAction unperformableAction = MockFactory.createAction(false, false);
+        final AbstractRole role = mockTestRole(unperformableAction);
         final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(new Position(0, 0));
 
