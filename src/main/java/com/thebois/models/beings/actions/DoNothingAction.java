@@ -11,19 +11,21 @@ import com.thebois.models.beings.ITaskPerformer;
  */
 public class DoNothingAction implements IAction {
 
+    private boolean isDone = false;
+
     @Override
     public void perform(final ITaskPerformer performer) {
-
+        isDone = true;
     }
 
     @Override
     public boolean isCompleted(final ITaskPerformer performer) {
-        return false;
+        return isDone;
     }
 
     @Override
     public boolean canPerform(final ITaskPerformer performer) {
-        return false;
+        return true;
     }
 
     @Override

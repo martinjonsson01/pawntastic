@@ -14,6 +14,18 @@ public class DoNothingActionTests {
     private ITaskPerformer performer;
     private IAction doNothing;
 
+    @Test
+    public void isCompletedReturnsTrueAfterPerformedOnce() {
+        // Arrange
+        doNothing.perform(performer);
+
+        // Act
+        final boolean isCompleted = doNothing.isCompleted(performer);
+
+        // Assert
+        assertThat(isCompleted).isTrue();
+    }
+
     @BeforeEach
     public void setup() {
         performer = mock(ITaskPerformer.class);
@@ -32,19 +44,18 @@ public class DoNothingActionTests {
     }
 
     @Test
-    public void canPerformReturnsFalse() {
+    public void canPerformReturnsTrue() {
         // Act
         doNothing.perform(performer);
         final boolean canPerform = doNothing.canPerform(performer);
 
         // Assert
-        assertThat(canPerform).isFalse();
+        assertThat(canPerform).isTrue();
     }
 
     @Test
-    public void isCompletedReturnsFalse() {
+    public void isCompletedReturnsFalseWhenNotPerformed() {
         // Act
-        doNothing.perform(performer);
         final boolean isCompleted = doNothing.isCompleted(performer);
 
         // Assert
