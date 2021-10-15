@@ -151,13 +151,12 @@ public class MoveActionTests {
         final Position begin, final Position destination) {
         // Arrange
         when(performer.getPosition()).thenReturn(begin);
+        action = ActionFactory.createMoveTo(destination);
 
         final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), destination);
         when(pathFinder.path(begin, destination)).thenReturn(path);
 
         final ArgumentCaptor<Position> destinationCaptor = ArgumentCaptor.forClass(Position.class);
-
-        action = ActionFactory.createMoveTo(destination);
 
         // Act
         for (final Position pathPosition : path) {

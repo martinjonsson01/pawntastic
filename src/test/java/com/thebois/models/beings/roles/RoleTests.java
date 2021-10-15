@@ -21,6 +21,7 @@ import com.thebois.models.beings.actions.IActionGenerator;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
+import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -139,7 +140,7 @@ public class RoleTests {
     }
 
     private IAction mockTask(final boolean completed) {
-        return mockTask(completed, true);
+        return MockFactory.createAction(completed, true);
     }
 
     private AbstractRole mockTestRole(final IAction... params) {
@@ -149,13 +150,6 @@ public class RoleTests {
             .map(task -> (IActionGenerator) performer -> task)
             .collect(Collectors.toList());
         return new TestRole(taskGenerators);
-    }
-
-    private IAction mockTask(final boolean completed, final boolean performable) {
-        final IAction task = mock(IAction.class);
-        when(task.isCompleted(any())).thenReturn(completed);
-        when(task.canPerform(any())).thenReturn(performable);
-        return task;
     }
 
     @Test
@@ -200,7 +194,7 @@ public class RoleTests {
     @Test
     public void obtainNextActionReturnsIdleRoleActionWhenNotAbleToPerform() {
         // Arrange
-        final IAction unperformableTask = mockTask(false, false);
+        final IAction unperformableTask = MockFactory.createAction(false, false);
         final AbstractRole role = mockTestRole(unperformableTask);
         final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(new Position(0, 0));

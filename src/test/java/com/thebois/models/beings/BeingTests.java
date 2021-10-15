@@ -23,7 +23,7 @@ import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.IWorld;
-import com.thebois.testutils.DefaultMocks;
+import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -268,7 +268,7 @@ public class BeingTests {
 
         @Override
         protected Collection<IActionGenerator> getTaskGenerators() {
-            final IAction nothingTask = DefaultMocks.createAction(false, true);
+            final IAction nothingTask = MockFactory.createAction(false, true);
             return List.of(performer -> nothingTask);
         }
 

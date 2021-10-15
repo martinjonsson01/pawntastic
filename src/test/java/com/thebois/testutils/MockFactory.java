@@ -5,9 +5,12 @@ import com.thebois.models.beings.actions.IAction;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public final class DefaultMocks {
+/**
+ * Creates standard mocks of commonly mocked objects.
+ */
+public final class MockFactory {
 
-    private DefaultMocks() {
+    private MockFactory() {
 
     }
 
