@@ -75,7 +75,7 @@ class MoveAction implements IAction {
 
     @Override
     public boolean isCompleted(final ITaskPerformer performer) {
-        return !canReachDestination || performer.getPosition().equals(destination);
+        return performer.getPosition().equals(destination);
     }
 
     @Override

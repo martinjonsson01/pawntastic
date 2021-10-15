@@ -77,7 +77,7 @@ public class MoveActionTests {
     }
 
     @Test
-    public void canPerformReturnsTrueWhenDestinationIsReachable() {
+    public void canPerformReturnsFalseWhenDestinationIsUnreachable() {
         // Arrange
         final Position start = new Position(0, 0);
         final Position end = new Position(3, 3);
@@ -88,14 +88,14 @@ public class MoveActionTests {
         final List<Position> path = List.of();
         when(pathFinder.path(start, end)).thenReturn(path);
 
-        final IAction task = ActionFactory.createMoveTo(end);
+        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
-        task.perform(performer);
-        final boolean isCompleted = task.isCompleted(performer);
+        action.perform(performer);
+        final boolean canPerform = action.canPerform(performer);
 
         // Assert
-        assertThat(isCompleted).isTrue();
+        assertThat(canPerform).isFalse();
     }
 
     @Test
@@ -110,10 +110,10 @@ public class MoveActionTests {
         final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), end);
         when(pathFinder.path(start, end)).thenReturn(path);
 
-        final IAction task = ActionFactory.createMoveTo(end);
+        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
-        final boolean canPerform = task.canPerform(performer);
+        final boolean canPerform = action.canPerform(performer);
 
         // Assert
         assertThat(canPerform).isTrue();
@@ -131,10 +131,11 @@ public class MoveActionTests {
         final List<Position> path = List.of();
         when(pathFinder.path(start, end)).thenReturn(path);
 
-        final IAction task = ActionFactory.createMoveTo(end);
+        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
-        final boolean canPerform = task.canPerform(performer);
+        action.perform(performer);
+        final boolean canPerform = action.canPerform(performer);
 
         // Assert
         assertThat(canPerform).isFalse();
@@ -166,13 +167,13 @@ public class MoveActionTests {
         final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), end);
         when(pathFinder.path(start, end)).thenReturn(path);
 
-        final IAction task = ActionFactory.createMoveTo(end);
+        final IAction action = ActionFactory.createMoveTo(end);
 
         final ArgumentCaptor<Position> destinationCaptor = ArgumentCaptor.forClass(Position.class);
 
         // Act
         for (final Position pathPosition : path) {
-            task.perform(performer);
+            action.perform(performer);
             // Simulate moving to path position.
             when(performer.getPosition()).thenReturn(pathPosition);
         }
@@ -184,7 +185,7 @@ public class MoveActionTests {
     }
 
     @Test
-    public void actionIsCompletedWhenNewObstacleBlocksAllPossiblePathsToDestination() {
+    public void canPerformIsFalseWhenNewObstacleBlocksAllPossiblePathsToDestination() {
         // Arrange
         final Position start = new Position(0, 0);
         final Position end = new Position(3, 3);
@@ -198,15 +199,15 @@ public class MoveActionTests {
 
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
 
-        final IAction task = ActionFactory.createMoveTo(end);
+        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
-        task.perform(performer);
+        action.perform(performer);
         Pawntastic.BUS.post(obstacleEvent);
-        final boolean completed = task.isCompleted(performer);
+        final boolean canPerform = action.canPerform(performer);
 
         // Assert
-        assertThat(completed).isTrue();
+        assertThat(canPerform).isFalse();
     }
 
     @Test
@@ -223,10 +224,10 @@ public class MoveActionTests {
 
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
 
-        final IAction task = ActionFactory.createMoveTo(end);
+        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
-        task.perform(performer);
+        action.perform(performer);
         Pawntastic.BUS.post(obstacleEvent);
 
         // Assert
@@ -247,10 +248,10 @@ public class MoveActionTests {
 
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
 
-        final IAction task = ActionFactory.createMoveTo(end);
+        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
-        task.perform(performer);
+        action.perform(performer);
         Pawntastic.BUS.post(obstacleEvent);
 
         // Assert
@@ -265,10 +266,10 @@ public class MoveActionTests {
         final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(end);
 
-        final IAction task = ActionFactory.createMoveTo(end);
+        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
-        task.perform(performer);
+        action.perform(performer);
 
         // Assert
         verify(performer, times(0)).setDestination(any());
@@ -282,11 +283,11 @@ public class MoveActionTests {
         final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(end);
 
-        final IAction task = ActionFactory.createMoveTo(end);
+        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
-        task.perform(performer);
-        final boolean completed = task.isCompleted(performer);
+        action.perform(performer);
+        final boolean completed = action.isCompleted(performer);
 
         // Assert
         assertThat(completed).isTrue();
@@ -304,11 +305,11 @@ public class MoveActionTests {
         final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), end);
         when(pathFinder.path(start, end)).thenReturn(path);
 
-        final IAction task = ActionFactory.createMoveTo(end);
+        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
-        task.perform(performer);
-        final boolean completed = task.isCompleted(performer);
+        action.perform(performer);
+        final boolean completed = action.isCompleted(performer);
 
         // Assert
         assertThat(completed).isFalse();

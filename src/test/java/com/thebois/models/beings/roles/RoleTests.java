@@ -201,6 +201,11 @@ public class RoleTests {
         assertThat(actualTaskFirstTime).isEqualTo(actualTaskSecondTime).isEqualTo(uncompletedTask);
     }
 
+    @Test
+    public void obtainNextTaskReturnsDoNothingWhenNotAbleToPerform() {
+
+    }
+
     /**
      * Fake role that returns a custom set of task-generating actionables.
      */
