@@ -133,7 +133,7 @@ public class RoleTests {
         final ITaskPerformer performer = mock(ITaskPerformer.class);
 
         // Act
-        final IAction action = role.obtainNextTask(performer);
+        final IAction action = role.obtainNextAction(performer);
 
         // Assert
         assertThat(action).isSameAs(flipper);
@@ -162,13 +162,13 @@ public class RoleTests {
         final ITaskPerformer performer = mock(ITaskPerformer.class);
 
         // Act
-        final IAction actualFirst = role.obtainNextTask(performer);
+        final IAction actualFirst = role.obtainNextAction(performer);
         // Simulate first task completing between this call and the next.
         when(first.isCompleted(performer)).thenReturn(true);
-        final IAction actualSecond = role.obtainNextTask(performer);
+        final IAction actualSecond = role.obtainNextAction(performer);
         // Simulate second task completing between this call and the next.
         when(actualSecond.isCompleted(performer)).thenReturn(true);
-        final IAction actualThird = role.obtainNextTask(performer);
+        final IAction actualThird = role.obtainNextAction(performer);
 
         // Assert
         final List<IAction> actualTasks = List.of(actualFirst, actualSecond, actualThird);
@@ -185,7 +185,7 @@ public class RoleTests {
         final ITaskPerformer performer = mock(ITaskPerformer.class);
 
         // Act
-        final IAction actualTask = role.obtainNextTask(performer);
+        final IAction actualTask = role.obtainNextAction(performer);
 
         // Assert
         assertThat(actualTask).isEqualTo(uncompletedTask);
@@ -204,11 +204,11 @@ public class RoleTests {
         when(randomTile.getPosition()).thenReturn(new Position(10, 10));
         when(world.getRandomVacantSpot()).thenReturn(randomTile);
         final AbstractRole idleRole = RoleFactory.idle();
-        final IAction idleAction = idleRole.obtainNextTask(performer);
+        final IAction idleAction = idleRole.obtainNextAction(performer);
 
         // Act
-        role.obtainNextTask(performer);
-        final IAction actualAction = role.obtainNextTask(performer);
+        role.obtainNextAction(performer);
+        final IAction actualAction = role.obtainNextAction(performer);
 
         // Assert
         assertThat(actualAction).isEqualTo(idleAction);
@@ -226,10 +226,10 @@ public class RoleTests {
         when(randomTile.getPosition()).thenReturn(new Position(10, 10));
         when(world.getRandomVacantSpot()).thenReturn(randomTile);
         final AbstractRole idleRole = RoleFactory.idle();
-        final IAction idleAction = idleRole.obtainNextTask(performer);
+        final IAction idleAction = idleRole.obtainNextAction(performer);
 
         // Act
-        final IAction actualAction = role.obtainNextTask(performer);
+        final IAction actualAction = role.obtainNextAction(performer);
 
         // Assert
         assertThat(actualAction).isEqualTo(idleAction);
@@ -244,8 +244,8 @@ public class RoleTests {
         final ITaskPerformer performer = mock(ITaskPerformer.class);
 
         // Act
-        final IAction actualTaskFirstTime = role.obtainNextTask(performer);
-        final IAction actualTaskSecondTime = role.obtainNextTask(performer);
+        final IAction actualTaskFirstTime = role.obtainNextAction(performer);
+        final IAction actualTaskSecondTime = role.obtainNextAction(performer);
 
         // Assert
         assertThat(actualTaskFirstTime).isEqualTo(actualTaskSecondTime).isEqualTo(uncompletedTask);

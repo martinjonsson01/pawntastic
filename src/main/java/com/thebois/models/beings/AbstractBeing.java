@@ -68,7 +68,7 @@ public abstract class AbstractBeing implements IBeing, ITaskPerformer {
 
     @Override
     public void update() {
-        role.obtainNextTask(this).perform(this);
+        role.obtainNextAction(this).perform(this);
         move();
     }
 

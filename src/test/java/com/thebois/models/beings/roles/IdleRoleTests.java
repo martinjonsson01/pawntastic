@@ -48,7 +48,7 @@ public class IdleRoleTests {
         when(performer.getPosition()).thenReturn(new Position());
 
         // Act
-        final IAction task = role.obtainNextTask(performer);
+        final IAction task = role.obtainNextAction(performer);
 
         // Assert
         assertThat(task).isEqualTo(expectedTask);

@@ -155,13 +155,13 @@ public class BeingTests {
         final AbstractBeing being = createBeing();
         final IAction task = mock(IAction.class);
         being.setRole(role);
-        when(role.obtainNextTask(being)).thenReturn(task);
+        when(role.obtainNextAction(being)).thenReturn(task);
 
         // Act
         being.update();
 
         // Assert
-        verify(role, times(1)).obtainNextTask(being);
+        verify(role, times(1)).obtainNextAction(being);
     }
 
     @Test
@@ -171,7 +171,7 @@ public class BeingTests {
         final AbstractBeing being = createBeing();
         final IAction task = mock(IAction.class);
         being.setRole(role);
-        when(role.obtainNextTask(being)).thenReturn(task);
+        when(role.obtainNextAction(being)).thenReturn(task);
 
         // Act
         being.update();

@@ -50,7 +50,7 @@ public class HarvesterRoleTests {
         final IAction expectedAction = ActionFactory.createDoNothing();
 
         // Act
-        final IAction actual = role.obtainNextTask(performer);
+        final IAction actual = role.obtainNextAction(performer);
 
         // Assert
         assertThat(actual).isEqualTo(expectedAction);
@@ -74,7 +74,7 @@ public class HarvesterRoleTests {
         final IAction expectedAction = ActionFactory.createMoveTo(besidesPosition);
 
         // Act
-        final IAction actual = role.obtainNextTask(performer);
+        final IAction actual = role.obtainNextAction(performer);
 
         // Assert
         assertThat(actual).isEqualTo(expectedAction);
@@ -105,7 +105,7 @@ public class HarvesterRoleTests {
         final IAction expectedAction = ActionFactory.createDoNothing();
 
         // Act
-        final IAction actual = role.obtainNextTask(performer);
+        final IAction actual = role.obtainNextAction(performer);
 
         // Assert
         assertThat(actual).isEqualTo(expectedAction);
@@ -128,7 +128,7 @@ public class HarvesterRoleTests {
         final IAction expected = ActionFactory.createHarvest(tree);
 
         // Act
-        final IAction actual = role.obtainNextTask(performer);
+        final IAction actual = role.obtainNextAction(performer);
 
         // Assert
         assertThat(actual).isEqualTo(expected);
@@ -156,7 +156,7 @@ public class HarvesterRoleTests {
         final IAction expected = ActionFactory.createDoNothing();
 
         // Act
-        final IAction actual = role.obtainNextTask(performer);
+        final IAction actual = role.obtainNextAction(performer);
 
         // Assert
         assertThat(actual).isEqualTo(expected);

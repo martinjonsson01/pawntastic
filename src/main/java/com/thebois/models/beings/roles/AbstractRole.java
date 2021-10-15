@@ -62,19 +62,19 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
     }
 
     /**
-     * Calculates the next task to perform at the moment and returns it.
+     * Calculates the next action to perform at the moment and returns it.
      *
-     * @param performer The entity who will perform the obtained task.
+     * @param performer The entity who will perform the obtained action.
      *
-     * @return The current task that needs to be completed.
+     * @return The current action that needs to be completed.
      */
-    public IAction obtainNextTask(final ITaskPerformer performer) {
+    public IAction obtainNextAction(final ITaskPerformer performer) {
         if (needsNewAction(performer)) {
             currentAction = getNextUncompletedAction(performer);
         }
 
         if (!currentAction.canPerform(performer)) {
-            currentAction = RoleFactory.idle().obtainNextTask(performer);
+            currentAction = RoleFactory.idle().obtainNextAction(performer);
         }
 
         return currentAction;
