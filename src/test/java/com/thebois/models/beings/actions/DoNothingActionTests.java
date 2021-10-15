@@ -1,5 +1,6 @@
 package com.thebois.models.beings.actions;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
@@ -10,13 +11,19 @@ import static org.mockito.Mockito.*;
 
 public class DoNothingActionTests {
 
-    @Test
-    public void performDoesNotSetDestination() {
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+    private ITaskPerformer performer;
+    private IAction doNothing;
+
+    @BeforeEach
+    public void setup() {
+        performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(new Position());
 
-        final IAction doNothing = ActionFactory.createDoNothing();
+        doNothing = ActionFactory.createDoNothing();
+    }
 
+    @Test
+    public void performDoesNotSetDestination() {
         // Act
         doNothing.perform(performer);
 
@@ -25,12 +32,17 @@ public class DoNothingActionTests {
     }
 
     @Test
+    public void canPerformReturnsFalse() {
+        // Act
+        doNothing.perform(performer);
+        final boolean canPerform = doNothing.canPerform(performer);
+
+        // Assert
+        assertThat(canPerform).isFalse();
+    }
+
+    @Test
     public void isCompletedReturnsFalse() {
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
-        when(performer.getPosition()).thenReturn(new Position());
-
-        final IAction doNothing = ActionFactory.createDoNothing();
-
         // Act
         doNothing.perform(performer);
         final boolean isCompleted = doNothing.isCompleted(performer);
