@@ -23,7 +23,7 @@ public class Tree extends AbstractResource {
      * @param posY Y coordinate for the tree resource.
      */
     public Tree(final float posX, final float posY) {
-        super(posX, posY);
+        this(new Position(posX, posY));
     }
 
     @Override
@@ -40,4 +40,5 @@ public class Tree extends AbstractResource {
     public ResourceType getType() {
         return ResourceType.TREE;
     }
+
 }

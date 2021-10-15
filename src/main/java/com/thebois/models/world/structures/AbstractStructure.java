@@ -19,7 +19,7 @@ abstract class AbstractStructure implements IStructure {
      * @param posY          Position in Y-axis
      * @param structureType The type of structure to create.
      */
-    AbstractStructure(final int posX, final int posY, final StructureType structureType) {
+    protected AbstractStructure(final int posX, final int posY, final StructureType structureType) {
         this.position = new Position(posX, posY);
         this.structureType = structureType;
     }
@@ -30,7 +30,7 @@ abstract class AbstractStructure implements IStructure {
      * @param position      The position the structure have.
      * @param structureType The type of structure to create.
      */
-    AbstractStructure(final Position position, final StructureType structureType) {
+    protected AbstractStructure(final Position position, final StructureType structureType) {
         this((int) position.getPosX(), (int) position.getPosY(), structureType);
     }
 

@@ -16,18 +16,8 @@ public abstract class AbstractResource implements IResource {
      *
      * @param position The position the resource should have.
      */
-    public AbstractResource(final Position position) {
+    protected AbstractResource(final Position position) {
         this.position = position;
-    }
-
-    /**
-     * Instantiate a resource with given position.
-     *
-     * @param x X coordinate for the resource.
-     * @param y Y Coordinate for the resource
-     */
-    public AbstractResource(final float x, final float y) {
-        this(new Position(x, y));
     }
 
     @Override

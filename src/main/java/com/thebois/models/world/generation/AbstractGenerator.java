@@ -17,7 +17,7 @@ public abstract class AbstractGenerator {
      * @param worldSize The size of the world to generate.
      * @param seed      The seed used to generate the world.
      */
-    public AbstractGenerator(final int worldSize, final int seed) {
+    protected AbstractGenerator(final int worldSize, final int seed) {
         this.seed = seed;
         this.worldSize = worldSize;
     }

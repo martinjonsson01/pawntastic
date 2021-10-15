@@ -40,7 +40,7 @@ public enum ResourceType {
      * Should be used like this: Value >= Threshold or Value <= Threshold.
      * </p>
      *
-     * @return The Threshold..
+     * @return The Threshold.
      */
     public float getThreshold() {
         return threshold;
