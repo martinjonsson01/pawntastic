@@ -23,6 +23,12 @@ import static org.mockito.Mockito.*;
 public class MoveActionTests {
 
     private IPathFinder pathFinder;
+    private Position start;
+    private Position end;
+    private List<Position> workingPath;
+    private List<Position> noPath;
+    private ITaskPerformer performer;
+    private IAction action;
 
     public static Stream<Arguments> getPositionsAndDestinations() {
         return Stream.of(Arguments.of(new Position(0, 0), new Position(0, 1)),
@@ -55,6 +61,13 @@ public class MoveActionTests {
     public void setup() {
         pathFinder = mock(IPathFinder.class);
         ActionFactory.setPathFinder(pathFinder);
+
+        start = new Position(0, 0);
+        end = new Position(3, 3);
+        workingPath = List.of(new Position(1, 1), new Position(2, 2), end);
+        noPath = List.of();
+        performer = mock(ITaskPerformer.class);
+        action = ActionFactory.createMoveTo(end);
     }
 
     @AfterEach
@@ -79,16 +92,8 @@ public class MoveActionTests {
     @Test
     public void canPerformReturnsFalseWhenDestinationIsUnreachable() {
         // Arrange
-        final Position start = new Position(0, 0);
-        final Position end = new Position(3, 3);
-
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(start);
-
-        final List<Position> path = List.of();
-        when(pathFinder.path(start, end)).thenReturn(path);
-
-        final IAction action = ActionFactory.createMoveTo(end);
+        when(pathFinder.path(start, end)).thenReturn(noPath);
 
         // Act
         action.perform(performer);
@@ -101,16 +106,8 @@ public class MoveActionTests {
     @Test
     public void canPerformIsTrueWhenDestinationIsReachable() {
         // Arrange
-        final Position start = new Position(0, 0);
-        final Position end = new Position(3, 3);
-
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(start);
-
-        final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), end);
-        when(pathFinder.path(start, end)).thenReturn(path);
-
-        final IAction action = ActionFactory.createMoveTo(end);
+        when(pathFinder.path(start, end)).thenReturn(workingPath);
 
         // Act
         final boolean canPerform = action.canPerform(performer);
@@ -122,16 +119,8 @@ public class MoveActionTests {
     @Test
     public void canPerformIsFalseWhenDestinationIsUnreachable() {
         // Arrange
-        final Position start = new Position(0, 0);
-        final Position end = new Position(3, 3);
-
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(start);
-
-        final List<Position> path = List.of();
-        when(pathFinder.path(start, end)).thenReturn(path);
-
-        final IAction action = ActionFactory.createMoveTo(end);
+        when(pathFinder.path(start, end)).thenReturn(noPath);
 
         // Act
         action.perform(performer);
@@ -159,17 +148,16 @@ public class MoveActionTests {
     @ParameterizedTest
     @MethodSource("getPositionsAndDestinations")
     public void performSetsDestinationToEveryStepInPathAfterMovingToPreviousStep(
-        final Position start, final Position end) {
+        final Position begin, final Position destination) {
         // Arrange
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
-        when(performer.getPosition()).thenReturn(start);
+        when(performer.getPosition()).thenReturn(begin);
 
-        final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), end);
-        when(pathFinder.path(start, end)).thenReturn(path);
-
-        final IAction action = ActionFactory.createMoveTo(end);
+        final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), destination);
+        when(pathFinder.path(begin, destination)).thenReturn(path);
 
         final ArgumentCaptor<Position> destinationCaptor = ArgumentCaptor.forClass(Position.class);
+
+        action = ActionFactory.createMoveTo(destination);
 
         // Act
         for (final Position pathPosition : path) {
@@ -187,19 +175,11 @@ public class MoveActionTests {
     @Test
     public void canPerformIsFalseWhenNewObstacleBlocksAllPossiblePathsToDestination() {
         // Arrange
-        final Position start = new Position(0, 0);
-        final Position end = new Position(3, 3);
-
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(start);
 
-        final List<Position> workingPath = List.of(new Position(1, 1), new Position(2, 2), end);
-        final List<Position> noPath = List.of();
         when(pathFinder.path(any(), any())).thenReturn(workingPath).thenReturn(noPath);
 
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
-
-        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
         action.perform(performer);
@@ -213,18 +193,10 @@ public class MoveActionTests {
     @Test
     public void entirePathIsRecalculatedWhenObstacleIsInWayAtStartOfPath() {
         // Arrange
-        final Position start = new Position(0, 0);
-        final Position end = new Position(3, 3);
-
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(start);
-
-        final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), end);
-        when(pathFinder.path(any(), any())).thenReturn(path);
+        when(pathFinder.path(any(), any())).thenReturn(workingPath);
 
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
-
-        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
         action.perform(performer);
@@ -237,18 +209,10 @@ public class MoveActionTests {
     @Test
     public void pathIsNotRecalculatedWhenObstacleIsPlacedAndThereIsNoPath() {
         // Arrange
-        final Position start = new Position(0, 0);
-        final Position end = new Position(3, 3);
-
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(start);
-
-        final List<Position> path = List.of();
-        when(pathFinder.path(any(), any())).thenReturn(path);
+        when(pathFinder.path(any(), any())).thenReturn(noPath);
 
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
-
-        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
         action.perform(performer);
@@ -261,12 +225,7 @@ public class MoveActionTests {
     @Test
     public void performDoesNothingWhenAtEnd() {
         // Arrange
-        final Position end = new Position(3, 3);
-
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(end);
-
-        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
         action.perform(performer);
@@ -278,12 +237,7 @@ public class MoveActionTests {
     @Test
     public void isCompletedIsTrueWhenAtEnd() {
         // Arrange
-        final Position end = new Position(3, 3);
-
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(end);
-
-        final IAction action = ActionFactory.createMoveTo(end);
 
         // Act
         action.perform(performer);
@@ -296,16 +250,8 @@ public class MoveActionTests {
     @Test
     public void isCompletedIsFalseWhenAtStart() {
         // Arrange
-        final Position start = new Position(0, 0);
-        final Position end = new Position(3, 3);
-
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
         when(performer.getPosition()).thenReturn(start);
-
-        final List<Position> path = List.of(new Position(1, 1), new Position(2, 2), end);
-        when(pathFinder.path(start, end)).thenReturn(path);
-
-        final IAction action = ActionFactory.createMoveTo(end);
+        when(pathFinder.path(start, end)).thenReturn(workingPath);
 
         // Act
         action.perform(performer);
