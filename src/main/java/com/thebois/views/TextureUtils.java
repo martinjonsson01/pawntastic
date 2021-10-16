@@ -57,7 +57,8 @@ public final class TextureUtils {
     }
 
     /**
-     * Creates a new instance of a square shaped texture with the side length.
+     * Creates a new instance of a square shaped texture with the with the side length being equal
+     * to the tile size.
      * <p>
      * Sets the base color to white.
      * </p>
@@ -69,25 +70,37 @@ public final class TextureUtils {
     }
 
     /**
-     * Creates a new instance of a square shaped texture with the side length.
+     * Creates a new instance of a square shaped texture with the side length being equal to the *
+     * tile size.
      *
      * @param color The color used in the texture.
      *
      * @return The square texture.
      */
     public static Texture createSquareTexture(final Color color) {
-        final Pixmap pixmap = new Pixmap(Pawntastic.getTileSize(),
-                                         Pawntastic.getTileSize(),
-                                         Pixmap.Format.RGBA8888);
+        return createSquareTexture(color, Pawntastic.getTileSize());
+    }
+
+    /**
+     * Creates a new instance of a square shaped texture with the side length.
+     *
+     * @param color      The color used in the texture.
+     * @param sideLength The side length of a square.
+     *
+     * @return The square texture.
+     */
+    public static Texture createSquareTexture(final Color color, final int sideLength) {
+        final Pixmap pixmap = new Pixmap(sideLength, sideLength, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
-        pixmap.fillRectangle(0, 0, Pawntastic.getTileSize(), Pawntastic.getTileSize());
+        pixmap.fillRectangle(0, 0, sideLength, sideLength);
         final Texture squareTexture = new Texture(pixmap);
         pixmap.dispose();
         return squareTexture;
     }
 
     /**
-     * Creates a new instance of a triangle shaped texture with the side length.
+     * Creates a new instance of a triangle shaped texture with the side length being equal to the *
+     * tile size.
      *
      * @return The triangle texture.
      */
@@ -96,23 +109,29 @@ public final class TextureUtils {
     }
 
     /**
-     * Creates a new instance of a triangle shaped texture with the side length.
+     * Creates a new instance of a triangle shaped texture with the side length being equal to the
+     * tile size.
      *
      * @param color The color used in the texture.
      *
      * @return The triangle texture.
      */
     public static Texture createTriangleTexture(final Color color) {
-        final Pixmap pixmap = new Pixmap(Pawntastic.getTileSize(),
-                                         Pawntastic.getTileSize(),
-                                         Pixmap.Format.RGBA8888);
+        return createTriangleTexture(color, Pawntastic.getTileSize());
+    }
+
+    /**
+     * Creates a new instance of a triangle shaped texture with the side length.
+     *
+     * @param color      The color used in the texture.
+     * @param sideLength The length of every side in the triangle.
+     *
+     * @return The triangle texture.
+     */
+    public static Texture createTriangleTexture(final Color color, final int sideLength) {
+        final Pixmap pixmap = new Pixmap(sideLength, sideLength, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
-        pixmap.fillTriangle(Pawntastic.getTileSize() / 2,
-                            0,
-                            0,
-                            Pawntastic.getTileSize(),
-                            Pawntastic.getTileSize(),
-                            Pawntastic.getTileSize());
+        pixmap.fillTriangle(sideLength / 2, 0, 0, sideLength, sideLength, sideLength);
         final Texture squareTexture = new Texture(pixmap);
         pixmap.dispose();
         return squareTexture;
