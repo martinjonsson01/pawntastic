@@ -41,10 +41,10 @@ public final class StructureView implements IView {
 
     // Houses get different colors based on built status
     private Color getHouseColor(final IStructure structure) {
-        final Color bluePrintColor = Color.valueOf("3B2916");
+        final Color blueprintColor = Color.valueOf("3B2916");
         final Color houseColor = Color.valueOf("1B52AB");
 
-        return houseColor.lerp(bluePrintColor, structure.getBuiltRatio());
+        return houseColor.lerp(blueprintColor, structure.getBuiltRatio());
     }
 
     /**

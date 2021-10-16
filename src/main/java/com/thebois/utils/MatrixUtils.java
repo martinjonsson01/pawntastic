@@ -82,10 +82,10 @@ public final class MatrixUtils {
         final Collection<TType> foundElements = new ArrayList<>();
 
         for (int searchRadius = 1; searchRadius <= maxSearchRadius; searchRadius++) {
-            for (final int[] ints : searchPattern) {
+            for (final int[] offsets : searchPattern) {
                 try {
-                    final int searchRow = startRow + ints[0] * searchRadius;
-                    final int searchCol = startCol + ints[1] * searchRadius;
+                    final int searchRow = startRow + offsets[0] * searchRadius;
+                    final int searchCol = startCol + offsets[1] * searchRadius;
 
                     if (matrix[searchRow][searchCol] != null) {
                         foundElements.add(matrix[searchRow][searchCol]);

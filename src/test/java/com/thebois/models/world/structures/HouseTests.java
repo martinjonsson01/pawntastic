@@ -46,15 +46,17 @@ public class HouseTests {
     }
 
     @Test
-    public void areHousesEqual() {
+    public void housesAreEqualWhenSameInstance() {
         // Arrange
-        final Position position = new Position(123, 456);
+        final Position positionA = new Position(123, 456);
+        final Position positionB = new Position(456, 123);
 
         // Act
-        final House structure = new House(position);
+        final House structureA = new House(positionA);
+        final House structureB = new House(positionB);
 
         // Assert
-        assertThat(structure.getType()).isEqualTo(StructureType.HOUSE);
+        assertThat(structureA).isNotEqualTo(structureB);
     }
 
     private static Stream<Arguments> tryDeliverItemReturnsExpectedValueSource() {
