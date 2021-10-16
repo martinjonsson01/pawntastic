@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 import com.thebois.controllers.AbstractInputProcessor;
 import com.thebois.controllers.IController;
+import com.thebois.listeners.IEventListener;
+import com.thebois.listeners.events.OnClickEvent;
 import com.thebois.models.world.World;
 import com.thebois.models.world.structures.StructureType;
 import com.thebois.views.IProjector;
@@ -15,7 +17,8 @@ import com.thebois.views.game.StructureView;
 /**
  * Controller for Structures in the world.
  */
-public class StructureController extends AbstractInputProcessor implements IController<IView> {
+public class StructureController extends AbstractInputProcessor
+    implements IController<IView>, IEventListener<OnClickEvent<StructureType>> {
 
     private final World world;
     private final StructureView structureView;
@@ -23,6 +26,7 @@ public class StructureController extends AbstractInputProcessor implements ICont
     private final float tileSize;
     private Actor gameContainer;
     private Widget gameWidget;
+    private StructureType selectedStructure = StructureType.HOUSE;
 
     /**
      * Creates a instance of a Structure Controller.
@@ -50,7 +54,7 @@ public class StructureController extends AbstractInputProcessor implements ICont
             final float offSetY = gameWidget.getY() + gameContainer.getY();
             final int worldPosX = (int) ((worldSpaceCoordinates.x - offSetX) / tileSize);
             final int worldPosY = (int) ((worldSpaceCoordinates.y - offSetY) / tileSize);
-            if (world.createStructure(StructureType.HOUSE, worldPosX, worldPosY)) {
+            if (world.createStructure(selectedStructure, worldPosX, worldPosY)) {
                 structureView.update(world.getStructures());
                 return true;
             }
@@ -83,6 +87,11 @@ public class StructureController extends AbstractInputProcessor implements ICont
      */
     public void setGameContainer(final Actor gameContainer) {
         this.gameContainer = gameContainer;
+    }
+
+    @Override
+    public void onEvent(final OnClickEvent<StructureType> event) {
+        selectedStructure = event.getValue();
     }
 
 }
