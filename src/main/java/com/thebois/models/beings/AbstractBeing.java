@@ -10,7 +10,7 @@ import com.thebois.models.inventory.items.IItem;
 /**
  * An independent agent that can act in the world according to its assigned role.
  */
-public abstract class AbstractBeing implements IBeing, ITaskPerformer {
+public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     // The max speed of the AbstractBeing
     private static final float MAX_WALKING_DISTANCE = 0.1f;

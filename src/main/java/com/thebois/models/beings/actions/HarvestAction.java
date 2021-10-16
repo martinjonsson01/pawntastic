@@ -2,7 +2,7 @@ package com.thebois.models.beings.actions;
 
 import java.util.Objects;
 
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.world.resources.IResource;
 
 /**
@@ -23,18 +23,18 @@ public class HarvestAction implements IAction {
     }
 
     @Override
-    public void perform(final ITaskPerformer performer) {
+    public void perform(final IActionPerformer performer) {
         performer.addItem(resource.harvest());
         harvested = true;
     }
 
     @Override
-    public boolean isCompleted(final ITaskPerformer performer) {
+    public boolean isCompleted(final IActionPerformer performer) {
         return harvested;
     }
 
     @Override
-    public boolean canPerform(final ITaskPerformer performer) {
+    public boolean canPerform(final IActionPerformer performer) {
         return resource.getPosition().distanceTo(performer.getPosition()) <= 1.0f;
     }
 

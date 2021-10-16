@@ -129,7 +129,7 @@ public class BeingTests {
     public void addItemCallsInjectedInventory() {
         // Arrange
         final IInventory inventory = mock(IInventory.class);
-        final ITaskPerformer being = createBeing(inventory);
+        final IActionPerformer being = createBeing(inventory);
         final IItem item = mock(IItem.class);
 
         // Act

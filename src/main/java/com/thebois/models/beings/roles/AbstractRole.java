@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Queue;
 
 import com.thebois.abstractions.IDeepClonable;
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionGenerator;
 
@@ -68,7 +68,7 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
      *
      * @return The current action that needs to be completed.
      */
-    public IAction obtainNextAction(final ITaskPerformer performer) {
+    public IAction obtainNextAction(final IActionPerformer performer) {
         if (needsNewAction(performer)) {
             currentAction = getNextUncompletedAction(performer);
         }
@@ -80,11 +80,11 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
         return currentAction;
     }
 
-    private boolean needsNewAction(final ITaskPerformer performer) {
+    private boolean needsNewAction(final IActionPerformer performer) {
         return currentAction == null || currentAction.isCompleted(performer);
     }
 
-    private IAction getNextUncompletedAction(final ITaskPerformer performer) {
+    private IAction getNextUncompletedAction(final IActionPerformer performer) {
         // Take actions from queue until one is found that is not completed.
         IAction newAction;
         do {

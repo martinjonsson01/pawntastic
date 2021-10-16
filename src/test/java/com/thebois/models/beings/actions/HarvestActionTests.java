@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.models.Position;
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.resources.IResource;
 
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 public class HarvestActionTests {
 
-    private ITaskPerformer performer;
+    private IActionPerformer performer;
     private IResource resource;
     private IAction action;
 
@@ -34,7 +34,7 @@ public class HarvestActionTests {
         final IResource sameResource = mock(IResource.class);
         final IAction sameResourceNotHarvested = ActionFactory.createHarvest(sameResource);
         final IAction sameResourceHarvested = ActionFactory.createHarvest(sameResource);
-        sameResourceHarvested.perform(mock(ITaskPerformer.class));
+        sameResourceHarvested.perform(mock(IActionPerformer.class));
         return Stream.of(Arguments.of(ActionFactory.createHarvest(mock(IResource.class)),
                                       ActionFactory.createHarvest(sameResource)),
                          Arguments.of(ActionFactory.createHarvest(sameResource), null),
@@ -45,7 +45,7 @@ public class HarvestActionTests {
 
     @BeforeEach
     public void setup() {
-        performer = mock(ITaskPerformer.class);
+        performer = mock(IActionPerformer.class);
         resource = mock(IResource.class);
         action = ActionFactory.createHarvest(resource);
     }

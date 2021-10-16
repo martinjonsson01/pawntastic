@@ -4,14 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class DoNothingActionTests {
 
-    private ITaskPerformer performer;
+    private IActionPerformer performer;
     private IAction doNothing;
 
     @Test
@@ -28,7 +28,7 @@ public class DoNothingActionTests {
 
     @BeforeEach
     public void setup() {
-        performer = mock(ITaskPerformer.class);
+        performer = mock(IActionPerformer.class);
         when(performer.getPosition()).thenReturn(new Position());
 
         doNothing = ActionFactory.createDoNothing();

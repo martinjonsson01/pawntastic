@@ -1,6 +1,6 @@
 package com.thebois.models.beings.actions;
 
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 
 /**
  * Makes the performer do nothing at all.
@@ -14,17 +14,17 @@ public class DoNothingAction implements IAction {
     private boolean isDone = false;
 
     @Override
-    public void perform(final ITaskPerformer performer) {
+    public void perform(final IActionPerformer performer) {
         isDone = true;
     }
 
     @Override
-    public boolean isCompleted(final ITaskPerformer performer) {
+    public boolean isCompleted(final IActionPerformer performer) {
         return isDone;
     }
 
     @Override
-    public boolean canPerform(final ITaskPerformer performer) {
+    public boolean canPerform(final IActionPerformer performer) {
         return true;
     }
 

@@ -6,7 +6,7 @@ import com.thebois.models.inventory.items.IItem;
 /**
  * An internal interface that represents a performer of actions.
  */
-public interface ITaskPerformer {
+public interface IActionPerformer {
 
     /**
      * Gives the performer a new destination.

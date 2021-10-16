@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionGenerator;
@@ -130,7 +130,7 @@ public class RoleTests {
         final IAction secondCompleted = mockTask(true);
         final IAction thirdCompleted = mockTask(true);
         final AbstractRole role = mockTestRole(flipper, secondCompleted, thirdCompleted);
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
 
         // Act
         final IAction action = role.obtainNextAction(performer);
@@ -159,7 +159,7 @@ public class RoleTests {
         final IAction second = mockTask(false);
         final IAction third = mockTask(false);
         final AbstractRole role = mockTestRole(first, second, third);
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
 
         // Act
         final IAction actualFirst = role.obtainNextAction(performer);
@@ -182,7 +182,7 @@ public class RoleTests {
         final IAction completedTask2 = mockTask(true);
         final IAction uncompletedTask = mockTask(false);
         final AbstractRole role = mockTestRole(completedTask1, completedTask2, uncompletedTask);
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
 
         // Act
         final IAction actualTask = role.obtainNextAction(performer);
@@ -197,7 +197,7 @@ public class RoleTests {
         final IAction switchPerformableAction = MockFactory.createAction(false, true);
         when(switchPerformableAction.canPerform(any())).thenReturn(true).thenReturn(false);
         final AbstractRole role = mockTestRole(switchPerformableAction);
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
         when(performer.getPosition()).thenReturn(new Position(0, 0));
 
         final ITile randomTile = mock(ITile.class);
@@ -219,7 +219,7 @@ public class RoleTests {
         // Arrange
         final IAction unperformableAction = MockFactory.createAction(false, false);
         final AbstractRole role = mockTestRole(unperformableAction);
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
         when(performer.getPosition()).thenReturn(new Position(0, 0));
 
         final ITile randomTile = mock(ITile.class);
@@ -241,7 +241,7 @@ public class RoleTests {
         final IAction uncompletedTask = mockTask(false);
         final IAction nextTask = mockTask(false);
         final AbstractRole role = mockTestRole(uncompletedTask, nextTask);
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
 
         // Act
         final IAction actualTaskFirstTime = role.obtainNextAction(performer);

@@ -10,7 +10,7 @@ import com.google.common.eventbus.Subscribe;
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 
 /**
@@ -53,7 +53,7 @@ class MoveAction implements IAction {
     }
 
     @Override
-    public void perform(final ITaskPerformer performer) {
+    public void perform(final IActionPerformer performer) {
         if (isCompleted(performer)) return;
 
         final Position position = performer.getPosition();
@@ -74,12 +74,12 @@ class MoveAction implements IAction {
     }
 
     @Override
-    public boolean isCompleted(final ITaskPerformer performer) {
+    public boolean isCompleted(final IActionPerformer performer) {
         return performer.getPosition().equals(destination);
     }
 
     @Override
-    public boolean canPerform(final ITaskPerformer performer) {
+    public boolean canPerform(final IActionPerformer performer) {
         return canReachDestination;
     }
 

@@ -1,6 +1,6 @@
 package com.thebois.models.beings.actions;
 
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 
 /**
  * An internal interface representing an action to be performed in a certain way.
@@ -12,7 +12,7 @@ public interface IAction {
      *
      * @param performer The entity to execute the task for.
      */
-    void perform(ITaskPerformer performer);
+    void perform(IActionPerformer performer);
 
     /**
      * Checks if the task is finished.
@@ -21,7 +21,7 @@ public interface IAction {
      *
      * @return Whether the task is finished.
      */
-    boolean isCompleted(ITaskPerformer performer);
+    boolean isCompleted(IActionPerformer performer);
 
     /**
      * Checks if a given performer is able to currently perform.
@@ -30,6 +30,6 @@ public interface IAction {
      *
      * @return Whether the performer is currently able to perform.
      */
-    boolean canPerform(ITaskPerformer performer);
+    boolean canPerform(IActionPerformer performer);
 
 }

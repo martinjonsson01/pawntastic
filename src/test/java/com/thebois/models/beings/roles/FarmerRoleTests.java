@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -39,7 +39,7 @@ public class FarmerRoleTests {
     @Test
     public void obtainNextActionReturnsSameAsIdleRole() {
         // Arrange
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
         when(performer.getPosition()).thenReturn(new Position(0, 0));
 
         final ITile tile = MockFactory.createTile(10, 10);

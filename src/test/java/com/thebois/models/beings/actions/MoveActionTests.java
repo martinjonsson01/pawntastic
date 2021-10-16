@@ -14,7 +14,7 @@ import org.mockito.ArgumentCaptor;
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 
 import static org.assertj.core.api.Assertions.*;
@@ -27,7 +27,7 @@ public class MoveActionTests {
     private Position end;
     private List<Position> workingPath;
     private List<Position> noPath;
-    private ITaskPerformer performer;
+    private IActionPerformer performer;
     private IAction action;
 
     public static Stream<Arguments> getPositionsAndDestinations() {
@@ -66,7 +66,7 @@ public class MoveActionTests {
         end = new Position(3, 3);
         workingPath = List.of(new Position(1, 1), new Position(2, 2), end);
         noPath = List.of();
-        performer = mock(ITaskPerformer.class);
+        performer = mock(IActionPerformer.class);
         action = ActionFactory.createMoveTo(end);
     }
 

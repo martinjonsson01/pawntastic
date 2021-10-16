@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionGenerator;
@@ -42,7 +42,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         return List.of(this::createMoveToResource, this::createHarvestResource);
     }
 
-    protected IAction createMoveToResource(final ITaskPerformer performer) {
+    protected IAction createMoveToResource(final IActionPerformer performer) {
         final Optional<IResource> maybeResource = findNearbyResource(performer);
         if (maybeResource.isEmpty()) return ActionFactory.createDoNothing();
 
@@ -57,7 +57,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         return ActionFactory.createMoveTo(closestSpotNextToResource.get());
     }
 
-    protected IAction createHarvestResource(final ITaskPerformer performer) {
+    protected IAction createHarvestResource(final IActionPerformer performer) {
         final Optional<IResource> maybeTree = findNearbyResource(performer);
         if (maybeTree.isEmpty()) return ActionFactory.createDoNothing();
 
@@ -66,7 +66,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         return ActionFactory.createHarvest(tree);
     }
 
-    protected Optional<IResource> findNearbyResource(final ITaskPerformer performer) {
+    protected Optional<IResource> findNearbyResource(final IActionPerformer performer) {
         final Position position = performer.getPosition();
         return finder.getNearbyOfType(position, resourceType);
     }

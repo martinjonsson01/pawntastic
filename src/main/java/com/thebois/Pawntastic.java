@@ -48,12 +48,12 @@ public class Pawntastic extends Game {
     /* These two decide the aspect ratio that will be preserved. */
     private static final float VIEWPORT_WIDTH = 1300;
     private static final float VIEWPORT_HEIGHT = 1000;
-    private static final int DEFAULT_FONT_SIZE = 26;
-    private static final int PAWN_POSITIONS = 50;
     /**
      * The tile size of the tiles in the world.
      */
     public static final float TILE_SIZE = Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH) / WORLD_SIZE;
+    private static final int DEFAULT_FONT_SIZE = 26;
+    private static final int PAWN_POSITIONS = 50;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
@@ -109,7 +109,7 @@ public class Pawntastic extends Game {
 
     private void createModels() {
         final Random random = new Random();
-        world = new World(WORLD_SIZE, 0, random);
+        world = new World(WORLD_SIZE, random.nextInt(Integer.MAX_VALUE), random);
         RoleFactory.setWorld(world);
         RoleFactory.setResourceFinder(world);
 

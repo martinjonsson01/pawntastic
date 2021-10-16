@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -44,7 +44,7 @@ public class HarvesterRoleTests {
     public void obtainNextActionIsDoNothingWhenNoTreeExists() {
         // Arrange
         final AbstractRole role = createRole();
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
         when(performer.getPosition()).thenReturn(new Position());
         when(finder.getNearbyOfType(any(), eq(ResourceType.TREE))).thenReturn(Optional.empty());
         final IAction expectedAction = ActionFactory.createDoNothing();
@@ -64,7 +64,7 @@ public class HarvesterRoleTests {
     public void obtainNextActionIsMoveToBesidesTreeWhenTreeExists() {
         // Arrange
         final AbstractRole role = createRole();
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
         when(performer.getPosition()).thenReturn(new Position(0, 0));
         final Position treePosition = new Position(5, 3);
         final Position besidesPosition = new Position(4, 3);
@@ -96,7 +96,7 @@ public class HarvesterRoleTests {
     public void obtainNextActionIsDoNothingWhenTreeExistsButHasNoVacantNeighbours() {
         // Arrange
         final AbstractRole role = createRole();
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
         when(performer.getPosition()).thenReturn(new Position(0, 0));
         final Position treePosition = new Position(5, 3);
         final IResource tree = mockTree(treePosition);
@@ -116,7 +116,7 @@ public class HarvesterRoleTests {
         // Arrange
         final AbstractRole role = createRole();
 
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
         final Position treePosition = new Position(5, 3);
         final Position besidesPosition = new Position(4, 3);
         when(performer.getPosition()).thenReturn(besidesPosition);
@@ -139,7 +139,7 @@ public class HarvesterRoleTests {
         // Arrange
         final AbstractRole role = createRole();
 
-        final ITaskPerformer performer = mock(ITaskPerformer.class);
+        final IActionPerformer performer = mock(IActionPerformer.class);
         final Position treePosition = new Position(5, 3);
         final Position besidesPosition = new Position(4, 3);
         when(performer.getPosition()).thenReturn(besidesPosition);

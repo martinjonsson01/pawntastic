@@ -1,6 +1,6 @@
 package com.thebois.models.beings.actions;
 
-import com.thebois.models.beings.ITaskPerformer;
+import com.thebois.models.beings.IActionPerformer;
 
 /**
  * Represents a generator of actions.
@@ -18,6 +18,6 @@ public interface IActionGenerator {
      *
      * @return The generated action.
      */
-    IAction generate(ITaskPerformer performer);
+    IAction generate(IActionPerformer performer);
 
 }
