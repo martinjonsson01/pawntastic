@@ -1,6 +1,7 @@
 package com.thebois.models.inventory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.thebois.models.inventory.items.IItem;
@@ -98,6 +99,6 @@ public interface IInventory {
      *
      * @return A list of differing item-types.
      */
-    ArrayList<ItemType> calculateDifference(IInventory otherInventory);
+    ArrayList<ItemType> calculateDifference(Collection<ItemType> otherInventory);
 
 }

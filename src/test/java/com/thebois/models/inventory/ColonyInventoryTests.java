@@ -26,49 +26,36 @@ public class ColonyInventoryTests {
 
     private static Stream<Arguments> calculatedDifferenceEqualToExpectedSource() {
         return Stream.of(
-            Arguments.of(List.of(
-                             new Rock(),
-                             new Rock(),
-                             new Rock(),
-                             new Log(),
-                             new Log(),
-                             new Log()),
-                         List.of(new Rock()),
-                         new ArrayList<>(Arrays.asList(ItemType.LOG,
-                                                       ItemType.LOG,
-                                                       ItemType.LOG,
-                                                       ItemType.ROCK,
-                                                       ItemType.ROCK))),
-            Arguments.of(List.of(new Rock(), new Rock()),
-                         List.of(new Rock()),
-                         new ArrayList<>(List.of(ItemType.ROCK))));
+            Arguments.of(
+                List.of(new Rock(), new Rock(), new Rock(), new Log(), new Log(), new Log()),
+                List.of(ItemType.ROCK),
+                List.of()),
+            Arguments.of(
+                List.of(new Rock(), new Rock()),
+                List.of(ItemType.ROCK, ItemType.ROCK, ItemType.ROCK),
+                List.of(ItemType.ROCK)),
+            Arguments.of(
+                List.of(),
+                List.of(ItemType.ROCK, ItemType.ROCK),
+                List.of(ItemType.ROCK, ItemType.ROCK))
+        );
     }
 
     @ParameterizedTest
     @MethodSource("calculatedDifferenceEqualToExpectedSource")
     public void calculatedDifferenceEqualToExpected(
-        final Collection<IItem> listA,
-        final Collection<IItem> listB,
-        final ArrayList<ItemType> expectedDifference) {
+        final List<IItem> listA,
+        final List<ItemType> listB,
+        final List<ItemType> expectedDifference) {
         // Arrange
+        final IInventory colony = new Colony(new ArrayList<>(),
+                                              Mockito.mock(IPathFinder.class),
+                                              Mockito.mock(IFinder.class));
 
-        final Stack<IItem> itemsA = new Stack<>();
-        final Stack<IItem> itemsB = new Stack<>();
-        itemsA.addAll(listA);
-        itemsB.addAll(listB);
-
-        final IInventory colonyA = new Colony(new ArrayList<>(),
-                                               Mockito.mock(IPathFinder.class),
-                                               Mockito.mock(IFinder.class));
-        final IInventory colonyB = new Colony(new ArrayList<>(),
-                                                          Mockito.mock(IPathFinder.class),
-                                                          Mockito.mock(IFinder.class));
-
-        colonyA.addMultiple(itemsA);
-        colonyB.addMultiple(itemsB);
+        colony.addMultiple(listA);
 
         // Act
-        final ArrayList<ItemType> difference = colonyA.calculateDifference(colonyB);
+        final ArrayList<ItemType> difference = colony.calculateDifference(listB);
 
         // Assert
         assertThat(difference.containsAll(expectedDifference)).isTrue();

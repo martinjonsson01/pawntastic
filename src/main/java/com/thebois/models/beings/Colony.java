@@ -178,7 +178,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     }
 
     @Override
-    public ArrayList<ItemType> calculateDifference(final IInventory otherInventory) {
+    public ArrayList<ItemType> calculateDifference(final Collection<ItemType> otherInventory) {
         return inventory.calculateDifference(otherInventory);
     }
 

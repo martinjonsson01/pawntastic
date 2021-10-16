@@ -1,10 +1,10 @@
 package com.thebois.models.world.structures;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.thebois.models.Position;
-import com.thebois.models.inventory.IInventory;
-import com.thebois.models.inventory.Inventory;
-import com.thebois.models.inventory.items.Log;
-import com.thebois.models.inventory.items.Rock;
+import com.thebois.models.inventory.items.ItemType;
 
 /**
  * A structure of type House.
@@ -30,13 +30,13 @@ public class House extends AbstractStructure {
         super(position, StructureType.HOUSE, generateNeededItemsInventory());
     }
 
-    private static IInventory generateNeededItemsInventory() {
-        final IInventory neededItems = new Inventory();
+    private static Collection<ItemType> generateNeededItemsInventory() {
+        final Collection<ItemType> neededItems = new ArrayList<>();
 
         final int numberOfItems = 10;
         for (int i = 0; i < numberOfItems; i++) {
-            neededItems.add(new Log());
-            neededItems.add(new Rock());
+            neededItems.add(ItemType.LOG);
+            neededItems.add(ItemType.ROCK);
         }
 
         return neededItems;

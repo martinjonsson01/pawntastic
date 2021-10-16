@@ -188,18 +188,19 @@ public class InventoryTests {
     }
 
     private static Stream<Arguments> calculatedDifferenceEqualToExpectedSource() {
-        return Stream.of(Arguments.of(
+        return Stream.of(
+            Arguments.of(
             List.of(new Rock(), new Rock(), new Rock(), new Log(), new Log(), new Log()),
-            List.of(new Rock()),
-            List.of(ItemType.LOG,
-                          ItemType.LOG,
-                          ItemType.LOG,
-                          ItemType.ROCK,
-                          ItemType.ROCK)),
+            List.of(ItemType.ROCK),
+            List.of()),
         Arguments.of(
             List.of(new Rock(), new Rock()),
-            List.of(new Rock()),
-            List.of(ItemType.ROCK))
+            List.of(ItemType.ROCK, ItemType.ROCK, ItemType.ROCK),
+            List.of(ItemType.ROCK)),
+         Arguments.of(
+             List.of(),
+             List.of(ItemType.ROCK, ItemType.ROCK),
+             List.of(ItemType.ROCK, ItemType.ROCK))
         );
     }
 
@@ -207,17 +208,15 @@ public class InventoryTests {
     @MethodSource("calculatedDifferenceEqualToExpectedSource")
     public void calculatedDifferenceEqualToExpected(
         final List<IItem> listA,
-        final List<IItem> listB,
+        final List<ItemType> listB,
         final List<ItemType> expectedDifference) {
         // Arrange
         final IInventory inventoryA = new Inventory();
-        final IInventory inventoryB = new Inventory();
 
         inventoryA.addMultiple(listA);
-        inventoryB.addMultiple(listB);
 
         // Act
-        final ArrayList<ItemType> difference = inventoryA.calculateDifference(inventoryB);
+        final ArrayList<ItemType> difference = inventoryA.calculateDifference(listB);
 
         // Assert
         assertThat(difference.containsAll(expectedDifference)).isTrue();

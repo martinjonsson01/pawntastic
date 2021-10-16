@@ -15,7 +15,7 @@ abstract class AbstractStructure implements IStructure {
 
     private Position position;
     private StructureType structureType;
-    private IInventory allNeededItems;
+    private Collection<ItemType> allNeededItems;
     private IInventory deliveredItems = new Inventory();
 
     /**
@@ -27,10 +27,10 @@ abstract class AbstractStructure implements IStructure {
      * @param allNeededItems The items needed to finalize construction.
      */
     AbstractStructure(
-        int posX,
-        int posY,
-        StructureType structureType,
-        final IInventory allNeededItems) {
+        final int posX,
+        final int posY,
+        final StructureType structureType,
+        final Collection<ItemType> allNeededItems) {
         this.position = new Position(posX, posY);
         this.structureType = structureType;
         this.allNeededItems = allNeededItems;
@@ -44,9 +44,9 @@ abstract class AbstractStructure implements IStructure {
      * @param allNeededItems The items needed to finalize construction.
      */
     AbstractStructure(
-        Position position,
-        StructureType structureType,
-        final IInventory allNeededItems) {
+        final Position position,
+        final StructureType structureType,
+        final Collection<ItemType> allNeededItems) {
         this((int) position.getPosX(), (int) position.getPosY(), structureType, allNeededItems);
     }
 
@@ -62,12 +62,13 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public Collection<ItemType> getNeededItems() {
-        return allNeededItems.calculateDifference(deliveredItems);
+        return deliveredItems.calculateDifference(allNeededItems);
     }
 
     @Override
     public boolean tryDeliverItem(final IItem deliveredItem) {
-        if (getNeededItems().contains(deliveredItem.getType())) {
+        final Collection<ItemType> neededItems = getNeededItems();
+        if (neededItems.contains(deliveredItem.getType())) {
             deliveredItems.add(deliveredItem);
             return true;
         }
