@@ -90,7 +90,7 @@ public class Pawntastic extends Game {
                                     infoController.getView(),
                                     TOOLBAR_HEIGHT);
         this.setScreen(gameScreen);
-        worldController.setGameContainer(gameScreen.getTable());
+        worldController.setGameContainer(gameScreen.getGameContainer());
         // Set up Input Processors
         initInputProcessors();
     }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
@@ -61,21 +62,6 @@ public class GameScreen implements Screen {
         createStage();
     }
 
-    /*
-        private void createStage() {
-        spriteBatch = new SpriteBatch();
-        stage = new Stage(viewport, spriteBatch);
-
-        final Table infoAndWorldGroup = new Table();
-        infoAndWorldGroup.setFillParent(true);
-        stage.addActor(infoAndWorldGroup);
-        infoAndWorldGroup.left();
-        infoAndWorldGroup.add(infoView.getPane()).expand().fill();
-        infoAndWorldGroup.add(gameView);
-    }
-
-     */
-
     private void createStage() {
         spriteBatch = new SpriteBatch();
         stage = new Stage(viewport, spriteBatch);
@@ -96,15 +82,17 @@ public class GameScreen implements Screen {
     }
 
     private Table createToolBar() {
-        // Set up table
+        // Set up table.
         final Table toolBarTable = new Table();
         toolBarTable.left().top();
         toolBarTable.row().expandY().fillY();
-        // Button group settings
+
+        // Button group settings.
         final ButtonGroup<Button> buttonGroup = new ButtonGroup<>();
         buttonGroup.setMaxCheckCount(1);
         buttonGroup.setMinCheckCount(1);
-        // Add buttons to table and button group
+
+        // Add buttons to table and button group.
         for (final StructureType type : StructureType.values()) {
             final Button structureButton = new StructureButton(type, skin);
             toolBarTable.add(structureButton);
@@ -122,7 +110,7 @@ public class GameScreen implements Screen {
         return stage;
     }
 
-    public Table getTable() {
+    public Actor getGameContainer() {
         return toolbarAndGame;
     }
 
