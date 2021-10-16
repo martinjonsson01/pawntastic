@@ -70,11 +70,11 @@ public class Pawntastic extends Game {
     }
 
     /**
-     * Gets a boolean whether or not the game is run in debug mode or not.
+     * Whether or not the game is run in debug mode or not.
      *
      * @return Whether or not the game is running in debug mode.
      */
-    public static boolean getDebugMode() {
+    public static boolean isDebugEnabled() {
         return DEBUG;
     }
 
