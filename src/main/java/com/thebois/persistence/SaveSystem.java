@@ -11,7 +11,12 @@ public class SaveSystem extends AbstractPersistence {
 
     private final ObjectOutputStream objectOutputStream;
 
-    SaveSystem() throws IOException {
+    /**
+     * Creates an instance of an output stream for the save-file.
+     *
+     * @throws IOException If the file save-file is deleted during runtime.
+     */
+    public SaveSystem() throws IOException {
 
         directoryExist();
 

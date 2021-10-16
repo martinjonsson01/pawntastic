@@ -11,7 +11,12 @@ public class LoadSystem extends AbstractPersistence {
 
     private final ObjectInputStream objectInputStream;
 
-    LoadSystem() throws IOException {
+    /**
+     * Creates an instance of an input stream for the save-file.
+     *
+     * @throws IOException If the save-file is deleted during runtime.
+     */
+    public LoadSystem() throws IOException {
 
         directoryExist();
         final FileInputStream fileInputStream = new FileInputStream(getSaveFilePath());
@@ -35,8 +40,8 @@ public class LoadSystem extends AbstractPersistence {
     /**
      * Returns computer resources used for holding the input stream.
      *
-     * @throws IOException If the file is not found. Will only occur if file is deleted *
-     *                     during runtime.
+     * @throws IOException If the file is not found. Will only occur if file is deleted * during
+     *                     runtime.
      */
     public void close() throws IOException {
         objectInputStream.close();
