@@ -23,8 +23,8 @@ public final class StructureView implements IView {
      * Creates an instance of a Structure view.
      */
     public StructureView() {
-        houseTexture = TextureUtils.createSquareTexture();
-        ceilingTexture = TextureUtils.createTriangleTexture();
+        houseTexture = TextureUtils.createSquareTexture(TILE_SIZE);
+        ceilingTexture = TextureUtils.createTriangleTexture(TILE_SIZE);
     }
 
     @Override

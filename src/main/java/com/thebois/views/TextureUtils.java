@@ -84,6 +84,17 @@ public final class TextureUtils {
     /**
      * Creates a new instance of a square shaped texture with the side length.
      *
+     * @param sideLength The side length of a square.
+     *
+     * @return The square texture.
+     */
+    public static Texture createSquareTexture(final int sideLength) {
+        return createSquareTexture(Color.WHITE, sideLength);
+    }
+
+    /**
+     * Creates a new instance of a square shaped texture with the side length.
+     *
      * @param color      The color used in the texture.
      * @param sideLength The side length of a square.
      *
@@ -118,6 +129,17 @@ public final class TextureUtils {
      */
     public static Texture createTriangleTexture(final Color color) {
         return createTriangleTexture(color, Pawntastic.getTileSize());
+    }
+
+    /**
+     * Creates a new instance of a triangle shaped texture with the side length.
+     *
+     * @param sideLength The side length of a square.
+     *
+     * @return The triangle texture.
+     */
+    public static Texture createTriangleTexture(final int sideLength) {
+        return createTriangleTexture(Color.WHITE, sideLength);
     }
 
     /**
