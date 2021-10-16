@@ -465,12 +465,13 @@ public class BeingTests {
                                    mockFinder);
 
         // Act
+        // Finds an incomplete structure.
         pawn.update();
+        // Doesn't pick a new incomplete structure while current structure is incomplete
         pawn.update();
 
         // Assert
-        final int callsExpected = 1;
-        verify(mockFinder, times(callsExpected)).findNearestIncompleteStructure(any());
+        verify(mockFinder, times(1)).findNearestIncompleteStructure(any());
     }
 
     @Test
@@ -500,14 +501,13 @@ public class BeingTests {
                                    mockFinder);
 
         // Act
-        // Finds A
+        // Finds mockStructureA
         pawn.update();
-        // Discard A, find B
+        // Discard mockStructureA, finds mockStructureB
         pawn.update();
 
         // Assert
-        final int callsExpected = 2;
-        verify(mockFinder, times(callsExpected)).findNearestIncompleteStructure(any());
+        verify(mockFinder, times(2)).findNearestIncompleteStructure(any());
     }
 
     @Test
