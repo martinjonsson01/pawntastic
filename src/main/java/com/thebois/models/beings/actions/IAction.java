@@ -3,7 +3,7 @@ package com.thebois.models.beings.actions;
 import com.thebois.models.beings.IActionPerformer;
 
 /**
- * An internal interface representing an action to be performed in a certain way.
+ * Represents a task to be performed in a certain way.
  */
 public interface IAction {
 
