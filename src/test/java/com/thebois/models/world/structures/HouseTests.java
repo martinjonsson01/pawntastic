@@ -34,15 +34,16 @@ public class HouseTests {
     }
 
     @Test
-    public void getTypeEqualsHouse() {
+    public void getTypeReturnsCorrectStructureType() {
         // Arrange
         final Position position = new Position(123, 456);
-
-        // Act
         final House structure = new House(position);
 
+        // Act
+        final StructureType returnedType = structure.getType();
+
         // Assert
-        assertThat(structure.getType()).isEqualTo(StructureType.HOUSE);
+        assertThat(returnedType).isEqualTo(StructureType.HOUSE);
     }
 
     @Test

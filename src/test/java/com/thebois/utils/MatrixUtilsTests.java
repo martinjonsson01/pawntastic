@@ -61,7 +61,7 @@ public class MatrixUtilsTests {
 
     @ParameterizedTest
     @MethodSource("getMatricesToTest")
-    public void matrixToCollection(final String[][] matrix,
+    public void matrixToCollectionReturnsExpectedElements(final String[][] matrix,
                                        final Collection<String> expectedElements) {
         // Act
         final Collection<String> stringCollection = MatrixUtils.toCollection(matrix);
@@ -71,18 +71,18 @@ public class MatrixUtilsTests {
     }
 
     private static Stream<Arguments> getCorrectCoordinatesToTest() {
-        final String[][] stringOptionalMatrix = new String[][] {
+        final String[][] stringMatrix = new String[][] {
             { "1", null, "3" }, { null, null, "6" }, { "7", "8", "9" },
             };
 
-        return Stream.of(Arguments.of(stringOptionalMatrix, 0, 0, "1"),
-                         Arguments.of(stringOptionalMatrix, 2, 2, "9")
+        return Stream.of(Arguments.of(stringMatrix, 0, 0, "1"),
+                         Arguments.of(stringMatrix, 2, 2, "9")
         );
     }
 
     @ParameterizedTest
     @MethodSource("getCorrectCoordinatesToTest")
-    public void matrixSpiralSearch(final String[][] stringMatrix, final int startX,
+    public void matrixSpiralSearchFindsCorrectElement(final String[][] stringMatrix, final int startX,
                                          final int startY,
                                          final String expectedString) {
         // Act
