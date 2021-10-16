@@ -161,17 +161,6 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     public boolean hasItem(final ItemType itemType, final int amount) {
         return inventory.hasItem(itemType, amount);
     }
-
-    @Override
-    public boolean isEmpty() {
-        return inventory.isEmpty();
-    }
-
-    @Override
-    public int size() {
-        return inventory.size();
-    }
-
     @Override
     public int numberOf(final ItemType itemType) {
         return inventory.numberOf(itemType);

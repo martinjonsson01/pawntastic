@@ -208,8 +208,7 @@ public class InventoryTests {
     @MethodSource("calculatedDifferenceEqualToExpectedSource")
     public void calculatedDifferenceEqualToExpected(
         final List<IItem> listA,
-        final List<ItemType> listB,
-        final List<ItemType> expectedDifference) {
+        final List<ItemType> listB, final List<ItemType> expectedDifference) {
         // Arrange
         final IInventory inventoryA = new Inventory();
 
@@ -220,45 +219,6 @@ public class InventoryTests {
 
         // Assert
         assertThat(difference.containsAll(expectedDifference)).isTrue();
-    }
-
-    private static Stream<Arguments> emptyReturnsCorrectValueSource() {
-        return Stream.of(
-            Arguments.of(List.of(new Rock(), new Rock()), false),
-            Arguments.of(List.of(), true)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("emptyReturnsCorrectValueSource")
-    public void emptyReturnsCorrectValue(
-        final List<IItem> items,
-        final boolean expectedResult) {
-        // Arrange
-        final IInventory inventory = new Inventory();
-        inventory.addMultiple(items);
-
-        // Assert
-        assertThat(inventory.isEmpty()).isEqualTo(expectedResult);
-    }
-
-    private static Stream<Arguments> sizeReturnsCorrectValueSource() {
-        return Stream.of(
-            Arguments.of(new Inventory(), List.of(new Rock(), new Rock()), 2),
-            Arguments.of(new Inventory(), List.of(), 0)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("sizeReturnsCorrectValueSource")
-    public void sizeReturnsCorrectValue(final IInventory inventory,
-        final List<IItem> items,
-        final int expectedSize) {
-        // Arrange
-        inventory.addMultiple(items);
-
-        // Assert
-        assertThat(inventory.size()).isEqualTo(expectedSize);
     }
 
 }

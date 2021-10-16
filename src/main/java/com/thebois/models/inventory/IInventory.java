@@ -70,20 +70,6 @@ public interface IInventory {
     boolean hasItem(ItemType itemType, int amount);
 
     /**
-     * Returns true if IInventory has no items.
-     *
-     * @return Returns true if IInventory has no items.
-     */
-    boolean isEmpty();
-
-    /**
-     * Number of Items in the inventory.
-     *
-     * @return The number of IItems in the inventory.
-     */
-    int size();
-
-    /**
      * Counts how many items are in the implemented inventory of the specified type.
      *
      * @param itemType The type to be counted.
