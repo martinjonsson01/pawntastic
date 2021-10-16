@@ -1,4 +1,4 @@
-package com.thebois;
+package com.thebois.persistence;
 
 import java.io.FileInputStream;
 import java.io.IOException;
