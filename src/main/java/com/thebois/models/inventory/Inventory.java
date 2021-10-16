@@ -1,7 +1,6 @@
 package com.thebois.models.inventory;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.thebois.models.inventory.items.IItem;
@@ -82,21 +81,6 @@ public class Inventory implements IInventory {
             }
         }
         return count;
-    }
-
-    @Override
-    public ArrayList<ItemType> calculateDifference(final Collection<ItemType> otherItems) {
-        final ArrayList<ItemType> itemDifference = new ArrayList<>(otherItems);
-        final ArrayList<ItemType> inventoryAsItemType = new ArrayList<>();
-
-        // Add all items from the inventory as ItemType to itemDifference.
-        for (final IItem item : this.items) {
-            inventoryAsItemType.add(item.getType());
-        }
-        for (final ItemType itemType : inventoryAsItemType) {
-            itemDifference.remove(itemType);
-        }
-        return itemDifference;
     }
 
 }

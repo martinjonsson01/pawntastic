@@ -1,6 +1,8 @@
 package com.thebois.models.world.structures;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 import com.thebois.models.Position;
@@ -16,7 +18,7 @@ abstract class AbstractStructure implements IStructure {
 
     private Position position;
     private StructureType structureType;
-    private Collection<ItemType> allNeededItems;
+    private Map<ItemType, Integer> allNeededItems;
     private IInventory deliveredItems = new Inventory();
 
     /**
@@ -31,7 +33,7 @@ abstract class AbstractStructure implements IStructure {
         final int posX,
         final int posY,
         final StructureType structureType,
-        final Collection<ItemType> allNeededItems) {
+        final Map<ItemType, Integer> allNeededItems) {
         this.position = new Position(posX, posY);
         this.structureType = structureType;
         this.allNeededItems = allNeededItems;
@@ -47,7 +49,7 @@ abstract class AbstractStructure implements IStructure {
     AbstractStructure(
         final Position position,
         final StructureType structureType,
-        final Collection<ItemType> allNeededItems) {
+        final Map<ItemType, Integer> allNeededItems) {
         this((int) position.getPosX(), (int) position.getPosY(), structureType, allNeededItems);
     }
 
@@ -63,7 +65,24 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public Collection<ItemType> getNeededItems() {
-        return deliveredItems.calculateDifference(allNeededItems);
+        final Collection<ItemType> neededItems = new ArrayList<>();
+        for (final var entry : allNeededItems.entrySet()) {
+            final int numberOf = entry.getValue() - deliveredItems.numberOf(entry.getKey());
+
+            for (int i = 0; i < numberOf; i++) {
+                neededItems.add(entry.getKey());
+            }
+
+        }
+        return neededItems;
+    }
+
+    private int calculateSumOfAllNeededItems() {
+        int sum = 0;
+        for (final var entry : allNeededItems.entrySet()) {
+            sum += entry.getValue();
+        }
+        return sum;
     }
 
     @Override
@@ -78,8 +97,8 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public float getBuiltRatio() {
-        final float totalDelivered = this.allNeededItems.size() - getNeededItems().size();
-        final float totalNeeded = this.allNeededItems.size();
+        final float totalNeeded = calculateSumOfAllNeededItems();
+        final float totalDelivered = totalNeeded - getNeededItems().size();
 
         return totalDelivered / totalNeeded;
     }

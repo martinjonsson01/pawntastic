@@ -77,14 +77,4 @@ public interface IInventory {
      * @return The counter.
      */
     int numberOf(ItemType itemType);
-
-    /**
-     * Calculates and returns a list of the item-types only present in the given collection.
-     *
-     * @param items The item-types to check against.
-     *
-     * @return A list of item-types.
-     */
-    Collection<ItemType> calculateDifference(Collection<ItemType> items);
-
 }

@@ -1,7 +1,7 @@
 package com.thebois.models.world.structures;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.EnumMap;
+import java.util.Map;
 
 import com.thebois.models.Position;
 import com.thebois.models.inventory.items.ItemType;
@@ -30,14 +30,13 @@ public class House extends AbstractStructure {
         super(position, StructureType.HOUSE, generateNeededItemsInventory());
     }
 
-    private static Collection<ItemType> generateNeededItemsInventory() {
-        final Collection<ItemType> neededItems = new ArrayList<>();
+    private static Map<ItemType, Integer> generateNeededItemsInventory() {
+        final Map<ItemType, Integer> neededItems = new EnumMap<>(ItemType.class);
 
         final int numberOfItems = 10;
-        for (int i = 0; i < numberOfItems; i++) {
-            neededItems.add(ItemType.LOG);
-            neededItems.add(ItemType.ROCK);
-        }
+
+        neededItems.put(ItemType.LOG, numberOfItems);
+        neededItems.put(ItemType.ROCK, numberOfItems);
 
         return neededItems;
     }
