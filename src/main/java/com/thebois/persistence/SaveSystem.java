@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+
 /**
  * Handles the saving of objects to the save-file.
  */
@@ -18,7 +19,7 @@ public class SaveSystem extends AbstractPersistence {
      */
     public SaveSystem() throws IOException {
 
-        directoryExist();
+        ensureDirectoryExists();
 
         final FileOutputStream fileOutputStream = new FileOutputStream(getSaveFilePath());
         objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -36,15 +37,15 @@ public class SaveSystem extends AbstractPersistence {
         objectOutputStream.writeObject(object);
     }
 
-    /**
-     * Flushes the output stream and returns computer resoruceses used but the output stream.
-     *
-     * @throws IOException If the save-file is not found. Will only occur if file is deleted *
-     *                     during runtime.
-     */
-    public void exit() throws IOException {
-        objectOutputStream.flush();
-        objectOutputStream.close();
+    @Override
+    public void dispose() {
+        try {
+            objectOutputStream.flush();
+            objectOutputStream.close();
+        }
+        catch (final IOException error) {
+            error.printStackTrace();
+        }
     }
 
 }

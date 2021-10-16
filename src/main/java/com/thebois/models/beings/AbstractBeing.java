@@ -89,7 +89,8 @@ public abstract class AbstractBeing implements IBeing {
 
     @Override
     public void update() {
-        // Registers everytime because we serialize.
+        // Registers every time because it might be registered to an old instance of the event bus
+        // (caused by saving/loading).
         Pawntastic.BUS.register(this);
         move();
     }

@@ -112,9 +112,8 @@ public class Pawntastic extends Game {
     }
 
     private void createModels() throws IOException, ClassNotFoundException {
-
         try {
-            getModelsFromSaveFile();
+            loadModelsFromSaveFile();
         }
         catch (final IOException exception) {
             world = new World(WORLD_SIZE, 0);
@@ -124,11 +123,11 @@ public class Pawntastic extends Game {
         }
     }
 
-    private void getModelsFromSaveFile() throws IOException, ClassNotFoundException {
+    private void loadModelsFromSaveFile() throws IOException, ClassNotFoundException {
         final LoadSystem loadSystem = new LoadSystem();
-        world = (World) loadSystem.read();
-        colony = (Colony) loadSystem.read();
-        loadSystem.close();
+        world = loadSystem.loadWorld();
+        colony = loadSystem.loadColony();
+        loadSystem.dispose();
     }
 
     private void generateFont() {
@@ -165,7 +164,7 @@ public class Pawntastic extends Game {
         final SaveSystem saveSystem = new SaveSystem();
         saveSystem.save(world);
         saveSystem.save(colony);
-        saveSystem.exit();
+        saveSystem.dispose();
     }
 
     @Override
