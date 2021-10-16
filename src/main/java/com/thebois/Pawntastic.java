@@ -71,8 +71,8 @@ public class Pawntastic extends Game {
         try {
             createModels();
         }
-        catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+        catch (IOException | ClassNotFoundException error) {
+            error.printStackTrace();
         }
         // Camera & Viewport
         final OrthographicCamera camera = new OrthographicCamera();

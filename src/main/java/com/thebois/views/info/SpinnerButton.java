@@ -39,9 +39,10 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
     /**
      * Instantiates a new spinner.
      *
-     * @param skin The skin to style widgets with
-     * @param min  The minimum value the spinner will allow
-     * @param max  The maximum value the spinner will allow
+     * @param skin  The skin to style widgets with.
+     * @param value The current value of the spinner.
+     * @param min   The minimum value the spinner will allow.
+     * @param max   The maximum value the spinner will allow.
      */
     public SpinnerButton(final Skin skin, final int value, final int min, final int max) {
         this.value = value;
