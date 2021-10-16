@@ -7,5 +7,5 @@ public enum StructureType {
     /**
      * A structure in form of a house.
      */
-    HOUSE
+    HOUSE, STOCKPILE
 }

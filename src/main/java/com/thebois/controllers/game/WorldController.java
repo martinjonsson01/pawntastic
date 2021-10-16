@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import com.thebois.Pawntastic;
 import com.thebois.controllers.IController;
@@ -25,6 +27,7 @@ public class WorldController implements IController<GameView> {
     private final Collection<IController<IView>> controllers;
     private final Collection<InputProcessor> inputProcessors;
     private final GameView gameView;
+    private final StructureController structureController;
 
     /**
      * Instantiate with all controllers and views used for the world.
@@ -41,9 +44,7 @@ public class WorldController implements IController<GameView> {
         final IProjector projector,
         final float tileSize,
         final BitmapFont font) {
-        final StructureController structureController = new StructureController(world,
-                                                                                projector,
-                                                                                tileSize);
+        structureController = new StructureController(world, projector, tileSize);
         final TerrainController terrainController = new TerrainController(world, tileSize);
         final ColonyController colonyController = new ColonyController(colony, tileSize);
         final ResourceController resourceController = new ResourceController(world, tileSize);
@@ -74,6 +75,10 @@ public class WorldController implements IController<GameView> {
         final FrameCounterView frameCounterView = new FrameCounterView(font);
 
         return List.of(frameCounterView, beingPathDebugView);
+    }
+
+    public void setGameContainer(final Actor gameContainer) {
+        structureController.setGameContainer(gameContainer);
     }
 
     @Override
