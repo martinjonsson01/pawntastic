@@ -16,17 +16,17 @@ import com.thebois.models.inventory.items.ItemType;
  */
 abstract class AbstractStructure implements IStructure {
 
-    private Position position;
-    private StructureType structureType;
-    private Map<ItemType, Integer> allNeededItems;
-    private IInventory deliveredItems = new Inventory();
+    private final Position position;
+    private final StructureType structureType;
+    private final Map<ItemType, Integer> allNeededItems;
+    private final IInventory deliveredItems = new Inventory();
 
     /**
      * Creates a structure with a position and structure type.
      *
-     * @param posX          Position in X-axis.
-     * @param posY          Position in Y-axis.
-     * @param structureType The type of structure to create.
+     * @param posX           Position in X-axis.
+     * @param posY           Position in Y-axis.
+     * @param structureType  The type of structure to create.
      * @param allNeededItems The items needed to finalize construction.
      */
     AbstractStructure(
@@ -42,8 +42,8 @@ abstract class AbstractStructure implements IStructure {
     /**
      * Creates a structure with a position and type.
      *
-     * @param position      The position the structure have.
-     * @param structureType The type of structure to create.
+     * @param position       The position the structure have.
+     * @param structureType  The type of structure to create.
      * @param allNeededItems The items needed to finalize construction.
      */
     AbstractStructure(
@@ -72,7 +72,6 @@ abstract class AbstractStructure implements IStructure {
             for (int i = 0; i < numberOf; i++) {
                 neededItems.add(entry.getKey());
             }
-
         }
         return neededItems;
     }

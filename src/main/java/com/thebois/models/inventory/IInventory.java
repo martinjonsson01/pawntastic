@@ -1,7 +1,6 @@
 package com.thebois.models.inventory;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.thebois.models.inventory.items.IItem;

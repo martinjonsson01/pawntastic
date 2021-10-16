@@ -184,4 +184,37 @@ public class HouseTests {
         assertThat(neededItems.containsAll(expectedNeededItems)).isTrue();
     }
 
+    private static Stream<Arguments> whenItemsHaveBeenDeliveredStructureReturnsCorrectIsCompleteSource() {
+        return Stream.of(
+            Arguments.of(10, 10, true),
+            Arguments.of(20, 20, true),
+            Arguments.of(0, 0, false),
+            Arguments.of(5, 5, false),
+            Arguments.of(20, 0, false),
+            Arguments.of(10, 0, false));
+    }
+
+    @ParameterizedTest
+    @MethodSource("whenItemsHaveBeenDeliveredStructureReturnsCorrectIsCompleteSource")
+    public void whenItemsHaveBeenDeliveredStructureReturnsCorrectIsComplete(
+        final int totalLogs, final int totalRocks, final boolean expectedResult) {
+
+        // Arrange
+        final House house = new House(new Position());
+
+        for (int i = 0; i < totalLogs; i++) {
+            house.tryDeliverItem(new Log());
+        }
+        for (int i = 0; i < totalRocks; i++) {
+            house.tryDeliverItem(new Rock());
+        }
+
+        // Act
+        final boolean isComplete = house.isCompleted();
+
+        // Assert
+        assertThat(isComplete).isEqualTo(expectedResult);
+    }
+
+
 }
