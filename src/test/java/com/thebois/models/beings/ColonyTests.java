@@ -16,8 +16,8 @@ import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
-import com.thebois.models.world.Grass;
 import com.thebois.models.world.IWorld;
+import com.thebois.models.world.terrains.Grass;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;

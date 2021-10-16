@@ -1,7 +1,6 @@
 package com.thebois.models.world;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -9,8 +8,12 @@ import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.IFinder;
 import com.thebois.models.Position;
+import com.thebois.models.world.generation.ResourceGenerator;
+import com.thebois.models.world.generation.TerrainGenerator;
+import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.terrains.ITerrain;
 import com.thebois.utils.MatrixUtils;
 
 /**
@@ -20,31 +23,37 @@ public class World implements IWorld, IFinder {
 
     private final ITerrain[][] terrainMatrix;
     private final IStructure[][] structureMatrix;
-    private final int worldSize;
+    private final IResource[][] resourceMatrix;
     private final ITile[][] canonicalMatrix;
+    private final int worldSize;
 
     /**
      * Initiates the world with the given size.
      *
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
+     * @param seed      The seed used to generate the world.
      */
-    public World(final int worldSize) {
+    public World(final int worldSize, final int seed) {
         this.worldSize = worldSize;
-
-        terrainMatrix = new ITerrain[worldSize][worldSize];
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
-                terrainMatrix[y][x] = new Grass(x, y);
-            }
-        }
-        // Structures
-        structureMatrix = new IStructure[worldSize][worldSize];
-        for (final IStructure[] matrix : structureMatrix) {
-            Arrays.fill(matrix, null);
-        }
-
+        terrainMatrix = setUpTerrain(worldSize, seed);
+        structureMatrix = setUpStructures();
+        resourceMatrix = setUpResources(worldSize, seed);
         canonicalMatrix = new ITile[worldSize][worldSize];
         updateCanonicalMatrix();
+    }
+
+    private IStructure[][] setUpStructures() {
+        final IStructure[][] newStructureMatrix = new IStructure[worldSize][worldSize];
+        MatrixUtils.populateElements(newStructureMatrix, (x, y) -> null);
+        return newStructureMatrix;
+    }
+
+    protected ITerrain[][] setUpTerrain(final int size, final int seed) {
+        return new TerrainGenerator(worldSize, seed).generateTerrainMatrix();
+    }
+
+    protected IResource[][] setUpResources(final int size, final int seed) {
+        return new ResourceGenerator(worldSize, seed).generateResourceMatrix();
     }
 
     /**
@@ -57,21 +66,24 @@ public class World implements IWorld, IFinder {
      */
     private void updateCanonicalMatrix() {
         // Fill with terrain.
-        MatrixUtils.forEachElement(terrainMatrix, tile -> {
+        replaceTilesInCanonicalMatrix(terrainMatrix);
+        // Replace with any possible resource.
+        replaceTilesInCanonicalMatrix(resourceMatrix);
+        // Replace with any possible structure.
+        replaceTilesInCanonicalMatrix(structureMatrix);
+    }
+
+    private void replaceTilesInCanonicalMatrix(final ITile[][] tiles) {
+        MatrixUtils.forEachElement(tiles, this::replaceTileInCanonicalMatrix);
+    }
+
+    private void replaceTileInCanonicalMatrix(final ITile tile) {
+        if (tile != null) {
             final Position position = tile.getPosition();
             final int posY = (int) position.getPosY();
             final int posX = (int) position.getPosX();
-            canonicalMatrix[posY][posX] = terrainMatrix[posY][posX].deepClone();
-        });
-        // Replace terrain with any possible structure.
-        MatrixUtils.forEachElement(structureMatrix, structure -> {
-            if (structure != null) {
-                final Position position = structure.getPosition();
-                final int posY = (int) position.getPosY();
-                final int posX = (int) position.getPosX();
-                canonicalMatrix[posY][posX] = structure.deepClone();
-            }
-        });
+            canonicalMatrix[posY][posX] = tile;
+        }
     }
 
     /**
@@ -85,9 +97,17 @@ public class World implements IWorld, IFinder {
         final List<Position> emptyPositions = new ArrayList<>();
         MatrixUtils.forEachElement(canonicalMatrix, tile -> {
             if (emptyPositions.size() >= count) return;
-            emptyPositions.add(tile.getPosition());
+            if (isPositionEmpty(tile.getPosition())) {
+                emptyPositions.add(tile.getPosition());
+            }
         });
         return emptyPositions;
+    }
+
+    private boolean isPositionEmpty(final Position position) {
+        final int x = (int) position.getPosX();
+        final int y = (int) position.getPosY();
+        return canonicalMatrix[y][x].getCost() < Float.MAX_VALUE;
     }
 
     /**
@@ -104,30 +124,40 @@ public class World implements IWorld, IFinder {
      *
      * @return ITile[][]
      */
-    public ArrayList<ITerrain> getTerrainTiles() {
-        final ArrayList<ITerrain> copy = new ArrayList<>();
-        for (final ITerrain[] matrix : terrainMatrix) {
-            for (final ITerrain iTerrain : matrix) {
-                copy.add(iTerrain.deepClone());
-            }
-        }
+    public Collection<ITerrain> getTerrainTiles() {
+        final Collection<ITerrain> copy = new ArrayList<>();
+        MatrixUtils.forEachElement(terrainMatrix,
+                                   maybeTerrain -> copy.add(maybeTerrain.deepClone()));
         return copy;
     }
 
     /**
-     * Returns the structures in a Collection as the interface IStructures.
+     * Returns the structures in a Collection as the interface IStructure.
      *
      * @return The list to be returned.
      */
     public Collection<IStructure> getStructures() {
         final Collection<IStructure> copy = new ArrayList<>();
-        for (final IStructure[] matrix : structureMatrix) {
-            for (final IStructure structure : matrix) {
-                if (structure != null) {
-                    copy.add(structure.deepClone());
-                }
+        MatrixUtils.forEachElement(structureMatrix, maybeStructure -> {
+            if (maybeStructure != null) {
+                copy.add(maybeStructure.deepClone());
             }
-        }
+        });
+        return copy;
+    }
+
+    /**
+     * Returns the resources in a Collection as the interface IResource.
+     *
+     * @return The list to be returned.
+     */
+    public Collection<IResource> getResources() {
+        final Collection<IResource> copy = new ArrayList<>();
+        MatrixUtils.forEachElement(resourceMatrix, maybeResource -> {
+            if (maybeResource != null) {
+                copy.add(maybeResource.deepClone());
+            }
+        });
         return copy;
     }
 
@@ -171,7 +201,7 @@ public class World implements IWorld, IFinder {
         if (posIntX < 0 || posIntX >= structureMatrix[posIntY].length) {
             return false;
         }
-        return structureMatrix[posIntY][posIntX] == null;
+        return isPositionEmpty(position);
     }
 
     private void postObstacleEvent(final int posX, final int posY) {
@@ -194,7 +224,7 @@ public class World implements IWorld, IFinder {
         for (int neighbourY = startY; neighbourY <= endY; neighbourY++) {
             for (int neighbourX = startX; neighbourX <= endX; neighbourX++) {
                 final ITile neighbour = canonicalMatrix[neighbourY][neighbourX];
-                if (tile.equals(neighbour)) continue;
+                if (position.equals(neighbour.getPosition())) continue;
                 if (isDiagonalTo(tile, neighbour)) continue;
                 tiles.add(neighbour);
             }
@@ -213,7 +243,7 @@ public class World implements IWorld, IFinder {
         if (posX < 0 || posY < 0 || posX >= worldSize || posY >= worldSize) {
             throw new IndexOutOfBoundsException("Given position is outside of the world.");
         }
-        return terrainMatrix[posY][posX];
+        return canonicalMatrix[posY][posX];
     }
 
     private boolean isDiagonalTo(final ITile tile, final ITile neighbour) {
