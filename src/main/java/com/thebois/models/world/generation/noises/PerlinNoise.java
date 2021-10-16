@@ -40,10 +40,7 @@ public class PerlinNoise implements INoise {
      *                    not be 0 if octave is greater than 1.
      */
     public PerlinNoise(
-        final int octaves,
-        final float amplitude,
-        final double frequency,
-        final double persistence) {
+        final int octaves, final float amplitude, final float frequency, final float persistence) {
         this.octaves = octaves;
         this.amplitude = amplitude;
         this.frequency = frequency;

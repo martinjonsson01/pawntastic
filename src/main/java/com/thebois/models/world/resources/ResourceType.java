@@ -1,5 +1,8 @@
 package com.thebois.models.world.resources;
 
+import com.thebois.models.world.generation.noises.INoise;
+import com.thebois.models.world.generation.noises.NoiseFactory;
+
 /**
  * All types of resources.
  */
@@ -7,21 +10,23 @@ public enum ResourceType {
     /**
      * A body of water.
      */
-    WATER(0.5f, 0),
+    WATER(0.5f, 0, NoiseFactory.createLargeChunksNoise()),
     /**
      * A natural tree.
      */
-    TREE(0.5f, 31),
+    TREE(0.5f, 31, NoiseFactory.createSmallChunksNoise()),
     /**
      * A large stone on the ground.
      */
-    STONE(0.5f, 27);
+    STONE(0.5f, 27, NoiseFactory.createVerySmallChunksNoise());
     private final float threshold;
     private final int seedPermutation;
+    private final INoise noise;
 
-    ResourceType(final float threshold, final int seedPermutation) {
+    ResourceType(final float threshold, final int seedPermutation, final INoise noise) {
         this.threshold = threshold;
         this.seedPermutation = seedPermutation;
+        this.noise = noise;
     }
 
     /**
@@ -35,7 +40,7 @@ public enum ResourceType {
      * Should be used like this: Value >= Threshold or Value <= Threshold.
      * </p>
      *
-     * @return The Threshold..
+     * @return The Threshold.
      */
     public float getThreshold() {
         return threshold;
@@ -56,5 +61,14 @@ public enum ResourceType {
      */
     public int getSeedPermutation() {
         return seedPermutation;
+    }
+
+    /**
+     * The noise used to generate this type of resource.
+     *
+     * @return The noise.
+     */
+    public INoise getNoise() {
+        return noise;
     }
 }

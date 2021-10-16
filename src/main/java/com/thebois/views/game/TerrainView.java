@@ -2,37 +2,18 @@ package com.thebois.views.game;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import com.thebois.models.world.terrains.ITerrain;
-import com.thebois.models.world.terrains.TerrainType;
-import com.thebois.views.TextureUtils;
 
 /**
  * World view handles all the drawing of the world itself and its information on how to draw it.
  */
 public class TerrainView implements IView {
 
-    private static final Color GRASS_COLOR = Color.valueOf("#008000");
-    private static final Color DIRT_COLOR = Color.valueOf("#76552b");
-    private static final Color SAND_COLOR = Color.valueOf("#bbc201");
-    private static final Map<TerrainType, Color> TERRAIN_COLOR;
-
-    static {
-        TERRAIN_COLOR = new HashMap<>();
-        TERRAIN_COLOR.put(TerrainType.GRASS, GRASS_COLOR);
-        TERRAIN_COLOR.put(TerrainType.DIRT, DIRT_COLOR);
-        TERRAIN_COLOR.put(TerrainType.SAND, SAND_COLOR);
-    }
-
-    private final float tileSize;
     private Collection<ITerrain> terrainTiles = new ArrayList<>();
-    private final Texture tileTexture;
+    private final float tileSize;
 
     /**
      * Creates the WorldView with a tileSize.
@@ -41,7 +22,6 @@ public class TerrainView implements IView {
      */
     public TerrainView(final float tileSize) {
         this.tileSize = tileSize;
-        tileTexture = TextureUtils.createSquareTexture(tileSize);
     }
 
     /**
@@ -56,9 +36,11 @@ public class TerrainView implements IView {
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         for (final ITerrain terrain : terrainTiles) {
-            batch.setColor(TERRAIN_COLOR.get(terrain.getType()));
+            final ViewableTerrain viewableTerrain = ViewableTerrain.valueByType(terrain.getType());
+
+            batch.setColor(viewableTerrain.getColor());
             batch.draw(
-                tileTexture,
+                viewableTerrain.getTexture(),
                 offsetX + terrain.getPosition().getPosX() * tileSize,
                 offsetY + terrain.getPosition().getPosY() * tileSize,
                 tileSize,
@@ -68,7 +50,9 @@ public class TerrainView implements IView {
 
     @Override
     public void dispose() {
-        tileTexture.dispose();
+        for (final ViewableTerrain viewableTerrain : ViewableTerrain.values()) {
+            viewableTerrain.getTexture().dispose();
+        }
     }
 
 }

@@ -64,7 +64,7 @@ public final class TextureUtils {
      *
      * @return The square texture.
      */
-    public static Texture createSquareTexture(final float sideLength) {
+    public static Texture createSquareTexture(final int sideLength) {
         return createSquareTexture(sideLength, Color.WHITE);
     }
 
@@ -76,11 +76,10 @@ public final class TextureUtils {
      *
      * @return The square texture.
      */
-    public static Texture createSquareTexture(final float sideLength, final Color color) {
-        final int roundedTileSize = (int) sideLength;
-        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
+    public static Texture createSquareTexture(final int sideLength, final Color color) {
+        final Pixmap pixmap = new Pixmap(sideLength, sideLength, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
-        pixmap.fillRectangle(0, 0, roundedTileSize, roundedTileSize);
+        pixmap.fillRectangle(0, 0, sideLength, sideLength);
         final Texture squareTexture = new Texture(pixmap);
         pixmap.dispose();
         return squareTexture;
@@ -93,7 +92,7 @@ public final class TextureUtils {
      *
      * @return The triangle texture.
      */
-    public static Texture createTriangleTexture(final float sideLength) {
+    public static Texture createTriangleTexture(final int sideLength) {
         return createTriangleTexture(sideLength, Color.WHITE);
     }
 
@@ -105,16 +104,10 @@ public final class TextureUtils {
      *
      * @return The triangle texture.
      */
-    public static Texture createTriangleTexture(final float sideLength, final Color color) {
-        final int roundedTileSize = (int) sideLength;
-        final Pixmap pixmap = new Pixmap(roundedTileSize, roundedTileSize, Pixmap.Format.RGBA8888);
+    public static Texture createTriangleTexture(final int sideLength, final Color color) {
+        final Pixmap pixmap = new Pixmap(sideLength, sideLength, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
-        pixmap.fillTriangle(roundedTileSize / 2,
-                            0,
-                            0,
-                            roundedTileSize,
-                            roundedTileSize,
-                            roundedTileSize);
+        pixmap.fillTriangle(sideLength / 2, 0, 0, sideLength, sideLength, sideLength);
         final Texture squareTexture = new Texture(pixmap);
         pixmap.dispose();
         return squareTexture;

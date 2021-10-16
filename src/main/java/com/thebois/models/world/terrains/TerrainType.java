@@ -1,5 +1,8 @@
 package com.thebois.models.world.terrains;
 
+import com.thebois.models.world.generation.noises.INoise;
+import com.thebois.models.world.generation.noises.NoiseFactory;
+
 /**
  * All the different types of terrain in the game.
  */
@@ -7,21 +10,24 @@ public enum TerrainType {
     /**
      * The default ground terrain.
      */
-    GRASS(0, 0),
+    GRASS(0, 0, NoiseFactory.createFillMapNoise()),
     /**
      * Terrain of type dirt.
      */
-    DIRT(0.4f, 27),
+    DIRT(0.4f, 27, NoiseFactory.createLargeChunksNoise()),
     /**
      * Terrain of type sand.
      */
-    SAND(0.3f, 0);
+    SAND(0.3f, 0, NoiseFactory.createLargeChunksNoise());
     private final float threshold;
     private final int seedPermutation;
+    private final INoise noise;
 
-    TerrainType(final float threshold, final int seedPermutation) {
+    TerrainType(
+        final float threshold, final int seedPermutation, final INoise noise) {
         this.threshold = threshold;
         this.seedPermutation = seedPermutation;
+        this.noise = noise;
     }
 
     /**
@@ -56,5 +62,14 @@ public enum TerrainType {
      */
     public int getSeedPermutation() {
         return seedPermutation;
+    }
+
+    /**
+     * The noise used to generate this type of terrain.
+     *
+     * @return The noise.
+     */
+    public INoise getNoise() {
+        return noise;
     }
 }
