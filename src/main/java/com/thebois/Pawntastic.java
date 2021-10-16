@@ -15,6 +15,7 @@ import com.google.common.eventbus.EventBus;
 
 import com.thebois.controllers.game.WorldController;
 import com.thebois.controllers.info.InfoController;
+import com.thebois.controllers.toolbar.ToolbarController;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.world.World;
@@ -63,6 +64,7 @@ public class Pawntastic extends Game {
     // Controllers
     private WorldController worldController;
     private InfoController infoController;
+    private ToolbarController toolbarController;
 
     @Override
     public void create() {
@@ -79,8 +81,9 @@ public class Pawntastic extends Game {
         final IProjector projector = new ViewportWrapper(viewport);
 
         // Controllers
-        this.worldController = new WorldController(world, colony, projector, TILE_SIZE, font);
+        this.worldController = new WorldController(world, colony, TILE_SIZE, font);
         this.infoController = new InfoController(colony, uiSkin);
+        this.toolbarController = new ToolbarController(world, uiSkin, projector, TILE_SIZE);
 
         // Screens
         gameScreen = new GameScreen(viewport,
@@ -88,9 +91,9 @@ public class Pawntastic extends Game {
                                     uiSkin,
                                     worldController.getView(),
                                     infoController.getView(),
+                                    toolbarController.getView(),
                                     TOOLBAR_HEIGHT);
         this.setScreen(gameScreen);
-        worldController.setGameContainer(gameScreen.getGameContainer());
         // Set up Input Processors
         initInputProcessors();
     }
@@ -146,7 +149,7 @@ public class Pawntastic extends Game {
     private void initInputProcessors() {
         final InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(gameScreen.getInputProcessor());
-        for (final InputProcessor inputProcessor : worldController.getInputProcessors()) {
+        for (final InputProcessor inputProcessor : toolbarController.getInputProcessors()) {
             multiplexer.addProcessor(inputProcessor);
         }
         Gdx.input.setInputProcessor(multiplexer);

@@ -7,17 +7,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import com.thebois.models.world.structures.StructureType;
-import com.thebois.views.game.GameView;
-import com.thebois.views.game.StructureButton;
 import com.thebois.views.info.InfoView;
+import com.thebois.views.toolbar.ToolbarView;
 
 /**
  * The main screen displaying the world and UI.
@@ -28,12 +24,12 @@ public class GameScreen implements Screen {
     private final FitViewport viewport;
     private final Color backgroundColor = new Color(0, 0, 0.2f, 1);
     private final Skin skin;
-    private final GameView gameView;
+    private final Actor gameView;
     private final InfoView infoView;
+    private final ToolbarView toolbarView;
     private Stage stage;
     private SpriteBatch spriteBatch;
-    private Table toolbarAndGame;
-    private final float toolBarHeight;
+    private final Actor gameContainer;
 
     /**
      * Creates an instance of GameScreen.
@@ -43,21 +39,24 @@ public class GameScreen implements Screen {
      * @param skin          The skin with styles to apply to all widgets
      * @param gameView      The view of the game world to render
      * @param infoView      The view displaying info about the colony
-     * @param toolBarHeight The height of the tool bar.
+     * @param toolbarView   The view that displays the tool bar.
+     * @param toolbarHeight The view of the toolbar.
      */
     public GameScreen(
         final FitViewport viewport,
         final OrthographicCamera camera,
         final Skin skin,
-        final GameView gameView,
+        final Actor gameView,
         final InfoView infoView,
-        final float toolBarHeight) {
+        final ToolbarView toolbarView,
+        final float toolbarHeight) {
         this.viewport = viewport;
         this.camera = camera;
         this.skin = skin;
         this.gameView = gameView;
         this.infoView = infoView;
-        this.toolBarHeight = toolBarHeight;
+        this.toolbarView = toolbarView;
+        this.gameContainer = createGameContainer(toolbarHeight);
 
         createStage();
     }
@@ -66,39 +65,20 @@ public class GameScreen implements Screen {
         spriteBatch = new SpriteBatch();
         stage = new Stage(viewport, spriteBatch);
 
-        final Table toolBar = createToolBar();
-
-        toolbarAndGame = new Table();
-        toolbarAndGame.add(gameView);
-        toolbarAndGame.row().height(toolBarHeight).left();
-        toolbarAndGame.add(toolBar);
-
         final Table infoAndGameTable = new Table();
         infoAndGameTable.setFillParent(true);
         infoAndGameTable.add(infoView.getPane()).fill().expand();
-        infoAndGameTable.add(toolbarAndGame);
+        infoAndGameTable.add(gameContainer);
         // Add to stage
         stage.addActor(infoAndGameTable);
     }
 
-    private Table createToolBar() {
-        // Set up table.
-        final Table toolBarTable = new Table();
-        toolBarTable.left().top();
-        toolBarTable.row().expandY().fillY();
-
-        // Button group settings.
-        final ButtonGroup<Button> buttonGroup = new ButtonGroup<>();
-        buttonGroup.setMaxCheckCount(1);
-        buttonGroup.setMinCheckCount(1);
-
-        // Add buttons to table and button group.
-        for (final StructureType type : StructureType.values()) {
-            final Button structureButton = new StructureButton(type, skin);
-            toolBarTable.add(structureButton);
-            buttonGroup.add(structureButton);
-        }
-        return toolBarTable;
+    private Actor createGameContainer(final float height) {
+        final Table gameContainerTable = new Table();
+        gameContainerTable.add(gameView);
+        gameContainerTable.row().height(height).left();
+        gameContainerTable.add(toolbarView.getPane());
+        return gameContainerTable;
     }
 
     /**
@@ -108,10 +88,6 @@ public class GameScreen implements Screen {
      */
     public InputProcessor getInputProcessor() {
         return stage;
-    }
-
-    public Actor getGameContainer() {
-        return toolbarAndGame;
     }
 
     @Override
