@@ -175,6 +175,7 @@
                             <excludes>
                                 <exclude>com/thebois/**/ResourceFactory.class</exclude>
                                 <exclude>com/thebois/**/TerrainFactory.class</exclude>
+                                <exclude>com/thebois/**/StructureFactory.class</exclude>
                             </excludes>
                             <rules>
                                 <rule>
