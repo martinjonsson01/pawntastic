@@ -12,7 +12,8 @@ public class HouseTests {
     public void getPositionSetInConstructor() {
         // Arrange
         final Position position = new Position(123, 456);
-        final House structure = new House(123, 456);
+        final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE,
+                                                                      position);
 
         // Act
         final Position structurePosition = structure.getPosition();
@@ -27,7 +28,9 @@ public class HouseTests {
         final Position position = new Position(123, 456);
 
         // Act
-        final House structure = new House(position);
+        final IStructure structure = StructureFactory.createStructure(
+            StructureType.HOUSE,
+            position);
 
         // Assert
         assertThat(structure.getType()).isEqualTo(StructureType.HOUSE);
@@ -37,10 +40,10 @@ public class HouseTests {
     public void deepCloneableIsEqualToOriginal() {
         // Arrange
         final Position position = new Position(0, 0);
-        final House house = new House(position);
+        final IStructure house = StructureFactory.createStructure(StructureType.HOUSE, position);
 
         // Act
-        final House deepClone = house.deepClone();
+        final IStructure deepClone = house.deepClone();
 
         // Assert
         assertThat(deepClone).isEqualTo(house);

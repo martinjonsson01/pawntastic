@@ -6,12 +6,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.models.Position;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class StructureFactoryTests {
 
     public static Stream<Arguments> getStructureTypeAndExpectedStructure() {
-        return Stream.of(Arguments.of(StructureType.HOUSE, new House(0, 0)));
+        return Stream.of(Arguments.of(StructureType.HOUSE, new House(new Position(0, 0))));
     }
 
     @ParameterizedTest
