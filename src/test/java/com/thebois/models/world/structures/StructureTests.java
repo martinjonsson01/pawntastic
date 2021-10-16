@@ -11,7 +11,7 @@ public class StructureTests {
     @Test
     public void structureDoesNotEqualNull() {
         // Arrange
-        final AbstractStructure structure = new House(1, 1);
+        final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE, 0, 0);
 
         // Act
         final boolean isEqual = structure.equals(null);
@@ -23,7 +23,7 @@ public class StructureTests {
     @Test
     public void structureDoesNotEqualOtherClass() {
         // Arrange
-        final AbstractStructure structure = new House(1, 1);
+        final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE, 1, 1);
         final Object object = new Object();
 
         // Act
@@ -36,7 +36,7 @@ public class StructureTests {
     @Test
     public void structureEqualItSelfIsTrue() {
         // Arrange
-        final AbstractStructure structure = new House(1, 1);
+        final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE, 0, 0);
 
         // Act
         final boolean isEqual = structure.equals(structure);
@@ -49,8 +49,10 @@ public class StructureTests {
     public void structureEqualIsTrueIfSamePositionAndType() {
         // Arrange
         final Position position = new Position(1, 1);
-        final AbstractStructure structure1 = new House(position);
-        final AbstractStructure structure2 = new House(position);
+        final IStructure structure1 = StructureFactory.createStructure(StructureType.HOUSE,
+                                                                       position);
+        final IStructure structure2 = StructureFactory.createStructure(StructureType.HOUSE,
+                                                                       position);
 
         // Act
         final boolean isEqual = structure1.equals(structure2);
@@ -64,8 +66,10 @@ public class StructureTests {
         // Arrange
         final Position position1 = new Position(1, 1);
         final Position position2 = new Position(2, 2);
-        final AbstractStructure structure1 = new House(position1);
-        final AbstractStructure structure2 = new House(position2);
+        final IStructure structure1 = StructureFactory.createStructure(StructureType.HOUSE,
+                                                                       position1);
+        final IStructure structure2 = StructureFactory.createStructure(StructureType.HOUSE,
+                                                                       position2);
 
         // Act
         final boolean isEqual = structure1.equals(structure2);
@@ -78,8 +82,10 @@ public class StructureTests {
     public void structureHashCodeIsSameForIdenticalStructures() {
         // Arrange
         final Position position = new Position(1, 1);
-        final AbstractStructure structure1 = new House(position);
-        final AbstractStructure structure2 = new House(position);
+        final IStructure structure1 = StructureFactory.createStructure(StructureType.HOUSE,
+                                                                       position);
+        final IStructure structure2 = StructureFactory.createStructure(StructureType.HOUSE,
+                                                                       position);
 
         // Act
         final boolean isEqual = structure1.hashCode() == structure2.hashCode();
@@ -93,8 +99,10 @@ public class StructureTests {
         // Arrange
         final Position position1 = new Position(1, 1);
         final Position position2 = new Position(2, 2);
-        final AbstractStructure structure1 = new House(position1);
-        final AbstractStructure structure2 = new House(position2);
+        final IStructure structure1 = StructureFactory.createStructure(StructureType.HOUSE,
+                                                                       position1);
+        final IStructure structure2 = StructureFactory.createStructure(StructureType.HOUSE,
+                                                                       position2);
 
         // Act
         final boolean isEqual = structure1.hashCode() == structure2.hashCode();

@@ -5,17 +5,7 @@ import com.thebois.models.Position;
 /**
  * A structure of type House.
  */
-public class House extends AbstractStructure {
-
-    /**
-     * Creates a house structure at a given position in the world.
-     *
-     * @param posX Position in X-axis
-     * @param posY Position in Y-axis
-     */
-    House(final int posX, final int posY) {
-        super(posX, posY, StructureType.HOUSE);
-    }
+class House extends AbstractStructure {
 
     /**
      * Creates a house structure at a given position in the world.
