@@ -13,25 +13,14 @@ abstract class AbstractStructure implements IStructure {
     private final StructureType structureType;
 
     /**
-     * Creates a structure with a position and structure type.
-     *
-     * @param posX          Position in X-axis
-     * @param posY          Position in Y-axis
-     * @param structureType The type of structure to create.
-     */
-    protected AbstractStructure(final int posX, final int posY, final StructureType structureType) {
-        this.position = new Position(posX, posY);
-        this.structureType = structureType;
-    }
-
-    /**
      * Creates a structure with a position and type.
      *
      * @param position      The position the structure have.
      * @param structureType The type of structure to create.
      */
     protected AbstractStructure(final Position position, final StructureType structureType) {
-        this((int) position.getPosX(), (int) position.getPosY(), structureType);
+        this.position = position;
+        this.structureType = structureType;
     }
 
     @Override

@@ -11,8 +11,9 @@ import com.thebois.models.Position;
 import com.thebois.models.world.generation.ResourceGenerator;
 import com.thebois.models.world.generation.TerrainGenerator;
 import com.thebois.models.world.resources.IResource;
-import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.StructureFactory;
+import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.ITerrain;
 import com.thebois.utils.MatrixUtils;
 
@@ -164,29 +165,31 @@ public class World implements IWorld, IFinder {
     /**
      * Builds a structure at a given position if possible.
      *
+     * @param type     The type of structure to be built.
      * @param position The position where the structure should be built.
      *
      * @return Whether the structure was built.
      */
-    public boolean createStructure(final Position position) {
-        return createStructure((int) position.getPosX(), (int) position.getPosY());
+    public boolean createStructure(final StructureType type, final Position position) {
+        return createStructure(type, (int) position.getPosX(), (int) position.getPosY());
     }
 
     /**
-     * Builds a structure at a given position if possible.
+     * Builds a structure of given type at a given position if possible.
      *
-     * @param posX The X coordinate where the structure should be built.
-     * @param posY The Y coordinate where the structure should be built.
+     * @param type The type of structure to be built.
+     * @param x    The X coordinate where the structure should be built.
+     * @param y    The Y coordinate where the structure should be built.
      *
      * @return Whether the structure was built.
      */
-    public boolean createStructure(final int posX, final int posY) {
-        final Position position = new Position(posX, posY);
+    public boolean createStructure(final StructureType type, final int x, final int y) {
+        final Position position = new Position(x, y);
         if (isPositionPlaceable(position)) {
-            structureMatrix[posY][posX] = new House(position);
+            structureMatrix[y][x] = StructureFactory.createStructure(type, x, y);
 
             updateCanonicalMatrix();
-            postObstacleEvent(posX, posY);
+            postObstacleEvent(x, y);
             return true;
         }
         return false;
