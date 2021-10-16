@@ -1,6 +1,7 @@
 package com.thebois.models.world.structures;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import com.thebois.models.Position;
 import com.thebois.models.inventory.IInventory;
@@ -89,11 +90,11 @@ abstract class AbstractStructure implements IStructure {
     }
 
     @Override
-    public IItem tryDismantle(final ItemType retrieving) {
+    public Optional<IItem> tryDismantle(final ItemType retrieving) {
         if (deliveredItems.hasItem(retrieving)) {
-            return deliveredItems.take(retrieving);
+            return Optional.of(deliveredItems.take(retrieving));
         }
-        return null;
+        return Optional.empty();
     }
 
 }

@@ -1,6 +1,7 @@
 package com.thebois.models.world.structures;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
@@ -47,5 +48,5 @@ public interface IBuildable {
      *
      * @return Returns the retrieved item.
      */
-    IItem tryDismantle(ItemType retrieving);
+    Optional<IItem> tryDismantle(ItemType retrieving);
 }

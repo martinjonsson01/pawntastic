@@ -2,6 +2,7 @@ package com.thebois.models.world.structures;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -114,7 +115,7 @@ public class HouseTests {
             house.tryDeliverItem(new Rock());
         }
         // Act
-        final IItem retrieveItem = house.tryDismantle(itemTypeToRetrieve);
+        final IItem retrieveItem = house.tryDismantle(itemTypeToRetrieve).orElse(null);
 
         // Assert
         assertThat(retrieveItem).isEqualTo(expectedItem);
