@@ -13,6 +13,7 @@ import com.thebois.views.TextureUtils;
  */
 public final class StructureView implements IView {
 
+    private static final int TILE_SIZE = Pawntastic.getTileSize();
     private Iterable<IStructure> structures;
     private final Color houseColor = Color.valueOf("#CD853F");
     private final Texture houseTexture;
@@ -45,12 +46,10 @@ public final class StructureView implements IView {
         batch.setColor(Color.BLACK);
         batch.draw(
             ceilingTexture,
-            offsetX + structure.getPosition().getPosX() * Pawntastic.getTileSize(),
-            offsetY
-            + structure.getPosition().getPosY() * Pawntastic.getTileSize()
-            + Pawntastic.getTileSize() / 2f,
-            Pawntastic.getTileSize(),
-            Pawntastic.getTileSize() / 2f);
+            offsetX + structure.getPosition().getPosX() * TILE_SIZE,
+            offsetY + structure.getPosition().getPosY() * TILE_SIZE + TILE_SIZE / 2f,
+            TILE_SIZE,
+            TILE_SIZE / 2f);
     }
 
     private void drawBase(
@@ -58,10 +57,10 @@ public final class StructureView implements IView {
         batch.setColor(houseColor);
         batch.draw(
             houseTexture,
-            offsetX + structure.getPosition().getPosX() * Pawntastic.getTileSize(),
-            offsetY + structure.getPosition().getPosY() * Pawntastic.getTileSize(),
-            Pawntastic.getTileSize(),
-            Pawntastic.getTileSize() / 2f);
+            offsetX + structure.getPosition().getPosX() * TILE_SIZE,
+            offsetY + structure.getPosition().getPosY() * TILE_SIZE,
+            TILE_SIZE,
+            TILE_SIZE / 2f);
     }
 
     /**

@@ -13,13 +13,8 @@ import com.thebois.models.world.terrains.ITerrain;
  */
 public class TerrainView implements IView {
 
+    private static final int TILE_SIZE = Pawntastic.getTileSize();
     private Collection<ITerrain> terrainTiles = new ArrayList<>();
-
-    /**
-     * Creates the WorldView with a tileSize.
-     */
-    public TerrainView() {
-    }
 
     /**
      * Creates the world grid for the view.
@@ -38,10 +33,10 @@ public class TerrainView implements IView {
             batch.setColor(viewableTerrain.getColor());
             batch.draw(
                 viewableTerrain.getTexture(),
-                offsetX + terrain.getPosition().getPosX() * Pawntastic.getTileSize(),
-                offsetY + terrain.getPosition().getPosY() * Pawntastic.getTileSize(),
-                Pawntastic.getTileSize(),
-                Pawntastic.getTileSize());
+                offsetX + terrain.getPosition().getPosX() * TILE_SIZE,
+                offsetY + terrain.getPosition().getPosY() * TILE_SIZE,
+                TILE_SIZE,
+                TILE_SIZE);
         }
     }
 

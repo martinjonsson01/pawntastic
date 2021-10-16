@@ -17,6 +17,7 @@ import com.thebois.views.game.IView;
 public class BeingPathDebugView implements IView {
 
     private static final int RADIUS = 2;
+    private static final int TILE_SIZE = Pawntastic.getTileSize();
     private final IBeingGroup beingGroup;
     private final Texture circleTexture;
 
@@ -42,12 +43,8 @@ public class BeingPathDebugView implements IView {
             for (final Position position : being.getPath()) {
                 batch.draw(
                     circleTexture,
-                    position.getPosX() * Pawntastic.getTileSize()
-                    + offsetX
-                    + Pawntastic.getTileSize() / 2f,
-                    position.getPosY() * Pawntastic.getTileSize()
-                    + offsetY
-                    + Pawntastic.getTileSize() / 2f);
+                    position.getPosX() * TILE_SIZE + offsetX + TILE_SIZE / 2f,
+                    position.getPosY() * TILE_SIZE + offsetY + TILE_SIZE / 2f);
             }
         }
     }

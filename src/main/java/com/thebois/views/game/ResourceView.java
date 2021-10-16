@@ -13,6 +13,7 @@ import com.thebois.models.world.resources.IResource;
  */
 public class ResourceView implements IView {
 
+    private static final int TILE_SIZE = Pawntastic.getTileSize();
     private Iterable<IResource> resourceTiles = new ArrayList<>();
 
     /**
@@ -38,10 +39,10 @@ public class ResourceView implements IView {
             batch.setColor(Color.WHITE);
             batch.draw(
                 viewableResource.getTexture(),
-                offsetX + resource.getPosition().getPosX() * Pawntastic.getTileSize(),
-                offsetY + resource.getPosition().getPosY() * Pawntastic.getTileSize(),
-                Pawntastic.getTileSize(),
-                Pawntastic.getTileSize());
+                offsetX + resource.getPosition().getPosX() * TILE_SIZE,
+                offsetY + resource.getPosition().getPosY() * TILE_SIZE,
+                TILE_SIZE,
+                TILE_SIZE);
         }
     }
 
