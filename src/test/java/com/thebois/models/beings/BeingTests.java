@@ -444,19 +444,19 @@ public class BeingTests {
     }
 
     @Test
-    public void pawnDoNotTryToFindNewClosestStructureWhenStillIncomplete() {
+    public void pawnDoNotTryToFindNewClosestIncompleteStructureWhenStillIncomplete() {
         // Arrange
         final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
         final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
 
-        final IStructure mockStructure = Mockito.mock(IStructure.class);
+        final IStructure incompleteStructure = Mockito.mock(IStructure.class);
 
         final Position expectedPosition = new Position(10f, 20f);
 
         when(mockFinder.findNearestIncompleteStructure(any()))
-            .thenReturn(Optional.of(mockStructure));
+            .thenReturn(Optional.of(incompleteStructure));
 
-        when(mockStructure.getPosition()).thenReturn(expectedPosition);
+        when(incompleteStructure.getPosition()).thenReturn(expectedPosition);
 
         final Pawn pawn = new Pawn(new Position(),
                                    new Position(),
@@ -519,19 +519,15 @@ public class BeingTests {
         final IStructure mockStructure = Mockito.mock(IStructure.class);
 
         final Position structurePosition = new Position(10f, 20f);
-        final Position positionA = new Position(0f, 0f);
-        final Position positionB = new Position(1f, 1f);
-        final Position positionC = new Position(2f, 2f);
-        final Position positionD = new Position(3f, 3f);
 
         when(mockFinder.findNearestIncompleteStructure(any()))
             .thenReturn(Optional.of(mockStructure));
 
         when(mockPathFinder.path(any(), any())).thenReturn(List.of(
-            positionA,
-            positionB,
-            positionC,
-            positionD));
+            new Position(0f, 0f),
+            new Position(1f, 1f),
+            new Position(2f, 2f),
+            new Position(3f, 3f)));
 
         when(mockStructure.getPosition()).thenReturn(structurePosition);
 
@@ -549,8 +545,7 @@ public class BeingTests {
         pawn.update();
 
         // Assert
-        final int callsExpected = 3;
-        verify(mockPathFinder, times(callsExpected)).path(any(), any());
+        verify(mockPathFinder, times(3)).path(any(), any());
     }
 
     @Test
