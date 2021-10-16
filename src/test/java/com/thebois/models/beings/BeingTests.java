@@ -474,7 +474,7 @@ public class BeingTests {
     }
 
     @Test
-    public void pawnTriesTpFindNewClosestStructureWhenNearestIsCompleted() {
+    public void pawnTriesToFindNewClosestStructureWhenNearestIsCompleted() {
         // Arrange
         final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
         final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
@@ -511,7 +511,7 @@ public class BeingTests {
     }
 
     @Test
-    public void pawnLooksForANewPawnWhenDestinationIsNotEqualToNeighborOfClosestStructure() {
+    public void pawnLooksForANewDestinationWhenItIsNotEqualToNeighborOfClosestStructuresPosition() {
         // Arrange
         final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
         final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
