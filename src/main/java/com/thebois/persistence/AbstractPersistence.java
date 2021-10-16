@@ -13,10 +13,9 @@ abstract class AbstractPersistence implements Disposable {
         System.getProperty("user.home") + "/Documents/Pawntastic/saves/";
 
     /**
-     * All subclasses need to use this in the constructor to ensure the directory is there before
-     * any commands/operations can be carried out.
+     * Ensures that the save directory exists before any other commands/operations are carried out.
      */
-    protected void ensureDirectoryExists() {
+    protected AbstractPersistence() {
         final File filePath = new File(saveDirectory);
         if (!filePath.exists()) {
             filePath.mkdirs();

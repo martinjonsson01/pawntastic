@@ -20,10 +20,7 @@ public class LoadSystem extends AbstractPersistence {
      * @throws IOException If the save-file is deleted during runtime.
      */
     public LoadSystem() throws IOException {
-
-        ensureDirectoryExists();
         final FileInputStream fileInputStream = new FileInputStream(getSaveFilePath());
-
         objectInputStream = new ObjectInputStream(fileInputStream);
     }
 

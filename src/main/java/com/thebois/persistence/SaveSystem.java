@@ -4,7 +4,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-
 /**
  * Handles the saving of objects to the save-file.
  */
@@ -18,9 +17,6 @@ public class SaveSystem extends AbstractPersistence {
      * @throws IOException If the file save-file is deleted during runtime.
      */
     public SaveSystem() throws IOException {
-
-        ensureDirectoryExists();
-
         final FileOutputStream fileOutputStream = new FileOutputStream(getSaveFilePath());
         objectOutputStream = new ObjectOutputStream(fileOutputStream);
     }
