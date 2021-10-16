@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
-import com.thebois.models.IFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.world.structures.House;
 import com.thebois.models.world.structures.IStructure;
@@ -17,7 +17,7 @@ import com.thebois.utils.MatrixUtils;
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
-public class World implements IWorld, IFinder {
+public class World implements IWorld, IStructureFinder {
 
     private final ITerrain[][] terrainMatrix;
     private final IStructure[][] structureMatrix;

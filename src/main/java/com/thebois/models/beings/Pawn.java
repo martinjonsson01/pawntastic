@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
 
-import com.thebois.models.IFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.inventory.items.Log;
@@ -35,7 +35,7 @@ public class Pawn extends AbstractBeing {
         final Position destination,
         final Random random,
         final IPathFinder pathFinder,
-        final IFinder finder) {
+        final IStructureFinder finder) {
         super(startPosition, destination, pathFinder, finder);
         this.random = random;
     }

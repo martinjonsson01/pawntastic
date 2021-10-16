@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
-import com.thebois.models.IFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
@@ -197,7 +197,7 @@ public class WorldTests {
             vacantPositions.add(new Position(0, 0));
         }
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         return new Colony(vacantPositions, pathFinder, mockFinder);
     }
 
@@ -208,7 +208,7 @@ public class WorldTests {
         final World world = new World(2);
         final Iterable<Position> vacantPositions = world.findEmptyPositions(5);
         final IPathFinder pathFinder = new AstarPathFinder(world);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
 
         // Act
         final Colony colony = new Colony(vacantPositions, pathFinder, mockFinder);

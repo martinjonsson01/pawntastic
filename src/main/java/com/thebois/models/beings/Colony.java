@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.thebois.models.IFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
@@ -35,7 +35,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
      * @param finder          Used to find things in the world.
      */
     public Colony(final Iterable<Position> vacantPositions, final IPathFinder pathFinder,
-                  final IFinder finder) {
+                  final IStructureFinder finder) {
         final Collection<IBeing> pawns = new ArrayList<>();
         final Random random = new Random();
         for (final Position vacantPosition : vacantPositions) {

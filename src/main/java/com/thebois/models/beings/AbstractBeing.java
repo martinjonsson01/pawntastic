@@ -14,7 +14,7 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
-import com.thebois.models.IFinder;
+import com.thebois.models.IStructureFinder;
 
 /**
  * An abstract implementation of IBeing.
@@ -27,7 +27,7 @@ public abstract class AbstractBeing implements IBeing {
     private Stack<Position> path;
     private Position position;
     private AbstractRole role;
-    private final IFinder finder;
+    private final IStructureFinder finder;
 
     /**
      * Creates an AbstractBeing with an initial position.
@@ -41,7 +41,7 @@ public abstract class AbstractBeing implements IBeing {
         final Position startPosition,
         final Position destination,
         final IPathFinder pathFinder,
-        final IFinder finder) {
+        final IStructureFinder finder) {
         this.position = startPosition;
         this.role = RoleFactory.idle();
         this.pathFinder = pathFinder;
@@ -169,7 +169,7 @@ public abstract class AbstractBeing implements IBeing {
         return pathFinder;
     }
 
-    protected IFinder getFinder() {
+    protected IStructureFinder getFinder() {
         return this.finder;
     }
 

@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
-import com.thebois.models.IFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -70,7 +70,7 @@ public class BeingTests {
         final Position destination = new Position(destinationX, destinationY);
         final AbstractRole role = RoleFactory.fromType(roleType);
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         final AbstractBeing being = new Pawn(currentPosition.deepClone(),
                                              destination.deepClone(),
                                              new Random(),
@@ -94,7 +94,7 @@ public class BeingTests {
         final Position startPosition, final Position endPosition) {
         // Arrange
         final float distanceToDestination = startPosition.distanceTo(endPosition);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         final Random mockRandom = Mockito.mock(Random.class);
         when(mockRandom.nextInt(anyInt())).thenReturn(0);
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
@@ -120,7 +120,7 @@ public class BeingTests {
     public void setRoleWithNullThrowsException() {
         // Arrange
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         final IBeing being = new Pawn(new Position(0, 0),
                                       new Position(1, 1),
                                       new Random(),
@@ -138,7 +138,7 @@ public class BeingTests {
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final Position endPosition = new Position(123, 456);
         final List<Position> actualPath = List.of(endPosition);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         when(pathFinder.path(any(), any())).thenReturn(actualPath);
         final AbstractBeing being = new Pawn(
             new Position(),
@@ -161,7 +161,7 @@ public class BeingTests {
         final Position destination = new Position(1, 1);
         final AbstractRole role = RoleFactory.farmer();
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         final IBeing first = new Pawn(currentPosition.deepClone(),
                                       destination.deepClone(),
                                       new Random(),
@@ -188,7 +188,7 @@ public class BeingTests {
         // Arrange
         final AbstractRole role = RoleFactory.farmer();
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         final IBeing first = new Pawn(new Position(0, 0),
                                       new Position(1, 1),
                                       new Random(),
@@ -236,7 +236,7 @@ public class BeingTests {
         // Arrange
         final Position startPosition = new Position();
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         when(pathFinder.path(any(), any())).thenReturn(List.of());
         final IBeing being = new Pawn(
             startPosition,
@@ -256,7 +256,7 @@ public class BeingTests {
     public void equalsReturnsFalseForOtherType() {
         // Arrange
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IFinder finder = Mockito.mock(IFinder.class);
+        final IStructureFinder finder = Mockito.mock(IStructureFinder.class);
         final IBeing being = new Pawn(new Position(0, 0),
                                       new Position(1, 1),
                                       new Random(),
@@ -290,7 +290,7 @@ public class BeingTests {
         // Arrange
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final IStructure structure = Mockito.mock(IStructure.class);
-        final IFinder finder = Mockito.mock(IFinder.class);
+        final IStructureFinder finder = Mockito.mock(IStructureFinder.class);
 
         when(structure.tryDeliverItem(any())).thenReturn(true);
 
@@ -382,7 +382,7 @@ public class BeingTests {
         final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
         when(mockPathFinder.path(any(), any())).thenReturn(path);
 
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         when(mockFinder.findNearestIncompleteStructure(any()))
             .thenReturn(Optional.of(mockStructure));
 
@@ -447,7 +447,7 @@ public class BeingTests {
     public void pawnDoNotTryToFindNewClosestStructureWhenStillIncomplete() {
         // Arrange
         final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
 
         final IStructure mockStructure = Mockito.mock(IStructure.class);
 
@@ -477,7 +477,7 @@ public class BeingTests {
     public void pawnTriesTpFindNewClosestStructureWhenNearestIsCompleted() {
         // Arrange
         final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
 
         final IStructure mockStructureA = Mockito.mock(IStructure.class);
         final IStructure mockStructureB = Mockito.mock(IStructure.class);
@@ -514,7 +514,7 @@ public class BeingTests {
     public void pawnLooksForANewPawnWhenDestinationIsNotEqualToNeighborOfClosestStructure() {
         // Arrange
         final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
-        final IFinder mockFinder = Mockito.mock(IFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
 
         final IStructure mockStructure = Mockito.mock(IStructure.class);
 
@@ -559,7 +559,7 @@ public class BeingTests {
         final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final AbstractBeingGroup colony = new Colony(vacantPositions, pathFinder, new World(10));
-        final IFinder finder = Mockito.mock(IFinder.class);
+        final IStructureFinder finder = Mockito.mock(IStructureFinder.class);
 
 
         final IBeing being = new Pawn(new Position(0, 0),

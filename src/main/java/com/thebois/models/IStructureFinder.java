@@ -7,7 +7,7 @@ import com.thebois.models.world.structures.IStructure;
 /**
  * Allows for locating of specific types of objects.
  */
-public interface IFinder {
+public interface IStructureFinder {
 
     /**
      * Finds and returns the closest IStructure to the passed position.
