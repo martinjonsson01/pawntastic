@@ -38,8 +38,8 @@ public class LoadSystem extends AbstractPersistence {
     }
 
     /**
-     * Reads an object from the save-file, and casts it as a World. The right order for
-     * deserialization need to be done by the caller.
+     * Reads an object from the save-file, and casts it as a World. The World need to be loaded as
+     * it was saved in for deserialization, needs to be done by the caller.
      *
      * @return The read object cast as World.
      *
@@ -52,8 +52,8 @@ public class LoadSystem extends AbstractPersistence {
     }
 
     /**
-     * Reads an object from the save-file, and casts it as a Colony. The right order for
-     * deserialization need to be done by the caller.
+     * Reads an object from the save-file, and casts it as a Colony. The Colony need to be loaded as
+     * it was saved in for deserialization, needs to be done by the caller.
      *
      * @return The read object cast as Colony.
      *
