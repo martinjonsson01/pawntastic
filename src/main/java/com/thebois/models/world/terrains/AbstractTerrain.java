@@ -1,4 +1,4 @@
-package com.thebois.models.world;
+package com.thebois.models.world.terrains;
 
 import java.util.Objects;
 
@@ -13,10 +13,6 @@ public abstract class AbstractTerrain implements ITerrain {
 
     protected AbstractTerrain(final Position position) {
         this.position = position;
-    }
-
-    protected AbstractTerrain(final float posX, final float posY) {
-        this.position = new Position(posX, posY);
     }
 
     @Override

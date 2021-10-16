@@ -15,8 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.google.common.eventbus.EventBus;
 
-import com.thebois.controllers.info.InfoController;
 import com.thebois.controllers.game.WorldController;
+import com.thebois.controllers.info.InfoController;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.world.World;
@@ -49,7 +49,10 @@ public class Pawntastic extends Game {
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int PAWN_POSITIONS = 50;
-    private float tileSize;
+    /**
+     * The tile size of the tiles in the world.
+     */
+    public static final float TILE_SIZE = Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH) / WORLD_SIZE;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
@@ -65,7 +68,6 @@ public class Pawntastic extends Game {
 
     @Override
     public void create() {
-        tileSize = Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH) / WORLD_SIZE;
 
         setUpUserInterfaceSkin();
 
@@ -84,7 +86,7 @@ public class Pawntastic extends Game {
         final IProjector projector = new ViewportWrapper(viewport);
 
         // Controllers
-        this.worldController = new WorldController(world, colony, projector, tileSize, font);
+        this.worldController = new WorldController(world, colony, projector, TILE_SIZE, font);
         this.infoController = new InfoController(colony, uiSkin);
 
         // Screens
@@ -115,9 +117,8 @@ public class Pawntastic extends Game {
             getModelsFromSaveFile();
         }
         catch (final IOException exception) {
-            world = new World(WORLD_SIZE);
-            colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS),
-                                new AstarPathFinder(world));
+            world = new World(WORLD_SIZE, 0);
+            colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS), new AstarPathFinder(world));
         }
     }
 
@@ -145,7 +146,6 @@ public class Pawntastic extends Game {
     }
 
     @Override
-
     public void dispose() {
         try {
             saveModelsToSaveFile();
