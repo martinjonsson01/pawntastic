@@ -33,4 +33,17 @@ public class HouseTests {
         assertThat(structure.getType()).isEqualTo(StructureType.HOUSE);
     }
 
+    @Test
+    public void deepCloneableIsEqualToOriginal() {
+        // Arrange
+        final Position position = new Position(0, 0);
+        final House house = new House(position);
+
+        // Act
+        final House deepClone = house.deepClone();
+
+        // Assert
+        assertThat(deepClone).isEqualTo(house);
+    }
+
 }
