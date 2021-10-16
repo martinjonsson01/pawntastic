@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
+import com.thebois.models.beings.roles.RoleType;
 
 /**
  * An entity.
