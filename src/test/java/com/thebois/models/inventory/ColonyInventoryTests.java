@@ -55,7 +55,7 @@ public class ColonyInventoryTests {
         colony.addMultiple(listA);
 
         // Act
-        final ArrayList<ItemType> difference = colony.calculateDifference(listB);
+        final Collection<ItemType> difference = colony.calculateDifference(listB);
 
         // Assert
         assertThat(difference.containsAll(expectedDifference)).isTrue();

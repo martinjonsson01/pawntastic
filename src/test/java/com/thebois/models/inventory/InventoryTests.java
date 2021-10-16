@@ -216,7 +216,7 @@ public class InventoryTests {
         inventoryA.addMultiple(listA);
 
         // Act
-        final ArrayList<ItemType> difference = inventoryA.calculateDifference(listB);
+        final Collection<ItemType> difference = inventoryA.calculateDifference(listB);
 
         // Assert
         assertThat(difference.containsAll(expectedDifference)).isTrue();

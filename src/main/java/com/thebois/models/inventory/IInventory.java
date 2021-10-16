@@ -93,12 +93,12 @@ public interface IInventory {
     int numberOf(ItemType itemType);
 
     /**
-     * Calculates and returns a list of the differing item-types between two inventories.
+     * Calculates and returns a list of the item-types only present in the given collection.
      *
-     * @param otherInventory The inventory to check against.
+     * @param items The item-types to check against.
      *
-     * @return A list of differing item-types.
+     * @return A list of item-types.
      */
-    ArrayList<ItemType> calculateDifference(Collection<ItemType> otherInventory);
+    Collection<ItemType> calculateDifference(Collection<ItemType> items);
 
 }
