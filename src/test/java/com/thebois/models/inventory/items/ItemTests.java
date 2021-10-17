@@ -24,4 +24,11 @@ public class ItemTests {
         assertThat(itemType.getWeight()).isEqualTo(item.getType().getWeight());
     }
 
+    @ParameterizedTest
+    @MethodSource("getItemTypesAndItemClass")
+    public void getWeightReturnsSameAsItemType(final ItemType itemType, final IItem item) {
+        // Assert
+        assertThat(itemType.getWeight()).isEqualTo(item.getWeight());
+    }
+
 }

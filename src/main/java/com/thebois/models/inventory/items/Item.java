@@ -21,4 +21,9 @@ public class Item implements IItem {
         return type;
     }
 
+    @Override
+    public float getWeight() {
+        return getType().getWeight();
+    }
+
 }
