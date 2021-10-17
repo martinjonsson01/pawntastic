@@ -14,11 +14,29 @@ import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 public class InventoryTests {
 
     public static Stream<Arguments> getItemTypes() {
         return Stream.of(Arguments.of(ItemType.LOG), Arguments.of(ItemType.ROCK));
+    }
+
+    /**
+     * Gets max capacities and whether an inventory containing 20.1 kgs of items would be full with
+     * that capacity.
+     *
+     * @return Max capacities associated with whether they are full.
+     */
+    public static Stream<Arguments> getCapacityAndExpectedFullState() {
+        return Stream.of(Arguments.of(100f, false),
+                         Arguments.of(25f, false),
+                         Arguments.of(10000f, false),
+                         Arguments.of(20.1f, true),
+                         Arguments.of(20f, true),
+                         Arguments.of(20.0001f, true),
+                         Arguments.of(-1000f, true),
+                         Arguments.of(0f, true));
     }
 
     @ParameterizedTest
@@ -33,6 +51,26 @@ public class InventoryTests {
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
+    }
+
+    @ParameterizedTest
+    @MethodSource("getCapacityAndExpectedFullState")
+    public void isFullReturnsTrueWhenAtCapacityAndFalseWhenNot(
+        final float capacity, final boolean expectedFull) {
+        // Arrange
+        final IInventory inventory = new Inventory(capacity);
+        final IItem heavyItem = mock(IItem.class);
+        when(heavyItem.getWeight()).thenReturn(20f);
+        final IItem lightItem = mock(IItem.class);
+        when(lightItem.getWeight()).thenReturn(0.1f);
+        inventory.add(heavyItem);
+        inventory.add(lightItem);
+
+        // Act
+        final boolean isFull = inventory.isFull();
+
+        // Assert
+        assertThat(isFull).isEqualTo(expectedFull);
     }
 
     @Test
@@ -132,9 +170,8 @@ public class InventoryTests {
         inventory.add(ItemFactory.fromType(ItemType.LOG));
         inventory.add(ItemFactory.fromType(ItemType.LOG));
 
-        final Exception exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> inventory.takeAmount(ItemType.ROCK, 2));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                                                 () -> inventory.takeAmount(ItemType.ROCK, 2));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo(

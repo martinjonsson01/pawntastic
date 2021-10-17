@@ -12,6 +12,13 @@ import com.thebois.models.inventory.items.ItemType;
 public interface IInventory {
 
     /**
+     * Checks whether the inventory is filled to its capacity.
+     *
+     * @return Whether more items can be added or not.
+     */
+    boolean isFull();
+
+    /**
      * Allows an IItem to be added to the implemented inventory.
      *
      * @param item The item to be added to the inventory.

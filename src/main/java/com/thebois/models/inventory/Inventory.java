@@ -12,6 +12,29 @@ import com.thebois.models.inventory.items.ItemType;
 public class Inventory implements IInventory {
 
     private final ArrayList<IItem> items = new ArrayList<>();
+    private float maxCapacity;
+
+    /**
+     * Instantiates with infinite capacity.
+     */
+    public Inventory() {
+
+    }
+
+    /**
+     * Instantiates with a given maximum carrying capacity.
+     *
+     * @param maxCapacity The maximum weight, in kilograms, that can be contained.
+     */
+    public Inventory(final float maxCapacity) {
+        this.maxCapacity = maxCapacity;
+    }
+
+    @Override
+    public boolean isFull() {
+        final float weight = calculateTotalWeight();
+        return weight >= maxCapacity;
+    }
 
     @Override
     public void add(final IItem item) {
@@ -81,6 +104,10 @@ public class Inventory implements IInventory {
             }
         }
         return count;
+    }
+
+    private float calculateTotalWeight() {
+        return items.stream().map(IItem::getWeight).reduce(0f, Float::sum);
     }
 
 }
