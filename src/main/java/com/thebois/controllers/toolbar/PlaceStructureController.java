@@ -16,8 +16,7 @@ import com.thebois.views.info.IActorView;
 import com.thebois.views.toolbar.StructureToolbarView;
 
 /**
- * Controller that manages the structure buttons on the toolbar and is responsible for placing
- * structures.
+ * Controller that manages the structure buttons and is responsible for placing structures.
  */
 public class PlaceStructureController extends AbstractInputProcessor
     implements IEventListener<OnClickEvent<StructureType>>, IController<IActorView> {
@@ -34,7 +33,7 @@ public class PlaceStructureController extends AbstractInputProcessor
      *
      * @param world     The world where the structures should be placed.
      * @param projector Projector used to translate screen coordinates to world coordinates.
-     * @param skin      The skin used to create the buttons used to select what structure to build.
+     * @param skin      The skin used to create the buttons.
      */
     public PlaceStructureController(
         final World world, final IProjector projector, final Skin skin) {

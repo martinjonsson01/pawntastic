@@ -12,7 +12,7 @@ public class OnClickEvent<TValue> implements IEvent {
     /**
      * Instantiates the event, providing the value.
      *
-     * @param value The previous value
+     * @param value The value
      */
     public OnClickEvent(final TValue value) {
         this.value = value;

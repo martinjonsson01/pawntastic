@@ -6,7 +6,7 @@ import com.thebois.views.game.IView;
 import com.thebois.views.game.StructureView;
 
 /**
- * Controller for Structures in the world.
+ * Controller responsible for updating the structures in the view.
  */
 public class StructureController implements IController<IView> {
 

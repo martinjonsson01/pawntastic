@@ -14,7 +14,7 @@ import com.thebois.views.info.IActorView;
 import com.thebois.views.toolbar.ToolbarView;
 
 /**
- * Container class for controllers that manage the info.
+ * Container class for controllers that manage the toolbar.
  */
 public class ToolbarController implements IController<ToolbarView> {
 
@@ -23,11 +23,11 @@ public class ToolbarController implements IController<ToolbarView> {
     private final ToolbarView toolbarView;
 
     /**
-     * Instantiate with all controller and views used for all panels.
+     * Instantiate with all controller and views used for the toolbar.
      *
      * @param world     The world that controllers manage.
-     * @param skin      The skin to style widgets with.
-     * @param projector The projector used to translate screen coordinate to world coordinates.
+     * @param skin      Used to style widgets with.
+     * @param projector Used to translate screen coordinate to world coordinates.
      */
     public ToolbarController(
         final World world, final Skin skin, final IProjector projector) {
