@@ -1,6 +1,7 @@
 package com.thebois.models.world.structures;
 
 import org.junit.jupiter.api.Test;
+import org.lwjgl.system.CallbackI;
 
 import com.thebois.models.Position;
 
@@ -109,6 +110,24 @@ public class StructureTests {
 
         // Assert
         assertThat(isEqual).isFalse();
+    }
+
+    @Test
+    public void deepCloneReturnsExpectedClone() {
+        // Arrange
+        final Position expectedPosition = new Position(20f, 15f);
+
+        final IStructure house = StructureFactory.createStructure(
+            StructureType.HOUSE,
+            expectedPosition);
+
+        // Act
+        final IStructure houseDeepClone = house.deepClone();
+
+        // Assert
+        assertThat(houseDeepClone.getPosition()).isEqualTo(houseDeepClone.getPosition());
+        assertThat(houseDeepClone.getType()).isEqualTo(houseDeepClone.getType());
+
     }
 
 }
