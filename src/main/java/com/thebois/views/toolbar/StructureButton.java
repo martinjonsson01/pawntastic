@@ -26,7 +26,6 @@ public class StructureButton extends Button implements IEventSource<OnClickEvent
     private final Collection<IEventListener<OnClickEvent<StructureType>>> onClickListeners =
         new ArrayList<>();
     private final StructureType structureType;
-    private final Button button;
 
     /**
      * Instantiate a structure button with the type of structure it should represent.
@@ -36,15 +35,14 @@ public class StructureButton extends Button implements IEventSource<OnClickEvent
      */
     public StructureButton(final StructureType structureType, final Skin skin) {
         super(skin, "toggle");
-        button = this;
         this.structureType = structureType;
         final String labelText = StringUtils.capitalizeFirst(structureType
                                                                  .toString()
                                                                  .toLowerCase(Locale.ROOT));
         final Label text = new Label(labelText, skin);
 
-        button.add(text).expandY().fillY();
-        button.pad(
+        this.add(text).expandY().fillY();
+        this.pad(
             TOP_AND_BOTTOM_PADDING,
             LEFT_AND_RIGHT_PADDING,
             TOP_AND_BOTTOM_PADDING,
@@ -53,11 +51,13 @@ public class StructureButton extends Button implements IEventSource<OnClickEvent
     }
 
     private void registerListeners() {
-        button.addListener(new ClickListener() {
+        // This in lambda function does not work, which is why this line of code as added.
+        final Button thisButton = this;
+        this.addListener(new ClickListener() {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
                 super.clicked(event, x, y);
-                if (button.isChecked()) {
+                if (thisButton.isChecked()) {
                     notifyListeners(structureType);
                 }
             }

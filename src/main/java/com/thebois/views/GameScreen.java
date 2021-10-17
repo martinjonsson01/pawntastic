@@ -27,7 +27,7 @@ public class GameScreen implements Screen {
     private final ToolbarView toolbarView;
     private Stage stage;
     private SpriteBatch spriteBatch;
-    private final Actor gameContainer;
+    private final Actor gameAndToolbarContainer;
 
     /**
      * Creates an instance of GameScreen.
@@ -49,7 +49,7 @@ public class GameScreen implements Screen {
         this.gameView = gameView;
         this.infoView = infoView;
         this.toolbarView = toolbarView;
-        this.gameContainer = createGameContainer();
+        this.gameAndToolbarContainer = createGameAndToolBarContainer();
 
         createStage();
     }
@@ -61,12 +61,12 @@ public class GameScreen implements Screen {
         final Table infoAndGameTable = new Table();
         infoAndGameTable.setFillParent(true);
         infoAndGameTable.add(infoView.getPane()).fillY().expandY();
-        infoAndGameTable.add(gameContainer).top().left().expandY().fillY();
+        infoAndGameTable.add(gameAndToolbarContainer).top().left().expandY().fillY();
         // Add to stage
         stage.addActor(infoAndGameTable);
     }
 
-    private Table createGameContainer() {
+    private Table createGameAndToolBarContainer() {
         final Table gameContainerTable = new Table();
         gameContainerTable.add(gameView).top().left();
         gameContainerTable.row().left().bottom().expandY().fillY();
