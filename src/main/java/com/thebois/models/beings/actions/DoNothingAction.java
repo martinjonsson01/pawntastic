@@ -5,8 +5,8 @@ import com.thebois.models.beings.IActionPerformer;
 /**
  * Makes the performer do nothing at all.
  * <p>
- * This action never completes by itself. It is an action given to a being when it asks for an
- * action but there is nothing more to do.
+ * Can always be performed. This action always completes after being performed once. It is an action
+ * given to a being when it asks for an action but there is nothing more to do.
  * </p>
  */
 public class DoNothingAction implements IAction {
