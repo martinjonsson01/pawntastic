@@ -230,10 +230,13 @@ public class World implements IWorld, IStructureFinder {
         final int searchRow = Math.round(position.getPosY());
         final int searchCol = Math.round(position.getPosX());
 
+        // If the search Radius is too great the game will take a performance hit.
+        final int maxSearchRadius = 10;
+
         return MatrixUtils.matrixSpiralSearch(this.structureMatrix,
                                               searchRow,
                                               searchCol,
-                                              this.worldSize,
+                                              maxSearchRadius,
                                               maxFoundElements);
     }
 
