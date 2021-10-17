@@ -13,9 +13,9 @@ import com.thebois.views.info.IActorView;
 /**
  * View that renders structure buttons used for selecting what structure to build.
  */
-public class StructureToolbarView implements IActorView {
+public class BuildMenuToolbarView implements IActorView {
 
-    private final Actor structureButtons;
+    private final Actor structureButtonContainer;
 
     /**
      * Instantiate with buttons for each structure.
@@ -23,37 +23,52 @@ public class StructureToolbarView implements IActorView {
      * @param skin     The skin used to create the buttons.
      * @param listener The listener that wants to listen to the structure buttons.
      */
-    public StructureToolbarView(
+    public BuildMenuToolbarView(
         final Skin skin, final IEventListener<OnClickEvent<StructureType>> listener) {
-        structureButtons = createToolbar(skin, listener);
+        structureButtonContainer = createStructureButtonContainer(skin, listener);
     }
 
-    private Actor createToolbar(
+    private Actor createStructureButtonContainer(
         final Skin skin, final IEventListener<OnClickEvent<StructureType>> listener) {
 
-        // Set up table.
-        final Table toolbarTable = new Table();
-        toolbarTable.left().top();
-        toolbarTable.row().expand().fill();
+        final Table toolbarTable = createTable();
 
-        // Button group settings.
-        final ButtonGroup<StructureButton> buttonGroup = new ButtonGroup<>();
-        buttonGroup.setMaxCheckCount(1);
-        buttonGroup.setMinCheckCount(1);
+        final ButtonGroup<StructureButton> buttonGroup = createButtonGroup();
 
-        // Add buttons to table and button group.
+        createStructureButtons(skin, listener, toolbarTable, buttonGroup);
+        return toolbarTable;
+    }
+
+    private void createStructureButtons(
+        final Skin skin,
+        final IEventListener<OnClickEvent<StructureType>> listener,
+        final Table toolbarTable,
+        final ButtonGroup<StructureButton> buttonGroup) {
         for (final StructureType type : StructureType.values()) {
             final StructureButton structureButton = new StructureButton(type, skin);
             toolbarTable.add(structureButton).expand().fill();
             buttonGroup.add(structureButton);
             structureButton.registerListener(listener);
         }
+    }
+
+    private ButtonGroup<StructureButton> createButtonGroup() {
+        final ButtonGroup<StructureButton> buttonGroup = new ButtonGroup<>();
+        buttonGroup.setMaxCheckCount(1);
+        buttonGroup.setMinCheckCount(1);
+        return buttonGroup;
+    }
+
+    private Table createTable() {
+        final Table toolbarTable = new Table();
+        toolbarTable.left().top();
+        toolbarTable.row().expand().fill();
         return toolbarTable;
     }
 
     @Override
     public Actor getWidgetContainer() {
-        return structureButtons;
+        return structureButtonContainer;
     }
 
 }

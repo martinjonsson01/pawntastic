@@ -13,7 +13,7 @@ import com.thebois.models.world.World;
 import com.thebois.models.world.structures.StructureType;
 import com.thebois.views.IProjector;
 import com.thebois.views.info.IActorView;
-import com.thebois.views.toolbar.StructureToolbarView;
+import com.thebois.views.toolbar.BuildMenuToolbarView;
 
 /**
  * Controller that manages the structure buttons and is responsible for placing structures.
@@ -26,7 +26,7 @@ public class PlaceStructureController extends AbstractInputProcessor
     private final IProjector projector;
     private Actor toolbarWidget;
     private StructureType selectedStructure = StructureType.HOUSE;
-    private final StructureToolbarView structureToolbarView;
+    private final BuildMenuToolbarView structureToolbarView;
 
     /**
      * Instantiate a controller that manage placement of structures.
@@ -40,7 +40,7 @@ public class PlaceStructureController extends AbstractInputProcessor
         this.world = world;
         this.projector = projector;
 
-        structureToolbarView = new StructureToolbarView(skin, this);
+        structureToolbarView = new BuildMenuToolbarView(skin, this);
     }
 
     @Override
