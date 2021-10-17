@@ -135,8 +135,8 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     }
 
     @Override
-    public boolean add(final IItem item) {
-        return inventory.add(item);
+    public boolean tryAdd(final IItem item) {
+        return inventory.tryAdd(item);
     }
 
     @Override

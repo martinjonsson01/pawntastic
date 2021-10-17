@@ -19,13 +19,13 @@ public interface IInventory {
     boolean isFull();
 
     /**
-     * Allows an IItem to be added to the implemented inventory.
+     * Tries to add an item to the inventory.
      *
-     * @param item The item to be added to the inventory.
+     * @param item What to add to the inventory.
      *
-     * @return Whether it could fit or not.
+     * @return Whether the item could fit or not.
      */
-    boolean add(IItem item);
+    boolean tryAdd(IItem item);
 
     /**
      * Allows multiple IItems to be added at the same time to the implemented inventory.

@@ -50,7 +50,7 @@ public class Inventory implements IInventory {
     }
 
     @Override
-    public boolean add(final IItem item) {
+    public boolean tryAdd(final IItem item) {
         final float newWeight = calculateTotalWeight() + item.getWeight();
         if (isAboveCapacity(newWeight)) return false;
 
@@ -61,7 +61,7 @@ public class Inventory implements IInventory {
     @Override
     public void addMultiple(final List<IItem> stack) {
         for (final IItem item : stack) {
-            add(item);
+            tryAdd(item);
         }
     }
 

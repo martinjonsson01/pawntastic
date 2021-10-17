@@ -87,8 +87,8 @@ public class InventoryTests {
         final IInventory inventory = new Inventory(capacity);
         final IItem heavyItem = mockItem(0f);
         final IItem lightItem = mockItem(0f);
-        inventory.add(heavyItem);
-        inventory.add(lightItem);
+        inventory.tryAdd(heavyItem);
+        inventory.tryAdd(lightItem);
         // Change the weight of mocked items after they have been added, so that they can be added
         // even if the inventory is full.
         when(heavyItem.getWeight()).thenReturn(20f);
@@ -109,7 +109,7 @@ public class InventoryTests {
         final IInventory infiniteInventory = new Inventory();
 
         // Act
-        final boolean succeeded = infiniteInventory.add(item);
+        final boolean succeeded = infiniteInventory.tryAdd(item);
 
         // Assert
         assertThat(succeeded).isTrue();
@@ -122,11 +122,11 @@ public class InventoryTests {
         final IInventory inventory = new Inventory(100f);
         final IItem heavyItem = mockItem(20f);
         final IItem heavierItem = mockItem(60f);
-        inventory.add(heavyItem);
-        inventory.add(heavierItem);
+        inventory.tryAdd(heavyItem);
+        inventory.tryAdd(heavierItem);
 
         // Act
-        final boolean fits = inventory.add(item);
+        final boolean fits = inventory.tryAdd(item);
 
         // Assert
         assertThat(fits).isEqualTo(shouldFit);
@@ -139,14 +139,14 @@ public class InventoryTests {
         final IInventory inventory = new Inventory(100f);
         final IItem heavyItem = mockItem(20f);
         final IItem heavierItem = mockItem(60f);
-        inventory.add(heavyItem);
-        inventory.add(heavierItem);
+        inventory.tryAdd(heavyItem);
+        inventory.tryAdd(heavierItem);
 
         final ItemType addedType = ItemType.FISH;
         when(item.getType()).thenReturn(addedType);
 
         // Act
-        inventory.add(item);
+        inventory.tryAdd(item);
         final boolean hasBeenAdded = inventory.hasItem(addedType);
 
         // Assert
@@ -159,8 +159,8 @@ public class InventoryTests {
         final IInventory infiniteInventory = new Inventory();
         final IItem heavyItem = mockItem(2000000f);
         final IItem heavierItem = mockItem(60000000f);
-        infiniteInventory.add(heavyItem);
-        infiniteInventory.add(heavierItem);
+        infiniteInventory.tryAdd(heavyItem);
+        infiniteInventory.tryAdd(heavierItem);
 
         // Act
         final boolean isFull = infiniteInventory.isFull();
@@ -175,8 +175,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
         final Exception exception = assertThrows(IllegalArgumentException.class,
                                                  () -> inventory.take(ItemType.ROCK));
 
@@ -190,8 +190,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(ItemFactory.fromType(ItemType.ROCK));
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.ROCK));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
         final IItem item = inventory.take(ItemType.LOG);
 
         // Assert
@@ -216,8 +216,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
 
         final int count = inventory.numberOf(ItemType.LOG);
 
@@ -231,8 +231,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
 
         final int count = inventory.numberOf(ItemType.ROCK);
 
@@ -246,8 +246,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
 
         final ArrayList<IItem> result = inventory.takeAmount(ItemType.LOG, 2);
 
@@ -263,8 +263,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
 
         final Exception exception = assertThrows(IllegalArgumentException.class,
                                                  () -> inventory.takeAmount(ItemType.ROCK, 2));
@@ -280,8 +280,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
-        inventory.add(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
+        inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
 
         final boolean result = inventory.hasItem(ItemType.LOG, 2);
 
