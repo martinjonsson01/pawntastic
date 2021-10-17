@@ -6,7 +6,6 @@ import java.util.Map;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 
-import com.thebois.Pawntastic;
 import com.thebois.models.world.terrains.TerrainType;
 import com.thebois.views.TextureUtils;
 
@@ -19,21 +18,21 @@ public enum ViewableTerrain {
      */
     GRASS(
         TerrainType.GRASS,
-        TextureUtils.createSquareTexture((int) Pawntastic.TILE_SIZE),
+        TextureUtils.createSquareTexture(),
         Color.valueOf("#008000")),
     /**
      * Viewable Sand Tile.
      */
     SAND(
         TerrainType.SAND,
-        TextureUtils.createSquareTexture((int) Pawntastic.TILE_SIZE),
+        TextureUtils.createSquareTexture(),
         Color.valueOf("#bbc201")),
     /**
      * Viewable Sand Type.
      */
     DIRT(
         TerrainType.DIRT,
-        TextureUtils.createSquareTexture((int) Pawntastic.TILE_SIZE),
+        TextureUtils.createSquareTexture(),
         Color.valueOf("#76552b"));
     private static final Map<TerrainType, ViewableTerrain> BY_TYPE = new HashMap<>();
 

@@ -209,7 +209,7 @@ public class World implements IWorld, IFinder {
 
     private void postObstacleEvent(final int posX, final int posY) {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(posX, posY);
-        Pawntastic.BUS.post(obstacleEvent);
+        Pawntastic.getEventBus().post(obstacleEvent);
     }
 
     @Override
