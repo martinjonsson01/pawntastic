@@ -15,9 +15,9 @@ public class ToolbarView {
     private final Container<HorizontalGroup> toolbarPane;
 
     /**
-     * Instantiates a new view of a toolbar that the player can interact with.
+     * Instantiates with all the views that make the toolbar.
      *
-     * @param widgetViews The items that should be displayed in the toolbar.
+     * @param widgetViews The views the toolbar consists of.
      */
     public ToolbarView(final Iterable<IActorView> widgetViews) {
 

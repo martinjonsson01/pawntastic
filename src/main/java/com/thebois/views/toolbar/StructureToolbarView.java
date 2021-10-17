@@ -18,7 +18,7 @@ public class StructureToolbarView implements IActorView {
     private final Actor structureButtons;
 
     /**
-     * Instantiate a table with the different structure buttons.
+     * Instantiate with buttons for each structure.
      *
      * @param skin     The skin used to create the buttons.
      * @param listener The listener that wants to listen to the structure buttons.

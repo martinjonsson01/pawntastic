@@ -48,10 +48,10 @@ public class PlaceStructureController extends AbstractInputProcessor
         if (button == LEFT_CLICK) {
             final Vector2 worldSpaceCoordinates = projector.unproject(x, y);
             final Actor gameContainer = toolbarWidget.getParent();
-            final float offSetX = gameContainer.getX();
-            final float offSetY = gameContainer.getY() + toolbarWidget.getHeight();
-            final int worldPosX = (int) ((worldSpaceCoordinates.x - offSetX) / TILE_SIZE);
-            final int worldPosY = (int) ((worldSpaceCoordinates.y - offSetY) / TILE_SIZE);
+            final float offsetX = gameContainer.getX();
+            final float offsetY = gameContainer.getY() + toolbarWidget.getHeight();
+            final int worldPosX = (int) ((worldSpaceCoordinates.x - offsetX) / TILE_SIZE);
+            final int worldPosY = (int) ((worldSpaceCoordinates.y - offsetY) / TILE_SIZE);
             return world.createStructure(selectedStructure, worldPosX, worldPosY);
         }
         return false;

@@ -1,7 +1,7 @@
 package com.thebois.listeners.events;
 
 /**
- * Sends out information about a value when notifier has been clicked.
+ * Contains information about a value that has been clicked.
  *
  * @param <TValue> The type of the value
  */

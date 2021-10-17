@@ -18,8 +18,7 @@ public class StructureController implements IController<IView> {
      *
      * @param world The world in which the structures exists.
      */
-    public StructureController(
-        final World world) {
+    public StructureController(final World world) {
         this.world = world;
         this.structureView = new StructureView();
         structureView.update(world.getStructures());
