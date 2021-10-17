@@ -30,6 +30,18 @@ public class ColonyTests {
     }
 
     @Test
+    public void isFullReturnsFalse() {
+        // Arrange
+        final Colony colony = new Colony(List.of(), mock(IPathFinder.class));
+
+        // Act
+        final boolean isFull = colony.isFull();
+
+        // Assert
+        assertThat(isFull).isFalse();
+    }
+
+    @Test
     public void constructWithTilesCreatesOneBeingPerPosition() {
         // Arrange
         final int beingCount = 25;
