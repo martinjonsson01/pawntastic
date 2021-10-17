@@ -69,18 +69,13 @@ public final class MatrixUtils {
      * within the search radius.
      *
      * @param matrix Matrix to be searched.
-     *
      * @param startRow Row to start search from.
-     *
      * @param startCol Column to start search from.
-     *
      * @param maxSearchRadius Maximum search radius.
-     *
      * @param maxFoundElements Maximum needed elements to be found.
-     *
      * @param <TType> Generic type of Optional matrix.
      *
-     * @return First found present Optional element of type TType.
+     * @return First found elements of type TType.
      */
     public static <TType> Collection<TType> matrixSpiralSearch(
         final TType[][] matrix,
@@ -98,6 +93,10 @@ public final class MatrixUtils {
                     try {
                         if (matrix[startRow + row][startCol + col] != null) {
                             foundElements.add(matrix[startRow + row][startCol + col]);
+
+                            if (foundElements.size() > maxFoundElements) {
+                                return foundElements;
+                            }
                         }
                     }
                     catch (final ArrayIndexOutOfBoundsException exception) {
@@ -107,7 +106,6 @@ public final class MatrixUtils {
                 }
             }
         }
-
         return foundElements;
     }
 

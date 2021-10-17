@@ -51,16 +51,17 @@ abstract class AbstractStructure implements IStructure {
     public Collection<ItemType> getNeededItems() {
         final Collection<ItemType> neededItems = new ArrayList<>();
         for (final ItemType itemType : allNeededItems.keySet()) {
-            final int numberOf = allNeededItems.get(itemType) - deliveredItems.numberOf(itemType);
+            final int numberOfNeededItems = allNeededItems.get(itemType) - deliveredItems.numberOf(
+                itemType);
 
-            for (int i = 0; i < numberOf; i++) {
+            for (int i = 0; i < numberOfNeededItems; i++) {
                 neededItems.add(itemType);
             }
         }
         return neededItems;
     }
 
-    private int calculateSumOfAllNeededItems() {
+    private int countAllNeededItems() {
         int sum = 0;
         for (final Integer numberOfItems : allNeededItems.values()) {
             sum += numberOfItems;
@@ -80,7 +81,7 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public float getBuiltRatio() {
-        final float totalNeeded = calculateSumOfAllNeededItems();
+        final float totalNeeded = countAllNeededItems();
         final float totalDelivered = totalNeeded - getNeededItems().size();
 
         return totalDelivered / totalNeeded;

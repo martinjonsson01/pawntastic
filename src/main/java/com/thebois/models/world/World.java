@@ -211,7 +211,8 @@ public class World implements IWorld, IStructureFinder, Serializable {
     @Override
     public Optional<IStructure> findNearestStructure(final Position position) {
         return getStructures()
-            .stream().min((o1, o2) -> Float.compare(position.distanceTo(o1.getPosition()),
+            .stream()
+            .min((o1, o2) -> Float.compare(position.distanceTo(o1.getPosition()),
                                            position.distanceTo(o2.getPosition())));
     }
 
