@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Queue;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
@@ -222,22 +221,17 @@ public class World implements IWorld, IStructureFinder {
 
     @Override
     public Optional<IStructure> findNearestIncompleteStructure(final Position position) {
-        IStructure closestIncomplete = null;
-        boolean firstLoop = true;
+        final List<IStructure> allStructures = new ArrayList<>(getStructures());
 
-        for (final IStructure structure : getStructures()) {
+        allStructures.sort((o1, o2) -> Float.compare(o1.getPosition().distanceTo(position),
+                                                     o2.getPosition().distanceTo(position)));
+
+        for (final IStructure structure : allStructures) {
             if (!structure.isCompleted()) {
-                if (firstLoop || structure.getPosition().distanceTo(position) < closestIncomplete
-                    .getPosition()
-                    .distanceTo(position)) {
-                    firstLoop = false;
-                    closestIncomplete = structure;
-                }
+                return Optional.of(structure);
             }
         }
-        if (closestIncomplete != null) {
-            return Optional.of(closestIncomplete);
-        }
+
         return Optional.empty();
     }
 
