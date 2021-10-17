@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
@@ -27,6 +28,7 @@ public class World implements IWorld, IStructureFinder {
     private final IStructure[][] structureMatrix;
     private final IResource[][] resourceMatrix;
     private final ITile[][] canonicalMatrix;
+    private Collection<IStructure> structuresCache = new ArrayList<>();
     private final int worldSize;
 
     /**
@@ -139,7 +141,11 @@ public class World implements IWorld, IStructureFinder {
      * @return The list to be returned.
      */
     public Collection<IStructure> getStructures() {
-        return MatrixUtils.toCollection(this.structureMatrix);
+        return structuresCache;
+    }
+
+    private void generateStructuresCache() {
+        structuresCache = MatrixUtils.toCollection(this.structureMatrix);
     }
 
     /**
@@ -179,6 +185,7 @@ public class World implements IWorld, IStructureFinder {
 
             updateCanonicalMatrix();
             postObstacleEvent(x, y);
+            generateStructuresCache();
             return true;
         }
         return false;
@@ -215,11 +222,21 @@ public class World implements IWorld, IStructureFinder {
 
     @Override
     public Optional<IStructure> findNearestIncompleteStructure(final Position position) {
-        final Collection<IStructure> foundStructures = getClosestStructures(position, 10);
-        for (final IStructure structure : foundStructures) {
+        IStructure closestIncomplete = null;
+        boolean firstLoop = true;
+
+        for (final IStructure structure : getStructures()) {
             if (!structure.isCompleted()) {
-                return Optional.of(structure);
+                if (firstLoop || structure.getPosition().distanceTo(position) < closestIncomplete
+                    .getPosition()
+                    .distanceTo(position)) {
+                    firstLoop = false;
+                    closestIncomplete = structure;
+                }
             }
+        }
+        if (closestIncomplete != null) {
+            return Optional.of(closestIncomplete);
         }
         return Optional.empty();
     }
