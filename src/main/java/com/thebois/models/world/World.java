@@ -114,8 +114,6 @@ public class World implements IWorld, IFinder, IResourceFinder {
             final ITile vacantTile = getRandomVacantSpot();
             final Position vacantPosition = vacantTile.getPosition();
 
-            if (emptyPositions.contains(vacantPosition)) continue;
-
             emptyPositions.add(vacantPosition);
         }
         return emptyPositions;
