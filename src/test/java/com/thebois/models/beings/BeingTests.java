@@ -197,7 +197,6 @@ public class BeingTests {
         assertThat(oldPath).contains(obstaclePosition);
 
         // Act
-        being.update();
         world.createStructure(obstaclePosition);
 
         // Assert
