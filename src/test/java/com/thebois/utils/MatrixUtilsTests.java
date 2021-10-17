@@ -27,7 +27,7 @@ public class MatrixUtilsTests {
             Arguments.of(new Integer[][] { { -1 } }, List.of(-1)));
     }
 
-    public static Stream<Arguments> getMatricesToTest() {
+    public static Stream<Arguments> getMatrixAndExpectedCollection() {
         return Stream.of(
             Arguments.of(new String[][] {
                 { "1", null, "3" },
@@ -121,7 +121,7 @@ public class MatrixUtilsTests {
     }
 
     @ParameterizedTest
-    @MethodSource("getMatricesToTest")
+    @MethodSource("getMatrixAndExpectedCollection")
     public void matrixToCollectionReturnsExpectedElements(final String[][] matrix,
                                                           final Collection<String> expectedElements) {
         // Act
@@ -131,7 +131,7 @@ public class MatrixUtilsTests {
         assertThat(stringCollection).isEqualTo(expectedElements);
     }
 
-    private static Stream<Arguments> getCorrectCoordinatesToTest() {
+    private static Stream<Arguments> getMatrixAndExpectedCoordinates() {
         final String[][] stringMatrix = new String[][] {
             { "1", null, "3" },
             { null, null, "6" },
@@ -144,7 +144,7 @@ public class MatrixUtilsTests {
     }
 
     @ParameterizedTest
-    @MethodSource("getCorrectCoordinatesToTest")
+    @MethodSource("getMatrixAndExpectedCoordinates")
     public void matrixSpiralSearchFindsCorrectElement(final String[][] stringMatrix, final int startRow,
                                                       final int startCol,
                                                       final String expectedString) {

@@ -331,36 +331,8 @@ public class WorldTests {
 
     }
 
-//    private static Stream<Arguments> getInCorrectCoordinatesToTest() {
-//        return Stream.of(Arguments.of(0, 0, 60, 60),
-//                         Arguments.of(5, 5, 100, 100),
-//                         Arguments.of(0, 0, 49, 26),
-//                         Arguments.of(20, 10, 49, 49)
-//        );
-//    }
-//
-//    @ParameterizedTest
-//    @MethodSource("getInCorrectCoordinatesToTest")
-//    public void findNearestStructureReturnsIncorrect(final int startX,
-//                                                     final int startY,
-//                                                     final int endX,
-//                                                     final int endY) {
-//
-//        // Arrange
-//        final World world = new TestWorld(50);
-//        world.createStructure(StructureType.HOUSE, endX, endY);
-//
-//        // Act
-//        final Optional<IStructure> foundStructure = world.findNearestStructure(new Position(
-//            startX,
-//            startY));
-//
-//        // Assert
-//        assertThat(foundStructure.isEmpty()).isTrue();
-//    }
-
     @Test
-    public void returnsNoNearestStructure() {
+    public void returnsNoNearestStructureWhenWorldIsEmpty() {
         // Arrange
         final World world = new TestWorld(50);
 
