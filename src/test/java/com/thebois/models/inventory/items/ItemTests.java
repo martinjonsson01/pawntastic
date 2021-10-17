@@ -22,7 +22,7 @@ public class ItemTests {
         assertThat(itemType).isEqualTo(item.getType());
     }
 
-    public static Stream<Arguments> isEqualSource() {
+    public static Stream<Arguments> getItemTypesToTestIfEqualAndExpectedResult() {
         return Stream.of(
             Arguments.of(ItemFactory.fromType(ItemType.LOG), ItemFactory.fromType(ItemType.LOG), true),
             Arguments.of(ItemFactory.fromType(ItemType.LOG), ItemFactory.fromType(ItemType.ROCK), false),
@@ -31,7 +31,7 @@ public class ItemTests {
     }
 
     @ParameterizedTest
-    @MethodSource("isEqualSource")
+    @MethodSource("getItemTypesToTestIfEqualAndExpectedResult")
     public void isEqual(final IItem itemA, final IItem itemB, final boolean expectedResult) {
 
         // Assert

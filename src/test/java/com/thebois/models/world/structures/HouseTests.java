@@ -66,7 +66,7 @@ public class HouseTests {
         assertThat(structureA).isNotEqualTo(structureB);
     }
 
-    private static Stream<Arguments> tryDeliverItemReturnsExpectedValueSource() {
+    private static Stream<Arguments> getNumberOfDeliveredItemsAndItemToTryToDeliverWithExpectedResult() {
         return Stream.of(
             Arguments.of(10, 10, ItemFactory.fromType(ItemType.ROCK), false),
             Arguments.of(10, 10,  ItemFactory.fromType(ItemType.LOG), false),
@@ -76,7 +76,7 @@ public class HouseTests {
     }
 
     @ParameterizedTest
-    @MethodSource("tryDeliverItemReturnsExpectedValueSource")
+    @MethodSource("getNumberOfDeliveredItemsAndItemToTryToDeliverWithExpectedResult")
     public void tryDeliverItemReturnsExpectedValue(
         final int totalLogs,
         final int totalRocks,
@@ -100,7 +100,7 @@ public class HouseTests {
         assertThat(deliveryResult).isEqualTo(expectedResult);
     }
 
-    private static Stream<Arguments> houseReturnsExpectedItemWhenDismantledSource() {
+    private static Stream<Arguments> getNumberOfDeliveredItemsAndItemTypeToTryToDismantleWithExpectedReturnedValue() {
         return Stream.of(
             Arguments.of(10, 10, ItemType.LOG, Optional.of(ItemFactory.fromType(ItemType.LOG))),
             Arguments.of(10, 10, ItemType.LOG, Optional.of(ItemFactory.fromType(ItemType.LOG))),
@@ -110,7 +110,7 @@ public class HouseTests {
     }
 
     @ParameterizedTest
-    @MethodSource("houseReturnsExpectedItemWhenDismantledSource")
+    @MethodSource("getNumberOfDeliveredItemsAndItemTypeToTryToDismantleWithExpectedReturnedValue")
     public void houseReturnsExpectedItemWhenDismantled(
         final int totalLogs,
         final int totalRocks,
@@ -135,7 +135,7 @@ public class HouseTests {
         assertThat(retrieveItem).isEqualTo(expectedItem);
     }
 
-    private static Stream<Arguments> whenItemsAreDeliveredBuiltRatioIsEqualToExpectedSource() {
+    private static Stream<Arguments> getNumberOfDeliveredItemsAndExpectedBuiltRatio() {
         return Stream.of(
             Arguments.of(10, 10, 1f),
             Arguments.of(20, 20, 1f),
@@ -146,7 +146,7 @@ public class HouseTests {
     }
 
     @ParameterizedTest
-    @MethodSource("whenItemsAreDeliveredBuiltRatioIsEqualToExpectedSource")
+    @MethodSource("getNumberOfDeliveredItemsAndExpectedBuiltRatio")
     public void whenItemsAreDeliveredBuiltRatioIsEqualToExpected(
         final int totalLogs, final int totalRocks, final float expectedRatio) {
 
@@ -169,7 +169,7 @@ public class HouseTests {
         assertThat(ratio).isEqualTo(expectedRatio);
     }
 
-    private static Stream<Arguments> whenStructureHasReceivedItemsNeededItemsAreEqualToExpectedSource() {
+    private static Stream<Arguments> getNumberOfDeliveredItemsAndAListOfExpectedItemsToBeDelivered() {
         return Stream.of(
             Arguments.of(8, 10, List.of(ItemType.LOG, ItemType.LOG)),
             Arguments.of(10, 10, List.of()),
@@ -178,7 +178,7 @@ public class HouseTests {
     }
 
     @ParameterizedTest
-    @MethodSource("whenStructureHasReceivedItemsNeededItemsAreEqualToExpectedSource")
+    @MethodSource("getNumberOfDeliveredItemsAndAListOfExpectedItemsToBeDelivered")
     public void whenStructureHasReceivedItemsNeededItemsAreEqualToExpected(
         final int totalLogs,
         final int totalRocks,
@@ -202,7 +202,7 @@ public class HouseTests {
         assertThat(neededItems.containsAll(expectedNeededItems)).isTrue();
     }
 
-    private static Stream<Arguments> whenItemsHaveBeenDeliveredStructureReturnsCorrectIsCompleteSource() {
+    private static Stream<Arguments> getNumberOfDeliveredItemsAndExpectedIsCompletedValue() {
         return Stream.of(
             Arguments.of(10, 10, true),
             Arguments.of(20, 20, true),
@@ -213,7 +213,7 @@ public class HouseTests {
     }
 
     @ParameterizedTest
-    @MethodSource("whenItemsHaveBeenDeliveredStructureReturnsCorrectIsCompleteSource")
+    @MethodSource("getNumberOfDeliveredItemsAndExpectedIsCompletedValue")
     public void whenItemsHaveBeenDeliveredStructureReturnsCorrectIsComplete(
         final int totalLogs, final int totalRocks, final boolean expectedResult) {
 

@@ -1,10 +1,7 @@
 package com.thebois.models.inventory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.Stack;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -176,9 +173,6 @@ public class InventoryTests {
     public void addMultipleItemsToInventory() {
         // Arrange
         final Inventory inventory = new Inventory();
-        final ArrayList<IItem> items = new ArrayList<>();
-        items.add(ItemFactory.fromType(ItemType.LOG));
-        items.add(ItemFactory.fromType(ItemType.LOG));
 
         // Act
         inventory.addMultiple(List.of(
