@@ -23,6 +23,7 @@ import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.StructureFactory;
 import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.Grass;
 
@@ -302,32 +303,30 @@ public class WorldTests {
     }
 
     private static Stream<Arguments> getCorrectCoordinatesToTest() {
-        return Stream.of(Arguments.of(0, 0, 2, 2),
-                         Arguments.of(5, 5, 10, 10),
-                         Arguments.of(0, 0, 0, 0),
-                         Arguments.of(20, 20, 11, 11),
-                         Arguments.of(49, 49, 40, 40)
+        return Stream.of(Arguments.of(new Position(25,5), new Position(0, 0), new Position(20, 20)),
+                         Arguments.of(new Position(5,5), new Position(0, 0), new Position(8, 8)),
+                         Arguments.of(new Position(0,0), new Position(5, 5), new Position(3, 3)),
+                         Arguments.of(new Position(5,5), new Position(0, 0), new Position(8, 8)),
+                         Arguments.of(new Position(20,20), new Position(5, 7), new Position(15, 15))
         );
     }
 
     @ParameterizedTest
     @MethodSource("getCorrectCoordinatesToTest")
-    public void findNearestStructureReturnsCorrect(final int startX,
-                                                   final int startY,
-                                                   final int endX,
-                                                   final int endY) {
+    public void findNearestStructureReturnsCorrect(final Position startingPosition,
+                                                   final Position incorrectPosition,
+                                                   final Position expectedPosition) {
 
         // Arrange
         final World world = new TestWorld(50);
-        world.createStructure(StructureType.HOUSE, endX, endY);
+        world.createStructure(StructureType.HOUSE, expectedPosition);
+        world.createStructure(StructureType.HOUSE, incorrectPosition);
 
         // Act
-        final Optional<IStructure> foundStructure = world.findNearestStructure(new Position(
-            startX,
-            startY));
+        final Optional<IStructure> foundStructure = world.findNearestStructure(startingPosition);
 
         // Assert
-        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(endX, endY));
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
 
     }
 
@@ -387,6 +386,7 @@ public class WorldTests {
         }
 
         world.createStructure(StructureType.HOUSE, new Position(1, 3));
+        world.createStructure(StructureType.HOUSE, new Position(7, 9));
 
         // Act
         final Optional<IStructure> foundStructure = world.findNearestIncompleteStructure(new Position(
