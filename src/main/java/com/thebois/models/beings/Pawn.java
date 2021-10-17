@@ -50,7 +50,7 @@ public class Pawn extends AbstractBeing {
 
         if (closestIncompleteStructure != null) {
             setFinalDestination(closestIncompleteStructure.getPosition());
-            deliverItemToStructure(closestIncompleteStructure);
+            tryDeliverItemToStructure(closestIncompleteStructure);
         }
 
         if (getDestination().isEmpty()) setRandomDestination();
@@ -80,7 +80,7 @@ public class Pawn extends AbstractBeing {
         }
     }
 
-    protected void deliverItemToStructure(final IStructure structure) {
+    protected void tryDeliverItemToStructure(final IStructure structure) {
         if (structure.getPosition().distanceTo(this.getPosition()) < 2f) {
             structure.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
             structure.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
