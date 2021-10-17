@@ -11,14 +11,15 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
-import com.thebois.models.world.TestWorld;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
+import com.thebois.models.world.structures.StructureType;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -197,7 +198,7 @@ public class BeingTests {
         assertThat(oldPath).contains(obstaclePosition);
 
         // Act
-        world.createStructure(obstaclePosition);
+        world.createStructure(StructureType.HOUSE, obstaclePosition);
 
         // Assert
         final Iterable<Position> newPath = being.getPath();

@@ -7,6 +7,7 @@ import com.thebois.Pawntastic;
 import com.thebois.controllers.AbstractInputProcessor;
 import com.thebois.controllers.IController;
 import com.thebois.models.world.World;
+import com.thebois.models.world.structures.StructureType;
 import com.thebois.views.IProjector;
 import com.thebois.views.game.IView;
 import com.thebois.views.game.StructureView;
@@ -46,7 +47,7 @@ public class StructureController extends AbstractInputProcessor implements ICont
             final float offSetY = gameWidget.getY();
             final int worldPosX = (int) ((worldSpaceCoordinates.x - offSetX) / tileSize);
             final int worldPosY = (int) ((worldSpaceCoordinates.y - offSetY) / tileSize);
-            if (world.createStructure(worldPosX, worldPosY)) {
+            if (world.createStructure(StructureType.HOUSE, worldPosX, worldPosY)) {
                 structureView.update(world.getStructures());
                 return true;
             }

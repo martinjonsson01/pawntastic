@@ -18,6 +18,7 @@ import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.Grass;
 
 import static org.assertj.core.api.Assertions.*;
@@ -34,12 +35,10 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(
-                             mockTile(1, 1),
-                             List.of(mockPosition(1, 0),
-                                     mockPosition(0, 1),
-                                     mockPosition(2, 1),
-                                     mockPosition(1, 2))));
+                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
+                                                              mockPosition(0, 1),
+                                                              mockPosition(2, 1),
+                                                              mockPosition(1, 2))));
     }
 
     private static Position mockPosition(final int positionX, final int positionY) {
@@ -152,7 +151,7 @@ public class WorldTests {
         final Position position = new Position(1, 1);
 
         // Act
-        final boolean isBuilt = world.createStructure(position);
+        final boolean isBuilt = world.createStructure(StructureType.HOUSE, position);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
@@ -167,7 +166,7 @@ public class WorldTests {
         final World world = new World(2, 0);
 
         // Act
-        final boolean isBuilt = world.createStructure(placementPosition);
+        final boolean isBuilt = world.createStructure(StructureType.HOUSE, placementPosition);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
@@ -183,8 +182,8 @@ public class WorldTests {
         final Position position2 = new Position(-1, -1);
 
         // Act
-        world.createStructure(position1);
-        world.createStructure(position2);
+        world.createStructure(StructureType.HOUSE, position1);
+        world.createStructure(StructureType.HOUSE, position2);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
@@ -257,7 +256,7 @@ public class WorldTests {
     private void fillWorldWithStructures(final int worldSize, final World world) {
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
-                world.createStructure(x, y);
+                world.createStructure(StructureType.HOUSE, x, y);
             }
         }
     }
