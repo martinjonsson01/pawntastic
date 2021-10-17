@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import org.assertj.core.api.ThrowableAssert;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -393,23 +394,19 @@ public class WorldTests {
     }
 
     @Test
-    public void instantiateWithPawnCountCreatesOnlyAsManyBeingsAsFitInTheWorld() {
+    public void findEmptyPositionsWithCountThatWontFitThrowsException() {
         // Arrange
-        final int pawnFitCount = 4;
         final World world = createWorld(2, 15);
-        final Iterable<Position> vacantPositions = world.findEmptyPositions(5);
+        final ThrowableAssert.ThrowingCallable findPositions = () -> world.findEmptyPositions(5);
 
         // Act
-        final Colony colony = new Colony(vacantPositions);
-
-        // Assert
-        assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
+        assertThatThrownBy(findPositions).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void findEmptyPositionsReturnsPositionWithNoResourcesOn() {
         // Arrange
-        final World world = createWorld(10, 15);
+        final World world = createWorld(10, 15, new Random());
         final Collection<IResource> resources = world.getResources();
         final Collection<Position> occupiedPositions = new ArrayList<>();
         for (final IResource resource : resources) {
@@ -424,39 +421,18 @@ public class WorldTests {
     }
 
     @Test
-    public void findEmptyPositionsReturnsEmptyIfNoEmptyPositionsWasFound() {
-        // Arrange
-        final int worldSize = 10;
-        final int amountOfWantedPositions = 5;
-        final World world = createWorld(worldSize);
-        fillWorldWithStructures(worldSize, world);
-
-        // Act
-        final Iterable<Position> emptyPositions = world.findEmptyPositions(amountOfWantedPositions);
-
-        // Assert
-        assertThat(emptyPositions).isEmpty();
-    }
-
-    private void fillWorldWithStructures(final int worldSize, final World world) {
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
-                world.createStructure(x, y);
-            }
-        }
-    }
-
-    @Test
     public void findEmptyPositionsReturnsEarlyIfAmountOfEmptyPositionsHaveBeenMet() {
         // Arrange
-        final World world = createWorld(2, 15);
+        final Random random = mock(Random.class);
+        when(random.nextInt(anyInt())).thenReturn(0, 0, 0, 1, 1, 0, 1, 1);
+        final World world = createWorld(2, 15, random);
         final int numberOfWantedPositions = 3;
 
         // Act
-        final int numberOfEmptyPositions = Lists.newArrayList(world.findEmptyPositions(
-            numberOfWantedPositions)).size();
+        final Iterable<Position> emptyPositions = world.findEmptyPositions(numberOfWantedPositions);
 
         // Assert
+        final int numberOfEmptyPositions = Lists.newArrayList(emptyPositions).size();
         assertThat(numberOfEmptyPositions).isEqualTo(numberOfWantedPositions);
     }
 
@@ -473,6 +449,14 @@ public class WorldTests {
 
         // Assert
         assertThat(actualNumberOfTerrainTiles).isEqualTo(expectedNumberOfTerrainTiles);
+    }
+
+    private void fillWorldWithStructures(final int worldSize, final World world) {
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
+                world.createStructure(x, y);
+            }
+        }
     }
 
     private static class ResourceTestWorld extends World {

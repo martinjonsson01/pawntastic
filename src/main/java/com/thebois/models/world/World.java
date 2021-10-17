@@ -49,14 +49,14 @@ public class World implements IWorld, IFinder, IResourceFinder {
         updateCanonicalMatrix();
     }
 
+    protected ITerrain[][] setUpTerrain(final int size, final int seed) {
+        return new TerrainGenerator(worldSize, seed).generateTerrainMatrix();
+    }
+
     private IStructure[][] setUpStructures() {
         final IStructure[][] newStructureMatrix = new IStructure[worldSize][worldSize];
         MatrixUtils.populateElements(newStructureMatrix, (x, y) -> null);
         return newStructureMatrix;
-    }
-
-    protected ITerrain[][] setUpTerrain(final int size, final int seed) {
-        return new TerrainGenerator(worldSize, seed).generateTerrainMatrix();
     }
 
     protected IResource[][] setUpResources(final int size, final int seed) {
@@ -99,16 +99,32 @@ public class World implements IWorld, IFinder, IResourceFinder {
      * @param count The amount of empty positions that needs to be found.
      *
      * @return List of empty positions.
+     *
+     * @throws IllegalArgumentException When it is impossible to find the requested amount of
+     *                                  positions.
      */
     public Iterable<Position> findEmptyPositions(final int count) {
+        if (count > worldSize * worldSize) {
+            throw new IllegalArgumentException(
+                "Can not find more empty positions than there are tiles in the world.");
+        }
+
         final List<Position> emptyPositions = new ArrayList<>();
-        MatrixUtils.forEachElement(canonicalMatrix, tile -> {
-            if (emptyPositions.size() >= count) return;
-            if (isVacant(tile.getPosition())) {
-                emptyPositions.add(tile.getPosition());
-            }
-        });
+        while (emptyPositions.size() < count) {
+            final ITile vacantTile = getRandomVacantSpot();
+            final Position vacantPosition = vacantTile.getPosition();
+
+            if (emptyPositions.contains(vacantPosition)) continue;
+
+            emptyPositions.add(vacantPosition);
+        }
         return emptyPositions;
+    }
+
+    private Position createRandomPosition() {
+        final int randomX = random.nextInt(worldSize);
+        final int randomY = random.nextInt(worldSize);
+        return new Position(randomX, randomY);
     }
 
     private boolean isVacant(final Position position) {
@@ -148,21 +164,6 @@ public class World implements IWorld, IFinder, IResourceFinder {
         MatrixUtils.forEachElement(structureMatrix, maybeStructure -> {
             if (maybeStructure != null) {
                 copy.add(maybeStructure.deepClone());
-            }
-        });
-        return copy;
-    }
-
-    /**
-     * Returns the resources in a Collection as the interface IResource.
-     *
-     * @return The list to be returned.
-     */
-    public Collection<IResource> getResources() {
-        final Collection<IResource> copy = new ArrayList<>();
-        MatrixUtils.forEachElement(resourceMatrix, maybeResource -> {
-            if (maybeResource != null) {
-                copy.add(maybeResource.deepClone());
             }
         });
         return copy;
@@ -225,6 +226,21 @@ public class World implements IWorld, IFinder, IResourceFinder {
                                            origin.distanceTo(o2.getPosition())));
     }
 
+    /**
+     * Returns the resources in a Collection as the interface IResource.
+     *
+     * @return The list to be returned.
+     */
+    public Collection<IResource> getResources() {
+        final Collection<IResource> copy = new ArrayList<>();
+        MatrixUtils.forEachElement(resourceMatrix, maybeResource -> {
+            if (maybeResource != null) {
+                copy.add(maybeResource.deepClone());
+            }
+        });
+        return copy;
+    }
+
     @Override
     public Collection<ITile> getNeighboursOf(final ITile tile) {
         final ArrayList<ITile> tiles = new ArrayList<>(8);
@@ -270,12 +286,6 @@ public class World implements IWorld, IFinder, IResourceFinder {
         } while (!isVacant(randomPosition));
 
         return getTileAt(randomPosition);
-    }
-
-    private Position createRandomPosition() {
-        final int randomX = random.nextInt(worldSize);
-        final int randomY = random.nextInt(worldSize);
-        return new Position(randomX, randomY);
     }
 
     @Override
