@@ -26,7 +26,8 @@ public class ItemTests {
         return Stream.of(
             Arguments.of(ItemFactory.fromType(ItemType.LOG), ItemFactory.fromType(ItemType.LOG), true),
             Arguments.of(ItemFactory.fromType(ItemType.LOG), ItemFactory.fromType(ItemType.ROCK), false),
-            Arguments.of(ItemFactory.fromType(ItemType.ROCK), ItemFactory.fromType(ItemType.ROCK), true));
+            Arguments.of(ItemFactory.fromType(ItemType.ROCK), ItemFactory.fromType(ItemType.ROCK), true),
+            Arguments.of(ItemFactory.fromType(ItemType.ROCK), null, false));
     }
 
     @ParameterizedTest

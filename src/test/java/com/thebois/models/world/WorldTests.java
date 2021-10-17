@@ -424,5 +424,28 @@ public class WorldTests {
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(1, 3));
     }
 
+    @Test
+    public void findNearestIncompleteStructureFindsNoIncompleteStructure() {
+        // Arrange
+        final World world = new TestWorld(50);
+        world.createStructure(StructureType.HOUSE, new Position(4, 2));
+        world.createStructure(StructureType.HOUSE, new Position(9, 5));
+
+        for (final IStructure structure : world.getStructures()) {
+            for (int i = 0; i < 10; i++) {
+                structure.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
+            }
+            for (int i = 0; i < 10; i++) {
+                structure.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
+            }
+        }
+
+        // Act
+        final Optional<IStructure> foundStructure = world.findNearestIncompleteStructure(new Position(
+            0, 0));
+
+        // Assert
+        assertThat(foundStructure.isEmpty()).isTrue();
+    }
 
 }

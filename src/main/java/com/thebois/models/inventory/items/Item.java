@@ -26,7 +26,7 @@ public class Item implements IItem {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
         final Item item = (Item) o;
         return type == item.type;
     }
