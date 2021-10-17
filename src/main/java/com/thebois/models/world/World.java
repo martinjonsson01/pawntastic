@@ -104,14 +104,14 @@ public class World implements IWorld, IFinder, IResourceFinder {
         final List<Position> emptyPositions = new ArrayList<>();
         MatrixUtils.forEachElement(canonicalMatrix, tile -> {
             if (emptyPositions.size() >= count) return;
-            if (isPositionEmpty(tile.getPosition())) {
+            if (isVacant(tile.getPosition())) {
                 emptyPositions.add(tile.getPosition());
             }
         });
         return emptyPositions;
     }
 
-    private boolean isPositionEmpty(final Position position) {
+    private boolean isVacant(final Position position) {
         final int x = (int) position.getPosX();
         final int y = (int) position.getPosY();
         return canonicalMatrix[y][x].getCost() < Float.MAX_VALUE;
@@ -208,7 +208,7 @@ public class World implements IWorld, IFinder, IResourceFinder {
         if (posIntX < 0 || posIntX >= structureMatrix[posIntY].length) {
             return false;
         }
-        return isPositionEmpty(position);
+        return isVacant(position);
     }
 
     private void postObstacleEvent(final int posX, final int posY) {
@@ -276,12 +276,6 @@ public class World implements IWorld, IFinder, IResourceFinder {
         final int randomX = random.nextInt(worldSize);
         final int randomY = random.nextInt(worldSize);
         return new Position(randomX, randomY);
-    }
-
-    private boolean isVacant(final Position position) {
-        final int y = (int) position.getPosY();
-        final int x = (int) position.getPosX();
-        return canonicalMatrix[y][x] instanceof ITerrain;
     }
 
     @Override
