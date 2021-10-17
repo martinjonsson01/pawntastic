@@ -19,7 +19,7 @@ public class Pawn extends AbstractBeing {
     /* Temporary hard-coded world size. Should be removed when pathfinding is implemented. */
     private static final int WORLD_SIZE = 50;
     private final Random random;
-    private IStructure closestStructure;
+    private IStructure closestIncompleteStructure;
 
     /**
      * Instantiates with an initial position and a destination to travel to.
@@ -44,13 +44,13 @@ public class Pawn extends AbstractBeing {
     public void update() {
         super.update();
 
-        if (closestStructure == null || closestStructure.isCompleted()) {
-            closestStructure = findNearestIncompleteStructure();
+        if (closestIncompleteStructure == null || closestIncompleteStructure.isCompleted()) {
+            closestIncompleteStructure = findNearestIncompleteStructure();
         }
 
-        if (closestStructure != null) {
-            setFinalDestination(closestStructure.getPosition());
-            deliverItemToStructure(closestStructure);
+        if (closestIncompleteStructure != null) {
+            setFinalDestination(closestIncompleteStructure.getPosition());
+            deliverItemToStructure(closestIncompleteStructure);
         }
 
         if (getDestination().isEmpty()) setRandomDestination();
@@ -67,7 +67,7 @@ public class Pawn extends AbstractBeing {
 
     protected IStructure findNearestIncompleteStructure() {
         final Optional<IStructure> structure =
-            getFinder().findNearestIncompleteStructure(this.getPosition());
+            getStructureFinder().findNearestIncompleteStructure(this.getPosition());
         return structure.orElse(null);
     }
 

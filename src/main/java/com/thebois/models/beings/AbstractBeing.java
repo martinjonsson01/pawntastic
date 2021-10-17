@@ -169,7 +169,7 @@ public abstract class AbstractBeing implements IBeing {
         return pathFinder;
     }
 
-    protected IStructureFinder getFinder() {
+    protected IStructureFinder getStructureFinder() {
         return this.finder;
     }
 
