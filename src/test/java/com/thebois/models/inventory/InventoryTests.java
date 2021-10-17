@@ -39,6 +39,32 @@ public class InventoryTests {
                          Arguments.of(0f, true));
     }
 
+    /**
+     * Gets an item to add and whether it would fit if added to an inventory with 20 kg capacity
+     * left.
+     *
+     * @return Items and if they should fit.
+     */
+    public static Stream<Arguments> getItemToAddAndWhetherItShouldFit() {
+        return Stream.of(Arguments.of(mockItem(20f), true),
+                         Arguments.of(mockItem(0.1f), true),
+                         Arguments.of(mockItem(19.9f), true),
+                         Arguments.of(mockItem(0f), true),
+                         Arguments.of(mockItem(20.1f), false),
+                         Arguments.of(mockItem(1000f), false));
+    }
+
+    private static IItem mockItem(final float weight) {
+        return mockItem(weight, ItemType.LOG);
+    }
+
+    private static IItem mockItem(final float weight, final ItemType type) {
+        final IItem item = mock(IItem.class);
+        when(item.getWeight()).thenReturn(weight);
+        when(item.getType()).thenReturn(type);
+        return item;
+    }
+
     @ParameterizedTest
     @MethodSource("getItemTypes")
     public void emptyInventoryIsEmpty(final ItemType itemType) {
@@ -59,18 +85,88 @@ public class InventoryTests {
         final float capacity, final boolean expectedFull) {
         // Arrange
         final IInventory inventory = new Inventory(capacity);
-        final IItem heavyItem = mock(IItem.class);
-        when(heavyItem.getWeight()).thenReturn(20f);
-        final IItem lightItem = mock(IItem.class);
-        when(lightItem.getWeight()).thenReturn(0.1f);
+        final IItem heavyItem = mockItem(0f);
+        final IItem lightItem = mockItem(0f);
         inventory.add(heavyItem);
         inventory.add(lightItem);
+        // Change the weight of mocked items after they have been added, so that they can be added
+        // even if the inventory is full.
+        when(heavyItem.getWeight()).thenReturn(20f);
+        when(lightItem.getWeight()).thenReturn(0.1f);
 
         // Act
         final boolean isFull = inventory.isFull();
 
         // Assert
         assertThat(isFull).isEqualTo(expectedFull);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getItemToAddAndWhetherItShouldFit")
+    public void addItemToInfiniteInventorySucceedsRegardlessOfIfItShould(
+        final IItem item, final boolean shouldFit) {
+        // Arrange
+        final IInventory infiniteInventory = new Inventory();
+
+        // Act
+        final boolean succeeded = infiniteInventory.add(item);
+
+        // Assert
+        assertThat(succeeded).isTrue();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getItemToAddAndWhetherItShouldFit")
+    public void addItemReturnsIfItemFits(final IItem item, final boolean shouldFit) {
+        // Arrange
+        final IInventory inventory = new Inventory(100f);
+        final IItem heavyItem = mockItem(20f);
+        final IItem heavierItem = mockItem(60f);
+        inventory.add(heavyItem);
+        inventory.add(heavierItem);
+
+        // Act
+        final boolean fits = inventory.add(item);
+
+        // Assert
+        assertThat(fits).isEqualTo(shouldFit);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getItemToAddAndWhetherItShouldFit")
+    public void addItemOnlyAddsItemIfItFits(final IItem item, final boolean shouldFit) {
+        // Arrange
+        final IInventory inventory = new Inventory(100f);
+        final IItem heavyItem = mockItem(20f);
+        final IItem heavierItem = mockItem(60f);
+        inventory.add(heavyItem);
+        inventory.add(heavierItem);
+
+        final ItemType addedType = ItemType.FISH;
+        when(item.getType()).thenReturn(addedType);
+
+        // Act
+        inventory.add(item);
+        final boolean hasBeenAdded = inventory.hasItem(addedType);
+
+        // Assert
+        assertThat(hasBeenAdded).isEqualTo(shouldFit);
+    }
+
+    @Test
+    public void isFullReturnsFalseWhenHasInfiniteCapacity() {
+        // Arrange
+        final IInventory infiniteInventory = new Inventory();
+        final IItem heavyItem = mockItem(2000000f);
+        final IItem heavierItem = mockItem(60000000f);
+        infiniteInventory.add(heavyItem);
+        infiniteInventory.add(heavierItem);
+
+        // Act
+        final boolean isFull = infiniteInventory.isFull();
+
+        // Assert
+        assertThat(isFull).isFalse();
     }
 
     @Test
