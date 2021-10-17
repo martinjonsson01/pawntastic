@@ -102,7 +102,7 @@ public abstract class AbstractBeing implements IBeing {
         // Registers every time on deserialization because it might be registered to an old instance
         // of the event bus.
         // (caused by saving/loading).
-        Pawntastic.BUS.register(this);
+        Pawntastic.getEventBus().register(this);
         in.defaultReadObject();
     }
 
