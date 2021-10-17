@@ -1,15 +1,15 @@
 package com.thebois.views.info;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 import com.thebois.views.DrawableUtils;
 
 /**
  * Displays info about the Colony to the player and allows them to interact with it.
  */
-public class InfoView {
+public class InfoView implements IActorView {
 
     private final Container<VerticalGroup> infoPane;
 
@@ -31,7 +31,8 @@ public class InfoView {
         infoPane.setBackground(DrawableUtils.createPaneBackground());
     }
 
-    public WidgetGroup getPane() {
+    @Override
+    public Actor getWidgetContainer() {
         return infoPane;
     }
 

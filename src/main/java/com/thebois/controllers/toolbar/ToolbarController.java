@@ -16,7 +16,7 @@ import com.thebois.views.toolbar.ToolbarView;
 /**
  * Container class for controllers that manage the toolbar.
  */
-public class ToolbarController implements IController<ToolbarView> {
+public class ToolbarController implements IController<IActorView> {
 
     private final Collection<IController<IActorView>> controllers;
     private final Collection<InputProcessor> inputProcessors;
@@ -39,7 +39,7 @@ public class ToolbarController implements IController<ToolbarView> {
 
         toolbarView = createToolbarView();
 
-        placeStructureController.setToolbarWidget(toolbarView.getPane());
+        placeStructureController.setToolbarWidget(toolbarView.getWidgetContainer());
     }
 
     private ToolbarView createToolbarView() {
@@ -49,7 +49,7 @@ public class ToolbarController implements IController<ToolbarView> {
     }
 
     @Override
-    public ToolbarView getView() {
+    public IActorView getView() {
         return toolbarView;
     }
 

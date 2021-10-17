@@ -10,7 +10,7 @@ import com.thebois.views.info.IActorView;
 /**
  * The view that displays the different items in the toolbar.
  */
-public class ToolbarView {
+public class ToolbarView implements IActorView {
 
     private final Container<HorizontalGroup> toolbarPane;
 
@@ -31,7 +31,8 @@ public class ToolbarView {
         toolbarPane.setBackground(DrawableUtils.createPaneBackground());
     }
 
-    public Actor getPane() {
+    @Override
+    public Actor getWidgetContainer() {
         return toolbarPane;
     }
 

@@ -11,8 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import com.thebois.views.info.InfoView;
-import com.thebois.views.toolbar.ToolbarView;
+import com.thebois.views.info.IActorView;
 
 /**
  * The main screen displaying the world and UI.
@@ -23,8 +22,8 @@ public class GameScreen implements Screen {
     private final FitViewport viewport;
     private final Color backgroundColor = new Color(0, 0, 0.2f, 1);
     private final Actor gameView;
-    private final InfoView infoView;
-    private final ToolbarView toolbarView;
+    private final IActorView infoView;
+    private final IActorView toolbarView;
     private Stage stage;
     private SpriteBatch spriteBatch;
     private final Actor gameAndToolbarContainer;
@@ -42,8 +41,8 @@ public class GameScreen implements Screen {
         final FitViewport viewport,
         final OrthographicCamera camera,
         final Actor gameView,
-        final InfoView infoView,
-        final ToolbarView toolbarView) {
+        final IActorView infoView,
+        final IActorView toolbarView) {
         this.viewport = viewport;
         this.camera = camera;
         this.gameView = gameView;
@@ -60,7 +59,7 @@ public class GameScreen implements Screen {
 
         final Table infoAndGameTable = new Table();
         infoAndGameTable.setFillParent(true);
-        infoAndGameTable.add(infoView.getPane()).fillY().expandY();
+        infoAndGameTable.add(infoView.getWidgetContainer()).fillY().expandY();
         infoAndGameTable.add(gameAndToolbarContainer).top().left().expandY().fillY();
         // Add to stage
         stage.addActor(infoAndGameTable);
@@ -70,7 +69,7 @@ public class GameScreen implements Screen {
         final Table gameContainerTable = new Table();
         gameContainerTable.add(gameView).top().left();
         gameContainerTable.row().left().bottom().expandY().fillY();
-        gameContainerTable.add(toolbarView.getPane()).fill();
+        gameContainerTable.add(toolbarView.getWidgetContainer()).fill();
         return gameContainerTable;
     }
 
