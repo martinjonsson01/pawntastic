@@ -94,11 +94,11 @@ public class HouseTests {
 
     private static Stream<Arguments> houseReturnsExpectedItemWhenDismantledSource() {
         return Stream.of(
-            Arguments.of(10, 10, ItemType.LOG, new Log()),
-            Arguments.of(10, 10, ItemType.LOG, new Log()),
-            Arguments.of(0, 0, ItemType.LOG, null),
-            Arguments.of(12, 12, ItemType.LOG, new Log()),
-            Arguments.of(10, 9, ItemType.LOG, new Log()));
+            Arguments.of(10, 10, ItemType.LOG, Optional.of(new Log())),
+            Arguments.of(10, 10, ItemType.LOG, Optional.of(new Log())),
+            Arguments.of(0, 0, ItemType.LOG, Optional.empty()),
+            Arguments.of(12, 12, ItemType.LOG, Optional.of(new Log())),
+            Arguments.of(10, 9, ItemType.LOG, Optional.of(new Log())));
     }
 
     @ParameterizedTest
@@ -107,7 +107,7 @@ public class HouseTests {
         final int totalLogs,
         final int totalRocks,
         final ItemType itemTypeToRetrieve,
-        final IItem expectedItem) {
+        final Optional<IItem> expectedItem) {
         // Arrange
         final House house = new House(new Position());
 
@@ -118,7 +118,7 @@ public class HouseTests {
             house.tryDeliverItem(new Rock());
         }
         // Act
-        final IItem retrieveItem = house.tryDismantle(itemTypeToRetrieve).orElse(null);
+        final Optional<IItem> retrieveItem = house.tryDismantle(itemTypeToRetrieve);
 
         // Assert
         assertThat(retrieveItem).isEqualTo(expectedItem);
