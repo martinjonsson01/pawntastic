@@ -1,4 +1,4 @@
-package com.thebois.views.game;
+package com.thebois.views.toolbar;
 
 import java.util.ArrayList;
 import java.util.Collection;

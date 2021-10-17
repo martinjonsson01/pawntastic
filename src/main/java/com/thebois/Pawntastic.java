@@ -37,7 +37,7 @@ public class Pawntastic extends Game {
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int PAWN_POSITIONS = 50;
-    private static final int TOOLBAR_HEIGHT = 100;
+    private static final int TOOLBAR_HEIGHT = 40;
     private static final int TILE_SIZE = (int) (Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH)
                                                 - TOOLBAR_HEIGHT) / WORLD_SIZE;
     // LibGDX assets
@@ -88,15 +88,6 @@ public class Pawntastic extends Game {
      */
     public static EventBus getEventBus() {
         return BUS;
-    }
-
-    /**
-     * Gets the height of the tool bar.
-     *
-     * @return The height.
-     */
-    public static int getToolBarHeight() {
-        return TOOLBAR_HEIGHT;
     }
 
     @Override

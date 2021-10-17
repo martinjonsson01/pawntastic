@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.thebois.listeners.IEventListener;
 import com.thebois.listeners.events.OnClickEvent;
 import com.thebois.models.world.structures.StructureType;
-import com.thebois.views.game.StructureButton;
 import com.thebois.views.info.IActorView;
 
 /**
@@ -19,7 +18,7 @@ public class StructureToolbarView implements IActorView {
     private final Actor structureButtons;
 
     /**
-     * Instansiate a table with the different structure buttons.
+     * Instantiate a table with the different structure buttons.
      *
      * @param skin     The skin used to create the buttons.
      * @param listener The listener that wants to listen to the structure buttons.
@@ -35,7 +34,7 @@ public class StructureToolbarView implements IActorView {
         // Set up table.
         final Table toolbarTable = new Table();
         toolbarTable.left().top();
-        toolbarTable.row().expandY().fillY();
+        toolbarTable.row().expand().fill();
 
         // Button group settings.
         final ButtonGroup<StructureButton> buttonGroup = new ButtonGroup<>();
@@ -45,7 +44,7 @@ public class StructureToolbarView implements IActorView {
         // Add buttons to table and button group.
         for (final StructureType type : StructureType.values()) {
             final StructureButton structureButton = new StructureButton(type, skin);
-            toolbarTable.add(structureButton);
+            toolbarTable.add(structureButton).expand().fill();
             buttonGroup.add(structureButton);
             structureButton.registerListener(listener);
         }

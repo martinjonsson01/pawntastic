@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import com.thebois.Pawntastic;
 import com.thebois.views.info.InfoView;
 import com.thebois.views.toolbar.ToolbarView;
 
@@ -62,16 +61,16 @@ public class GameScreen implements Screen {
         final Table infoAndGameTable = new Table();
         infoAndGameTable.setFillParent(true);
         infoAndGameTable.add(infoView.getPane()).fillY().expandY();
-        infoAndGameTable.add(gameContainer);
+        infoAndGameTable.add(gameContainer).top().left().expandY().fillY();
         // Add to stage
         stage.addActor(infoAndGameTable);
     }
 
-    private Actor createGameContainer() {
+    private Table createGameContainer() {
         final Table gameContainerTable = new Table();
-        gameContainerTable.add(gameView);
-        gameContainerTable.row().left().height(Pawntastic.getToolBarHeight());
-        gameContainerTable.add(toolbarView.getPane());
+        gameContainerTable.add(gameView).top().left();
+        gameContainerTable.row().left().bottom().expandY().fillY();
+        gameContainerTable.add(toolbarView.getPane()).fill();
         return gameContainerTable;
     }
 

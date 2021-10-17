@@ -1,8 +1,10 @@
 package com.thebois.views.toolbar;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 
+import com.thebois.views.DrawableUtils;
 import com.thebois.views.info.IActorView;
 
 /**
@@ -10,7 +12,7 @@ import com.thebois.views.info.IActorView;
  */
 public class ToolbarView {
 
-    private final HorizontalGroup toolbar;
+    private final Container<HorizontalGroup> toolbarPane;
 
     /**
      * Instantiates a new view of a toolbar that the player can interact with.
@@ -19,15 +21,18 @@ public class ToolbarView {
      */
     public ToolbarView(final Iterable<IActorView> widgetViews) {
 
-        toolbar = new HorizontalGroup();
-        toolbar.expand().fill().expand();
+        final HorizontalGroup toolbar = new HorizontalGroup();
+        toolbar.expand().expand().fill();
         for (final IActorView actorView : widgetViews) {
             toolbar.addActor(actorView.getWidgetContainer());
         }
+
+        toolbarPane = new Container<>(toolbar).fill();
+        toolbarPane.setBackground(DrawableUtils.createPaneBackground());
     }
 
     public Actor getPane() {
-        return toolbar;
+        return toolbarPane;
     }
 
 }
