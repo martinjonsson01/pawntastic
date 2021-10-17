@@ -40,5 +40,5 @@ Participants: Martin, Jonathan, Jacob, Mathias
 (Note: We should document that our code is not thread safe.)   
 
 ## Wrap up
-* Work on adding more fetures / completing more user stories.
+* Work on adding more features / completing more user stories.
 * Next meeting on Friday 15:15
