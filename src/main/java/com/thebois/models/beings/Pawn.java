@@ -7,8 +7,8 @@ import java.util.Random;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
-import com.thebois.models.inventory.items.Log;
-import com.thebois.models.inventory.items.Rock;
+import com.thebois.models.inventory.items.ItemFactory;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.structures.IStructure;
 
 /**
@@ -82,8 +82,8 @@ public class Pawn extends AbstractBeing {
 
     protected void deliverItemToStructure(final IStructure structure) {
         if (structure.getPosition().distanceTo(this.getPosition()) < 2f) {
-            structure.tryDeliverItem(new Rock());
-            structure.tryDeliverItem(new Log());
+            structure.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
+            structure.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
         }
     }
 

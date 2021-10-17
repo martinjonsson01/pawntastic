@@ -18,8 +18,6 @@ abstract class AbstractStructure implements IStructure {
 
     private final Position position;
     private final StructureType structureType;
-    private final Position position;
-    private final StructureType structureType;
     private final Map<ItemType, Integer> allNeededItems;
     private final IInventory deliveredItems = new Inventory();
 
@@ -34,7 +32,7 @@ abstract class AbstractStructure implements IStructure {
         final Position position,
         final StructureType structureType,
         final Map<ItemType, Integer> allNeededItems) {
-        this.position = new Position(posX, posY);
+        this.position = position;
         this.structureType = structureType;
         this.allNeededItems = allNeededItems;
     }

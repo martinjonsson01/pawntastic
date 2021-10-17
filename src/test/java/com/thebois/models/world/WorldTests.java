@@ -315,8 +315,8 @@ public class WorldTests {
                                                    final int endY) {
 
         // Arrange
-        final World world = new World(50);
-        world.createStructure(endX, endY);
+        final World world = new TestWorld(50);
+        world.createStructure(StructureType.HOUSE, endX, endY);
 
         // Act
         final Optional<IStructure> foundStructure = world.findNearestStructure(new Position(
@@ -344,8 +344,8 @@ public class WorldTests {
                                                      final int endY) {
 
         // Arrange
-        final World world = new World(50);
-        world.createStructure(endX, endY);
+        final World world = new TestWorld(50);
+        world.createStructure(StructureType.HOUSE, endX, endY);
 
         // Act
         final Optional<IStructure> foundStructure = world.findNearestStructure(new Position(
@@ -359,7 +359,7 @@ public class WorldTests {
     @Test
     public void returnsNoNearestStructure() {
         // Arrange
-        final World world = new World(50);
+        final World world = new TestWorld(50);
 
         // Act
         final Optional<IStructure> structure = world.findNearestStructure(
@@ -384,11 +384,11 @@ public class WorldTests {
         final Collection<Position> positions,
         final int size) {
         // Arrange
-        final World world = new World(50);
+        final World world = new TestWorld(50);
 
         // Act
         for (final Position position : positions) {
-            world.createStructure(position);
+            world.createStructure(StructureType.HOUSE, position);
         }
 
         // Assert

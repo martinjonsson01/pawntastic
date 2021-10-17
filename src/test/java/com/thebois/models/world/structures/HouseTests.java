@@ -12,9 +12,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.models.Position;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
-import com.thebois.models.inventory.items.Log;
-import com.thebois.models.inventory.items.Rock;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -38,12 +37,13 @@ public class HouseTests {
     public void getTypeReturnsCorrectStructureType() {
         // Arrange
         final Position position = new Position(123, 456);
-        final House structure = new House(position);
-
-        // Act
         final IStructure structure = StructureFactory.createStructure(
             StructureType.HOUSE,
             position);
+        // Act
+
+        StructureType returnedType = structure.getType();
+
         // Assert
         assertThat(returnedType).isEqualTo(StructureType.HOUSE);
     }
@@ -55,10 +55,10 @@ public class HouseTests {
         final Position positionB = new Position(456, 123);
 
         // Act
-        final House structureB = StructureFactory.createStructure(
+        final IStructure structureA = StructureFactory.createStructure(
             StructureType.HOUSE,
             positionA);
-        final House structureB = StructureFactory.createStructure(
+        final IStructure structureB = StructureFactory.createStructure(
             StructureType.HOUSE,
             positionB);
 
@@ -68,11 +68,11 @@ public class HouseTests {
 
     private static Stream<Arguments> tryDeliverItemReturnsExpectedValueSource() {
         return Stream.of(
-            Arguments.of(10, 10, new Rock(), false),
-            Arguments.of(10, 10, new Log(), false),
-            Arguments.of(0, 0, new Rock(), true),
-            Arguments.of(12, 12, new Rock(), false),
-            Arguments.of(10, 9, new Rock(), true));
+            Arguments.of(10, 10, ItemFactory.fromType(ItemType.ROCK), false),
+            Arguments.of(10, 10,  ItemFactory.fromType(ItemType.LOG), false),
+            Arguments.of(0, 0,  ItemFactory.fromType(ItemType.ROCK), true),
+            Arguments.of(12, 12,  ItemFactory.fromType(ItemType.ROCK), false),
+            Arguments.of(10, 9,  ItemFactory.fromType(ItemType.ROCK), true));
     }
 
     @ParameterizedTest
@@ -83,15 +83,15 @@ public class HouseTests {
         final IItem itemToDeliver,
         final boolean expectedResult) {
         // Arrange
-        final House house = StructureFactory.createStructure(
+        final IStructure house = StructureFactory.createStructure(
             StructureType.HOUSE,
             new Position());
 
         for (int i = 0; i < totalLogs; i++) {
-            house.tryDeliverItem(new Log());
+            house.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
         }
         for (int i = 0; i < totalRocks; i++) {
-            house.tryDeliverItem(new Rock());
+            house.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
         }
         // Act
         final boolean deliveryResult = house.tryDeliverItem(itemToDeliver);
@@ -102,11 +102,11 @@ public class HouseTests {
 
     private static Stream<Arguments> houseReturnsExpectedItemWhenDismantledSource() {
         return Stream.of(
-            Arguments.of(10, 10, ItemType.LOG, Optional.of(new Log())),
-            Arguments.of(10, 10, ItemType.LOG, Optional.of(new Log())),
+            Arguments.of(10, 10, ItemType.LOG, Optional.of(ItemFactory.fromType(ItemType.LOG))),
+            Arguments.of(10, 10, ItemType.LOG, Optional.of(ItemFactory.fromType(ItemType.LOG))),
             Arguments.of(0, 0, ItemType.LOG, Optional.empty()),
-            Arguments.of(12, 12, ItemType.LOG, Optional.of(new Log())),
-            Arguments.of(10, 9, ItemType.LOG, Optional.of(new Log())));
+            Arguments.of(12, 12, ItemType.LOG, Optional.of(ItemFactory.fromType(ItemType.LOG))),
+            Arguments.of(10, 9, ItemType.LOG, Optional.of(ItemFactory.fromType(ItemType.LOG))));
     }
 
     @ParameterizedTest
@@ -117,16 +117,17 @@ public class HouseTests {
         final ItemType itemTypeToRetrieve,
         final Optional<IItem> expectedItem) {
         // Arrange
-        final House house = StructureFactory.createStructure(
+        final IStructure house = StructureFactory.createStructure(
             StructureType.HOUSE,
             new Position());
 
         for (int i = 0; i < totalLogs; i++) {
-            house.tryDeliverItem(new Log());
+            house.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
         }
         for (int i = 0; i < totalRocks; i++) {
-            house.tryDeliverItem(new Rock());
+            house.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
         }
+
         // Act
         final Optional<IItem> retrieveItem = house.tryDismantle(itemTypeToRetrieve);
 
@@ -150,15 +151,15 @@ public class HouseTests {
         final int totalLogs, final int totalRocks, final float expectedRatio) {
 
         // Arrange
-        final House house = StructureFactory.createStructure(
+        final IStructure house = StructureFactory.createStructure(
             StructureType.HOUSE,
             new Position());
 
         for (int i = 0; i < totalLogs; i++) {
-            house.tryDeliverItem(new Log());
+            house.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
         }
         for (int i = 0; i < totalRocks; i++) {
-            house.tryDeliverItem(new Rock());
+            house.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
         }
 
         // Act
@@ -183,15 +184,15 @@ public class HouseTests {
         final int totalRocks,
         final Collection<ItemType> expectedNeededItems) {
         // Arrange
-        final House house = StructureFactory.createStructure(
+        final IStructure house = StructureFactory.createStructure(
             StructureType.HOUSE,
             new Position());
 
         for (int i = 0; i < totalLogs; i++) {
-            house.tryDeliverItem(new Log());
+            house.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
         }
         for (int i = 0; i < totalRocks; i++) {
-            house.tryDeliverItem(new Rock());
+            house.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
         }
 
         // Act
@@ -217,15 +218,15 @@ public class HouseTests {
         final int totalLogs, final int totalRocks, final boolean expectedResult) {
 
         // Arrange
-        final House house = StructureFactory.createStructure(
+        final IStructure house = StructureFactory.createStructure(
             StructureType.HOUSE,
             new Position());
 
         for (int i = 0; i < totalLogs; i++) {
-            house.tryDeliverItem(new Log());
+            house.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
         }
         for (int i = 0; i < totalRocks; i++) {
-            house.tryDeliverItem(new Rock());
+            house.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
         }
 
         // Act
@@ -233,20 +234,6 @@ public class HouseTests {
 
         // Assert
         assertThat(isComplete).isEqualTo(expectedResult);
-    }
-
-
-    @Test
-    public void deepCloneableIsEqualToOriginal() {
-        // Arrange
-        final Position position = new Position(0, 0);
-        final IStructure house = StructureFactory.createStructure(StructureType.HOUSE, position);
-
-        // Act
-        final IStructure deepClone = house.deepClone();
-
-        // Assert
-        assertThat(deepClone).isEqualTo(house);
     }
 
 }

@@ -24,9 +24,9 @@ public class ItemTests {
 
     public static Stream<Arguments> isEqualSource() {
         return Stream.of(
-            Arguments.of(new Log(), new Log(), true),
-            Arguments.of(new Log(), new Rock(), false),
-            Arguments.of(new Rock(), new Rock(), true));
+            Arguments.of(ItemFactory.fromType(ItemType.LOG), ItemFactory.fromType(ItemType.LOG), true),
+            Arguments.of(ItemFactory.fromType(ItemType.LOG), ItemFactory.fromType(ItemType.ROCK), false),
+            Arguments.of(ItemFactory.fromType(ItemType.ROCK), ItemFactory.fromType(ItemType.ROCK), true));
     }
 
     @ParameterizedTest

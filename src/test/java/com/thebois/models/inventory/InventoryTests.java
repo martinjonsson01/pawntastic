@@ -182,8 +182,8 @@ public class InventoryTests {
 
         // Act
         inventory.addMultiple(List.of(
-            items.add(ItemFactory.fromType(ItemType.LOG)),
-            items.add(ItemFactory.fromType(ItemType.LOG)));
+            ItemFactory.fromType(ItemType.LOG),
+            ItemFactory.fromType(ItemType.LOG)));
 
         // Assert
         assertThat(inventory.hasItem(ItemType.LOG, 2)).isTrue();

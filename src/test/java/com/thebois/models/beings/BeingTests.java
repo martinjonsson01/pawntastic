@@ -19,8 +19,8 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.models.inventory.items.Log;
-import com.thebois.models.inventory.items.Rock;
+import com.thebois.models.inventory.items.ItemFactory;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
 import com.thebois.models.world.structures.IStructure;
@@ -310,40 +310,41 @@ public class BeingTests {
     @Test
     public void whenAllStructuresAreCompletePawnPicksRandomDestination() {
         // Arrange
-        final Position positionA = new Position(10, 0);
-        final Position startPosition = new Position(20, 0);
-        final Position positionB = new Position(30, 0);
-
-        final Position correctDestination = new Position(0, 0);
-
-        final World world = new World(50);
-        final IPathFinder pathFinder = new AstarPathFinder(world);
+        final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
 
         final Random mockRandom = Mockito.mock(Random.class);
-        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+        when(mockRandom.nextInt(anyInt())).thenReturn(5);
 
-        world.createStructure(positionA);
-        world.createStructure(positionB);
+        final Position positionA = new Position(10f, 20f);
+        final IStructure structureA = Mockito.mock(IStructure.class);
+        when(structureA.getPosition()).thenReturn(positionA);
+        when(structureA.isCompleted()).thenReturn(true);
 
-        for (int i = 0; i < 10; i++) {
-            for (final IStructure structure : world.getStructures()) {
-                structure.tryDeliverItem(new Log());
-                structure.tryDeliverItem(new Rock());
-            }
-        }
+        final Position positionB = new Position(0f, 12f);
+        final IStructure structureB = Mockito.mock(IStructure.class);
+        when(structureB.getPosition()).thenReturn(positionB);
+        when(structureB.isCompleted()).thenReturn(true);
 
-        final Pawn pawn = new Pawn(
-            startPosition,
-            new Position(),
-            mockRandom,
-            pathFinder,
-            world);
+
+        when(mockFinder.findNearestIncompleteStructure(any()))
+            .thenReturn(Optional.of(structureA)).thenReturn(Optional.of(structureB));
+
+
+
+        final Pawn pawn = new Pawn(new Position(),
+                                   new Position(),
+                                   mockRandom,
+                                   mockPathFinder,
+                                   mockFinder);
 
         // Act
+        // Finds an incomplete structure.
         pawn.update();
+        // Does pick a new incomplete structure because current structure is completed
 
         // Assert
-        assertThat(pawn.getFinalDestination()).isEqualTo(correctDestination);
+        verify(mockRandom, times(2)).nextInt(anyInt());
     }
 
     private static Stream<Arguments> pawnWalkToNearestUnBuiltStructureSource() {
@@ -404,44 +405,39 @@ public class BeingTests {
     @Test
     public void pawnFindsANewStructureWhenNewStructureIsPlaced() {
         // Arrange
-        final Position positionA = new Position(10, 0);
-        final Position startPosition = new Position(20, 0);
-        final Position positionB = new Position(30, 0);
-        final Position positionC = new Position(40, 0);
+        final IPathFinder mockPathFinder = Mockito.mock(IPathFinder.class);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
 
-        final Position correctDestination = new Position(39, 0);
+        final Position initialPosition = new Position(10f, 20f);
+        final IStructure initialStructure = Mockito.mock(IStructure.class);
+        when(initialStructure.getPosition()).thenReturn(initialPosition);
+        when(initialStructure.isCompleted()).thenReturn(true);
 
-        final World world = new World(50);
-        final IPathFinder pathFinder = new AstarPathFinder(world);
+        final Position expectedPosition = new Position(10f, 20f);
+        final IStructure expectedStructure = Mockito.mock(IStructure.class);
+        when(expectedStructure.getPosition()).thenReturn(expectedPosition);
+        when(expectedStructure.isCompleted()).thenReturn(false);
 
-        final Random mockRandom = Mockito.mock(Random.class);
-        when(mockRandom.nextInt(anyInt())).thenReturn(0);
-        when(mockRandom.nextInt(anyInt())).thenReturn(0);
 
-        world.createStructure(positionA);
-        world.createStructure(positionB);
+        when(mockFinder.findNearestIncompleteStructure(any()))
+            .thenReturn(Optional.of(initialStructure)).thenReturn(Optional.of(expectedStructure));
 
-        for (int i = 0; i < 10; i++) {
-            for (final IStructure structure : world.getStructures()) {
-                structure.tryDeliverItem(new Log());
-                structure.tryDeliverItem(new Rock());
-            }
-        }
 
-        final Pawn testPawn = new Pawn(startPosition,
-                                       new Position(),
-                                       mockRandom,
-                                       pathFinder,
-                                       world);
+
+        final Pawn pawn = new Pawn(new Position(),
+                                   new Position(),
+                                   new Random(),
+                                   mockPathFinder,
+                                   mockFinder);
 
         // Act
-        testPawn.update();
-        testPawn.update();
-        world.createStructure(positionC);
-        testPawn.update();
+        // Finds an incomplete structure.
+        pawn.update();
+        // Does pick a new incomplete structure because current structure is completed
+        pawn.update();
 
         // Assert
-        assertThat(testPawn.getFinalDestination()).isEqualTo(correctDestination);
+        verify(mockFinder, times(2)).findNearestIncompleteStructure(any());
     }
 
     @Test
@@ -554,7 +550,7 @@ public class BeingTests {
         // Arrange
         final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final AbstractBeingGroup colony = new Colony(vacantPositions, pathFinder, new World(10));
+        final AbstractBeingGroup colony = new Colony(vacantPositions, pathFinder, new TestWorld(50));
         final IStructureFinder finder = Mockito.mock(IStructureFinder.class);
 
 

@@ -14,7 +14,7 @@ public class StructureTests {
         final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE, 0, 0);
 
         // Act
-        final boolean isEqual = structure.equals(null);
+        final boolean isEqual = structure == null;
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -46,7 +46,7 @@ public class StructureTests {
     }
 
     @Test
-    public void structureEqualIsTrueIfSamePositionAndType() {
+    public void structureEqualIsFalseIfSamePositionAndType() {
         // Arrange
         final Position position = new Position(1, 1);
         final IStructure structure1 = StructureFactory.createStructure(StructureType.HOUSE,
@@ -58,7 +58,7 @@ public class StructureTests {
         final boolean isEqual = structure1.equals(structure2);
 
         // Assert
-        assertThat(isEqual).isTrue();
+        assertThat(isEqual).isFalse();
     }
 
     @Test
@@ -79,7 +79,7 @@ public class StructureTests {
     }
 
     @Test
-    public void structureHashCodeIsSameForIdenticalStructures() {
+    public void structureHashCodeIsDifferentForIdenticalStructures() {
         // Arrange
         final Position position = new Position(1, 1);
         final IStructure structure1 = StructureFactory.createStructure(StructureType.HOUSE,
@@ -91,7 +91,7 @@ public class StructureTests {
         final boolean isEqual = structure1.hashCode() == structure2.hashCode();
 
         // Assert
-        assertThat(isEqual).isTrue();
+        assertThat(isEqual).isFalse();
     }
 
     @Test

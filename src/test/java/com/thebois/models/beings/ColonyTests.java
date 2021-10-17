@@ -67,12 +67,6 @@ public class ColonyTests {
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
     }
 
-    private Colony mockColony() {
-        final List<Position> positions = new ArrayList<>();
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        return new Colony(positions, pathFinder);
-    }
-
     @Test
     public void canAddAndTakeItemToInventory() {
         // Arrange
@@ -131,7 +125,8 @@ public class ColonyTests {
     private Colony mockColony() {
         final List<Position> positions = new ArrayList<>();
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        return new Colony(positions, pathFinder, new World(10));
+        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
+        return new Colony(positions, pathFinder, structureFinder);
     }
 
     @Test
