@@ -14,6 +14,8 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.Inventory;
 
 /**
  * An abstract implementation of IBeing.
@@ -22,7 +24,10 @@ public abstract class AbstractBeing implements IBeing {
 
     // The max speed of the AbstractBeing
     private static final float MAX_WALKING_DISTANCE = 0.1f;
+    // How many kilograms a being can carry.
+    private static final float MAX_CARRYING_CAPACITY = 100f;
     private final IPathFinder pathFinder;
+    private final IInventory inventory = new Inventory(MAX_CARRYING_CAPACITY);
     private Stack<Position> path;
     private Position position;
     private AbstractRole role;
