@@ -209,24 +209,13 @@ public class World implements IWorld, IStructureFinder {
 
     @Override
     public Optional<IStructure> findNearestStructure(final Position position) {
-        final Collection<IStructure> foundStructures = getClosestStructures(position, 1);
-
-        if (foundStructures.iterator().hasNext()) {
-            return Optional.of(foundStructures.iterator().next());
-        }
-        else {
-            return Optional.empty();
-        }
+        final List<IStructure> foundStructures = sortByDistanceTo(position);
+        return foundStructures.stream().findFirst();
     }
 
     @Override
     public Optional<IStructure> findNearestIncompleteStructure(final Position position) {
-        final List<IStructure> allStructures = new ArrayList<>(getStructures());
-
-        allStructures.sort((o1, o2) -> Float.compare(o1.getPosition().distanceTo(position),
-                                                     o2.getPosition().distanceTo(position)));
-
-        for (final IStructure structure : allStructures) {
+        for (final IStructure structure : sortByDistanceTo(position)) {
             if (!structure.isCompleted()) {
                 return Optional.of(structure);
             }
@@ -235,20 +224,12 @@ public class World implements IWorld, IStructureFinder {
         return Optional.empty();
     }
 
-    private Collection<IStructure> getClosestStructures(
-        final Position position,
-        final int maxFoundElements) {
-        final int searchRow = Math.round(position.getPosY());
-        final int searchCol = Math.round(position.getPosX());
+    private List<IStructure> sortByDistanceTo(final Position position) {
+        final List<IStructure> allStructures = new ArrayList<>(getStructures());
 
-        // If the search Radius is too great the game will take a performance hit.
-        final int maxSearchRadius = 10;
-
-        return MatrixUtils.matrixSpiralSearch(this.structureMatrix,
-                                              searchRow,
-                                              searchCol,
-                                              maxSearchRadius,
-                                              maxFoundElements);
+        allStructures.sort((o1, o2) -> Float.compare(o1.getPosition().distanceTo(position),
+                                                     o2.getPosition().distanceTo(position)));
+        return allStructures;
     }
 
     @Override
