@@ -89,32 +89,25 @@ public final class MatrixUtils {
         final int maxSearchRadius,
         final int maxFoundElements) {
 
-        // Spiral search pattern
-        final int[][] searchPattern = {
-            {0, 0}, {0, 1}, {1, 1},
-            {1, 0}, {1, -1}, {0, -1},
-            {-1, -1}, {-1, 0}, {-1, 1},
-            };
         final Collection<TType> foundElements = new ArrayList<>();
 
-        for (int searchRadius = 1; searchRadius <= maxSearchRadius; searchRadius++) {
-            for (final int[] offsets : searchPattern) {
-                try {
-                    final int searchRow = startRow + offsets[0] * searchRadius;
-                    final int searchCol = startCol + offsets[1] * searchRadius;
+        for (int length = 0; length < maxSearchRadius; length++) {
+            for (int row = -length; row <= length * 2; row++) {
 
-                    if (matrix[searchRow][searchCol] != null) {
-                        foundElements.add(matrix[searchRow][searchCol]);
+                for (int col = -length; col <= length * 2; col++) {
+                    try {
+                        if (matrix[startRow + row][startCol + col] != null) {
+                            foundElements.add(matrix[startRow + row][startCol + col]);
+                        }
+                    }
+                    catch (final ArrayIndexOutOfBoundsException exception) {
+                        // Since there is a search limit, we can let the method loop outside of matrix
                     }
                 }
-                catch (final ArrayIndexOutOfBoundsException exception) {
-                    // Since there is a search limit, we can let the method loop outside of matrix
-                }
-            }
-            if (foundElements.size() >= maxFoundElements) {
-                break;
             }
         }
+
         return foundElements;
     }
+
 }

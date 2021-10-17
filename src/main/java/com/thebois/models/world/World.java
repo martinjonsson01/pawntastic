@@ -139,14 +139,7 @@ public class World implements IWorld, IStructureFinder {
      * @return The list to be returned.
      */
     public Collection<IStructure> getStructures() {
-        // return MatrixUtils.toCollection(this.structureMatrix);
-        final Collection<IStructure> copy = new ArrayList<>();
-        MatrixUtils.forEachElement(structureMatrix, maybeStructure -> {
-            if (maybeStructure != null) {
-                copy.add(maybeStructure.deepClone());
-            }
-        });
-        return copy;
+        return MatrixUtils.toCollection(this.structureMatrix);
     }
 
     /**
@@ -155,13 +148,7 @@ public class World implements IWorld, IStructureFinder {
      * @return The list to be returned.
      */
     public Collection<IResource> getResources() {
-        final Collection<IResource> copy = new ArrayList<>();
-        MatrixUtils.forEachElement(resourceMatrix, maybeResource -> {
-            if (maybeResource != null) {
-                copy.add(maybeResource.deepClone());
-            }
-        });
-        return copy;
+        return MatrixUtils.toCollection(this.resourceMatrix);
     }
 
     /**
