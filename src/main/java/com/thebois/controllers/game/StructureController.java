@@ -16,14 +16,12 @@ public class StructureController implements IController<IView> {
     /**
      * Creates a instance of a Structure Controller.
      *
-     * @param world    The world in which the structures exists.
-     * @param tileSize The tile size represented on the screen.
+     * @param world The world in which the structures exists.
      */
     public StructureController(
-        final World world, final float tileSize) {
-
+        final World world) {
         this.world = world;
-        this.structureView = new StructureView(tileSize);
+        this.structureView = new StructureView();
         structureView.update(world.getStructures());
     }
 

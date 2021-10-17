@@ -2,6 +2,7 @@ package com.thebois.views.game;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -13,13 +14,15 @@ import com.thebois.listeners.IEventListener;
 import com.thebois.listeners.IEventSource;
 import com.thebois.listeners.events.OnClickEvent;
 import com.thebois.models.world.structures.StructureType;
+import com.thebois.utils.StringUtils;
 
 /**
  * A button that represent a structure and is used to select which structure to build.
  */
 public class StructureButton extends Button implements IEventSource<OnClickEvent<StructureType>> {
 
-    private static final float PADDING = 5f;
+    private static final float TOP_AND_BOTTOM_PADDING = 5f;
+    private static final float LEFT_AND_RIGHT_PADDING = 20f;
     private final Collection<IEventListener<OnClickEvent<StructureType>>> onClickListeners =
         new ArrayList<>();
     private final StructureType structureType;
@@ -35,10 +38,17 @@ public class StructureButton extends Button implements IEventSource<OnClickEvent
         super(skin, "toggle");
         button = this;
         this.structureType = structureType;
-        final Label text = new Label(structureType.toString(), skin);
+        final String labelText = StringUtils.capitalizeFirst(structureType
+                                                                 .toString()
+                                                                 .toLowerCase(Locale.ROOT));
+        final Label text = new Label(labelText, skin);
 
         button.add(text).expandY().fillY();
-        button.pad(PADDING);
+        button.pad(
+            TOP_AND_BOTTOM_PADDING,
+            LEFT_AND_RIGHT_PADDING,
+            TOP_AND_BOTTOM_PADDING,
+            LEFT_AND_RIGHT_PADDING);
         registerListeners();
     }
 

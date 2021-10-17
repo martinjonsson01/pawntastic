@@ -16,12 +16,11 @@ public class ColonyController implements IController<IView> {
     /**
      * Creates a colony controller.
      *
-     * @param colony   The colony that should be updated and displayed.
-     * @param tileSize The tile size for the tiles in the world.
+     * @param colony The colony that should be updated and displayed.
      */
-    public ColonyController(final AbstractBeingGroup colony, final float tileSize) {
+    public ColonyController(final AbstractBeingGroup colony) {
         this.colony = colony;
-        this.colonyView = new ColonyView(tileSize);
+        this.colonyView = new ColonyView();
     }
 
     @Override

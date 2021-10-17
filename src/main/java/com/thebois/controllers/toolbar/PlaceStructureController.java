@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import com.thebois.Pawntastic;
 import com.thebois.controllers.AbstractInputProcessor;
 import com.thebois.controllers.IController;
 import com.thebois.listeners.IEventListener;
@@ -21,9 +22,9 @@ import com.thebois.views.toolbar.StructureToolbarView;
 public class PlaceStructureController extends AbstractInputProcessor
     implements IEventListener<OnClickEvent<StructureType>>, IController<IActorView> {
 
+    private static final int TILE_SIZE = Pawntastic.getTileSize();
     private final World world;
     private final IProjector projector;
-    private final float tileSize;
     private Actor toolbarWidget;
     private StructureType selectedStructure = StructureType.HOUSE;
     private final StructureToolbarView structureToolbarView;
@@ -33,14 +34,12 @@ public class PlaceStructureController extends AbstractInputProcessor
      *
      * @param world     The world where the structures should be placed.
      * @param projector Projector used to translate screen coordinates to world coordinates.
-     * @param tileSize  The tile size of the world.
      * @param skin      The skin used to create the buttons used to select what structure to build.
      */
     public PlaceStructureController(
-        final World world, final IProjector projector, final float tileSize, final Skin skin) {
+        final World world, final IProjector projector, final Skin skin) {
         this.world = world;
         this.projector = projector;
-        this.tileSize = tileSize;
 
         structureToolbarView = new StructureToolbarView(skin, this);
     }
@@ -52,8 +51,8 @@ public class PlaceStructureController extends AbstractInputProcessor
             final Actor gameContainer = toolbarWidget.getParent();
             final float offSetX = gameContainer.getX();
             final float offSetY = gameContainer.getY() + toolbarWidget.getHeight();
-            final int worldPosX = (int) ((worldSpaceCoordinates.x - offSetX) / tileSize);
-            final int worldPosY = (int) ((worldSpaceCoordinates.y - offSetY) / tileSize);
+            final int worldPosX = (int) ((worldSpaceCoordinates.x - offSetX) / TILE_SIZE);
+            final int worldPosY = (int) ((worldSpaceCoordinates.y - offSetY) / TILE_SIZE);
             return world.createStructure(selectedStructure, worldPosX, worldPosY);
         }
         return false;

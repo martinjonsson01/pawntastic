@@ -19,12 +19,11 @@ public class GameView extends Widget implements Disposable {
     /**
      * Instantiates a new view of the world.
      *
-     * @param views    The different sub-views of the world
-     * @param tileSize The size of a single tile in world space
+     * @param views The different sub-views of the world
      */
-    public GameView(final Collection<IView> views, final float tileSize) {
+    public GameView(final Collection<IView> views) {
         this.views = views;
-        this.worldScreenSize = tileSize * Pawntastic.WORLD_SIZE;
+        this.worldScreenSize = Pawntastic.getTileSize() * Pawntastic.getWorldSize();
     }
 
     @Override

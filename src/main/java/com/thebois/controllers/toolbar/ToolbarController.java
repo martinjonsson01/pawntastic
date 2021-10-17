@@ -28,12 +28,11 @@ public class ToolbarController implements IController<ToolbarView> {
      * @param world     The world that controllers manage.
      * @param skin      The skin to style widgets with.
      * @param projector The projector used to translate screen coordinate to world coordinates.
-     * @param tileSize  The tile size of the tiles in the world.
      */
     public ToolbarController(
-        final World world, final Skin skin, final IProjector projector, final float tileSize) {
+        final World world, final Skin skin, final IProjector projector) {
         final PlaceStructureController placeStructureController =
-            new PlaceStructureController(world, projector, tileSize, skin);
+            new PlaceStructureController(world, projector, skin);
 
         controllers = List.of(placeStructureController);
         inputProcessors = List.of(placeStructureController);

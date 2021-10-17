@@ -20,8 +20,7 @@ public class ToolbarView {
     public ToolbarView(final Iterable<IActorView> widgetViews) {
 
         toolbar = new HorizontalGroup();
-        toolbar.expand().fill();
-
+        toolbar.expand().fill().expand();
         for (final IActorView actorView : widgetViews) {
             toolbar.addActor(actorView.getWidgetContainer());
         }

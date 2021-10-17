@@ -28,30 +28,18 @@ import com.thebois.views.ViewportWrapper;
  */
 public class Pawntastic extends Game {
 
-    /**
-     * The global event bus that most events pass through.
-     */
-    public static final EventBus BUS = new EventBus();
+    private static final EventBus BUS = new EventBus();
     /* Toggles debug-mode. */
-    /**
-     * Global variable used to check if game is run in debug mode.
-     */
-    public static final boolean DEBUG = false;
-    /**
-     * Number of tiles per axis in the world.
-     */
-    public static final int WORLD_SIZE = 50;
+    private static final boolean DEBUG = false;
+    private static final int WORLD_SIZE = 50;
     /* These two decide the aspect ratio that will be preserved. */
     private static final float VIEWPORT_WIDTH = 1300;
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int PAWN_POSITIONS = 50;
-    private static final float TOOLBAR_HEIGHT = 60f;
-    /**
-     * The tile size of the tiles in the world.
-     */
-    public static final float TILE_SIZE = (Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH)
-                                           - TOOLBAR_HEIGHT) / WORLD_SIZE;
+    private static final int TOOLBAR_HEIGHT = 100;
+    private static final int TILE_SIZE = (int) (Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH)
+                                                - TOOLBAR_HEIGHT) / WORLD_SIZE;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
@@ -65,6 +53,51 @@ public class Pawntastic extends Game {
     private WorldController worldController;
     private InfoController infoController;
     private ToolbarController toolbarController;
+
+    /**
+     * Gets the size of a single tile in world space.
+     *
+     * @return The tile size.
+     */
+    public static int getTileSize() {
+        return TILE_SIZE;
+    }
+
+    /**
+     * Gets the number of tiles per axis in the world.
+     *
+     * @return The number of tiles.
+     */
+    public static int getWorldSize() {
+        return WORLD_SIZE;
+    }
+
+    /**
+     * Whether or not the game is run in debug mode or not.
+     *
+     * @return Whether or not the game is running in debug mode.
+     */
+    public static boolean isDebugEnabled() {
+        return DEBUG;
+    }
+
+    /**
+     * Gets the global event bus that most events pass through.
+     *
+     * @return The event bus.
+     */
+    public static EventBus getEventBus() {
+        return BUS;
+    }
+
+    /**
+     * Gets the height of the tool bar.
+     *
+     * @return The height.
+     */
+    public static int getToolBarHeight() {
+        return TOOLBAR_HEIGHT;
+    }
 
     @Override
     public void create() {
@@ -81,18 +114,16 @@ public class Pawntastic extends Game {
         final IProjector projector = new ViewportWrapper(viewport);
 
         // Controllers
-        this.worldController = new WorldController(world, colony, TILE_SIZE, font);
+        this.worldController = new WorldController(world, colony, font);
         this.infoController = new InfoController(colony, uiSkin);
-        this.toolbarController = new ToolbarController(world, uiSkin, projector, TILE_SIZE);
+        this.toolbarController = new ToolbarController(world, uiSkin, projector);
 
         // Screens
         gameScreen = new GameScreen(viewport,
                                     camera,
-                                    uiSkin,
                                     worldController.getView(),
                                     infoController.getView(),
-                                    toolbarController.getView(),
-                                    TOOLBAR_HEIGHT);
+                                    toolbarController.getView());
         this.setScreen(gameScreen);
         // Set up Input Processors
         initInputProcessors();
