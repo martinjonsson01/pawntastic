@@ -11,8 +11,9 @@ import static org.assertj.core.api.Assertions.*;
 public class ItemTests {
 
     public static Stream<Arguments> getItemTypesAndItemClass() {
-        return Stream.of(Arguments.of(ItemType.LOG, ItemFactory.fromType(ItemType.LOG)),
-                         Arguments.of(ItemType.ROCK, ItemFactory.fromType(ItemType.ROCK)));
+        return Stream.of(
+            Arguments.of(ItemType.LOG, ItemFactory.fromType(ItemType.LOG)),
+            Arguments.of(ItemType.ROCK, ItemFactory.fromType(ItemType.ROCK)));
     }
 
     @ParameterizedTest
@@ -20,6 +21,7 @@ public class ItemTests {
     public void getTypeReturnsCorrectItemType(final ItemType itemType, final IItem item) {
         // Assert
         assertThat(itemType).isEqualTo(item.getType());
+        assertThat(itemType.getWeight()).isEqualTo(item.getType().getWeight());
     }
 
 }
