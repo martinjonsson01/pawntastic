@@ -45,12 +45,13 @@ public interface IWorld {
     ITile getRandomVacantSpot();
 
     /**
-     * Finds an empty neighbour of a tile that is closest to the given position.
+     * Finds an empty neighbour of a tile that is closest to the given position, if there is any.
      *
      * @param tile The tile to get neighbours of.
      * @param from The position that needs to be closest to the returned neighbour.
      *
-     * @return The position of the neighbouring tile that is the closest to the given position.
+     * @return The position of the neighbouring tile that is the closest to the given position, if
+     * it exists.
      */
     Optional<Position> getClosestNeighbourOf(ITile tile, Position from);
 
