@@ -1,5 +1,7 @@
 package com.thebois.models.beings;
 
+import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -91,6 +93,17 @@ public abstract class AbstractBeing implements IBeing {
     @Override
     public void update() {
         move();
+    }
+
+    @Serial
+    private void readObject(final java.io.ObjectInputStream in) throws
+                                                                IOException,
+                                                                ClassNotFoundException {
+        // Registers every time on deserialization because it might be registered to an old instance
+        // of the event bus.
+        // (caused by saving/loading).
+        Pawntastic.getEventBus().register(this);
+        in.defaultReadObject();
     }
 
     /**

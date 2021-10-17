@@ -1,5 +1,6 @@
 package com.thebois.models.world;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +21,7 @@ import com.thebois.utils.MatrixUtils;
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
-public class World implements IWorld, IFinder {
+public class World implements IWorld, IFinder, Serializable {
 
     private final ITerrain[][] terrainMatrix;
     private final IStructure[][] structureMatrix;
