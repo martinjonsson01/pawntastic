@@ -580,9 +580,8 @@ public class BeingTests {
         // Arrange
         final World world = new TestWorld(3);
         final IPathFinder pathFinder = new AstarPathFinder(world);
-        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
 
-        final IBeing being = new Pawn(new Position(), new Position(), new Random(), pathFinder, mockFinder);
+        final IBeing being = new Pawn(new Position(), new Position(), new Random(), pathFinder, world);
 
         // Act
         final byte[] serialized1 = serialize(being);
