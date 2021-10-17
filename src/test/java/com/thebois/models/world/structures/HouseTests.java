@@ -24,7 +24,8 @@ public class HouseTests {
     public void getPositionSetInConstructor() {
         // Arrange
         final Position position = new Position(123, 456);
-        final House structure = new House(123, 456);
+        final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE,
+                                                                      position);
 
         // Act
         final Position structurePosition = structure.getPosition();
@@ -40,8 +41,9 @@ public class HouseTests {
         final House structure = new House(position);
 
         // Act
-        final StructureType returnedType = structure.getType();
-
+        final IStructure structure = StructureFactory.createStructure(
+            StructureType.HOUSE,
+            position);
         // Assert
         assertThat(returnedType).isEqualTo(StructureType.HOUSE);
     }
@@ -53,8 +55,12 @@ public class HouseTests {
         final Position positionB = new Position(456, 123);
 
         // Act
-        final House structureA = new House(positionA);
-        final House structureB = new House(positionB);
+        final House structureB = StructureFactory.createStructure(
+            StructureType.HOUSE,
+            positionA);
+        final House structureB = StructureFactory.createStructure(
+            StructureType.HOUSE,
+            positionB);
 
         // Assert
         assertThat(structureA).isNotEqualTo(structureB);
@@ -77,7 +83,9 @@ public class HouseTests {
         final IItem itemToDeliver,
         final boolean expectedResult) {
         // Arrange
-        final House house = new House(new Position());
+        final House house = StructureFactory.createStructure(
+            StructureType.HOUSE,
+            new Position());
 
         for (int i = 0; i < totalLogs; i++) {
             house.tryDeliverItem(new Log());
@@ -109,7 +117,9 @@ public class HouseTests {
         final ItemType itemTypeToRetrieve,
         final Optional<IItem> expectedItem) {
         // Arrange
-        final House house = new House(new Position());
+        final House house = StructureFactory.createStructure(
+            StructureType.HOUSE,
+            new Position());
 
         for (int i = 0; i < totalLogs; i++) {
             house.tryDeliverItem(new Log());
@@ -140,7 +150,9 @@ public class HouseTests {
         final int totalLogs, final int totalRocks, final float expectedRatio) {
 
         // Arrange
-        final House house = new House(new Position());
+        final House house = StructureFactory.createStructure(
+            StructureType.HOUSE,
+            new Position());
 
         for (int i = 0; i < totalLogs; i++) {
             house.tryDeliverItem(new Log());
@@ -171,7 +183,9 @@ public class HouseTests {
         final int totalRocks,
         final Collection<ItemType> expectedNeededItems) {
         // Arrange
-        final House house = new House(new Position());
+        final House house = StructureFactory.createStructure(
+            StructureType.HOUSE,
+            new Position());
 
         for (int i = 0; i < totalLogs; i++) {
             house.tryDeliverItem(new Log());
@@ -203,7 +217,9 @@ public class HouseTests {
         final int totalLogs, final int totalRocks, final boolean expectedResult) {
 
         // Arrange
-        final House house = new House(new Position());
+        final House house = StructureFactory.createStructure(
+            StructureType.HOUSE,
+            new Position());
 
         for (int i = 0; i < totalLogs; i++) {
             house.tryDeliverItem(new Log());
@@ -219,5 +235,18 @@ public class HouseTests {
         assertThat(isComplete).isEqualTo(expectedResult);
     }
 
+
+    @Test
+    public void deepCloneableIsEqualToOriginal() {
+        // Arrange
+        final Position position = new Position(0, 0);
+        final IStructure house = StructureFactory.createStructure(StructureType.HOUSE, position);
+
+        // Act
+        final IStructure deepClone = house.deepClone();
+
+        // Assert
+        assertThat(deepClone).isEqualTo(house);
+    }
 
 }

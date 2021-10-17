@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -42,8 +43,8 @@ public class MatrixUtilsTests {
     @SuppressWarnings("unchecked")
     @ParameterizedTest
     @MethodSource("getMatricesAndTheirElements")
-    public void forEachElementGetsAllElementsInOrder(final Integer[][] matrix,
-                                                     final Collection<Integer> expectedElements) {
+    public void forEachElementGetsAllElementsInOrder(
+        final Integer[][] matrix, final Collection<Integer> expectedElements) {
         // Arrange
         final Consumer<Integer> elementAction = (Consumer<Integer>) Mockito.mock(Consumer.class);
         final ArgumentCaptor<Integer> elementCaptor = ArgumentCaptor.forClass(Integer.class);
@@ -53,16 +54,76 @@ public class MatrixUtilsTests {
 
         // Assert
         final int wantedNumberOfInvocations = expectedElements.size();
-        Mockito.verify(elementAction, times(wantedNumberOfInvocations))
-               .accept(elementCaptor.capture());
+        Mockito
+            .verify(elementAction, times(wantedNumberOfInvocations))
+            .accept(elementCaptor.capture());
         final List<Integer> actualElements = elementCaptor.getAllValues();
         assertThat(actualElements).containsExactlyElementsOf(expectedElements);
+    }
+
+    @Test
+    public void populateElementsPopulatesMatrixWithX() {
+
+        // Arrange
+        final int matrixSize = 10;
+        final Integer[][] intMatrix = new Integer[matrixSize][matrixSize];
+        final Integer[][] expectedMatrix = new Integer[matrixSize][matrixSize];
+        final Integer[] row = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        for (int y = 0; y < matrixSize; y++) {
+            expectedMatrix[y] = row;
+        }
+
+        // Act
+        MatrixUtils.populateElements(intMatrix, (x, y) -> x);
+
+        // Assert
+        assertThat(intMatrix).isDeepEqualTo(expectedMatrix);
+    }
+
+    @Test
+    public void populateElementsPopulatesMatrixWithY() {
+
+        // Arrange
+        final int matrixSize = 10;
+        final Integer[][] intMatrix = new Integer[matrixSize][matrixSize];
+        final Integer[][] expectedMatrix = new Integer[matrixSize][matrixSize];
+        for (int y = 0; y < matrixSize; y++) {
+            for (int x = 0; x < matrixSize; x++) {
+                expectedMatrix[y][x] = y;
+            }
+        }
+
+        // Act
+        MatrixUtils.populateElements(intMatrix, (x, y) -> y);
+
+        // Assert
+        assertThat(intMatrix).isDeepEqualTo(expectedMatrix);
+    }
+
+    @Test
+    public void populateElementsPopulatesMatrixWithBooleanTrue() {
+
+        // Arrange
+        final int matrixSize = 10;
+        final Boolean[][] intMatrix = new Boolean[matrixSize][matrixSize];
+        final Boolean[][] expectedMatrix = new Boolean[matrixSize][matrixSize];
+        for (int y = 0; y < matrixSize; y++) {
+            for (int x = 0; x < matrixSize; x++) {
+                expectedMatrix[y][x] = true;
+            }
+        }
+
+        // Act
+        MatrixUtils.populateElements(intMatrix, (x, y) -> true);
+
+        // Assert
+        assertThat(intMatrix).isDeepEqualTo(expectedMatrix);
     }
 
     @ParameterizedTest
     @MethodSource("getMatricesToTest")
     public void matrixToCollectionReturnsExpectedElements(final String[][] matrix,
-                                       final Collection<String> expectedElements) {
+                                                          final Collection<String> expectedElements) {
         // Act
         final Collection<String> stringCollection = MatrixUtils.toCollection(matrix);
 
@@ -83,8 +144,8 @@ public class MatrixUtilsTests {
     @ParameterizedTest
     @MethodSource("getCorrectCoordinatesToTest")
     public void matrixSpiralSearchFindsCorrectElement(final String[][] stringMatrix, final int startX,
-                                         final int startY,
-                                         final String expectedString) {
+                                                      final int startY,
+                                                      final String expectedString) {
         // Act
         final String foundString = MatrixUtils.matrixSpiralSearch(
             stringMatrix,
@@ -95,4 +156,5 @@ public class MatrixUtilsTests {
         // Assert
         assertThat(foundString).isEqualTo(expectedString);
     }
+
 }

@@ -14,7 +14,9 @@ public final class StructureView implements IView {
 
     private final float tileSize;
     private Iterable<IStructure> structures;
+    private final Color houseColor = Color.valueOf("#CD853F");
     private final Texture houseTexture;
+    private final Texture ceilingTexture;
 
     /**
      * Creates an instance of a Structure view.
@@ -23,20 +25,45 @@ public final class StructureView implements IView {
      */
     public StructureView(final float tileSize) {
         this.tileSize = tileSize;
-        houseTexture = TextureUtils.createSquareTexture(tileSize);
+
+        houseTexture = TextureUtils.createSquareTexture((int) tileSize);
+        ceilingTexture = TextureUtils.createTriangleTexture((int) tileSize);
     }
 
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
+        batch.setColor(houseColor);
         for (final IStructure structure : structures) {
-            // Generate color based on structure completeness
-            batch.setColor(getHouseColor(structure));
-            batch.draw(houseTexture,
-                       offsetX + structure.getPosition().getPosX() * tileSize,
-                       offsetY + structure.getPosition().getPosY() * tileSize,
-                       tileSize,
-                       tileSize);
+            drawHouse(batch, offsetX, offsetY, structure);
         }
+    }
+
+    private void drawHouse(
+        final Batch batch, final float offsetX, final float offsetY, final IStructure structure) {
+        drawBase(batch, offsetX, offsetY, structure);
+        drawRoof(batch, offsetX, offsetY, structure);
+    }
+
+    private void drawRoof(
+        final Batch batch, final float offsetX, final float offsetY, final IStructure structure) {
+        batch.setColor(Color.BLACK);
+        batch.draw(
+            ceilingTexture,
+            offsetX + structure.getPosition().getPosX() * tileSize,
+            offsetY + structure.getPosition().getPosY() * tileSize + tileSize / 2,
+            tileSize,
+            tileSize / 2);
+    }
+
+    private void drawBase(
+        final Batch batch, final float offsetX, final float offsetY, final IStructure structure) {
+        batch.setColor(getHouseColor(structure));
+        batch.draw(
+            houseTexture,
+            offsetX + structure.getPosition().getPosX() * tileSize,
+            offsetY + structure.getPosition().getPosY() * tileSize,
+            tileSize,
+            tileSize / 2);
     }
 
     // Houses get different colors based on built status

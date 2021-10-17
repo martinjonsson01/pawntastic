@@ -11,10 +11,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import com.thebois.models.Position;
-import com.thebois.models.world.Grass;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
+import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
+import com.thebois.models.world.structures.StructureType;
+import com.thebois.models.world.terrains.Grass;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -44,7 +46,7 @@ public class AstarPathFinderTests {
     @Test
     public void pathAvoidsTilesWithHighCost() {
         // Arrange
-        final IWorld world = mock3x3WorldWithObstacles();
+        final IWorld world = testWorld3x3WithObstacles();
         final IPathFinder cut = new AstarPathFinder(world);
         final Position start = new Position(0, 0);
         final Position destination = new Position(2, 2);
@@ -76,11 +78,11 @@ public class AstarPathFinderTests {
      *
      * @return The mocked world.
      */
-    private IWorld mock3x3WorldWithObstacles() {
-        final World world = new World(3);
+    private IWorld testWorld3x3WithObstacles() {
+        final World world = new TestWorld(3);
 
-        world.createStructure(1, 0);
-        world.createStructure(1, 1);
+        world.createStructure(StructureType.HOUSE, 1, 0);
+        world.createStructure(StructureType.HOUSE, 1, 1);
 
         return world;
     }
@@ -109,7 +111,7 @@ public class AstarPathFinderTests {
     public void pathReturnsPositionsThatLeadToDestination(
         final Position from, final Position destination) {
         // Arrange
-        final IWorld world = new World(30);
+        final IWorld world = new TestWorld(30);
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act
@@ -123,8 +125,9 @@ public class AstarPathFinderTests {
     @MethodSource("getPositionsAndDestinations")
     public void pathReturnsEnoughPositionsToCoverDistance(
         final Position from, final Position destination) {
+
         // Arrange
-        final IWorld world = new World(30);
+        final IWorld world = new TestWorld(30);
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act

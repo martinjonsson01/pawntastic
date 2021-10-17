@@ -1,4 +1,4 @@
-package com.thebois.models.world;
+package com.thebois.models.world.terrains;
 
 import org.junit.jupiter.api.Test;
 
@@ -27,10 +27,9 @@ public class TerrainTests {
         // Arrange
         final Position position = new Position(1, 1);
         final AbstractTerrain terrain = new Grass(position);
-        final boolean isEqual;
 
         // Act
-        isEqual = terrain.hashCode() == terrain.hashCode();
+        final boolean isEqual = terrain.hashCode() == terrain.hashCode();
 
         // Assert
         assertThat(isEqual).isTrue();
@@ -43,10 +42,9 @@ public class TerrainTests {
         final Position position2 = new Position(1, 1);
         final AbstractTerrain terrain1 = new Grass(position1);
         final AbstractTerrain terrain2 = new Grass(position2);
-        final boolean isEqual;
 
         // Act
-        isEqual = terrain1.hashCode() == terrain2.hashCode();
+        final boolean isEqual = terrain1.hashCode() == terrain2.hashCode();
 
         // Assert
         assertThat(isEqual).isTrue();
@@ -59,10 +57,10 @@ public class TerrainTests {
         final Position position2 = new Position(2, 2);
         final AbstractTerrain terrain1 = new Grass(position1);
         final AbstractTerrain terrain2 = new Grass(position2);
-        final boolean isEqual;
 
         // Act
-        isEqual = terrain1.hashCode() == terrain2.hashCode();
+
+        final boolean isEqual = terrain1.hashCode() == terrain2.hashCode();
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -71,13 +69,24 @@ public class TerrainTests {
     // Equal Tests
 
     @Test
+    public void terrainIsEqualToItSelf() {
+        // Arrange
+        final AbstractTerrain terrain = new Grass(1, 1);
+
+        // Act
+        final boolean isEqual = terrain.equals(terrain);
+
+        // Assert
+        assertThat(isEqual).isTrue();
+    }
+
+    @Test
     public void terrainIsNotEqualToNull() {
         // Arrange
         final AbstractTerrain terrain = new Grass(1, 1);
-        final boolean isEqual;
 
         // Act
-        isEqual = terrain.equals(null);
+        final boolean isEqual = terrain.equals(null);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -88,10 +97,9 @@ public class TerrainTests {
         // Arrange
         final AbstractTerrain terrain = new Grass(1, 1);
         final Object otherObject = new Position(1, 1);
-        final boolean isEqual;
 
         // Act
-        isEqual = terrain.equals(otherObject);
+        final boolean isEqual = terrain.equals(otherObject);
         // Assert
         assertThat(isEqual).isFalse();
     }
@@ -101,10 +109,9 @@ public class TerrainTests {
         // Arrange
         final AbstractTerrain terrain1 = new Grass(1, 1);
         final AbstractTerrain terrain2 = new Grass(2, 2);
-        final boolean isEqual;
 
         // Act
-        isEqual = terrain1.equals(terrain2);
+        final boolean isEqual = terrain1.equals(terrain2);
         // Assert
         assertThat(isEqual).isFalse();
     }
@@ -115,10 +122,9 @@ public class TerrainTests {
         final Position position = new Position(1, 1);
         final AbstractTerrain terrain1 = new Grass(position);
         final AbstractTerrain terrain2 = new Grass(position);
-        final boolean isEqual;
 
         // Act
-        isEqual = terrain1.equals(terrain2);
+        final boolean isEqual = terrain1.equals(terrain2);
         // Assert
         assertThat(isEqual).isTrue();
     }

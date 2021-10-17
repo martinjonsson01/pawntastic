@@ -18,26 +18,10 @@ abstract class AbstractStructure implements IStructure {
 
     private final Position position;
     private final StructureType structureType;
+    private final Position position;
+    private final StructureType structureType;
     private final Map<ItemType, Integer> allNeededItems;
     private final IInventory deliveredItems = new Inventory();
-
-    /**
-     * Creates a structure with a position and structure type.
-     *
-     * @param posX           Position in X-axis.
-     * @param posY           Position in Y-axis.
-     * @param structureType  The type of structure to create.
-     * @param allNeededItems The items needed to finalize construction.
-     */
-    AbstractStructure(
-        final int posX,
-        final int posY,
-        final StructureType structureType,
-        final Map<ItemType, Integer> allNeededItems) {
-        this.position = new Position(posX, posY);
-        this.structureType = structureType;
-        this.allNeededItems = allNeededItems;
-    }
 
     /**
      * Creates a structure with a position and type.
@@ -50,7 +34,9 @@ abstract class AbstractStructure implements IStructure {
         final Position position,
         final StructureType structureType,
         final Map<ItemType, Integer> allNeededItems) {
-        this((int) position.getPosX(), (int) position.getPosY(), structureType, allNeededItems);
+        this.position = new Position(posX, posY);
+        this.structureType = structureType;
+        this.allNeededItems = allNeededItems;
     }
 
     @Override

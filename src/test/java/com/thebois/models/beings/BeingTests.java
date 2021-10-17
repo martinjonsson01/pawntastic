@@ -21,8 +21,10 @@ import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.inventory.items.Log;
 import com.thebois.models.inventory.items.Rock;
+import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.StructureType;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -30,15 +32,14 @@ import static org.mockito.Mockito.*;
 public class BeingTests {
 
     public static Stream<Arguments> getPositionsAndDestinations() {
-        return Stream.of(
-            Arguments.of(new Position(0, 0), new Position(0, 0)),
-            Arguments.of(new Position(0, 0), new Position(1, 1)),
-            Arguments.of(new Position(0, 0), new Position(1, 0)),
-            Arguments.of(new Position(0, 0), new Position(99, 99)),
-            Arguments.of(new Position(0, 0), new Position(-1, -1)),
-            Arguments.of(new Position(0, 0), new Position(-99, -99)),
-            Arguments.of(new Position(123, 456), new Position(0, 0)),
-            Arguments.of(new Position(456, 789), new Position(0, 0)));
+        return Stream.of(Arguments.of(new Position(0, 0), new Position(0, 0)),
+                         Arguments.of(new Position(0, 0), new Position(1, 1)),
+                         Arguments.of(new Position(0, 0), new Position(1, 0)),
+                         Arguments.of(new Position(0, 0), new Position(99, 99)),
+                         Arguments.of(new Position(0, 0), new Position(-1, -1)),
+                         Arguments.of(new Position(0, 0), new Position(-99, -99)),
+                         Arguments.of(new Position(123, 456), new Position(0, 0)),
+                         Arguments.of(new Position(456, 789), new Position(0, 0)));
     }
 
     public static Stream<Arguments> getEqualBeings() {
@@ -215,7 +216,7 @@ public class BeingTests {
         final Position from = new Position();
         final Position destination = new Position(2, 2);
         final Position obstaclePosition = new Position(1, 1);
-        final World world = new World(3);
+        final World world = new TestWorld(3);
         final IPathFinder pathFinder = new AstarPathFinder(world);
         final IBeing being = new Pawn(from, destination, new Random(), pathFinder, world);
 
@@ -224,7 +225,7 @@ public class BeingTests {
         assertThat(oldPath).contains(obstaclePosition);
 
         // Act
-        world.createStructure(obstaclePosition);
+        world.createStructure(StructureType.HOUSE, obstaclePosition);
 
         // Assert
         final Iterable<Position> newPath = being.getPath();

@@ -11,15 +11,15 @@ import static org.assertj.core.api.Assertions.*;
 public class ItemTests {
 
     public static Stream<Arguments> getItemTypesAndItemClass() {
-        return Stream.of(Arguments.of(ItemType.LOG, new Log()),
-                         Arguments.of(ItemType.ROCK, new Rock()));
+        return Stream.of(Arguments.of(ItemType.LOG, ItemFactory.fromType(ItemType.LOG)),
+                         Arguments.of(ItemType.ROCK, ItemFactory.fromType(ItemType.ROCK)));
     }
 
     @ParameterizedTest
     @MethodSource("getItemTypesAndItemClass")
-    public void getTypeReturnsCorrectItemType(final ItemType itemType, final IItem expectedType) {
+    public void getTypeReturnsCorrectItemType(final ItemType itemType, final IItem item) {
         // Assert
-        assertThat(itemType).isEqualTo(expectedType.getType());
+        assertThat(itemType).isEqualTo(item.getType());
     }
 
     public static Stream<Arguments> isEqualSource() {
