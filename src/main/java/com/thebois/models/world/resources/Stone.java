@@ -11,19 +11,19 @@ import com.thebois.models.inventory.items.ItemType;
 public class Stone extends AbstractResource {
 
     /**
-     * Instantiate a new rock resource at given position.
+     * Instantiate at a given position.
      *
-     * @param x X coordinate for the rock resource.
-     * @param y Y coordinate for the rock resource.
+     * @param x The X-coordinate to place it.
+     * @param y The Y-coordinate to place it.
      */
     public Stone(final float x, final float y) {
         this(new Position(x, y));
     }
 
     /**
-     * Instantiate a new rock resource at given position.
+     * Instantiate at a given position.
      *
-     * @param position The position where the rock resource should be created.
+     * @param position The location to place it.
      */
     public Stone(final Position position) {
         super(position);
