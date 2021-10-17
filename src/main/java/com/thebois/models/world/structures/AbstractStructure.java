@@ -50,11 +50,11 @@ abstract class AbstractStructure implements IStructure {
     @Override
     public Collection<ItemType> getNeededItems() {
         final Collection<ItemType> neededItems = new ArrayList<>();
-        for (final var entry : allNeededItems.entrySet()) {
-            final int numberOf = entry.getValue() - deliveredItems.numberOf(entry.getKey());
+        for (final ItemType itemType : allNeededItems.keySet()) {
+            final int numberOf = allNeededItems.get(itemType) - deliveredItems.numberOf(itemType);
 
             for (int i = 0; i < numberOf; i++) {
-                neededItems.add(entry.getKey());
+                neededItems.add(itemType);
             }
         }
         return neededItems;
@@ -62,8 +62,8 @@ abstract class AbstractStructure implements IStructure {
 
     private int calculateSumOfAllNeededItems() {
         int sum = 0;
-        for (final var entry : allNeededItems.entrySet()) {
-            sum += entry.getValue();
+        for (final Integer numberOfItems : allNeededItems.values()) {
+            sum += numberOfItems;
         }
         return sum;
     }
