@@ -42,7 +42,7 @@ public abstract class AbstractBeing implements IBeing {
         this.role = RoleFactory.idle();
         this.pathFinder = pathFinder;
         setPath(pathFinder.path(startPosition, destination));
-        Pawntastic.BUS.register(this);
+        Pawntastic.getEventBus().register(this);
     }
 
     /**

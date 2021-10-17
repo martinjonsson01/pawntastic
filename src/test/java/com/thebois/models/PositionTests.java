@@ -8,7 +8,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.thebois.models.world.structures.House;
+import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.StructureFactory;
+import com.thebois.models.world.structures.StructureType;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -92,9 +94,10 @@ public class PositionTests {
     public void positionEqualOtherObjectIsFalse() {
         // Arrange
         final Position position = new Position(123, 123);
+        final IStructure house = StructureFactory.createStructure(StructureType.HOUSE, 0, 0);
 
         // Act
-        final boolean isEqual = position.equals(new House(1, 1));
+        final boolean isEqual = position.equals(house);
 
         // Assert
         assertThat(isEqual).isFalse();
