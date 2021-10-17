@@ -1,5 +1,6 @@
 package com.thebois.models.world;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +22,7 @@ import com.thebois.utils.MatrixUtils;
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
-public class World implements IWorld, IStructureFinder {
+public class World implements IWorld, IStructureFinder, Serializable {
 
     private final ITerrain[][] terrainMatrix;
     private final IStructure[][] structureMatrix;
@@ -204,7 +205,7 @@ public class World implements IWorld, IStructureFinder {
 
     private void postObstacleEvent(final int posX, final int posY) {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(posX, posY);
-        Pawntastic.BUS.post(obstacleEvent);
+        Pawntastic.getEventBus().post(obstacleEvent);
     }
 
     @Override

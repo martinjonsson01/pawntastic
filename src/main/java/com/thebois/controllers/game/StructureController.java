@@ -3,6 +3,7 @@ package com.thebois.controllers.game;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
+import com.thebois.Pawntastic;
 import com.thebois.controllers.AbstractInputProcessor;
 import com.thebois.controllers.IController;
 import com.thebois.models.world.World;
@@ -19,7 +20,7 @@ public class StructureController extends AbstractInputProcessor implements ICont
     private final World world;
     private final StructureView structureView;
     private final IProjector projector;
-    private final float tileSize;
+    private final int tileSize = Pawntastic.getTileSize();
     private Widget gameWidget;
 
     /**
@@ -27,15 +28,13 @@ public class StructureController extends AbstractInputProcessor implements ICont
      *
      * @param world     The world in which the structures exists.
      * @param projector Projector used for converting screen coordinates to world coordinates.
-     * @param tileSize  The tile size represented on the screen.
      */
     public StructureController(
-        final World world, final IProjector projector, final float tileSize) {
+        final World world, final IProjector projector) {
 
         this.world = world;
-        this.structureView = new StructureView(tileSize);
+        this.structureView = new StructureView();
         this.projector = projector;
-        this.tileSize = tileSize;
 
         structureView.update(world.getStructures());
     }

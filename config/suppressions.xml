@@ -8,4 +8,5 @@
     <suppress checks="ClassDataAbstractionCoupling" files="Pawntastic"/>
     <suppress checks="[a-zA-Z0-9]*" files="[\\/]test[\\/]"/>
     <suppress checks="NoWhitespaceAfter" files="MatrixUtilsTests" />
+    <suppress checks="ClassDataAbstractionCoupling" files="BeingTests" />
 </suppressions>

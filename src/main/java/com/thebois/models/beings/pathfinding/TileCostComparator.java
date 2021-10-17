@@ -1,5 +1,6 @@
 package com.thebois.models.beings.pathfinding;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import com.thebois.models.world.ITile;
@@ -7,7 +8,7 @@ import com.thebois.models.world.ITile;
 /**
  * Compares two tiles to determine which costs more to move to.
  */
-class TileCostComparator implements Comparator<ITile> {
+class TileCostComparator implements Comparator<ITile>, Serializable {
 
     private final TileCostCalculator costCalculator;
     private final ITile destination;
