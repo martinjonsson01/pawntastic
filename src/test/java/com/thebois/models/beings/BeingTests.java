@@ -1,5 +1,10 @@
 package com.thebois.models.beings;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -271,6 +276,34 @@ public class BeingTests {
         // Assert
         assertThat(before).isEqualTo(1);
         assertThat(after).isEqualTo(2);
+    }
+
+    @Test
+    public void sameObjectAfterDeserialization() throws ClassNotFoundException, IOException {
+        // Arrange
+        final World world = new TestWorld(3);
+        final IPathFinder pathFinder = new AstarPathFinder(world);
+        final IBeing being = new Pawn(new Position(), new Position(), new Random(), pathFinder);
+
+        // Act
+        final byte[] serialized1 = serialize(being);
+        final IBeing deserialized1 = (IBeing) deserialize(serialized1);
+
+        // Assert
+        assertThat(being).isEqualTo(deserialized1);
+    }
+
+    private byte[] serialize(final Object object) throws IOException {
+        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        final ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
+        outputStream.writeObject(object);
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    private Object deserialize(final byte[] bytes) throws IOException, ClassNotFoundException {
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        final ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        return objectInputStream.readObject();
     }
 
 }
