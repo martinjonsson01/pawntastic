@@ -58,12 +58,12 @@ abstract class AbstractHarvesterRole extends AbstractRole {
     }
 
     protected IAction createHarvestResource(final IActionPerformer performer) {
-        final Optional<IResource> maybeTree = findNearbyResource(performer);
-        if (maybeTree.isEmpty()) return ActionFactory.createDoNothing();
+        final Optional<IResource> maybeResource = findNearbyResource(performer);
+        if (maybeResource.isEmpty()) return ActionFactory.createDoNothing();
 
-        final IResource tree = maybeTree.get();
+        final IResource resource = maybeResource.get();
 
-        return ActionFactory.createHarvest(tree);
+        return ActionFactory.createHarvest(resource);
     }
 
     protected Optional<IResource> findNearbyResource(final IActionPerformer performer) {
