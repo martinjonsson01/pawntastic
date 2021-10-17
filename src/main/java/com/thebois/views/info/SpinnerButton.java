@@ -125,9 +125,7 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
 
     private void notifyListeners(final int oldValue, final int newValue) {
         final ValueChangedEvent<Integer> event = new ValueChangedEvent<>(oldValue, newValue);
-        for (final IEventListener<ValueChangedEvent<Integer>> listener : valueChangedListeners) {
-            listener.onEvent(event);
-        }
+        valueChangedListeners.forEach(listener -> listener.onEvent(event));
     }
 
     @Override

@@ -66,9 +66,7 @@ public class StructureButton extends Button implements IEventSource<OnClickEvent
 
     private void notifyListeners(final StructureType type) {
         final OnClickEvent<StructureType> event = new OnClickEvent<>(type);
-        for (final IEventListener<OnClickEvent<StructureType>> listener : onClickListeners) {
-            listener.onEvent(event);
-        }
+        onClickListeners.forEach(listener -> listener.onEvent(event));
     }
 
     @Override
