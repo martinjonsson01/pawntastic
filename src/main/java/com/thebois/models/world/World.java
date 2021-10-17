@@ -210,27 +210,18 @@ public class World implements IWorld, IStructureFinder, Serializable {
 
     @Override
     public Optional<IStructure> findNearestStructure(final Position position) {
-        final List<IStructure> foundStructures = sortByDistanceTo(position);
-        return foundStructures.stream().findFirst();
+        return getStructures()
+            .stream().min((o1, o2) -> Float.compare(position.distanceTo(o1.getPosition()),
+                                           position.distanceTo(o2.getPosition())));
     }
 
     @Override
     public Optional<IStructure> findNearestIncompleteStructure(final Position position) {
-        for (final IStructure structure : sortByDistanceTo(position)) {
-            if (!structure.isCompleted()) {
-                return Optional.of(structure);
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    private List<IStructure> sortByDistanceTo(final Position position) {
-        final List<IStructure> allStructures = new ArrayList<>(getStructures());
-
-        allStructures.sort((o1, o2) -> Float.compare(o1.getPosition().distanceTo(position),
-                                                     o2.getPosition().distanceTo(position)));
-        return allStructures;
+        return getStructures()
+            .stream()
+            .filter(structure -> !structure.isCompleted())
+            .min((o1, o2) -> Float.compare(position.distanceTo(o1.getPosition()),
+                                           position.distanceTo(o2.getPosition())));
     }
 
     @Override

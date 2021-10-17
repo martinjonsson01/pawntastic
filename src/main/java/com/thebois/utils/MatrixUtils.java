@@ -101,7 +101,8 @@ public final class MatrixUtils {
                         }
                     }
                     catch (final ArrayIndexOutOfBoundsException exception) {
-                        // Since there is a search limit, we can let the method loop outside of matrix
+                        // Since there is a search limit, we can let the method loop
+                        // outside of matrix.
                     }
                 }
             }
