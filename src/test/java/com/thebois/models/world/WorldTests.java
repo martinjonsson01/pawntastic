@@ -24,6 +24,7 @@ import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
 import com.thebois.models.world.resources.Tree;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
 
@@ -120,11 +121,11 @@ public class WorldTests {
           * * * * * * *
          */
         final World world = createTestWorld(7, mock(Random.class));
-        world.createStructure(2, 4);
-        world.createStructure(4, 4);
-        world.createStructure(2, 2);
-        world.createStructure(3, 2);
-        world.createStructure(4, 2);
+        world.createStructure(StructureType.HOUSE, 2, 4);
+        world.createStructure(StructureType.HOUSE, 4, 4);
+        world.createStructure(StructureType.HOUSE, 2, 2);
+        world.createStructure(StructureType.HOUSE, 3, 2);
+        world.createStructure(StructureType.HOUSE, 4, 2);
         final ITile tile = mockTile(3, 3);
 
         // Act
@@ -142,10 +143,10 @@ public class WorldTests {
     public void getClosestNeighbourOfReturnsEmptyWhenAllNeighboursOccupied() {
         // Arrange
         final World world = createTestWorld(3, mock(Random.class));
-        world.createStructure(1, 0);
-        world.createStructure(0, 1);
-        world.createStructure(2, 1);
-        world.createStructure(1, 2);
+        world.createStructure(StructureType.HOUSE, 1, 0);
+        world.createStructure(StructureType.HOUSE, 0, 1);
+        world.createStructure(StructureType.HOUSE, 2, 1);
+        world.createStructure(StructureType.HOUSE, 1, 2);
         final ITile tile = mockTile(1, 1);
         final Position from = new Position(0, 0);
 
@@ -232,8 +233,8 @@ public class WorldTests {
                                                       (int) thirdEmptyRandomSpot.getPosX(),
                                                       (int) thirdEmptyRandomSpot.getPosY());
         final World world = createTestWorld(3, mockRandom);
-        world.createStructure(firstBlockedRandomSpot);
-        world.createStructure(secondBlockedRandomSpot);
+        world.createStructure(StructureType.HOUSE, firstBlockedRandomSpot);
+        world.createStructure(StructureType.HOUSE, secondBlockedRandomSpot);
 
         // Act
         final Position vacantSpot = world.getRandomVacantSpot().getPosition();
@@ -337,7 +338,7 @@ public class WorldTests {
         final Position position = new Position(1, 1);
 
         // Act
-        final boolean isBuilt = world.createStructure(position);
+        final boolean isBuilt = world.createStructure(StructureType.HOUSE, position);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
@@ -352,7 +353,7 @@ public class WorldTests {
         final World world = createWorld(2);
 
         // Act
-        final boolean isBuilt = world.createStructure(placementPosition);
+        final boolean isBuilt = world.createStructure(StructureType.HOUSE, placementPosition);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
@@ -368,8 +369,8 @@ public class WorldTests {
         final Position position2 = new Position(-1, -1);
 
         // Act
-        world.createStructure(position1);
-        world.createStructure(position2);
+        world.createStructure(StructureType.HOUSE, position1);
+        world.createStructure(StructureType.HOUSE, position2);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
@@ -454,7 +455,7 @@ public class WorldTests {
     private void fillWorldWithStructures(final int worldSize, final World world) {
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
-                world.createStructure(x, y);
+                world.createStructure(StructureType.HOUSE, x, y);
             }
         }
     }

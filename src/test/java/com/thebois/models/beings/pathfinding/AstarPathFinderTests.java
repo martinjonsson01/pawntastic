@@ -16,6 +16,7 @@ import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
+import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.Grass;
 
 import static org.assertj.core.api.Assertions.*;
@@ -96,8 +97,8 @@ public class AstarPathFinderTests {
     private IWorld testWorld3x3WithObstacles() {
         final World world = createTestWorld(3);
 
-        world.createStructure(1, 0);
-        world.createStructure(1, 1);
+        world.createStructure(StructureType.HOUSE, 1, 0);
+        world.createStructure(StructureType.HOUSE, 1, 1);
 
         return world;
     }
