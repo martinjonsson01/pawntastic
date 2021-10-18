@@ -64,49 +64,4 @@ public final class MatrixUtils {
         }
     }
 
-    /**
-     * Traverses the given Optional matrix using a spiral pattern to find present element
-     * within the search radius.
-     *
-     * @param matrix Matrix to be searched.
-     * @param startRow Row to start search from.
-     * @param startCol Column to start search from.
-     * @param maxSearchRadius Maximum search radius.
-     * @param maxFoundElements Maximum needed elements to be found.
-     * @param <TType> Generic type of Optional matrix.
-     *
-     * @return First found elements of type TType.
-     */
-    public static <TType> Collection<TType> matrixSpiralSearch(
-        final TType[][] matrix,
-        final int startRow,
-        final int startCol,
-        final int maxSearchRadius,
-        final int maxFoundElements) {
-
-        final Collection<TType> foundElements = new ArrayList<>();
-
-        for (int length = 0; length < maxSearchRadius; length++) {
-            for (int row = -length; row <= length * 2; row++) {
-
-                for (int col = -length; col <= length * 2; col++) {
-                    try {
-                        if (matrix[startRow + row][startCol + col] != null) {
-                            foundElements.add(matrix[startRow + row][startCol + col]);
-
-                            if (foundElements.size() > maxFoundElements) {
-                                return foundElements;
-                            }
-                        }
-                    }
-                    catch (final ArrayIndexOutOfBoundsException exception) {
-                        // Since there is a search limit, we can let the method loop
-                        // outside of matrix.
-                    }
-                }
-            }
-        }
-        return foundElements;
-    }
-
 }

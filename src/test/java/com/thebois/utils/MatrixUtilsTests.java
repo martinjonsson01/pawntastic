@@ -131,32 +131,4 @@ public class MatrixUtilsTests {
         assertThat(stringCollection).isEqualTo(expectedElements);
     }
 
-    private static Stream<Arguments> getMatrixAndExpectedCoordinates() {
-        final String[][] stringMatrix = new String[][] {
-            { "1", null, "3" },
-            { null, null, "6" },
-            { "7", "8", "9" },
-            };
-
-        return Stream.of(Arguments.of(stringMatrix, 0, 1, "1"),
-                         Arguments.of(stringMatrix, 2, 1, "8")
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("getMatrixAndExpectedCoordinates")
-    public void matrixSpiralSearchFindsCorrectElement(final String[][] stringMatrix, final int startRow,
-                                                      final int startCol,
-                                                      final String expectedString) {
-        // Act
-        final String foundString = MatrixUtils.matrixSpiralSearch(
-            stringMatrix,
-            startRow,
-            startCol,
-            5, 1).iterator().next();
-
-        // Assert
-        assertThat(foundString).isEqualTo(expectedString);
-    }
-
 }
