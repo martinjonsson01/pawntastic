@@ -15,7 +15,7 @@ public class StructureTests {
         final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE, 0, 0);
 
         // Act
-        final boolean isEqual = structure == null;
+        final boolean isEqual = structure.equals(null);
 
         // Assert
         assertThat(isEqual).isFalse();

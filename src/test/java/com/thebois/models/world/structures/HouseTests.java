@@ -25,7 +25,6 @@ public class HouseTests {
         final Position position = new Position(123, 456);
         final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE,
                                                                       position);
-
         // Act
         final Position structurePosition = structure.getPosition();
 
@@ -40,8 +39,8 @@ public class HouseTests {
         final IStructure structure = StructureFactory.createStructure(
             StructureType.HOUSE,
             position);
-        // Act
 
+        // Act
         StructureType returnedType = structure.getType();
 
         // Assert

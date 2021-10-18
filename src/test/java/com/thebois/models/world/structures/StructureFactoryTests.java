@@ -28,7 +28,7 @@ public class StructureFactoryTests {
         final IStructure actualStructure = StructureFactory.createStructure(type, x, y);
 
         // Assert
-        assertThat(actualStructure.getClass()).isEqualTo(expectedStructure);
+        assertThat(actualStructure).isInstanceOf(expectedStructure);
     }
 
 }
