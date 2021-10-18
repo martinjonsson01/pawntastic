@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Optional;
-import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 import java.util.stream.Stream;
@@ -25,8 +24,6 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.models.inventory.items.ItemFactory;
-import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
 import com.thebois.models.world.structures.IStructure;
@@ -302,7 +299,7 @@ public class BeingTests {
         when(structure.tryDeliverItem(any())).thenReturn(true);
 
         when(structure.getPosition()).thenReturn(new Position());
-        when(finder.findNearestIncompleteStructure(any(), eq(StructureType.HOUSE))).thenReturn(Optional.of(structure));
+        when(finder.getNearbyIncompleteStructureOfType(any(), eq(StructureType.HOUSE))).thenReturn(Optional.of(structure));
 
         final Pawn pawn = new Pawn(new Position(), new Position(), new Random(), pathFinder, finder);
 
@@ -333,7 +330,7 @@ public class BeingTests {
         when(structureB.isCompleted()).thenReturn(true);
 
 
-        when(mockFinder.findNearestIncompleteStructure(any(), eq(StructureType.HOUSE)))
+        when(mockFinder.getNearbyIncompleteStructureOfType(any(), eq(StructureType.HOUSE)))
             .thenReturn(Optional.of(structureA)).thenReturn(Optional.of(structureB));
 
 
@@ -386,7 +383,7 @@ public class BeingTests {
         when(mockPathFinder.path(any(), eq(expectedPosition))).thenReturn(path);
 
         final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
-        when(mockFinder.findNearestIncompleteStructure(any(), eq(StructureType.HOUSE)))
+        when(mockFinder.getNearbyIncompleteStructureOfType(any(), eq(StructureType.HOUSE)))
             .thenReturn(Optional.of(mockStructure));
 
         final Pawn pawn = new Pawn(startingPosition,
@@ -420,7 +417,7 @@ public class BeingTests {
         when(expectedStructure.isCompleted()).thenReturn(false);
 
 
-        when(mockFinder.findNearestIncompleteStructure(any(), eq(StructureType.HOUSE)))
+        when(mockFinder.getNearbyIncompleteStructureOfType(any(), eq(StructureType.HOUSE)))
             .thenReturn(Optional.of(initialStructure)).thenReturn(Optional.of(expectedStructure));
 
 
@@ -438,7 +435,7 @@ public class BeingTests {
         pawn.update();
 
         // Assert
-        verify(mockFinder, times(2)).findNearestIncompleteStructure(any(), eq(StructureType.HOUSE));
+        verify(mockFinder, times(2)).getNearbyIncompleteStructureOfType(any(), eq(StructureType.HOUSE));
     }
 
     @Test
@@ -451,7 +448,7 @@ public class BeingTests {
 
         final Position expectedPosition = new Position(10f, 20f);
 
-        when(mockFinder.findNearestIncompleteStructure(any(), eq(StructureType.HOUSE)))
+        when(mockFinder.getNearbyIncompleteStructureOfType(any(), eq(StructureType.HOUSE)))
             .thenReturn(Optional.of(incompleteStructure));
 
         when(incompleteStructure.getPosition()).thenReturn(expectedPosition);
@@ -469,7 +466,7 @@ public class BeingTests {
         pawn.update();
 
         // Assert
-        verify(mockFinder, times(1)).findNearestIncompleteStructure(any(), eq(StructureType.HOUSE));
+        verify(mockFinder, times(1)).getNearbyIncompleteStructureOfType(any(), eq(StructureType.HOUSE));
     }
 
     @Test
@@ -484,7 +481,7 @@ public class BeingTests {
         final Position positionA = new Position(10f, 20f);
         final Position positionB = new Position(0f, 5f);
 
-        when(mockFinder.findNearestIncompleteStructure(any(), eq(StructureType.HOUSE)))
+        when(mockFinder.getNearbyIncompleteStructureOfType(any(), eq(StructureType.HOUSE)))
             .thenReturn(Optional.of(mockStructureA)).thenReturn(Optional.of(mockStructureB));
 
         when(mockStructureA.getPosition()).thenReturn(positionA);
@@ -505,7 +502,7 @@ public class BeingTests {
         pawn.update();
 
         // Assert
-        verify(mockFinder, times(2)).findNearestIncompleteStructure(any(), eq(StructureType.HOUSE));
+        verify(mockFinder, times(2)).getNearbyIncompleteStructureOfType(any(), eq(StructureType.HOUSE));
     }
 
     @Test
@@ -518,7 +515,7 @@ public class BeingTests {
 
         final Position structurePosition = new Position(10f, 20f);
 
-        when(mockFinder.findNearestIncompleteStructure(any(), eq(StructureType.HOUSE)))
+        when(mockFinder.getNearbyIncompleteStructureOfType(any(), eq(StructureType.HOUSE)))
             .thenReturn(Optional.of(mockStructure));
 
         when(mockPathFinder.path(any(), any())).thenReturn(List.of(

@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.lwjgl.system.CallbackI;
 import org.mockito.Mockito;
 
 import com.thebois.models.IStructureFinder;
@@ -23,7 +22,6 @@ import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.IStructure;
-import com.thebois.models.world.structures.StructureFactory;
 import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.Grass;
 
@@ -340,7 +338,7 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> foundStructure =
-            world.findNearestStructure(startingPosition, StructureType.HOUSE);
+            world.getNearbyStructureOfType(startingPosition, StructureType.HOUSE);
 
         // Assert
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
@@ -353,7 +351,7 @@ public class WorldTests {
         final World world = new TestWorld(50);
 
         // Act
-        final Optional<IStructure> structure = world.findNearestStructure(
+        final Optional<IStructure> structure = world.getNearbyStructureOfType(
             new Position(20f, 20f), StructureType.HOUSE);
 
         // Assert
@@ -407,7 +405,7 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> foundStructure =
-            world.findNearestIncompleteStructure(new Position(0, 0)
+            world.getNearbyIncompleteStructureOfType(new Position(0, 0)
                 , StructureType.HOUSE);
 
         // Assert
@@ -434,7 +432,7 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> foundStructure =
-            world.findNearestIncompleteStructure(new Position(0, 0), StructureType.HOUSE);
+            world.getNearbyIncompleteStructureOfType(new Position(0, 0), StructureType.HOUSE);
 
         // Assert
         assertThat(foundStructure.isEmpty()).isTrue();
