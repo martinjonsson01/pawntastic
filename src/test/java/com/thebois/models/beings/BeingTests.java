@@ -1,10 +1,6 @@
 package com.thebois.models.beings;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -28,6 +24,7 @@ import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.IWorld;
+import com.thebois.testutils.InMemorySerialize;
 import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
@@ -267,24 +264,11 @@ public class BeingTests {
         final IBeing being = createBeing();
 
         // Act
-        final byte[] serialized1 = serialize(being);
-        final IBeing deserialized1 = (IBeing) deserialize(serialized1);
+        final byte[] serialized1 = InMemorySerialize.serialize(being);
+        final IBeing deserialized1 = (IBeing) InMemorySerialize.deserialize(serialized1);
 
         // Assert
         assertThat(being).isEqualTo(deserialized1);
-    }
-
-    private byte[] serialize(final Object object) throws IOException {
-        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        final ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-        outputStream.writeObject(object);
-        return byteArrayOutputStream.toByteArray();
-    }
-
-    private Object deserialize(final byte[] bytes) throws IOException, ClassNotFoundException {
-        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-        final ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-        return objectInputStream.readObject();
     }
 
     /**
