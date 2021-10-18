@@ -264,11 +264,11 @@ public class BeingTests {
         final IBeing being = createBeing();
 
         // Act
-        final byte[] serialized1 = InMemorySerialize.serialize(being);
-        final IBeing deserialized1 = (IBeing) InMemorySerialize.deserialize(serialized1);
+        final byte[] serializedBeing = InMemorySerialize.serialize(being);
+        final IBeing deserializedBeing = (IBeing) InMemorySerialize.deserialize(serializedBeing);
 
         // Assert
-        assertThat(being).isEqualTo(deserialized1);
+        assertThat(being).isEqualTo(deserializedBeing);
     }
 
     /**
