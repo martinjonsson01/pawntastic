@@ -22,8 +22,14 @@ import com.thebois.models.beings.roles.RoleFactory;
  */
 public abstract class AbstractBeing implements IBeing {
 
-    // The max speed of the being, in tiles/second.
+    /**
+     * The max speed of the being, in tiles/second.
+     */
     private static final float SPEED = 6f;
+    /**
+     * The distance at which the being stops moving towards a destination and considers itself
+     * arrived.
+     */
     private static final float DESTINATION_REACHED_DISTANCE = 0.01f;
     private final IPathFinder pathFinder;
     private Position position;
