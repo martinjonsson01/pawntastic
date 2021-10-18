@@ -303,11 +303,27 @@ public class WorldTests {
     }
 
     private static Stream<Arguments> getCorrectCoordinatesToTest() {
-        return Stream.of(Arguments.of(new Position(25,5), new Position(0, 0), new Position(20, 20)),
-                         Arguments.of(new Position(5,5), new Position(0, 0), new Position(8, 8)),
-                         Arguments.of(new Position(0,0), new Position(5, 5), new Position(3, 3)),
-                         Arguments.of(new Position(5,5), new Position(0, 0), new Position(8, 8)),
-                         Arguments.of(new Position(20,20), new Position(5, 7), new Position(15, 15))
+        return Stream.of(
+            Arguments.of(
+                new Position(25,5),
+                new Position(0, 0),
+                new Position(20, 20)),
+            Arguments.of(
+                new Position(5,5),
+                new Position(0, 0),
+                new Position(8, 8)),
+            Arguments.of(
+                new Position(0,0),
+                new Position(5, 5),
+                new Position(3, 3)),
+            Arguments.of(
+                new Position(5,5),
+                new Position(0, 0),
+                new Position(8, 8)),
+            Arguments.of(
+                new Position(20,20),
+                new Position(5, 7),
+                new Position(15, 15))
         );
     }
 
@@ -323,7 +339,8 @@ public class WorldTests {
         world.createStructure(StructureType.HOUSE, incorrectPosition);
 
         // Act
-        final Optional<IStructure> foundStructure = world.findNearestStructure(startingPosition, StructureType.HOUSE);
+        final Optional<IStructure> foundStructure =
+            world.findNearestStructure(startingPosition, StructureType.HOUSE);
 
         // Assert
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
@@ -389,11 +406,14 @@ public class WorldTests {
         world.createStructure(StructureType.HOUSE, new Position(7, 9));
 
         // Act
-        final Optional<IStructure> foundStructure = world.findNearestIncompleteStructure(new Position(
-            0, 0), StructureType.HOUSE);
+        final Optional<IStructure> foundStructure =
+            world.findNearestIncompleteStructure(new Position(0, 0)
+                , StructureType.HOUSE);
 
         // Assert
-        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(1, 3));
+        assertThat(foundStructure.orElseThrow()
+                                 .getPosition())
+            .isEqualTo(new Position(1, 3));
     }
 
     @Test
@@ -413,8 +433,8 @@ public class WorldTests {
         }
 
         // Act
-        final Optional<IStructure> foundStructure = world.findNearestIncompleteStructure(new Position(
-            0, 0), StructureType.HOUSE);
+        final Optional<IStructure> foundStructure =
+            world.findNearestIncompleteStructure(new Position(0, 0), StructureType.HOUSE);
 
         // Assert
         assertThat(foundStructure.isEmpty()).isTrue();
