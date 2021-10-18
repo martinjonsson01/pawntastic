@@ -121,4 +121,27 @@ public final class Position implements IDeepClonable<Position>, Serializable {
         return Math.round(distanceX + distanceY);
     }
 
+    /**
+     * Subtracts a position component-wise.
+     *
+     * @param other The position to subtract.
+     *
+     * @return The difference.
+     */
+    public Position subtract(final Position other) {
+        return subtract(other.getPosX(), other.getPosY());
+    }
+
+    /**
+     * Subtracts components by the given values.
+     *
+     * @param otherX How much to subtract from the x-coordinate.
+     * @param otherY How much to subtract from the y-coordinate.
+     *
+     * @return A position with its coordinates subtracted from.
+     */
+    public Position subtract(final float otherX, final float otherY) {
+        return new Position(posX - otherX, posY - otherY);
+    }
+
 }

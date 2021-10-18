@@ -36,6 +36,15 @@ public class PositionTests {
             Arguments.of(new Position(-20, -30), new Position(0, 0), 50));
     }
 
+    public static Stream<Arguments> getPositionsAndTheirDifferences() {
+        return Stream.of(
+            Arguments.of(new Position(0, 0), new Position(0, 0), new Position(0, 0)),
+            Arguments.of(new Position(0, 0), new Position(1, 1), new Position(-1, -1)),
+            Arguments.of(new Position(1, 1), new Position(1, 1), new Position(0, 0)),
+            Arguments.of(new Position(10, 10), new Position(9, 9), new Position(1, 1)),
+            Arguments.of(new Position(-2, -4), new Position(-1, -1), new Position(-1, -3)));
+    }
+
     @Test
     public void constructorSetsCoordinates() {
         // Arrange
@@ -166,6 +175,17 @@ public class PositionTests {
 
         // Assert
         assertThat(isEqual).isFalse();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsAndTheirDifferences")
+    public void subtractReturnsCorrectDifference(
+        final Position first, final Position second, final Position expectedDifference) {
+        // Act
+        final Position actualDifference = first.subtract(second);
+
+        // Assert
+        assertThat(actualDifference).isEqualTo(expectedDifference);
     }
 
     @ParameterizedTest
