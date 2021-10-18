@@ -400,7 +400,7 @@ public class BeingTests {
         pawn.update();
 
         // Assert
-        assertThat(pawn.getFinalDestination().equals(expectedPosition)).isEqualTo(true);
+        assertThat(pawn.getFinalDestination()).isEqualTo(expectedPosition);
     }
 
     @Test
