@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
+import com.thebois.Pawntastic;
+import com.thebois.listeners.events.SpawnPawnsEvent;
 import com.thebois.models.Position;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
@@ -71,6 +73,9 @@ abstract class AbstractStructure implements IStructure {
         final Collection<ItemType> neededItems = getNeededItems();
         if (neededItems.contains(deliveredItem.getType())) {
             deliveredItems.add(deliveredItem);
+            if (isCompleted()) {
+                postSpawnPawnsEvent(getPosition());
+            }
             return true;
         }
         return false;
@@ -95,6 +100,11 @@ abstract class AbstractStructure implements IStructure {
             return Optional.of(deliveredItems.take(retrieving));
         }
         return Optional.empty();
+    }
+
+    private void postSpawnPawnsEvent(final Position spawnPosition) {
+        final SpawnPawnsEvent spawnPawnsEvent = new SpawnPawnsEvent(5, spawnPosition, 5f);
+        Pawntastic.getEventBus().post(spawnPawnsEvent);
     }
 
 }
