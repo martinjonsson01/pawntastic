@@ -52,7 +52,7 @@ public interface IWorld extends Serializable {
      * @param from The position that needs to be closest to the returned neighbour.
      *
      * @return The position of the neighbouring tile that is the closest to the given position, if
-     * it exists.
+     *     it exists.
      */
     Optional<Position> getClosestNeighbourOf(ITile tile, Position from);
 
