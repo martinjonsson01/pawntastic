@@ -36,6 +36,33 @@ public class PositionTests {
             Arguments.of(new Position(-20, -30), new Position(0, 0), 50));
     }
 
+    public static Stream<Arguments> getPositionsAndTheirDifferences() {
+        return Stream.of(
+            Arguments.of(new Position(0, 0), new Position(0, 0), new Position(0, 0)),
+            Arguments.of(new Position(0, 0), new Position(1, 1), new Position(-1, -1)),
+            Arguments.of(new Position(1, 1), new Position(1, 1), new Position(0, 0)),
+            Arguments.of(new Position(10, 10), new Position(9, 9), new Position(1, 1)),
+            Arguments.of(new Position(-2, -4), new Position(-1, -1), new Position(-1, -3)));
+    }
+
+    public static Stream<Arguments> getPositionWithScalarAndTheirProduct() {
+        return Stream.of(
+            Arguments.of(1f, new Position(1, 1), new Position(1, 1)),
+            Arguments.of(0f, new Position(10, 10), new Position(0, 0)),
+            Arguments.of(2f, new Position(3, 2), new Position(6, 4)),
+            Arguments.of(0.5f, new Position(2, 2), new Position(1, 1)),
+            Arguments.of(-3f, new Position(1, 2), new Position(-3, -6)));
+    }
+
+    public static Stream<Arguments> getPositionsAndTheirSums() {
+        return Stream.of(
+            Arguments.of(new Position(0, 0), new Position(0, 0), new Position(0, 0)),
+            Arguments.of(new Position(0, 0), new Position(1, 1), new Position(1, 1)),
+            Arguments.of(new Position(1, 1), new Position(1, 1), new Position(2, 2)),
+            Arguments.of(new Position(10, 10), new Position(9, 9), new Position(19, 19)),
+            Arguments.of(new Position(-2, -4), new Position(-1, -1), new Position(-3, -5)));
+    }
+
     @Test
     public void constructorSetsCoordinates() {
         // Arrange
@@ -166,6 +193,39 @@ public class PositionTests {
 
         // Assert
         assertThat(isEqual).isFalse();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsAndTheirSums")
+    public void addReturnsCorrectSum(
+        final Position first, final Position second, final Position expectedSum) {
+        // Act
+        final Position actualSum = first.add(second);
+
+        // Assert
+        assertThat(actualSum).isEqualTo(expectedSum);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsAndTheirDifferences")
+    public void subtractReturnsCorrectDifference(
+        final Position first, final Position second, final Position expectedDifference) {
+        // Act
+        final Position actualDifference = first.subtract(second);
+
+        // Assert
+        assertThat(actualDifference).isEqualTo(expectedDifference);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionWithScalarAndTheirProduct")
+    public void multiplyReturnsCorrectProduct(
+        final float scalar, final Position position, final Position expectedProduct) {
+        // Act
+        final Position actualProduct = position.multiply(scalar);
+
+        // Assert
+        assertThat(actualProduct).isEqualTo(expectedProduct);
     }
 
     @ParameterizedTest

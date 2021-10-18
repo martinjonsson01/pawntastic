@@ -4,10 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
-import com.thebois.models.IFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.world.generation.ResourceGenerator;
 import com.thebois.models.world.generation.TerrainGenerator;
@@ -21,12 +22,13 @@ import com.thebois.utils.MatrixUtils;
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
-public class World implements IWorld, IFinder, Serializable {
+public class World implements IWorld, IStructureFinder, Serializable {
 
     private final ITerrain[][] terrainMatrix;
     private final IStructure[][] structureMatrix;
     private final IResource[][] resourceMatrix;
     private final ITile[][] canonicalMatrix;
+    private Collection<IStructure> structuresCache = new ArrayList<>();
     private final int worldSize;
 
     /**
@@ -139,13 +141,11 @@ public class World implements IWorld, IFinder, Serializable {
      * @return The list to be returned.
      */
     public Collection<IStructure> getStructures() {
-        final Collection<IStructure> copy = new ArrayList<>();
-        MatrixUtils.forEachElement(structureMatrix, maybeStructure -> {
-            if (maybeStructure != null) {
-                copy.add(maybeStructure.deepClone());
-            }
-        });
-        return copy;
+        return structuresCache;
+    }
+
+    private void generateStructuresCache() {
+        structuresCache = MatrixUtils.toCollection(this.structureMatrix);
     }
 
     /**
@@ -154,13 +154,7 @@ public class World implements IWorld, IFinder, Serializable {
      * @return The list to be returned.
      */
     public Collection<IResource> getResources() {
-        final Collection<IResource> copy = new ArrayList<>();
-        MatrixUtils.forEachElement(resourceMatrix, maybeResource -> {
-            if (maybeResource != null) {
-                copy.add(maybeResource.deepClone());
-            }
-        });
-        return copy;
+        return MatrixUtils.toCollection(this.resourceMatrix);
     }
 
     /**
@@ -191,6 +185,7 @@ public class World implements IWorld, IFinder, Serializable {
 
             updateCanonicalMatrix();
             postObstacleEvent(x, y);
+            generateStructuresCache();
             return true;
         }
         return false;
@@ -211,6 +206,27 @@ public class World implements IWorld, IFinder, Serializable {
     private void postObstacleEvent(final int posX, final int posY) {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(posX, posY);
         Pawntastic.getEventBus().post(obstacleEvent);
+    }
+
+    @Override
+    public Optional<IStructure> getNearbyStructureOfType(
+        final Position origin,
+        final StructureType type) {
+        return getStructures()
+            .stream()
+            .filter(structure -> structure.getType().equals(type))
+            .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
+                                           origin.distanceTo(o2.getPosition())));
+    }
+
+    @Override
+    public Optional<IStructure> getNearbyIncompleteStructure(
+        final Position origin) {
+        return getStructures()
+            .stream()
+            .filter(structure -> !structure.isCompleted())
+            .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
+                                           origin.distanceTo(o2.getPosition())));
     }
 
     @Override

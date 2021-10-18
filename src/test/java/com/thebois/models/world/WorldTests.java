@@ -3,6 +3,7 @@ package com.thebois.models.world;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.assertj.core.util.Lists;
@@ -12,10 +13,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.inventory.items.ItemFactory;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.structures.StructureType;
@@ -194,6 +198,7 @@ public class WorldTests {
     public void instantiateWithPawnCountCreatesCorrectNumberOfBeings() {
         // Arrange
         final Colony colony = mockColonyWithMockBeings();
+
         // Assert
         assertThat(colony.getBeings()).size().isEqualTo(5);
     }
@@ -204,7 +209,8 @@ public class WorldTests {
             vacantPositions.add(new Position(0, 0));
         }
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        return new Colony(vacantPositions, pathFinder);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
+        return new Colony(vacantPositions, pathFinder, mockFinder);
     }
 
     @Test
@@ -214,8 +220,11 @@ public class WorldTests {
         final World world = new World(2, 15);
         final Iterable<Position> vacantPositions = world.findEmptyPositions(5);
         final IPathFinder pathFinder = new AstarPathFinder(world);
+        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
 
-        final Colony colony = new Colony(vacantPositions, pathFinder);
+        // Act
+        final Colony colony = new Colony(vacantPositions, pathFinder, mockFinder);
+
         // Assert
         assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
     }
@@ -289,6 +298,143 @@ public class WorldTests {
 
         // Assert
         assertThat(actualNumberOfTerrainTiles).isEqualTo(expectedNumberOfTerrainTiles);
+    }
+
+    private static Stream<Arguments> getCorrectCoordinatesToTest() {
+        return Stream.of(
+            Arguments.of(
+                new Position(25,5),
+                new Position(0, 0),
+                new Position(20, 20)),
+            Arguments.of(
+                new Position(5,5),
+                new Position(0, 0),
+                new Position(8, 8)),
+            Arguments.of(
+                new Position(0,0),
+                new Position(5, 5),
+                new Position(3, 3)),
+            Arguments.of(
+                new Position(5,5),
+                new Position(0, 0),
+                new Position(8, 8)),
+            Arguments.of(
+                new Position(20,20),
+                new Position(5, 7),
+                new Position(15, 15))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("getCorrectCoordinatesToTest")
+    public void findNearestStructureReturnsCorrect(final Position startingPosition,
+                                                   final Position incorrectPosition,
+                                                   final Position expectedPosition) {
+
+        // Arrange
+        final World world = new TestWorld(50);
+        world.createStructure(StructureType.HOUSE, expectedPosition);
+        world.createStructure(StructureType.HOUSE, incorrectPosition);
+
+        // Act
+        final Optional<IStructure> foundStructure =
+            world.getNearbyStructureOfType(startingPosition, StructureType.HOUSE);
+
+        // Assert
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
+
+    }
+
+    @Test
+    public void returnsNoNearestStructureWhenWorldIsEmpty() {
+        // Arrange
+        final World world = new TestWorld(50);
+
+        // Act
+        final Optional<IStructure> structure = world.getNearbyStructureOfType(
+            new Position(20f, 20f), StructureType.HOUSE);
+
+        // Assert
+        assertThat(structure.isPresent()).isFalse();
+    }
+
+    private static Stream<Arguments> getPositionsAndNumberOfPositions() {
+        return Stream.of(Arguments.of(List.of(new Position(10, 10),
+                                              new Position(30, 5),
+                                              new Position(6, 33),
+                                              new Position(23, 23),
+                                              new Position(0, 0)), 5),
+                         Arguments.of(List.of(), 0));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsAndNumberOfPositions")
+    public void getStructureCollectionIsCorrectSize(
+        final Collection<Position> positions,
+        final int size) {
+        // Arrange
+        final World world = new TestWorld(50);
+
+        // Act
+        for (final Position position : positions) {
+            world.createStructure(StructureType.HOUSE, position);
+        }
+
+        // Assert
+        assertThat(world.getStructures().size()).isEqualTo(size);
+    }
+
+    @Test
+    public void findNearestIncompleteStructureReturnsCorrect() {
+        // Arrange
+        final World world = new TestWorld(50);
+        world.createStructure(StructureType.HOUSE, new Position(4, 2));
+        world.createStructure(StructureType.HOUSE, new Position(9, 5));
+
+        for (final IStructure structure : world.getStructures()) {
+            for (int i = 0; i < 10; i++) {
+                structure.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
+            }
+            for (int i = 0; i < 10; i++) {
+                structure.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
+            }
+        }
+
+        world.createStructure(StructureType.HOUSE, new Position(1, 3));
+        world.createStructure(StructureType.HOUSE, new Position(7, 9));
+
+        // Act
+        final Optional<IStructure> foundStructure =
+            world.getNearbyIncompleteStructure(new Position(0, 0));
+
+        // Assert
+        assertThat(foundStructure.orElseThrow()
+                                 .getPosition())
+            .isEqualTo(new Position(1, 3));
+    }
+
+    @Test
+    public void findNearestIncompleteStructureFindsNoIncompleteStructure() {
+        // Arrange
+        final World world = new TestWorld(50);
+        world.createStructure(StructureType.HOUSE, new Position(4, 2));
+        world.createStructure(StructureType.HOUSE, new Position(9, 5));
+
+        for (final IStructure structure : world.getStructures()) {
+            for (int i = 0; i < 10; i++) {
+                structure.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
+            }
+            for (int i = 0; i < 10; i++) {
+                structure.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
+            }
+        }
+
+        // Act
+        final Optional<IStructure> foundStructure =
+            world.getNearbyIncompleteStructure(new Position(0, 0));
+
+        // Assert
+        assertThat(foundStructure.isEmpty()).isTrue();
     }
 
 }
