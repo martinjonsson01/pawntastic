@@ -42,7 +42,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         return List.of(this::createMoveToResource, this::createHarvestResource);
     }
 
-    protected IAction createMoveToResource(final IActionPerformer performer) {
+    private IAction createMoveToResource(final IActionPerformer performer) {
         final Optional<IResource> maybeResource = findNearbyResource(performer);
         if (maybeResource.isEmpty()) return ActionFactory.createDoNothing();
 
@@ -57,7 +57,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         return ActionFactory.createMoveTo(closestSpotNextToResource.get());
     }
 
-    protected IAction createHarvestResource(final IActionPerformer performer) {
+    private IAction createHarvestResource(final IActionPerformer performer) {
         final Optional<IResource> maybeResource = findNearbyResource(performer);
         if (maybeResource.isEmpty()) return ActionFactory.createDoNothing();
 
@@ -66,7 +66,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         return ActionFactory.createHarvest(resource);
     }
 
-    protected Optional<IResource> findNearbyResource(final IActionPerformer performer) {
+    private Optional<IResource> findNearbyResource(final IActionPerformer performer) {
         final Position position = performer.getPosition();
         return finder.getNearbyOfType(position, resourceType);
     }
