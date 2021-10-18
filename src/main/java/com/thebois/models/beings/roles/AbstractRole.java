@@ -8,14 +8,14 @@ import java.util.Queue;
 import com.thebois.abstractions.IDeepClonable;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.IAction;
-import com.thebois.models.beings.actions.IActionGenerator;
+import com.thebois.models.beings.actions.IActionSource;
 
 /**
  * Represents an assignment to a specific work task.
  */
 public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
 
-    private final Queue<IActionGenerator> tasks = new LinkedList<>();
+    private final Queue<IActionSource> tasks = new LinkedList<>();
     private IAction currentAction;
 
     @Override
@@ -90,7 +90,7 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
         do {
             if (tasks.isEmpty()) tasks.addAll(getTaskGenerators());
 
-            final IActionGenerator actionable = tasks.remove();
+            final IActionSource actionable = tasks.remove();
             newAction = actionable.generate(performer);
         } while (newAction.isCompleted(performer));
         return newAction;
@@ -108,6 +108,6 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
      *
      * @return Generators of actions to perform.
      */
-    protected abstract Collection<IActionGenerator> getTaskGenerators();
+    protected abstract Collection<IActionSource> getTaskGenerators();
 
 }

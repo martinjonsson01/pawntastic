@@ -15,7 +15,7 @@ import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
-import com.thebois.models.beings.actions.IActionGenerator;
+import com.thebois.models.beings.actions.IActionSource;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
@@ -267,7 +267,7 @@ public class BeingTests {
         }
 
         @Override
-        protected Collection<IActionGenerator> getTaskGenerators() {
+        protected Collection<IActionSource> getTaskGenerators() {
             final IAction nothingTask = MockFactory.createAction(false, true);
             return List.of(performer -> nothingTask);
         }

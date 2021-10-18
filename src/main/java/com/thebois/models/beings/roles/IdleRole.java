@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.thebois.models.beings.actions.ActionFactory;
-import com.thebois.models.beings.actions.IActionGenerator;
+import com.thebois.models.beings.actions.IActionSource;
 import com.thebois.models.world.IWorld;
 
 /**
@@ -29,12 +29,12 @@ class IdleRole extends AbstractRole {
     }
 
     @Override
-    protected Collection<IActionGenerator> getTaskGenerators() {
-        final IActionGenerator randomMove = getRandomMove();
+    protected Collection<IActionSource> getTaskGenerators() {
+        final IActionSource randomMove = getRandomMove();
         return List.of(randomMove);
     }
 
-    private IActionGenerator getRandomMove() {
+    private IActionSource getRandomMove() {
         return performer -> ActionFactory.createMoveTo(world.getRandomVacantSpot().getPosition());
     }
 

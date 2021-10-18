@@ -9,7 +9,7 @@ import com.thebois.models.beings.IActionPerformer;
  * fly depending on current conditions.
  * </p>
  */
-public interface IActionGenerator {
+public interface IActionSource {
 
     /**
      * Generates an action.

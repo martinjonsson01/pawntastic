@@ -9,7 +9,7 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
-import com.thebois.models.beings.actions.IActionGenerator;
+import com.thebois.models.beings.actions.IActionSource;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
@@ -38,7 +38,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
     }
 
     @Override
-    protected Collection<IActionGenerator> getTaskGenerators() {
+    protected Collection<IActionSource> getTaskGenerators() {
         return List.of(this::createMoveToResource, this::createHarvestResource);
     }
 

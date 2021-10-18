@@ -2,7 +2,7 @@ package com.thebois.models.beings.roles;
 
 import java.util.Collection;
 
-import com.thebois.models.beings.actions.IActionGenerator;
+import com.thebois.models.beings.actions.IActionSource;
 
 /**
  * The farmer harvests crops.
@@ -15,7 +15,7 @@ class FarmerRole extends AbstractRole {
     }
 
     @Override
-    protected Collection<IActionGenerator> getTaskGenerators() {
+    protected Collection<IActionSource> getTaskGenerators() {
         return RoleFactory.idle().getTaskGenerators();
     }
 

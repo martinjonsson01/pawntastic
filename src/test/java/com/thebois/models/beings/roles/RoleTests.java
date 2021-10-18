@@ -17,7 +17,7 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
-import com.thebois.models.beings.actions.IActionGenerator;
+import com.thebois.models.beings.actions.IActionSource;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
@@ -145,9 +145,9 @@ public class RoleTests {
 
     private AbstractRole mockTestRole(final IAction... params) {
         final List<IAction> tasks = List.of(params);
-        final List<IActionGenerator> taskGenerators = tasks
+        final List<IActionSource> taskGenerators = tasks
             .stream()
-            .map(task -> (IActionGenerator) performer -> task)
+            .map(task -> (IActionSource) performer -> task)
             .collect(Collectors.toList());
         return new TestRole(taskGenerators);
     }
@@ -256,9 +256,9 @@ public class RoleTests {
      */
     private static class TestRole extends AbstractRole {
 
-        private final Collection<IActionGenerator> taskGenerators;
+        private final Collection<IActionSource> taskGenerators;
 
-        TestRole(final Collection<IActionGenerator> taskGenerators) {
+        TestRole(final Collection<IActionSource> taskGenerators) {
             this.taskGenerators = taskGenerators;
         }
 
@@ -268,7 +268,7 @@ public class RoleTests {
         }
 
         @Override
-        protected Collection<IActionGenerator> getTaskGenerators() {
+        protected Collection<IActionSource> getTaskGenerators() {
             return taskGenerators;
         }
 
