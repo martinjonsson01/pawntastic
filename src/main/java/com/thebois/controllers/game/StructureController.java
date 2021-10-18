@@ -62,7 +62,6 @@ public class StructureController extends AbstractInputProcessor implements ICont
 
     @Override
     public void update() {
-        structureView.update(world.getStructures());
     }
 
     /**
