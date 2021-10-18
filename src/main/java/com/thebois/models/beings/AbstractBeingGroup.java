@@ -2,13 +2,14 @@ package com.thebois.models.beings;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * An abstract implementation of IBeingGroup.
  */
 public abstract class AbstractBeingGroup implements IBeingGroup {
 
-    private Collection<IBeing> beings = new ArrayList<>();
+    private Collection<IBeing> beings = new ConcurrentLinkedQueue<>();
 
     /**
      * Adds a being to the internal collection of beings.

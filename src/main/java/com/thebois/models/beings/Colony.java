@@ -5,11 +5,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.eventbus.Subscribe;
 
+import com.thebois.Pawntastic;
 import com.thebois.listeners.events.SpawnPawnsEvent;
 import com.thebois.models.IPositionFinder;
 import com.thebois.models.IStructureFinder;
@@ -49,12 +51,13 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
         this.pathFinder = pathFinder;
         this.structureFinder = structureFinder;
         this.positionFinder = positionFinder;
-        final Collection<IBeing> pawns = new ArrayList<>();
+        final Collection<IBeing> pawns = new ConcurrentLinkedQueue<>();
         final Random random = new Random();
         for (final Position vacantPosition : vacantPositions) {
-            pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder, structureFinder));
+            super.addBeing(new Pawn(vacantPosition, vacantPosition, random, pathFinder, structureFinder));
         }
-        setBeings(pawns);
+        //        setBeings(pawns);
+        Pawntastic.getEventBus().register(this);
     }
 
     public IInventory getInventory() {
@@ -188,17 +191,9 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     @Subscribe
     public void onSpawnPawnsEvent(final SpawnPawnsEvent event) {
         final Iterable<Position> vacantPositions = positionFinder.findEmptyPositions(10);
-
-        for (int i = 0; i < event.getNumberOfPawns(); i++) {
-            final Random random = new Random();
-            for (final Position vacantPosition : vacantPositions) {
-                addBeing(new Pawn(
-                    vacantPosition,
-                    vacantPosition,
-                    random,
-                    pathFinder,
-                    structureFinder));
-            }
+        final Random random = new Random();
+        for (final Position vacantPosition : vacantPositions) {
+            addBeing(new Pawn(vacantPosition, vacantPosition, random, pathFinder, structureFinder));
         }
     }
 
