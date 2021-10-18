@@ -93,6 +93,18 @@ public class BeingTests {
                          createBeing(1, 0, 0, 0, RoleType.LUMBERJACK)));
     }
 
+    private static Stream<Arguments> getStartingPositionFinalExpectedPositionAndHousePosition() {
+        return Stream.of(Arguments.of(new Position(6f, 0f),
+                                      new Position(7f, 0f),
+                                      new Position(8f, 0f)),
+                         Arguments.of(new Position(0f, 3f),
+                                      new Position(0f, 4f),
+                                      new Position(0f, 5f)),
+                         Arguments.of(new Position(3f, 3f),
+                                      new Position(4f, 4f),
+                                      new Position(5f, 5f)));
+    }
+
     @ParameterizedTest
     @MethodSource("getPositionsAndDestinations")
     public void updateMovesTowardsDestination(
@@ -104,12 +116,11 @@ public class BeingTests {
         when(mockRandom.nextInt(anyInt())).thenReturn(0);
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         when(pathFinder.path(any(), any())).thenReturn(List.of(endPosition));
-        final AbstractBeing being = new Pawn(
-            startPosition,
-            endPosition,
-            mockRandom,
-            pathFinder,
-            mockFinder);
+        final AbstractBeing being = new Pawn(startPosition,
+                                             endPosition,
+                                             mockRandom,
+                                             pathFinder,
+                                             mockFinder);
 
         // Act
         being.update(0.1f);
@@ -130,7 +141,11 @@ public class BeingTests {
         when(mockRandom.nextInt(anyInt())).thenReturn(0);
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         when(pathFinder.path(any(), any())).thenReturn(List.of(destination));
-        final AbstractBeing being = new Pawn(startPosition, destination, mockRandom, pathFinder);
+        final AbstractBeing being = new Pawn(startPosition,
+                                             destination,
+                                             mockRandom,
+                                             pathFinder,
+                                             mock(IStructureFinder.class));
 
         final float distanceBefore = startPosition.distanceTo(destination);
 
@@ -152,7 +167,11 @@ public class BeingTests {
         when(mockRandom.nextInt(anyInt())).thenReturn(0);
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         when(pathFinder.path(any(), any())).thenReturn(List.of(destination));
-        final AbstractBeing being = new Pawn(startPosition, destination, mockRandom, pathFinder);
+        final AbstractBeing being = new Pawn(startPosition,
+                                             destination,
+                                             mockRandom,
+                                             pathFinder,
+                                             mock(IStructureFinder.class));
 
         // Act
         being.update(0f);
@@ -173,11 +192,13 @@ public class BeingTests {
         final AbstractBeing slowerBeing = new Pawn(new Position(0, 0),
                                                    destination,
                                                    mockRandom,
-                                                   pathFinder);
+                                                   pathFinder,
+                                                   mock(IStructureFinder.class));
         final AbstractBeing fasterBeing = new Pawn(new Position(0, 0),
                                                    destination,
                                                    mockRandom,
-                                                   pathFinder);
+                                                   pathFinder,
+                                                   mock(IStructureFinder.class));
 
         // Act
         slowerBeing.update(0.01f);
@@ -213,12 +234,11 @@ public class BeingTests {
         final List<Position> actualPath = List.of(endPosition);
         final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         when(pathFinder.path(any(), any())).thenReturn(actualPath);
-        final AbstractBeing being = new Pawn(
-            new Position(),
-            endPosition,
-            mockRandom,
-            pathFinder,
-            mockFinder);
+        final AbstractBeing being = new Pawn(new Position(),
+                                             endPosition,
+                                             mockRandom,
+                                             pathFinder,
+                                             mockFinder);
 
         // Act
         final Iterable<Position> pathPositions = being.getPath();
@@ -311,12 +331,11 @@ public class BeingTests {
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         when(pathFinder.path(any(), any())).thenReturn(List.of());
-        final IBeing being = new Pawn(
-            startPosition,
-            startPosition,
-            new Random(),
-            pathFinder,
-            mockFinder);
+        final IBeing being = new Pawn(startPosition,
+                                      startPosition,
+                                      new Random(),
+                                      pathFinder,
+                                      mockFinder);
 
         // Act
         being.update(0.1f);
@@ -370,10 +389,14 @@ public class BeingTests {
         when(structure.getPosition()).thenReturn(new Position());
         when(finder.getNearbyIncompleteStructure(any())).thenReturn(Optional.of(structure));
 
-        final Pawn pawn = new Pawn(new Position(), new Position(), new Random(), pathFinder, finder);
+        final Pawn pawn = new Pawn(new Position(),
+                                   new Position(),
+                                   new Random(),
+                                   pathFinder,
+                                   finder);
 
         // Act
-        pawn.update();
+        pawn.update(0.1f);
 
         // Assert
         verify(structure, atLeastOnce()).tryDeliverItem(any());
@@ -398,11 +421,9 @@ public class BeingTests {
         when(structureB.getPosition()).thenReturn(positionB);
         when(structureB.isCompleted()).thenReturn(true);
 
-
         when(mockFinder.getNearbyIncompleteStructure(any()))
-            .thenReturn(Optional.of(structureA)).thenReturn(Optional.of(structureB));
-
-
+            .thenReturn(Optional.of(structureA))
+            .thenReturn(Optional.of(structureB));
 
         final Pawn pawn = new Pawn(new Position(),
                                    new Position(),
@@ -412,34 +433,18 @@ public class BeingTests {
 
         // Act
         // Finds an incomplete structure.
-        pawn.update();
+        pawn.update(0.1f);
         // Does pick a new incomplete structure because current structure is completed
 
         // Assert
         verify(mockRandom, times(2)).nextInt(anyInt());
     }
 
-    private static Stream<Arguments> getStartingPositionFinalExpectedPositionAndHousePosition() {
-        return Stream.of(
-            Arguments.of(
-                new Position(6f, 0f),
-                new Position(7f, 0f),
-                new Position(8f, 0f)),
-            Arguments.of(
-                new Position(0f, 3f),
-                new Position(0f, 4f),
-                new Position(0f, 5f)),
-            Arguments.of(
-                new Position(3f, 3f),
-                new Position(4f, 4f),
-                new Position(5f, 5f))
-        );
-    }
-
     @ParameterizedTest
     @MethodSource("getStartingPositionFinalExpectedPositionAndHousePosition")
     public void pawnWalksToNeighborPositionOfNearestUnBuiltStructure(
-        final Position startingPosition, final Position expectedPosition,
+        final Position startingPosition,
+        final Position expectedPosition,
         final Position housePosition) {
         // Arrange
         final Stack<Position> path = new Stack<>();
@@ -452,8 +457,7 @@ public class BeingTests {
         when(mockPathFinder.path(any(), eq(expectedPosition))).thenReturn(path);
 
         final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
-        when(mockFinder.getNearbyIncompleteStructure(any()))
-            .thenReturn(Optional.of(mockStructure));
+        when(mockFinder.getNearbyIncompleteStructure(any())).thenReturn(Optional.of(mockStructure));
 
         final Pawn pawn = new Pawn(startingPosition,
                                    new Position(),
@@ -463,7 +467,7 @@ public class BeingTests {
 
         // Act
         // Find and calculate neighbor position of house
-        pawn.update();
+        pawn.update(0.1f);
 
         // Assert
         assertThat(pawn.getFinalDestination()).isEqualTo(expectedPosition);
@@ -485,11 +489,9 @@ public class BeingTests {
         when(expectedStructure.getPosition()).thenReturn(expectedPosition);
         when(expectedStructure.isCompleted()).thenReturn(false);
 
-
         when(mockFinder.getNearbyIncompleteStructure(any()))
-            .thenReturn(Optional.of(initialStructure)).thenReturn(Optional.of(expectedStructure));
-
-
+            .thenReturn(Optional.of(initialStructure))
+            .thenReturn(Optional.of(expectedStructure));
 
         final Pawn pawn = new Pawn(new Position(),
                                    new Position(),
@@ -499,9 +501,9 @@ public class BeingTests {
 
         // Act
         // Finds an incomplete structure.
-        pawn.update();
+        pawn.update(0.1f);
         // Does pick a new incomplete structure because current structure is completed
-        pawn.update();
+        pawn.update(0.1f);
 
         // Assert
         verify(mockFinder, times(2)).getNearbyIncompleteStructure(any());
@@ -517,8 +519,8 @@ public class BeingTests {
 
         final Position expectedPosition = new Position(10f, 20f);
 
-        when(mockFinder.getNearbyIncompleteStructure(any()))
-            .thenReturn(Optional.of(incompleteStructure));
+        when(mockFinder.getNearbyIncompleteStructure(any())).thenReturn(Optional.of(
+            incompleteStructure));
 
         when(incompleteStructure.getPosition()).thenReturn(expectedPosition);
 
@@ -530,9 +532,9 @@ public class BeingTests {
 
         // Act
         // Finds an incomplete structure.
-        pawn.update();
+        pawn.update(0.1f);
         // Doesn't pick a new incomplete structure while current structure is incomplete
-        pawn.update();
+        pawn.update(0.1f);
 
         // Assert
         verify(mockFinder, times(1)).getNearbyIncompleteStructure(any());
@@ -551,7 +553,8 @@ public class BeingTests {
         final Position positionB = new Position(0f, 5f);
 
         when(mockFinder.getNearbyIncompleteStructure(any()))
-            .thenReturn(Optional.of(mockStructureA)).thenReturn(Optional.of(mockStructureB));
+            .thenReturn(Optional.of(mockStructureA))
+            .thenReturn(Optional.of(mockStructureB));
 
         when(mockStructureA.getPosition()).thenReturn(positionA);
         when(mockStructureB.getPosition()).thenReturn(positionB);
@@ -566,9 +569,9 @@ public class BeingTests {
 
         // Act
         // Finds mockStructureA
-        pawn.update();
+        pawn.update(0.1f);
         // Discard mockStructureA, finds mockStructureB
-        pawn.update();
+        pawn.update(0.1f);
 
         // Assert
         verify(mockFinder, times(2)).getNearbyIncompleteStructure(any());
@@ -584,14 +587,12 @@ public class BeingTests {
 
         final Position structurePosition = new Position(10f, 20f);
 
-        when(mockFinder.getNearbyIncompleteStructure(any()))
-            .thenReturn(Optional.of(mockStructure));
+        when(mockFinder.getNearbyIncompleteStructure(any())).thenReturn(Optional.of(mockStructure));
 
-        when(mockPathFinder.path(any(), any())).thenReturn(List.of(
-            new Position(0f, 0f),
-            new Position(1f, 1f),
-            new Position(2f, 2f),
-            new Position(3f, 3f)));
+        when(mockPathFinder.path(any(), any())).thenReturn(List.of(new Position(0f, 0f),
+                                                                   new Position(1f, 1f),
+                                                                   new Position(2f, 2f),
+                                                                   new Position(3f, 3f)));
 
         when(mockStructure.getPosition()).thenReturn(structurePosition);
 
@@ -604,9 +605,9 @@ public class BeingTests {
                                    mockFinder);
         // Act
         // Finds A
-        pawn.update();
+        pawn.update(0.1f);
         // Discard A, find B
-        pawn.update();
+        pawn.update(0.1f);
 
         // Assert
         verify(mockPathFinder, times(3)).path(any(), any());
@@ -617,14 +618,16 @@ public class BeingTests {
         // Arrange
         final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final AbstractBeingGroup colony = new Colony(vacantPositions, pathFinder, new TestWorld(50));
+        final AbstractBeingGroup colony = new Colony(vacantPositions,
+                                                     pathFinder,
+                                                     new TestWorld(50));
         final IStructureFinder finder = Mockito.mock(IStructureFinder.class);
-
 
         final IBeing being = new Pawn(new Position(0, 0),
                                       new Position(1, 1),
                                       new Random(),
-                                      pathFinder, finder);
+                                      pathFinder,
+                                      finder);
 
         // Act
         final int before = colony.getBeings().size();
@@ -642,7 +645,11 @@ public class BeingTests {
         final World world = new TestWorld(3);
         final IPathFinder pathFinder = new AstarPathFinder(world);
 
-        final IBeing being = new Pawn(new Position(), new Position(), new Random(), pathFinder, world);
+        final IBeing being = new Pawn(new Position(),
+                                      new Position(),
+                                      new Random(),
+                                      pathFinder,
+                                      world);
 
         // Act
         final byte[] serialized1 = serialize(being);
