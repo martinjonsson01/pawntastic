@@ -8,6 +8,10 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.common.eventbus.Subscribe;
+
+import com.thebois.listeners.events.SpawnPawnsEvent;
+import com.thebois.models.IPositionFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -26,20 +30,29 @@ import com.thebois.models.inventory.items.ItemType;
 public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInventory {
 
     private final IInventory inventory = new Inventory();
+    private final IPathFinder pathFinder;
+    private final IStructureFinder structureFinder;
+    private final IPositionFinder positionFinder;
 
     /**
      * Creates a colony and fills it with pawns in the provided open positions.
      *
      * @param vacantPositions Positions in the world where pawns can be created.
      * @param pathFinder      The pathfinder that the pawns will use.
-     * @param finder          Used to find things in the world.
+     * @param structureFinder          Used to find structures in the world.
+     * @param positionFinder          Used to find positions in the world.
      */
-    public Colony(final Iterable<Position> vacantPositions, final IPathFinder pathFinder,
-                  final IStructureFinder finder) {
+    public Colony(
+        final Iterable<Position> vacantPositions,
+        final IPathFinder pathFinder,
+        final IStructureFinder structureFinder, final IPositionFinder positionFinder) {
+        this.pathFinder = pathFinder;
+        this.structureFinder = structureFinder;
+        this.positionFinder = positionFinder;
         final Collection<IBeing> pawns = new ArrayList<>();
         final Random random = new Random();
         for (final Position vacantPosition : vacantPositions) {
-            pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder, finder));
+            pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder, structureFinder));
         }
         setBeings(pawns);
     }
@@ -165,6 +178,28 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     @Override
     public int numberOf(final ItemType itemType) {
         return inventory.numberOf(itemType);
+    }
+
+    /**
+     * Listens to the spawnPawnsEvent in order to know when to add pawns to the colony.
+     *
+     * @param event The published event.
+     */
+    @Subscribe
+    public void onSpawnPawnsEvent(final SpawnPawnsEvent event) {
+        final Iterable<Position> vacantPositions = positionFinder.findEmptyPositions(10);
+
+        for (int i = 0; i < event.getNumberOfPawns(); i++) {
+            final Random random = new Random();
+            for (final Position vacantPosition : vacantPositions) {
+                addBeing(new Pawn(
+                    vacantPosition,
+                    vacantPosition,
+                    random,
+                    pathFinder,
+                    structureFinder));
+            }
+        }
     }
 
 }

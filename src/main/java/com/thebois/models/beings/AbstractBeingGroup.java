@@ -19,6 +19,10 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
         beings.add(being);
     }
 
+    protected void addMultipleBeings(final Collection<IBeing> beingsToAdd) {
+        beings.addAll(beingsToAdd);
+    }
+
     @Override
     public void update(final float deltaTime) {
         for (final IBeing being : this.beings) {

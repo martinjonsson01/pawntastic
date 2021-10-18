@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
+import com.thebois.models.IPositionFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.world.generation.ResourceGenerator;
@@ -22,7 +23,7 @@ import com.thebois.utils.MatrixUtils;
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
-public class World implements IWorld, IStructureFinder, Serializable {
+public class World implements IWorld, IStructureFinder, IPositionFinder, Serializable {
 
     private final ITerrain[][] terrainMatrix;
     private final IStructure[][] structureMatrix;
@@ -90,13 +91,7 @@ public class World implements IWorld, IStructureFinder, Serializable {
         }
     }
 
-    /**
-     * Creates a list of tiles that are not occupied by a structure or resource.
-     *
-     * @param count The amount of empty positions that needs to be found.
-     *
-     * @return List of empty positions.
-     */
+    @Override
     public Iterable<Position> findEmptyPositions(final int count) {
         final List<Position> emptyPositions = new ArrayList<>();
         MatrixUtils.forEachElement(canonicalMatrix, tile -> {
