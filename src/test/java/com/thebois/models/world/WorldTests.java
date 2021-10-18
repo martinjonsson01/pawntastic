@@ -405,8 +405,7 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> foundStructure =
-            world.getNearbyIncompleteStructureOfType(new Position(0, 0)
-                , StructureType.HOUSE);
+            world.getNearbyIncompleteStructure(new Position(0, 0));
 
         // Assert
         assertThat(foundStructure.orElseThrow()
@@ -432,7 +431,7 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> foundStructure =
-            world.getNearbyIncompleteStructureOfType(new Position(0, 0), StructureType.HOUSE);
+            world.getNearbyIncompleteStructure(new Position(0, 0));
 
         // Assert
         assertThat(foundStructure.isEmpty()).isTrue();

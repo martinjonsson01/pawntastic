@@ -24,10 +24,9 @@ public interface IStructureFinder {
      * Finds and returns the closest incomplete IStructure to the passed position.
      *
      * @param origin The position to find an incomplete structure closest to.
-     * @param type The type of structure to find.
      *
      * @return The found IStructure.
      */
-    Optional<IStructure> getNearbyIncompleteStructureOfType(Position origin, StructureType type);
+    Optional<IStructure> getNearbyIncompleteStructure(Position origin);
 
 }

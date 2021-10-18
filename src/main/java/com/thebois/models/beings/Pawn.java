@@ -10,7 +10,6 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.structures.IStructure;
-import com.thebois.models.world.structures.StructureType;
 
 /**
  * Pawn.
@@ -68,8 +67,8 @@ public class Pawn extends AbstractBeing {
 
     protected IStructure findNearestIncompleteStructure() {
         final Optional<IStructure> structure =
-            getStructureFinder().getNearbyIncompleteStructureOfType(
-                this.getPosition(), StructureType.HOUSE);
+            getStructureFinder().getNearbyIncompleteStructure(
+                this.getPosition());
         return structure.orElse(null);
     }
 
