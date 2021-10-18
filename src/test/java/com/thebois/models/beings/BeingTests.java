@@ -396,7 +396,7 @@ public class BeingTests {
                                    mockFinder);
 
         // Act
-        pawn.update();
+        // Find and calculate neighbor position of house
         pawn.update();
 
         // Assert
