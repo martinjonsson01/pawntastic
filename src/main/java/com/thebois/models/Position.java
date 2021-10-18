@@ -121,4 +121,61 @@ public final class Position implements IDeepClonable<Position>, Serializable {
         return Math.round(distanceX + distanceY);
     }
 
+    /**
+     * Adds a position component-wise.
+     *
+     * @param other The position to add.
+     *
+     * @return The sum of the positions.
+     */
+    public Position add(final Position other) {
+        return add(other.getX(), other.getY());
+    }
+
+    /**
+     * Adds the given values to each component.
+     *
+     * @param otherX How much to add to the x-coordinate.
+     * @param otherY How much to add to the y-coordinate.
+     *
+     * @return A position with its coordinates added to.
+     */
+    public Position add(final float otherX, final float otherY) {
+        return new Position(x + otherX, y + otherY);
+    }
+
+    /**
+     * Subtracts a position component-wise.
+     *
+     * @param other The position to subtract.
+     *
+     * @return The difference.
+     */
+    public Position subtract(final Position other) {
+        return subtract(other.getX(), other.getY());
+    }
+
+    /**
+     * Subtracts components by the given values.
+     *
+     * @param otherX How much to subtract from the x-coordinate.
+     * @param otherY How much to subtract from the y-coordinate.
+     *
+     * @return A position with its coordinates subtracted from.
+     */
+    public Position subtract(final float otherX, final float otherY) {
+        return add(-otherX, -otherY);
+    }
+
+    /**
+     * Scales the position by a given value.
+     *
+     * @param scalar The factor to scale by.
+     *
+     * @return The scaled position.
+     */
+    public Position multiply(final float scalar) {
+        return new Position(x * scalar, y * scalar);
+    }
+
 }

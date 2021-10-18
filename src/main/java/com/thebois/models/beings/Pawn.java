@@ -41,8 +41,8 @@ public class Pawn extends AbstractBeing {
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void update(final float deltaTime) {
+        super.update(deltaTime);
 
         if (closestIncompleteStructure == null || closestIncompleteStructure.isCompleted()) {
             closestIncompleteStructure = findNearestIncompleteStructure();
