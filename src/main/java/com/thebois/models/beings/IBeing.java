@@ -1,12 +1,14 @@
 package com.thebois.models.beings;
 
+import java.io.Serializable;
+
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 
 /**
  * An entity.
  */
-public interface IBeing {
+public interface IBeing extends Serializable {
 
     /**
      * Gets the current location.

@@ -34,23 +34,25 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
         new ArrayList<>();
     private Predicate<Integer> canIncrease = currentValue -> true;
     private Predicate<Integer> canDecrease = currentValue -> true;
-    private int value = 0;
+    private int value;
 
     /**
      * Instantiates a new spinner.
      *
-     * @param skin The skin to style widgets with
-     * @param min  The minimum value the spinner will allow
-     * @param max  The maximum value the spinner will allow
+     * @param skin  The skin to style widgets with.
+     * @param value The current value of the spinner.
+     * @param min   The minimum value the spinner will allow.
+     * @param max   The maximum value the spinner will allow.
      */
-    public SpinnerButton(final Skin skin, final int min, final int max) {
+    public SpinnerButton(final Skin skin, final int value, final int min, final int max) {
+        this.value = value;
         this.min = min;
         this.max = max;
 
         final TextButton.TextButtonStyle buttonStyle = skin.get(TextButton.TextButtonStyle.class);
         addButton = new TextButton("+", buttonStyle);
         removeButton = new TextButton("-", buttonStyle);
-        countLabel = new Label("0", skin);
+        countLabel = new Label("" + value, skin);
         countLabel.setAlignment(Align.center);
 
         setPadding();

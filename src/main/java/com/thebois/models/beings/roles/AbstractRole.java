@@ -1,5 +1,6 @@
 package com.thebois.models.beings.roles;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Objects;
@@ -13,9 +14,9 @@ import com.thebois.models.beings.actions.IActionSource;
 /**
  * Represents an assignment to a specific work task.
  */
-public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
+public abstract class AbstractRole implements IDeepClonable<AbstractRole>, Serializable {
 
-    private final Queue<IActionSource> tasks = new LinkedList<>();
+    private transient Queue<IActionSource> tasks = new LinkedList<>();
     private IAction currentAction;
 
     @Override
@@ -85,6 +86,8 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
     }
 
     private IAction getNextUncompletedAction(final IActionPerformer performer) {
+        if (tasks == null) tasks = new LinkedList<>();
+
         // Take actions from queue until one is found that is not completed.
         IAction newAction;
         do {

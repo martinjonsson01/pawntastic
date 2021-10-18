@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import com.thebois.Pawntastic;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IBeing;
 import com.thebois.models.beings.IBeingGroup;
@@ -21,8 +22,8 @@ import com.thebois.views.TextureUtils;
 public class BeingPathDebugView implements IView {
 
     private static final int RADIUS = 2;
+    private static final int TILE_SIZE = Pawntastic.getTileSize();
     private final IBeingGroup beingGroup;
-    private final float tileSize;
     private final Texture circleTexture;
     private final IPathFinder pathFinder;
 
@@ -30,13 +31,11 @@ public class BeingPathDebugView implements IView {
      * Initializes with a group of beings to display paths for.
      *
      * @param beingGroup The group containing the beings to display paths of.
-     * @param tileSize   The size of a single tile in the world, in pixels.
      * @param world      The world to recalculate paths in.
      */
     public BeingPathDebugView(
-        final IBeingGroup beingGroup, final float tileSize, final IWorld world) {
+        final IBeingGroup beingGroup, final IWorld world) {
         this.beingGroup = beingGroup;
-        this.tileSize = tileSize;
         this.circleTexture = TextureUtils.createCircleTexture(RADIUS);
         this.pathFinder = new AstarPathFinder(world);
     }
@@ -54,8 +53,8 @@ public class BeingPathDebugView implements IView {
                                                               being.getDestination());
             for (final Position position : path) {
                 batch.draw(circleTexture,
-                           position.getPosX() * tileSize + offsetX + tileSize / 2,
-                           position.getPosY() * tileSize + offsetY + tileSize / 2);
+                           position.getPosX() * TILE_SIZE + offsetX + TILE_SIZE / 2f,
+                           position.getPosY() * TILE_SIZE + offsetY + TILE_SIZE / 2f);
             }
         }
     }

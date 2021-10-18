@@ -8,4 +8,5 @@
     <suppress checks="ClassDataAbstractionCoupling" files="Pawntastic" />
     <suppress checks="ClassFanOutComplexity" files="Pawntastic" />
     <suppress checks="NoWhitespaceAfter" files="MatrixUtilsTests" />
+    <suppress checks="ClassDataAbstractionCoupling" files="BeingTests" />
 </suppressions>

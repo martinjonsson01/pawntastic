@@ -1,5 +1,6 @@
 package com.thebois.models.beings.actions;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import com.thebois.models.beings.IActionPerformer;
@@ -8,7 +9,7 @@ import com.thebois.models.world.resources.IResource;
 /**
  * Used to perform the harvesting of a given resource.
  */
-public class HarvestAction implements IAction {
+public class HarvestAction implements IAction, Serializable {
 
     private final IResource resource;
     private boolean harvested = false;

@@ -16,12 +16,11 @@ public class TerrainController implements IController<IView> {
     /**
      * Creates a Terrain Controller.
      *
-     * @param world    The world that controller should get data from.
-     * @param tileSize The tile size of the world.
+     * @param world The world that controller should get data from.
      */
-    public TerrainController(final World world, final float tileSize) {
+    public TerrainController(final World world) {
         this.world = world;
-        this.terrainView = new TerrainView(tileSize);
+        this.terrainView = new TerrainView();
     }
 
     @Override

@@ -16,12 +16,11 @@ public class ResourceController implements IController<IView> {
     /**
      * Creates a Resource Controller.
      *
-     * @param world    The world that controller should get data from.
-     * @param tileSize The tile size of the world.
+     * @param world The world that controller should get data from.
      */
-    public ResourceController(final World world, final float tileSize) {
+    public ResourceController(final World world) {
         this.world = world;
-        this.resourceView = new ResourceView(tileSize);
+        this.resourceView = new ResourceView();
     }
 
     @Override

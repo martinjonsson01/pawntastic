@@ -1,5 +1,6 @@
 package com.thebois.models.world;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import com.thebois.models.Position;
@@ -7,7 +8,7 @@ import com.thebois.models.Position;
 /**
  * Represents a world containing tiles.
  */
-public interface IWorld {
+public interface IWorld extends Serializable {
 
     /**
      * Gets the neighbouring tiles.

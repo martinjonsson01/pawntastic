@@ -182,7 +182,7 @@ public class MoveActionTests {
 
         // Act
         action.perform(performer);
-        Pawntastic.BUS.post(obstacleEvent);
+        Pawntastic.getEventBus().post(obstacleEvent);
         final boolean canPerform = action.canPerform(performer);
 
         // Assert
@@ -199,7 +199,7 @@ public class MoveActionTests {
 
         // Act
         action.perform(performer);
-        Pawntastic.BUS.post(obstacleEvent);
+        Pawntastic.getEventBus().post(obstacleEvent);
 
         // Assert
         verify(pathFinder, times(2)).path(any(), any());
@@ -215,7 +215,7 @@ public class MoveActionTests {
 
         // Act
         action.perform(performer);
-        Pawntastic.BUS.post(obstacleEvent);
+        Pawntastic.getEventBus().post(obstacleEvent);
 
         // Assert
         verify(pathFinder, times(1)).path(any(), any());

@@ -1,5 +1,7 @@
 package com.thebois.models.beings.actions;
 
+import java.io.Serializable;
+
 import com.thebois.models.beings.IActionPerformer;
 
 /**
@@ -9,7 +11,7 @@ import com.thebois.models.beings.IActionPerformer;
  * fly depending on current conditions.
  * </p>
  */
-public interface IActionSource {
+public interface IActionSource extends Serializable {
 
     /**
      * Generates an action.

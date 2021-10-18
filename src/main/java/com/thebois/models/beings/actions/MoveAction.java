@@ -1,5 +1,9 @@
 package com.thebois.models.beings.actions;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -16,7 +20,7 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 /**
  * Moves the performer towards a specified goal.
  */
-class MoveAction implements IAction {
+class MoveAction implements IAction, Serializable {
 
     private final Position destination;
     private final IPathFinder pathFinder;
@@ -69,7 +73,7 @@ class MoveAction implements IAction {
             path.remove();
         }
 
-        Pawntastic.BUS.register(this);
+        Pawntastic.getEventBus().register(this);
         performer.setDestination(path.element());
     }
 
@@ -125,6 +129,15 @@ class MoveAction implements IAction {
         final Collection<Position> recalculatedPath = new ArrayList<>(originalPathSegment);
         recalculatedPath.addAll(recalculatedPathSegment);
         setPath(recalculatedPath);
+    }
+
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        // Registers every time on deserialization because it might be registered to an old instance
+        // of the event bus.
+        // (caused by saving/loading).
+        Pawntastic.getEventBus().register(this);
+        in.defaultReadObject();
     }
 
 }
