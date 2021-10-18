@@ -62,11 +62,8 @@ abstract class AbstractStructure implements IStructure {
     }
 
     private int countAllNeededItems() {
-        int sum = 0;
-        for (final Integer numberOfItems : allNeededItems.values()) {
-            sum += numberOfItems;
-        }
-        return sum;
+        return allNeededItems.values().stream().reduce(0, Integer::sum);
+
     }
 
     @Override
