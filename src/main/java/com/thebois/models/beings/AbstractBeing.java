@@ -22,10 +22,9 @@ import com.thebois.models.beings.roles.RoleFactory;
  */
 public abstract class AbstractBeing implements IBeing {
 
-    // The max speed of the AbstractBeing
-    private static final float MOVEMENT_SPEED = 5f;
-    private static final float MAX_WALKING_DISTANCE = 1f;
-    private static final float DESTINATION_REACHED_DISTANCE = 0.1f;
+    // The max speed of the being, in tiles/second.
+    private static final float MOVEMENT_SPEED = 6f;
+    private static final float DESTINATION_REACHED_DISTANCE = 0.01f;
     private final IPathFinder pathFinder;
     private Position position;
     private Stack<Position> path;
@@ -126,11 +125,17 @@ public abstract class AbstractBeing implements IBeing {
         final float velocityX = directionX * MOVEMENT_SPEED;
         final float velocityY = directionY * MOVEMENT_SPEED;
 
-        // Because the system can't handle moving multiple path segments in one frame.
-        final float limitedDeltaTime = Math.min(0.1f, deltaTime);
+        final float oldX = getPosition().getPosX();
+        final float oldY = getPosition().getPosY();
+        float newX = oldX + velocityX * deltaTime;
+        float newY = oldY + velocityY * deltaTime;
 
-        final float newX = getPosition().getPosX() + velocityX * limitedDeltaTime;
-        final float newY = getPosition().getPosY() + velocityY * limitedDeltaTime;
+        // Clamp position to destination,
+        // to prevent walking past the destination during large time skips.
+        final float newDeltaX = destination.getPosX() - newX;
+        final float newDeltaY = destination.getPosY() - newY;
+        if (Math.signum(newDeltaX) != Math.signum(deltaX)) newX = destination.getPosX();
+        if (Math.signum(newDeltaY) != Math.signum(deltaY)) newY = destination.getPosY();
 
         position.setPosX(newX);
         position.setPosY(newY);
