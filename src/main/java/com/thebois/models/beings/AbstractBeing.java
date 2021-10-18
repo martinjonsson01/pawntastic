@@ -23,10 +23,12 @@ import com.thebois.models.beings.roles.RoleFactory;
 public abstract class AbstractBeing implements IBeing {
 
     // The max speed of the AbstractBeing
-    private static final float MAX_WALKING_DISTANCE = 0.1f;
+    private static final float MOVEMENT_SPEED = 5f;
+    private static final float MAX_WALKING_DISTANCE = 1f;
+    private static final float DESTINATION_REACHED_DISTANCE = 0.1f;
     private final IPathFinder pathFinder;
-    private Stack<Position> path;
     private Position position;
+    private Stack<Position> path;
     private AbstractRole role;
 
     /**
@@ -110,35 +112,28 @@ public abstract class AbstractBeing implements IBeing {
         final float deltaX = destination.getPosX() - this.position.getPosX();
         final float deltaY = destination.getPosY() - this.position.getPosY();
 
-        // Pythagorean theorem
-        final float totalDistance = (float) Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        final float totalDistance = destination.distanceTo(getPosition());
 
-        // Calculate walking distance based on distance to destination
-        final float updatedWalkingDistance = Math.min(
-            MAX_WALKING_DISTANCE,
-            Math.abs(totalDistance));
-
-        // Calculate norm of distance vector
-        final float normDeltaX = deltaX / totalDistance;
-        final float normDeltaY = deltaY / totalDistance;
-
-        // To avoid the position being set to NaN
-        if (totalDistance == 0) {
-            this.position = destination;
+        if (totalDistance < DESTINATION_REACHED_DISTANCE) {
+            position = destination;
             path.pop();
+            return;
         }
-        else {
 
-            // Calculate new position using s += v * t
-            final float newPosX =
-                this.position.getPosX() + normDeltaX * updatedWalkingDistance * deltaTime;
-            final float newPosY =
-                this.position.getPosY() + normDeltaY * updatedWalkingDistance * deltaTime;
+        final float directionX = deltaX / totalDistance;
+        final float directionY = deltaY / totalDistance;
 
-            // Apply new position to current position
-            this.position.setPosX(newPosX);
-            this.position.setPosY(newPosY);
-        }
+        final float velocityX = directionX * MOVEMENT_SPEED;
+        final float velocityY = directionY * MOVEMENT_SPEED;
+
+        // Because the system can't handle moving multiple path segments in one frame.
+        final float limitedDeltaTime = Math.min(0.1f, deltaTime);
+
+        final float newX = getPosition().getPosX() + velocityX * limitedDeltaTime;
+        final float newY = getPosition().getPosY() + velocityY * limitedDeltaTime;
+
+        position.setPosX(newX);
+        position.setPosY(newY);
     }
 
     @Override
