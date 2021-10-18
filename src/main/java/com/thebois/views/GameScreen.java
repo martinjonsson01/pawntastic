@@ -21,7 +21,7 @@ public class GameScreen implements Screen {
     private final OrthographicCamera camera;
     private final FitViewport viewport;
     private final Color backgroundColor = new Color(0, 0, 0.2f, 1);
-    private final Actor gameView;
+    private final IActorView gameView;
     private final IActorView infoView;
     private final IActorView toolbarView;
     private Stage stage;
@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
     public GameScreen(
         final FitViewport viewport,
         final OrthographicCamera camera,
-        final Actor gameView,
+        final IActorView gameView,
         final IActorView infoView,
         final IActorView toolbarView) {
         this.viewport = viewport;
@@ -67,7 +67,7 @@ public class GameScreen implements Screen {
 
     private Table createGameAndToolBarContainer() {
         final Table gameContainerTable = new Table();
-        gameContainerTable.add(gameView).top().left();
+        gameContainerTable.add(gameView.getWidgetContainer()).top().left();
         gameContainerTable.row().left().bottom().expandY().fillY();
         gameContainerTable.add(toolbarView.getWidgetContainer()).fill();
         return gameContainerTable;

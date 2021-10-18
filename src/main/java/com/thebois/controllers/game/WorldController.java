@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import com.thebois.Pawntastic;
 import com.thebois.controllers.IController;
@@ -15,11 +14,12 @@ import com.thebois.views.debug.BeingPathDebugView;
 import com.thebois.views.debug.FrameCounterView;
 import com.thebois.views.game.GameView;
 import com.thebois.views.game.IView;
+import com.thebois.views.info.IActorView;
 
 /**
  * Container class for controllers that manage the world.
  */
-public class WorldController implements IController<Actor> {
+public class WorldController implements IController<IActorView> {
 
     private final Collection<IController<IView>> controllers;
     private final GameView gameView;
@@ -65,7 +65,7 @@ public class WorldController implements IController<Actor> {
     }
 
     @Override
-    public Actor getView() {
+    public IActorView getView() {
         return gameView;
     }
 
