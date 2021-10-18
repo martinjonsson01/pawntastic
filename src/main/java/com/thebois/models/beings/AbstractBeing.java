@@ -123,8 +123,8 @@ public abstract class AbstractBeing implements IBeing {
         final Position destination = path.peek();
 
         // Calculate delta of distance between current position and the destination
-        final float deltaX = destination.getPosX() - this.position.getPosX();
-        final float deltaY = destination.getPosY() - this.position.getPosY();
+        final float deltaX = destination.getX() - this.position.getX();
+        final float deltaY = destination.getY() - this.position.getY();
 
         // Pythagorean theorem
         final float totalDistance = (float) Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
@@ -145,12 +145,12 @@ public abstract class AbstractBeing implements IBeing {
         else {
 
             // Calculate new position
-            final float newPosX = this.position.getPosX() + normDeltaX * updatedWalkingDistance;
-            final float newPosY = this.position.getPosY() + normDeltaY * updatedWalkingDistance;
+            final float newX = this.position.getX() + normDeltaX * updatedWalkingDistance;
+            final float newY = this.position.getY() + normDeltaY * updatedWalkingDistance;
 
             // Apply new position to current position
-            this.position.setPosX(newPosX);
-            this.position.setPosY(newPosY);
+            this.position.setX(newX);
+            this.position.setY(newY);
         }
     }
 
@@ -197,8 +197,8 @@ public abstract class AbstractBeing implements IBeing {
         Position lastPosition;
 
         for (int i = 0; i < positionOffsets.length; i++) {
-            final float x = destination.getPosX() + positionOffsets[i][0];
-            final float y = destination.getPosY() + positionOffsets[i][1];
+            final float x = destination.getX() + positionOffsets[i][0];
+            final float y = destination.getY() + positionOffsets[i][1];
             lastPosition = new Position(x, y);
 
             if (getPosition().distanceTo(nearestNeighbor)

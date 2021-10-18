@@ -45,9 +45,9 @@ public class StructureController extends AbstractInputProcessor implements ICont
             final Vector2 worldSpaceCoordinates = projector.unproject(x, y);
             final float offSetX = gameWidget.getX();
             final float offSetY = gameWidget.getY();
-            final int worldPosX = (int) ((worldSpaceCoordinates.x - offSetX) / tileSize);
-            final int worldPosY = (int) ((worldSpaceCoordinates.y - offSetY) / tileSize);
-            if (world.createStructure(StructureType.HOUSE, worldPosX, worldPosY)) {
+            final int worldX = (int) ((worldSpaceCoordinates.x - offSetX) / tileSize);
+            final int worldY = (int) ((worldSpaceCoordinates.y - offSetY) / tileSize);
+            if (world.createStructure(StructureType.HOUSE, worldX, worldY)) {
                 structureView.update(world.getStructures());
                 return true;
             }
