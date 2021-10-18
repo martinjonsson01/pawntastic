@@ -78,14 +78,14 @@ public final class Position implements IDeepClonable<Position>, Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
+    public boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (other == null || getClass() != other.getClass()) {
             return false;
         }
-        final Position position = (Position) o;
+        final Position position = (Position) other;
         return Float.compare(position.posX, posX) == 0 && Float.compare(position.posY, posY) == 0;
     }
 
@@ -119,6 +119,63 @@ public final class Position implements IDeepClonable<Position>, Serializable {
         final float distanceX = Math.abs(getPosX() - destination.getPosX());
         final float distanceY = Math.abs(getPosY() - destination.getPosY());
         return Math.round(distanceX + distanceY);
+    }
+
+    /**
+     * Adds a position component-wise.
+     *
+     * @param other The position to add.
+     *
+     * @return The sum of the positions.
+     */
+    public Position add(final Position other) {
+        return add(other.getPosX(), other.getPosY());
+    }
+
+    /**
+     * Adds the given values to each component.
+     *
+     * @param otherX How much to add to the x-coordinate.
+     * @param otherY How much to add to the y-coordinate.
+     *
+     * @return A position with its coordinates added to.
+     */
+    public Position add(final float otherX, final float otherY) {
+        return new Position(posX + otherX, posY + otherY);
+    }
+
+    /**
+     * Subtracts a position component-wise.
+     *
+     * @param other The position to subtract.
+     *
+     * @return The difference.
+     */
+    public Position subtract(final Position other) {
+        return subtract(other.getPosX(), other.getPosY());
+    }
+
+    /**
+     * Subtracts components by the given values.
+     *
+     * @param otherX How much to subtract from the x-coordinate.
+     * @param otherY How much to subtract from the y-coordinate.
+     *
+     * @return A position with its coordinates subtracted from.
+     */
+    public Position subtract(final float otherX, final float otherY) {
+        return add(-otherX, -otherY);
+    }
+
+    /**
+     * Scales the position by a given value.
+     *
+     * @param scalar The factor to scale by.
+     *
+     * @return The scaled position.
+     */
+    public Position multiply(final float scalar) {
+        return new Position(posX * scalar, posY * scalar);
     }
 
 }

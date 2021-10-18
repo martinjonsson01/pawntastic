@@ -77,5 +77,4 @@ public interface IInventory extends Serializable {
      * @return The counter.
      */
     int numberOf(ItemType itemType);
-
 }

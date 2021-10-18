@@ -13,13 +13,13 @@ import static org.assertj.core.api.Assertions.*;
 public class StructureFactoryTests {
 
     public static Stream<Arguments> getStructureTypeAndExpectedStructure() {
-        return Stream.of(Arguments.of(StructureType.HOUSE, new House(new Position(0, 0))));
+        return Stream.of(Arguments.of(StructureType.HOUSE, House.class));
     }
 
     @ParameterizedTest
     @MethodSource("getStructureTypeAndExpectedStructure")
     public void factoryCreatesCorrectStructureWithGivenEnum(
-        final StructureType type, final IStructure expectedStructure) {
+        final StructureType type, final Class<IStructure> expectedStructure) {
         // Arrange
         final int x = 0;
         final int y = 0;
@@ -28,7 +28,7 @@ public class StructureFactoryTests {
         final IStructure actualStructure = StructureFactory.createStructure(type, x, y);
 
         // Assert
-        assertThat(actualStructure).isEqualTo(expectedStructure);
+        assertThat(actualStructure).isInstanceOf(expectedStructure);
     }
 
 }

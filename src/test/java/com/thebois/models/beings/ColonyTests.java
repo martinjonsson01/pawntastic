@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.inventory.IInventory;
@@ -18,6 +19,7 @@ import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.terrains.Grass;
+import com.thebois.models.world.World;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,8 +44,10 @@ public class ColonyTests {
 
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
 
+        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
+
         // Act
-        final Colony colony = new Colony(positions, pathFinder);
+        final Colony colony = new Colony(positions, pathFinder, structureFinder);
 
         // Assert
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);
@@ -61,12 +65,6 @@ public class ColonyTests {
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
-    }
-
-    private Colony mockColony() {
-        final List<Position> positions = new ArrayList<>();
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        return new Colony(positions, pathFinder);
     }
 
     @Test
@@ -122,6 +120,13 @@ public class ColonyTests {
 
         // Assert
         assertThat(count).isEqualTo(0);
+    }
+
+    private Colony mockColony() {
+        final List<Position> positions = new ArrayList<>();
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
+        return new Colony(positions, pathFinder, structureFinder);
     }
 
     @Test
@@ -256,12 +261,14 @@ public class ColonyTests {
         final IBeing being = Mockito.mock(IBeing.class);
         final Colony colony = mockColony();
 
-        // Act
         colony.addBeing(being);
-        colony.update();
+        final float deltaTime = 0.1f;
+
+        // Act
+        colony.update(deltaTime);
 
         // Assert
-        verify(being, times(1)).update();
+        verify(being, times(1)).update(deltaTime);
     }
 
 }
