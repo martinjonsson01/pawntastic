@@ -92,24 +92,15 @@ public abstract class AbstractBeing implements IBeing {
 
     @Override
     public void update(final float deltaTime) {
-        move();
-    }
-
-    @Serial
-    private void readObject(final java.io.ObjectInputStream in) throws
-                                                                IOException,
-                                                                ClassNotFoundException {
-        // Registers every time on deserialization because it might be registered to an old instance
-        // of the event bus.
-        // (caused by saving/loading).
-        Pawntastic.getEventBus().register(this);
-        in.defaultReadObject();
+        move(deltaTime);
     }
 
     /**
      * Calculates and sets new position.
+     *
+     * @param deltaTime How much time the being should move at its speed forward, in seconds.
      */
-    protected void move() {
+    protected void move(final float deltaTime) {
 
         if (path.isEmpty()) return;
 
@@ -123,8 +114,9 @@ public abstract class AbstractBeing implements IBeing {
         final float totalDistance = (float) Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
         // Calculate walking distance based on distance to destination
-        final float updatedWalkingDistance = Math.min(MAX_WALKING_DISTANCE,
-                                                      Math.abs(totalDistance));
+        final float updatedWalkingDistance = Math.min(
+            MAX_WALKING_DISTANCE,
+            Math.abs(totalDistance));
 
         // Calculate norm of distance vector
         final float normDeltaX = deltaX / totalDistance;
@@ -137,9 +129,11 @@ public abstract class AbstractBeing implements IBeing {
         }
         else {
 
-            // Calculate new position
-            final float newPosX = this.position.getPosX() + normDeltaX * updatedWalkingDistance;
-            final float newPosY = this.position.getPosY() + normDeltaY * updatedWalkingDistance;
+            // Calculate new position using s += v * t
+            final float newPosX =
+                this.position.getPosX() + normDeltaX * updatedWalkingDistance * deltaTime;
+            final float newPosY =
+                this.position.getPosY() + normDeltaY * updatedWalkingDistance * deltaTime;
 
             // Apply new position to current position
             this.position.setPosX(newPosX);
@@ -159,6 +153,17 @@ public abstract class AbstractBeing implements IBeing {
     protected void setPath(final Collection<Position> path) {
         this.path = new Stack<>();
         this.path.addAll(path);
+    }
+
+    @Serial
+    private void readObject(final java.io.ObjectInputStream in) throws
+                                                                IOException,
+                                                                ClassNotFoundException {
+        // Registers every time on deserialization because it might be registered to an old instance
+        // of the event bus.
+        // (caused by saving/loading).
+        Pawntastic.getEventBus().register(this);
+        in.defaultReadObject();
     }
 
     protected Optional<Position> getDestination() {

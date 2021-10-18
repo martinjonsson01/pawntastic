@@ -110,6 +110,52 @@ public class BeingTests {
     }
 
     @Test
+    public void updateDoesNotMoveTowardsDestinationWhenDeltaTimeIsZero() {
+        // Arrange
+        final Position startPosition = new Position(0, 0);
+        final Position destination = new Position(10, 0);
+        final Random mockRandom = Mockito.mock(Random.class);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        when(pathFinder.path(any(), any())).thenReturn(List.of(destination));
+        final AbstractBeing being = new Pawn(startPosition, destination, mockRandom, pathFinder);
+
+        // Act
+        being.update(0f);
+
+        // Assert
+        final Position newPosition = being.getPosition();
+        assertThat(newPosition).isEqualTo(startPosition);
+    }
+
+    @Test
+    public void updateMovesFurtherTowardsDestinationWhenDeltaTimeIsGreater() {
+        // Arrange
+        final Position destination = new Position(10, 0);
+        final Random mockRandom = Mockito.mock(Random.class);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        when(pathFinder.path(any(), any())).thenReturn(List.of(destination));
+        final AbstractBeing slowerBeing = new Pawn(new Position(0, 0),
+                                                   destination,
+                                                   mockRandom,
+                                                   pathFinder);
+        final AbstractBeing fasterBeing = new Pawn(new Position(0, 0),
+                                                   destination,
+                                                   mockRandom,
+                                                   pathFinder);
+
+        // Act
+        slowerBeing.update(0.01f);
+        fasterBeing.update(0.1f);
+
+        // Assert
+        final float slowerDistanceAfterUpdate = slowerBeing.getPosition().distanceTo(destination);
+        final float fasterDistanceAfterUpdate = fasterBeing.getPosition().distanceTo(destination);
+        assertThat(slowerDistanceAfterUpdate).isGreaterThan(fasterDistanceAfterUpdate);
+    }
+
+    @Test
     public void setRoleWithNullThrowsException() {
         // Arrange
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
