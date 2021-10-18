@@ -7,6 +7,9 @@ import com.thebois.models.Position;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.ItemType;
 
+/**
+ * A structure used for storing items.
+ */
 public class Stockpile extends AbstractStructure {
 
     private IInventory inventory;
