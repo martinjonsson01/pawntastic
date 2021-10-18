@@ -36,5 +36,4 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
     protected void setBeings(final Collection<IBeing> beings) {
         this.beings = beings;
     }
-
 }

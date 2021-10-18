@@ -27,6 +27,19 @@ public class MatrixUtilsTests {
             Arguments.of(new Integer[][] { { -1 } }, List.of(-1)));
     }
 
+    public static Stream<Arguments> getMatrixAndExpectedCollection() {
+        return Stream.of(
+            Arguments.of(new String[][] {
+                { "1", null, "3" },
+                { null, null, "6" },
+                { "7", "8", "9" },
+                }, List.of("1", "3", "6", "7", "8", "9")),
+
+            Arguments.of(new String[][] {
+                { "1", "1" }, { "1", "1" }, { "7", "8" },
+                }, List.of("1", "1", "1", "1", "7", "8")));
+    }
+
     @SuppressWarnings("unchecked")
     @ParameterizedTest
     @MethodSource("getMatricesAndTheirElements")
@@ -105,6 +118,17 @@ public class MatrixUtilsTests {
 
         // Assert
         assertThat(intMatrix).isDeepEqualTo(expectedMatrix);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getMatrixAndExpectedCollection")
+    public void matrixToCollectionReturnsExpectedElements(final String[][] matrix,
+                                                          final Collection<String> expectedElements) {
+        // Act
+        final Collection<String> stringCollection = MatrixUtils.toCollection(matrix);
+
+        // Assert
+        assertThat(stringCollection).isEqualTo(expectedElements);
     }
 
 }
