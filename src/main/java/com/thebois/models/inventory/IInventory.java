@@ -1,5 +1,6 @@
 package com.thebois.models.inventory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import com.thebois.models.inventory.items.ItemType;
 /**
  * Common method for all the uses an inventory or is an inventory.
  */
-public interface IInventory {
+public interface IInventory extends Serializable {
 
     /**
      * Allows an IItem to be added to the implemented inventory.
