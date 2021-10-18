@@ -144,4 +144,15 @@ public final class Position implements IDeepClonable<Position>, Serializable {
         return new Position(posX - otherX, posY - otherY);
     }
 
+    /**
+     * Scales the position by a given value.
+     *
+     * @param scalar The factor to scale by.
+     *
+     * @return The scaled position.
+     */
+    public Position multiply(final float scalar) {
+        return new Position(posX * scalar, posY * scalar);
+    }
+
 }

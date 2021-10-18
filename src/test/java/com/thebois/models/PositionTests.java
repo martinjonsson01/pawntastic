@@ -45,6 +45,15 @@ public class PositionTests {
             Arguments.of(new Position(-2, -4), new Position(-1, -1), new Position(-1, -3)));
     }
 
+    public static Stream<Arguments> getPositionWithScalarAndTheirProduct() {
+        return Stream.of(
+            Arguments.of(1f, new Position(1, 1), new Position(1, 1)),
+            Arguments.of(0f, new Position(10, 10), new Position(0, 0)),
+            Arguments.of(2f, new Position(3, 2), new Position(6, 4)),
+            Arguments.of(0.5f, new Position(2, 2), new Position(1, 1)),
+            Arguments.of(-3f, new Position(1, 2), new Position(-3, -6)));
+    }
+
     @Test
     public void constructorSetsCoordinates() {
         // Arrange
@@ -186,6 +195,17 @@ public class PositionTests {
 
         // Assert
         assertThat(actualDifference).isEqualTo(expectedDifference);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionWithScalarAndTheirProduct")
+    public void multiplyReturnsCorrectProduct(
+        final float scalar, final Position position, final Position expectedProduct) {
+        // Act
+        final Position actualProduct = position.multiply(scalar);
+
+        // Assert
+        assertThat(actualProduct).isEqualTo(expectedProduct);
     }
 
     @ParameterizedTest
