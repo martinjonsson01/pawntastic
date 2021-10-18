@@ -91,7 +91,7 @@ public abstract class AbstractBeing implements IBeing {
     }
 
     @Override
-    public void update() {
+    public void update(final float deltaTime) {
         move();
     }
 

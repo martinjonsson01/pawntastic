@@ -100,7 +100,7 @@ public class Pawntastic extends Game {
         try {
             createModels();
         }
-        catch (IOException | ClassNotFoundException error) {
+        catch (final IOException | ClassNotFoundException error) {
             error.printStackTrace();
         }
         // Camera & Viewport
@@ -142,17 +142,18 @@ public class Pawntastic extends Game {
         }
         catch (final IOException exception) {
             world = new World(WORLD_SIZE, 0);
-            colony = new Colony(
-                world.findEmptyPositions(PAWN_POSITIONS),
-                new AstarPathFinder(world));
+            colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS),
+                                new AstarPathFinder(world));
         }
     }
 
-    private void loadModelsFromSaveFile() throws IOException, ClassNotFoundException {
-        final LoadSystem loadSystem = new LoadSystem();
-        world = loadSystem.loadWorld();
-        colony = loadSystem.loadColony();
-        loadSystem.dispose();
+    private void initInputProcessors() {
+        final InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(gameScreen.getInputProcessor());
+        for (final InputProcessor inputProcessor : worldController.getInputProcessors()) {
+            multiplexer.addProcessor(inputProcessor);
+        }
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     private void generateFont() {
@@ -169,6 +170,13 @@ public class Pawntastic extends Game {
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear,
                                                 Texture.TextureFilter.Linear);
         generator.dispose();
+    }
+
+    private void loadModelsFromSaveFile() throws IOException, ClassNotFoundException {
+        final LoadSystem loadSystem = new LoadSystem();
+        world = loadSystem.loadWorld();
+        colony = loadSystem.loadColony();
+        loadSystem.dispose();
     }
 
     @Override
@@ -195,18 +203,9 @@ public class Pawntastic extends Game {
     @Override
     public void render() {
         super.render();
-        colony.update();
+        colony.update(Gdx.graphics.getDeltaTime());
         worldController.update();
         infoController.update();
-    }
-
-    private void initInputProcessors() {
-        final InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(gameScreen.getInputProcessor());
-        for (final InputProcessor inputProcessor : worldController.getInputProcessors()) {
-            multiplexer.addProcessor(inputProcessor);
-        }
-        Gdx.input.setInputProcessor(multiplexer);
     }
 
 }

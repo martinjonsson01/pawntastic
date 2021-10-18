@@ -20,9 +20,9 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
     }
 
     @Override
-    public void update() {
+    public void update(final float deltaTime) {
         for (final IBeing being : this.beings) {
-            being.update();
+            being.update(deltaTime);
         }
     }
 

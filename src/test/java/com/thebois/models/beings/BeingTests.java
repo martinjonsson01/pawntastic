@@ -100,7 +100,7 @@ public class BeingTests {
         final AbstractBeing being = new Pawn(startPosition, endPosition, mockRandom, pathFinder);
 
         // Act
-        being.update();
+        being.update(0.1f);
 
         // Assert
         final Optional<Position> actualDestination = being.getDestination();
@@ -219,7 +219,7 @@ public class BeingTests {
         final IBeing being = new Pawn(startPosition, startPosition, new Random(), pathFinder);
 
         // Act
-        being.update();
+        being.update(0.1f);
 
         // Assert
         assertThat(being.getPosition()).isEqualTo(startPosition);
