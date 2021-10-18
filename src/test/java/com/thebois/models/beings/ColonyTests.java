@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.models.IPositionFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -45,9 +46,10 @@ public class ColonyTests {
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
 
         final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
+        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
 
         // Act
-        final Colony colony = new Colony(positions, pathFinder, structureFinder);
+        final Colony colony = new Colony(positions, pathFinder, structureFinder, positionFinder);
 
         // Assert
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);
@@ -126,7 +128,8 @@ public class ColonyTests {
         final List<Position> positions = new ArrayList<>();
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
-        return new Colony(positions, pathFinder, structureFinder);
+        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
+        return new Colony(positions, pathFinder, structureFinder, positionFinder);
     }
 
     @Test

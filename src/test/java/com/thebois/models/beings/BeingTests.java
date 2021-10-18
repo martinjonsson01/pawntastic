@@ -618,9 +618,10 @@ public class BeingTests {
         // Arrange
         final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        final World world = new TestWorld(50);
         final AbstractBeingGroup colony = new Colony(vacantPositions,
                                                      pathFinder,
-                                                     new TestWorld(50));
+                                                     world, world);
         final IStructureFinder finder = Mockito.mock(IStructureFinder.class);
 
         final IBeing being = new Pawn(new Position(0, 0),
