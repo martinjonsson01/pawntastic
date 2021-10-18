@@ -218,9 +218,9 @@ public abstract class AbstractBeing implements IBeing {
         Position nearestNeighbor = new Position(Float.MAX_VALUE, Float.MAX_VALUE);
         Position lastPosition;
 
-        for (int i = 0; i < positionOffsets.length; i++) {
-            final float x = destination.getX() + positionOffsets[i][0];
-            final float y = destination.getY() + positionOffsets[i][1];
+        for (final int[] positionOffset : positionOffsets) {
+            final float x = destination.getX() + positionOffset[0];
+            final float y = destination.getY() + positionOffset[1];
             lastPosition = new Position(x, y);
 
             if (getPosition().distanceTo(nearestNeighbor)
