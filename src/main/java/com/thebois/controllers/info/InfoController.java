@@ -14,7 +14,7 @@ import com.thebois.views.info.InfoView;
 /**
  * Container class for controllers that manage the info.
  */
-public class InfoController implements IController<InfoView> {
+public class InfoController implements IController<IActorView> {
 
     private final Collection<IController<IActorView>> controllers;
     private final InfoView infoView;
@@ -41,7 +41,7 @@ public class InfoController implements IController<InfoView> {
     }
 
     @Override
-    public InfoView getView() {
+    public IActorView getView() {
         return infoView;
     }
 

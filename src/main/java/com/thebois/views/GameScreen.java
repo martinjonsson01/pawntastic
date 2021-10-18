@@ -5,14 +5,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import com.thebois.views.game.GameView;
-import com.thebois.views.info.InfoView;
+import com.thebois.views.info.IActorView;
 
 /**
  * The main screen displaying the world and UI.
@@ -22,31 +21,34 @@ public class GameScreen implements Screen {
     private final OrthographicCamera camera;
     private final FitViewport viewport;
     private final Color backgroundColor = new Color(0, 0, 0.2f, 1);
-    private final Skin skin;
-    private final GameView gameView;
-    private final InfoView infoView;
+    private final IActorView gameView;
+    private final IActorView infoView;
+    private final IActorView toolbarView;
     private Stage stage;
     private SpriteBatch spriteBatch;
+    private final Actor gameAndToolbarContainer;
 
     /**
      * Creates an instance of GameScreen.
      *
-     * @param viewport The viewport for the game.
-     * @param camera   The camera used to display the game.
-     * @param skin     The skin with styles to apply to all widgets
-     * @param gameView The view of the game world to render
-     * @param infoView The view displaying info about the colony
+     * @param viewport    The viewport for the game.
+     * @param camera      The camera used to display the game.
+     * @param gameView    The view of the game world to render
+     * @param infoView    The view displaying info about the colony
+     * @param toolbarView The view that displays the tool bar.
      */
-    public GameScreen(final FitViewport viewport,
-                      final OrthographicCamera camera,
-                      final Skin skin,
-                      final GameView gameView,
-                      final InfoView infoView) {
+    public GameScreen(
+        final FitViewport viewport,
+        final OrthographicCamera camera,
+        final IActorView gameView,
+        final IActorView infoView,
+        final IActorView toolbarView) {
         this.viewport = viewport;
         this.camera = camera;
-        this.skin = skin;
         this.gameView = gameView;
         this.infoView = infoView;
+        this.toolbarView = toolbarView;
+        this.gameAndToolbarContainer = createGameAndToolBarContainer();
 
         createStage();
     }
@@ -55,14 +57,20 @@ public class GameScreen implements Screen {
         spriteBatch = new SpriteBatch();
         stage = new Stage(viewport, spriteBatch);
 
-        final Table infoAndWorldGroup = new Table();
-        infoAndWorldGroup.setFillParent(true);
-        stage.addActor(infoAndWorldGroup);
+        final Table infoAndGameTable = new Table();
+        infoAndGameTable.setFillParent(true);
+        infoAndGameTable.add(infoView.getWidgetContainer()).fillY().expandY();
+        infoAndGameTable.add(gameAndToolbarContainer).top().left().expandY().fillY();
+        // Add to stage
+        stage.addActor(infoAndGameTable);
+    }
 
-        infoAndWorldGroup.left();
-
-        infoAndWorldGroup.add(infoView.getPane()).expand().fill();
-        infoAndWorldGroup.add(gameView);
+    private Table createGameAndToolBarContainer() {
+        final Table gameContainerTable = new Table();
+        gameContainerTable.add(gameView.getWidgetContainer()).top().left();
+        gameContainerTable.row().left().bottom().expandY().fillY();
+        gameContainerTable.add(toolbarView.getWidgetContainer()).fill();
+        return gameContainerTable;
     }
 
     /**

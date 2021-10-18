@@ -17,6 +17,7 @@ import com.google.common.eventbus.EventBus;
 
 import com.thebois.controllers.game.WorldController;
 import com.thebois.controllers.info.InfoController;
+import com.thebois.controllers.toolbar.ToolbarController;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.world.World;
@@ -40,8 +41,9 @@ public class Pawntastic extends Game {
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int PAWN_POSITIONS = 50;
-    private static final int TILE_SIZE = (int) Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH)
-                                         / WORLD_SIZE;
+    private static final int TOOLBAR_HEIGHT = 40;
+    private static final int TILE_SIZE = (int) (Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH)
+                                                - TOOLBAR_HEIGHT) / WORLD_SIZE;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
@@ -54,6 +56,7 @@ public class Pawntastic extends Game {
     // Controllers
     private WorldController worldController;
     private InfoController infoController;
+    private ToolbarController toolbarController;
 
     /**
      * Gets the size of a single tile in world space.
@@ -111,17 +114,17 @@ public class Pawntastic extends Game {
         final IProjector projector = new ViewportWrapper(viewport);
 
         // Controllers
-        this.worldController = new WorldController(world, colony, projector, font);
+        this.worldController = new WorldController(world, colony, font);
         this.infoController = new InfoController(colony, uiSkin);
+        this.toolbarController = new ToolbarController(world, uiSkin, projector);
 
         // Screens
         gameScreen = new GameScreen(viewport,
                                     camera,
-                                    uiSkin,
                                     worldController.getView(),
-                                    infoController.getView());
+                                    infoController.getView(),
+                                    toolbarController.getView());
         this.setScreen(gameScreen);
-
         // Set up Input Processors
         initInputProcessors();
     }
@@ -142,19 +145,10 @@ public class Pawntastic extends Game {
         }
         catch (final IOException exception) {
             world = new World(WORLD_SIZE, 0);
-            colony = new Colony(
-                world.findEmptyPositions(PAWN_POSITIONS),
-                new AstarPathFinder(world), world);
+            colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS),
+                                new AstarPathFinder(world),
+                                world);
         }
-    }
-
-    private void initInputProcessors() {
-        final InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(gameScreen.getInputProcessor());
-        for (final InputProcessor inputProcessor : worldController.getInputProcessors()) {
-            multiplexer.addProcessor(inputProcessor);
-        }
-        Gdx.input.setInputProcessor(multiplexer);
     }
 
     private void generateFont() {
@@ -207,6 +201,15 @@ public class Pawntastic extends Game {
         colony.update(Gdx.graphics.getDeltaTime());
         worldController.update();
         infoController.update();
+    }
+
+    private void initInputProcessors() {
+        final InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(gameScreen.getInputProcessor());
+        for (final InputProcessor inputProcessor : toolbarController.getInputProcessors()) {
+            multiplexer.addProcessor(inputProcessor);
+        }
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
 }
