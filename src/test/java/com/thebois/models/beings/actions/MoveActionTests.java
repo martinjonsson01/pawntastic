@@ -1,5 +1,6 @@
 package com.thebois.models.beings.actions;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -16,6 +17,7 @@ import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.testutils.InMemorySerialize;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -258,6 +260,17 @@ public class MoveActionTests {
 
         // Assert
         assertThat(completed).isFalse();
+    }
+
+    @Test
+    public void sameObjectAfterDeserialization() throws ClassNotFoundException, IOException {
+        // Act
+        final byte[] serializedAction = InMemorySerialize.serialize(action);
+        final IAction deserializedAction =
+            (IAction) InMemorySerialize.deserialize(serializedAction);
+
+        // Assert
+        assertThat(action).isEqualTo(deserializedAction);
     }
 
 }
