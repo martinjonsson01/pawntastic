@@ -106,14 +106,24 @@ public abstract class AbstractBeing implements IBeing {
 
         final Position segmentDestination = path.peek();
 
-        final float totalDistance = segmentDestination.distanceTo(getPosition());
+        final float distanceToDestination = segmentDestination.distanceTo(getPosition());
 
-        if (totalDistance < DESTINATION_REACHED_DISTANCE) {
-            position = segmentDestination;
-            path.pop();
+        if (distanceToDestination < DESTINATION_REACHED_DISTANCE) {
+            onArrivedAtDestination(segmentDestination);
             return;
         }
 
+        movePositionTowardsDestination(deltaTime, segmentDestination, distanceToDestination);
+    }
+
+    private void onArrivedAtDestination(final Position segmentDestination) {
+        position = segmentDestination;
+        path.pop();
+    }
+
+    private void movePositionTowardsDestination(
+        final float deltaTime, final Position segmentDestination, final float totalDistance) {
+        // Calculate how much to move and in what direction.
         final Position delta = segmentDestination.subtract(position);
         final Position direction = delta.multiply(1f / totalDistance);
         final Position velocity = direction.multiply(SPEED);
