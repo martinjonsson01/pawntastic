@@ -122,6 +122,29 @@ public final class Position implements IDeepClonable<Position>, Serializable {
     }
 
     /**
+     * Adds a position component-wise.
+     *
+     * @param other The position to add.
+     *
+     * @return The sum of the positions.
+     */
+    public Position add(final Position other) {
+        return add(other.getPosX(), other.getPosY());
+    }
+
+    /**
+     * Adds the given values to each component.
+     *
+     * @param otherX How much to add to the x-coordinate.
+     * @param otherY How much to add to the y-coordinate.
+     *
+     * @return A position with its coordinates added to.
+     */
+    public Position add(final float otherX, final float otherY) {
+        return new Position(posX + otherX, posY + otherY);
+    }
+
+    /**
      * Subtracts a position component-wise.
      *
      * @param other The position to subtract.
@@ -141,7 +164,7 @@ public final class Position implements IDeepClonable<Position>, Serializable {
      * @return A position with its coordinates subtracted from.
      */
     public Position subtract(final float otherX, final float otherY) {
-        return new Position(posX - otherX, posY - otherY);
+        return add(-otherX, -otherY);
     }
 
     /**

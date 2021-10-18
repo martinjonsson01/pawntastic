@@ -54,6 +54,15 @@ public class PositionTests {
             Arguments.of(-3f, new Position(1, 2), new Position(-3, -6)));
     }
 
+    public static Stream<Arguments> getPositionsAndTheirSums() {
+        return Stream.of(
+            Arguments.of(new Position(0, 0), new Position(0, 0), new Position(0, 0)),
+            Arguments.of(new Position(0, 0), new Position(1, 1), new Position(1, 1)),
+            Arguments.of(new Position(1, 1), new Position(1, 1), new Position(2, 2)),
+            Arguments.of(new Position(10, 10), new Position(9, 9), new Position(19, 19)),
+            Arguments.of(new Position(-2, -4), new Position(-1, -1), new Position(-3, -5)));
+    }
+
     @Test
     public void constructorSetsCoordinates() {
         // Arrange
@@ -184,6 +193,17 @@ public class PositionTests {
 
         // Assert
         assertThat(isEqual).isFalse();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsAndTheirSums")
+    public void addReturnsCorrectSum(
+        final Position first, final Position second, final Position expectedSum) {
+        // Act
+        final Position actualSum = first.add(second);
+
+        // Assert
+        assertThat(actualSum).isEqualTo(expectedSum);
     }
 
     @ParameterizedTest
