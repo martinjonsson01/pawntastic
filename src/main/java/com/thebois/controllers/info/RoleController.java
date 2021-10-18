@@ -1,6 +1,8 @@
 package com.thebois.controllers.info;
 
 import java.util.AbstractMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -34,11 +36,7 @@ public class RoleController implements IController<IActorView> {
         this.roleAllocator = roleAllocator;
         this.roleView = new RoleView(skin);
 
-        roleView.updateRoles(RoleFactory.all()
-                                        .stream()
-                                        .map(AbstractRole::getType)
-                                        .filter(type -> !type.equals(RoleType.IDLE))
-                                        .collect(Collectors.toList()));
+        roleView.updateRoles(createRoleCountMap());
 
         roleButtons = roleView.getRoleButtons();
         for (final RoleType roleType : roleButtons.keySet()) {
@@ -47,6 +45,19 @@ public class RoleController implements IController<IActorView> {
             button.setCanDecrease(roleCount -> roleAllocator.canDecreaseAllocation(roleType));
             button.setCanIncrease(roleCount -> roleAllocator.canIncreaseAllocation());
         }
+    }
+
+    private Map<RoleType, Integer> createRoleCountMap() {
+        final Iterable<RoleType> roles =
+            RoleFactory.all().stream().map(AbstractRole::getType).filter(type -> !type.equals(
+                RoleType.IDLE)).collect(Collectors.toList());
+
+        final Map<RoleType, Integer> roleTotal = new LinkedHashMap<RoleType, Integer>();
+        for (final RoleType roleType : roles) {
+            final int total = roleAllocator.countBeingsWithRole(roleType);
+            roleTotal.put(roleType, total);
+        }
+        return roleTotal;
     }
 
     private void onRoleButtonClick(final RoleType role, final ValueChangedEvent<Integer> event) {

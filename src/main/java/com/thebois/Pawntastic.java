@@ -1,5 +1,7 @@
 package com.thebois;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -19,6 +21,8 @@ import com.thebois.controllers.toolbar.ToolbarController;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.world.World;
+import com.thebois.persistence.LoadSystem;
+import com.thebois.persistence.SaveSystem;
 import com.thebois.views.GameScreen;
 import com.thebois.views.IProjector;
 import com.thebois.views.ViewportWrapper;
@@ -96,7 +100,12 @@ public class Pawntastic extends Game {
         setUpUserInterfaceSkin();
 
         // Model
-        createModels();
+        try {
+            createModels();
+        }
+        catch (IOException | ClassNotFoundException error) {
+            error.printStackTrace();
+        }
         // Camera & Viewport
         final OrthographicCamera camera = new OrthographicCamera();
         final FitViewport viewport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, camera);
@@ -130,10 +139,23 @@ public class Pawntastic extends Game {
         uiSkin.load(Gdx.files.internal("uiskin.json"));
     }
 
-    private void createModels() {
+    private void createModels() throws IOException, ClassNotFoundException {
+        try {
+            loadModelsFromSaveFile();
+        }
+        catch (final IOException exception) {
+            world = new World(WORLD_SIZE, 0);
+            colony = new Colony(
+                world.findEmptyPositions(PAWN_POSITIONS),
+                new AstarPathFinder(world));
+        }
+    }
 
-        world = new World(WORLD_SIZE, 0);
-        colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS), new AstarPathFinder(world));
+    private void loadModelsFromSaveFile() throws IOException, ClassNotFoundException {
+        final LoadSystem loadSystem = new LoadSystem();
+        world = loadSystem.loadWorld();
+        colony = loadSystem.loadColony();
+        loadSystem.dispose();
     }
 
     private void generateFont() {
@@ -153,11 +175,24 @@ public class Pawntastic extends Game {
     }
 
     @Override
-
     public void dispose() {
+        try {
+            saveModelsToSaveFile();
+        }
+        catch (final IOException error) {
+            error.printStackTrace();
+        }
+
         gameScreen.dispose();
         skinAtlas.dispose();
         uiSkin.dispose();
+    }
+
+    private void saveModelsToSaveFile() throws IOException {
+        final SaveSystem saveSystem = new SaveSystem();
+        saveSystem.save(world);
+        saveSystem.save(colony);
+        saveSystem.dispose();
     }
 
     @Override

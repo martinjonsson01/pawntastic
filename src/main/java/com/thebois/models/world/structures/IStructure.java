@@ -1,12 +1,14 @@
 package com.thebois.models.world.structures;
 
+import java.io.Serializable;
+
 import com.thebois.abstractions.IDeepClonable;
 import com.thebois.models.world.ITile;
 
 /**
  * Represents a Structure. E.g. a house.
  */
-public interface IStructure extends ITile, IDeepClonable<IStructure> {
+public interface IStructure extends ITile, IDeepClonable<IStructure>, Serializable {
 
     /**
      * Returns the specific type of terrain.
