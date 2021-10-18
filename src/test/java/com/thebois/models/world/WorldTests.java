@@ -343,7 +343,7 @@ public class WorldTests {
         assertThat(structure.isPresent()).isFalse();
     }
 
-    private static Stream<Arguments> getPositionsAndSizeToTest() {
+    private static Stream<Arguments> getPositionsAndNumberOfPositions() {
         return Stream.of(Arguments.of(List.of(new Position(10, 10),
                                               new Position(30, 5),
                                               new Position(6, 33),
@@ -353,7 +353,7 @@ public class WorldTests {
     }
 
     @ParameterizedTest
-    @MethodSource("getPositionsAndSizeToTest")
+    @MethodSource("getPositionsAndNumberOfPositions")
     public void getStructureCollectionIsCorrectSize(
         final Collection<Position> positions,
         final int size) {
