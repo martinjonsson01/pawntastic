@@ -23,7 +23,7 @@ import com.thebois.models.beings.roles.RoleFactory;
 public abstract class AbstractBeing implements IBeing {
 
     // The max speed of the being, in tiles/second.
-    private static final float MOVEMENT_SPEED = 6f;
+    private static final float SPEED = 6f;
     private static final float DESTINATION_REACHED_DISTANCE = 0.01f;
     private final IPathFinder pathFinder;
     private Position position;
@@ -102,43 +102,44 @@ public abstract class AbstractBeing implements IBeing {
      * @param deltaTime How much time the being should move at its speed forward, in seconds.
      */
     protected void move(final float deltaTime) {
-
         if (path.isEmpty()) return;
 
-        final Position destination = path.peek();
+        final Position segmentDestination = path.peek();
 
-        // Calculate delta of distance between current position and the destination
-        final float deltaX = destination.getPosX() - this.position.getPosX();
-        final float deltaY = destination.getPosY() - this.position.getPosY();
-
-        final float totalDistance = destination.distanceTo(getPosition());
+        final float totalDistance = segmentDestination.distanceTo(getPosition());
 
         if (totalDistance < DESTINATION_REACHED_DISTANCE) {
-            position = destination;
+            position = segmentDestination;
             path.pop();
             return;
         }
 
-        final float directionX = deltaX / totalDistance;
-        final float directionY = deltaY / totalDistance;
+        final Position delta = segmentDestination.subtract(position);
+        final Position direction = delta.multiply(1f / totalDistance);
+        final Position velocity = direction.multiply(SPEED);
+        final Position movement = velocity.multiply(deltaTime);
 
-        final float velocityX = directionX * MOVEMENT_SPEED;
-        final float velocityY = directionY * MOVEMENT_SPEED;
+        Position newPosition = position.add(movement);
 
-        final float oldX = getPosition().getPosX();
-        final float oldY = getPosition().getPosY();
-        float newX = oldX + velocityX * deltaTime;
-        float newY = oldY + velocityY * deltaTime;
+        if (hasOvershotDestination(segmentDestination, delta, newPosition)) {
+            // Clamp position to destination,
+            // to prevent walking past the destination during large time skips.
+            newPosition = segmentDestination;
+        }
 
-        // Clamp position to destination,
-        // to prevent walking past the destination during large time skips.
-        final float newDeltaX = destination.getPosX() - newX;
-        final float newDeltaY = destination.getPosY() - newY;
-        if (Math.signum(newDeltaX) != Math.signum(deltaX)) newX = destination.getPosX();
-        if (Math.signum(newDeltaY) != Math.signum(deltaY)) newY = destination.getPosY();
+        position = newPosition;
+    }
 
-        position.setPosX(newX);
-        position.setPosY(newY);
+    private boolean hasOvershotDestination(
+        final Position destination, final Position delta, final Position newPosition) {
+        // Destination has been overshot if the delta has changed sign before and after moving.
+        final Position newDelta = destination.subtract(newPosition);
+        return hasChangedSign(newDelta.getPosX(), delta.getPosX())
+               || hasChangedSign(newDelta.getPosY(), delta.getPosY());
+    }
+
+    private boolean hasChangedSign(final float posX, final float posX2) {
+        return Math.signum(posX) != Math.signum(posX2);
     }
 
     @Override

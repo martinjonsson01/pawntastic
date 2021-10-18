@@ -35,6 +35,7 @@ public class BeingTests {
         return Stream.of(Arguments.of(new Position(0, 0), new Position(0, 0)),
                          Arguments.of(new Position(0, 0), new Position(1, 1)),
                          Arguments.of(new Position(0, 0), new Position(1, 0)),
+                         Arguments.of(new Position(0, 0), new Position(0, 1)),
                          Arguments.of(new Position(0, 0), new Position(99, 99)),
                          Arguments.of(new Position(0, 0), new Position(-1, -1)),
                          Arguments.of(new Position(0, 0), new Position(-99, -99)),
@@ -107,6 +108,28 @@ public class BeingTests {
         assertThat(actualDestination).isPresent();
         final float distanceAfterUpdate = being.getPosition().distanceTo(actualDestination.get());
         assertThat(distanceAfterUpdate).isLessThanOrEqualTo(distanceToDestination);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsAndDestinations")
+    public void updateDoesNotOvershootDestinationWhenDeltaTimeIsLarge(
+        final Position startPosition, final Position destination) {
+        // Arrange
+        final Random mockRandom = Mockito.mock(Random.class);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        when(pathFinder.path(any(), any())).thenReturn(List.of(destination));
+        final AbstractBeing being = new Pawn(startPosition, destination, mockRandom, pathFinder);
+
+        final float distanceBefore = startPosition.distanceTo(destination);
+
+        // Act
+        being.update(10f);
+
+        // Assert
+        final Position newPosition = being.getPosition();
+        final float distanceAfter = newPosition.distanceTo(destination);
+        assertThat(distanceAfter).isLessThanOrEqualTo(distanceBefore);
     }
 
     @Test
