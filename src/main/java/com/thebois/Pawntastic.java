@@ -142,8 +142,9 @@ public class Pawntastic extends Game {
         }
         catch (final IOException exception) {
             world = new World(WORLD_SIZE, 0);
-            colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS),
-                                new AstarPathFinder(world));
+            colony = new Colony(
+                world.findEmptyPositions(PAWN_POSITIONS),
+                new AstarPathFinder(world), world);
         }
     }
 

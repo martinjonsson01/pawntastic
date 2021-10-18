@@ -16,6 +16,7 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.IStructureFinder;
 
 /**
  * An abstract implementation of IBeing.
@@ -35,19 +36,25 @@ public abstract class AbstractBeing implements IBeing {
     private Position position;
     private Stack<Position> path;
     private AbstractRole role;
+    private final IStructureFinder finder;
 
     /**
      * Creates an AbstractBeing with an initial position.
      *
-     * @param startPosition the initial position of the AbstractBeing.
-     * @param destination   the initial destination of the AbstractBeing.
+     * @param startPosition The initial position of the AbstractBeing.
+     * @param destination   The initial destination of the AbstractBeing.
      * @param pathFinder    The generator of paths to positions in the world.
+     * @param finder        Used to find structures in the world.
      */
     public AbstractBeing(
-        final Position startPosition, final Position destination, final IPathFinder pathFinder) {
+        final Position startPosition,
+        final Position destination,
+        final IPathFinder pathFinder,
+        final IStructureFinder finder) {
         this.position = startPosition;
         this.role = RoleFactory.idle();
         this.pathFinder = pathFinder;
+        this.finder = finder;
         setPath(pathFinder.path(startPosition, destination));
         Pawntastic.getEventBus().register(this);
     }
@@ -71,10 +78,10 @@ public abstract class AbstractBeing implements IBeing {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AbstractBeing)) return false;
-        final AbstractBeing that = (AbstractBeing) o;
+    public boolean equals(final Object other) {
+        if (this == other) return true;
+        if (!(other instanceof AbstractBeing)) return false;
+        final AbstractBeing that = (AbstractBeing) other;
         return Objects.equals(getPosition(), that.getPosition()) && Objects.equals(getRole(),
                                                                                    that.getRole());
     }
@@ -188,8 +195,40 @@ public abstract class AbstractBeing implements IBeing {
         return Optional.of(path.peek().deepClone());
     }
 
+    protected Position getFinalDestination() {
+        if (path.isEmpty()) return null;
+        return path.firstElement().deepClone();
+    }
+
     protected IPathFinder getPathFinder() {
         return pathFinder;
+    }
+
+    protected IStructureFinder getStructureFinder() {
+        return this.finder;
+    }
+
+    protected Position nearestNeighborOf(final Position destination) {
+        final int[][] positionOffsets = {
+            {-1, -1}, {0, -1}, {1, -1},
+            {-1, 0}, {1, 0},
+            {-1, 1}, {0, 1}, {1, 1},
+            };
+
+        Position nearestNeighbor = new Position(Float.MAX_VALUE, Float.MAX_VALUE);
+        Position lastPosition;
+
+        for (int i = 0; i < positionOffsets.length; i++) {
+            final float x = destination.getPosX() + positionOffsets[i][0];
+            final float y = destination.getPosY() + positionOffsets[i][1];
+            lastPosition = new Position(x, y);
+
+            if (getPosition().distanceTo(nearestNeighbor)
+                > getPosition().distanceTo(lastPosition)) {
+                nearestNeighbor = lastPosition;
+            }
+        }
+        return nearestNeighbor;
     }
 
 }
