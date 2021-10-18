@@ -78,14 +78,14 @@ public final class Position implements IDeepClonable<Position>, Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
+    public boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (other == null || getClass() != other.getClass()) {
             return false;
         }
-        final Position position = (Position) o;
+        final Position position = (Position) other;
         return Float.compare(position.posX, posX) == 0 && Float.compare(position.posY, posY) == 0;
     }
 

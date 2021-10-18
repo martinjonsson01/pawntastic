@@ -71,10 +71,10 @@ public abstract class AbstractBeing implements IBeing {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AbstractBeing)) return false;
-        final AbstractBeing that = (AbstractBeing) o;
+    public boolean equals(final Object other) {
+        if (this == other) return true;
+        if (!(other instanceof AbstractBeing)) return false;
+        final AbstractBeing that = (AbstractBeing) other;
         return Objects.equals(getPosition(), that.getPosition()) && Objects.equals(getRole(),
                                                                                    that.getRole());
     }
