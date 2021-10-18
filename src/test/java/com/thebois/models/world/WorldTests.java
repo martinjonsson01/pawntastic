@@ -323,7 +323,7 @@ public class WorldTests {
         world.createStructure(StructureType.HOUSE, incorrectPosition);
 
         // Act
-        final Optional<IStructure> foundStructure = world.findNearestStructure(startingPosition);
+        final Optional<IStructure> foundStructure = world.findNearestStructure(startingPosition, StructureType.HOUSE);
 
         // Assert
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
@@ -337,7 +337,7 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> structure = world.findNearestStructure(
-            new Position(20f, 20f));
+            new Position(20f, 20f), StructureType.HOUSE);
 
         // Assert
         assertThat(structure.isPresent()).isFalse();
@@ -390,7 +390,7 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> foundStructure = world.findNearestIncompleteStructure(new Position(
-            0, 0));
+            0, 0), StructureType.HOUSE);
 
         // Assert
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(1, 3));
@@ -414,7 +414,7 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> foundStructure = world.findNearestIncompleteStructure(new Position(
-            0, 0));
+            0, 0), StructureType.HOUSE);
 
         // Assert
         assertThat(foundStructure.isEmpty()).isTrue();
