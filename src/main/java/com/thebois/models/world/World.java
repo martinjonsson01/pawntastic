@@ -107,9 +107,9 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
     @Override
     public Iterable<Position> tryGetEmptyPositionsNextTo(
         final Position position, final int count, final float radius) {
-        return MatrixUtils.toCollection(canonicalMatrix)
-                          .stream().filter(iTile -> iTile.getCost() < Float.MAX_VALUE
-                                                    && radius > position.distanceTo(
+        return MatrixUtils.toCollection(canonicalMatrix).stream().filter(iTile -> !iTile
+            .getPosition()
+            .equals(position) && iTile.getCost() < Float.MAX_VALUE && radius > position.distanceTo(
             iTile.getPosition())).limit(count).map(ITile::getPosition).collect(Collectors.toList());
     }
 

@@ -33,7 +33,7 @@ public final class StructureView implements IView {
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         for (final IStructure structure : structures) {
             switch (structure.getType()) {
-                //case HOUSE -> drawHouse(batch, offsetX, offsetY, structure);
+                case HOUSE -> drawHouse(batch, offsetX, offsetY, structure);
                 case TOWN_HALL -> drawTownHall(batch, offsetX, offsetY, structure);
                 default -> drawDefault(batch, offsetX, offsetY, structure);
             }
@@ -95,7 +95,7 @@ public final class StructureView implements IView {
         final float offsetX,
         final float offsetY,
         final IStructure structure) {
-        batch.setColor(Color.valueOf("CC1A29"));
+        batch.setColor(getHouseColor(structure));
         batch.draw(
             defaultTexture,
             offsetX + structure.getPosition().getX() * TILE_SIZE,
