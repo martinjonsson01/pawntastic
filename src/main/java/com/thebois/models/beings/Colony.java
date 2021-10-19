@@ -131,7 +131,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
 
     @Override
     public boolean isFull() {
-        return false;
+        return inventory.isFull();
     }
 
     @Override
