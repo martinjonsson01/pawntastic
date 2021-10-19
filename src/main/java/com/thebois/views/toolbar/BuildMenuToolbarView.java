@@ -45,6 +45,8 @@ public class BuildMenuToolbarView implements IActorView {
         final Table toolbarTable,
         final ButtonGroup<StructureButton> buttonGroup) {
         for (final StructureType type : StructureType.values()) {
+            // Don't add a button for the town hall structure.
+            if (type.equals(StructureType.TOWN_HALL)) break;
             final StructureButton structureButton = new StructureButton(type, skin);
             toolbarTable.add(structureButton).expand().fill();
             buttonGroup.add(structureButton);
