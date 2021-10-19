@@ -13,11 +13,11 @@ import com.thebois.models.beings.IBeingGroup;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.IWorld;
-import com.thebois.views.game.IView;
 import com.thebois.views.TextureUtils;
+import com.thebois.views.game.IView;
 
 /**
- * Recalculates and then displays the paths of all beings.
+ * Recreates being paths by recalculating them, and then displays them.
  */
 public class BeingPathDebugView implements IView {
 
