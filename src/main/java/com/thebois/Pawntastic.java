@@ -20,7 +20,9 @@ import com.thebois.controllers.info.InfoController;
 import com.thebois.controllers.toolbar.ToolbarController;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
+import com.thebois.models.inventory.Inventory;
 import com.thebois.models.world.World;
+import com.thebois.models.world.structures.StructureFactory;
 import com.thebois.persistence.LoadSystem;
 import com.thebois.persistence.SaveSystem;
 import com.thebois.views.GameScreen;
@@ -77,9 +79,9 @@ public class Pawntastic extends Game {
     }
 
     /**
-     * Whether or not the game is run in debug mode or not.
+     * Whether the game is run in debug mode or not.
      *
-     * @return Whether or not the game is running in debug mode.
+     * @return Whether the game is running in debug mode.
      */
     public static boolean isDebugEnabled() {
         return DEBUG;
@@ -144,6 +146,7 @@ public class Pawntastic extends Game {
             loadModelsFromSaveFile();
         }
         catch (final IOException exception) {
+            StructureFactory.setInventory(new Inventory());
             world = new World(WORLD_SIZE, 0);
             colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS),
                                 new AstarPathFinder(world),

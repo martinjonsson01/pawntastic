@@ -210,8 +210,7 @@ public class World implements IWorld, IStructureFinder, Serializable {
 
     @Override
     public Optional<IStructure> getNearbyStructureOfType(
-        final Position origin,
-        final StructureType type) {
+        final Position origin, final StructureType type) {
         return getStructures()
             .stream()
             .filter(structure -> structure.getType().equals(type))

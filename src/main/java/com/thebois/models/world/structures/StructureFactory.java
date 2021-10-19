@@ -1,14 +1,21 @@
 package com.thebois.models.world.structures;
 
 import com.thebois.models.Position;
+import com.thebois.models.inventory.IInventory;
 
 /**
  * A factory that instantiates structures.
  */
 public final class StructureFactory {
 
+    private static IInventory inventory;
+
     private StructureFactory() {
 
+    }
+
+    public static void setInventory(final IInventory inventory) {
+        StructureFactory.inventory = inventory;
     }
 
     /**
@@ -24,6 +31,7 @@ public final class StructureFactory {
 
         return switch (type) {
             case HOUSE -> new House(position);
+            case STOCKPILE -> new Stockpile(position, inventory);
         };
     }
 
@@ -36,7 +44,8 @@ public final class StructureFactory {
      *
      * @return The created structure
      */
-    public static IStructure createStructure(final StructureType type, final int x, final int y) {
+    public static IStructure createStructure(
+        final StructureType type, final int x, final int y) {
         return createStructure(type, new Position(x, y));
     }
 
