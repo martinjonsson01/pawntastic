@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import com.thebois.Pawntastic;
 import com.thebois.models.beings.IBeing;
 import com.thebois.models.beings.IBeingGroup;
 import com.thebois.models.beings.roles.RoleType;
@@ -37,19 +38,15 @@ public class ColonyView implements IView {
         ROLE_COLORS.put(RoleType.IDLE, Color.WHITE);
     }
 
-    private final float tileSize;
     private final int radius;
     private IBeingGroup colony;
     private final Texture beingTexture;
 
     /**
      * Instantiates a new ColonyView.
-     *
-     * @param tileSize The size of a single tile, in pixels.
      */
-    public ColonyView(final float tileSize) {
-        this.tileSize = tileSize;
-        this.radius = Math.round(tileSize / 2f);
+    public ColonyView() {
+        this.radius = Math.round(Pawntastic.getTileSize() / 2f);
         this.beingTexture = TextureUtils.createCircleTexture(radius
                                                              * TEXTURE_SUPER_SAMPLING_FACTOR);
     }
@@ -65,17 +62,17 @@ public class ColonyView implements IView {
 
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
-        float posX;
-        float posY;
+        float x;
+        float y;
 
         if (colony != null) {
             for (final IBeing pawn : colony.getBeings()) {
-                posX = pawn.getPosition().getPosX() * tileSize;
-                posY = pawn.getPosition().getPosY() * tileSize;
+                x = pawn.getPosition().getX() * Pawntastic.getTileSize();
+                y = pawn.getPosition().getY() * Pawntastic.getTileSize();
 
                 batch.setColor(ROLE_COLORS.get(pawn.getRole().getType()));
 
-                batch.draw(beingTexture, offsetX + posX, offsetY + posY, radius * 2, radius * 2);
+                batch.draw(beingTexture, offsetX + x, offsetY + y, radius * 2, radius * 2);
             }
         }
     }

@@ -3,15 +3,17 @@ package com.thebois.views.game;
 import java.util.Collection;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Disposable;
 
 import com.thebois.Pawntastic;
+import com.thebois.views.info.IActorView;
 
 /**
  * A view of the game world.
  */
-public class GameView extends Widget implements Disposable {
+public class GameView extends Widget implements Disposable, IActorView {
 
     private final Collection<IView> views;
     private final float worldScreenSize;
@@ -19,12 +21,11 @@ public class GameView extends Widget implements Disposable {
     /**
      * Instantiates a new view of the world.
      *
-     * @param views    The different sub-views of the world
-     * @param tileSize The size of a single tile in world space
+     * @param views The different sub-views of the world
      */
-    public GameView(final Collection<IView> views, final float tileSize) {
+    public GameView(final Collection<IView> views) {
         this.views = views;
-        this.worldScreenSize = tileSize * Pawntastic.WORLD_SIZE;
+        this.worldScreenSize = Pawntastic.getTileSize() * Pawntastic.getWorldSize();
     }
 
     @Override
@@ -49,6 +50,11 @@ public class GameView extends Widget implements Disposable {
         for (final IView view : views) {
             view.draw(batch, getX(), getY());
         }
+    }
+
+    @Override
+    public Actor getWidgetContainer() {
+        return this;
     }
 
 }

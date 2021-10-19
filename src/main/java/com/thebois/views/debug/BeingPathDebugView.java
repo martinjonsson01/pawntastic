@@ -4,11 +4,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import com.thebois.Pawntastic;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IBeing;
 import com.thebois.models.beings.IBeingGroup;
-import com.thebois.views.game.IView;
 import com.thebois.views.TextureUtils;
+import com.thebois.views.game.IView;
 
 /**
  * Displays the paths of all beings.
@@ -16,19 +17,17 @@ import com.thebois.views.TextureUtils;
 public class BeingPathDebugView implements IView {
 
     private static final int RADIUS = 2;
+    private static final int TILE_SIZE = Pawntastic.getTileSize();
     private final IBeingGroup beingGroup;
-    private final float tileSize;
-    private Texture circleTexture;
+    private final Texture circleTexture;
 
     /**
      * Initializes with a group of beings to display paths for.
      *
      * @param beingGroup The group containing the beings to display paths of.
-     * @param tileSize   The size of a single tile in the world, in pixels.
      */
-    public BeingPathDebugView(final IBeingGroup beingGroup, final float tileSize) {
+    public BeingPathDebugView(final IBeingGroup beingGroup) {
         this.beingGroup = beingGroup;
-        this.tileSize = tileSize;
         this.circleTexture = TextureUtils.createCircleTexture(RADIUS);
     }
 
@@ -44,8 +43,8 @@ public class BeingPathDebugView implements IView {
             for (final Position position : being.getPath()) {
                 batch.draw(
                     circleTexture,
-                    position.getPosX() * tileSize + offsetX + tileSize / 2,
-                    position.getPosY() * tileSize + offsetY + tileSize / 2);
+                    position.getX() * TILE_SIZE + offsetX + TILE_SIZE / 2f,
+                    position.getY() * TILE_SIZE + offsetY + TILE_SIZE / 2f);
             }
         }
     }

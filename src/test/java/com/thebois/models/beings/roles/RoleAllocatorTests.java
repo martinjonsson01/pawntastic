@@ -7,10 +7,12 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.world.World;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -36,7 +38,8 @@ public class RoleAllocatorTests {
             vacantPositions.add(new Position(0, 0));
         }
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        return new Colony(vacantPositions, pathFinder);
+        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
+        return new Colony(vacantPositions, pathFinder, structureFinder);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.thebois.models;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import com.thebois.abstractions.IDeepClonable;
@@ -7,10 +8,10 @@ import com.thebois.abstractions.IDeepClonable;
 /**
  * A two-dimensional location.
  */
-public final class Position implements IDeepClonable<Position> {
+public final class Position implements IDeepClonable<Position>, Serializable {
 
-    private float posX;
-    private float posY;
+    private float x;
+    private float y;
 
     /**
      * Creates position at 0,0.
@@ -22,12 +23,12 @@ public final class Position implements IDeepClonable<Position> {
     /**
      * Creates position at specified coordinates.
      *
-     * @param posX The x-coordinate.
-     * @param posY The y-coordinate.
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
      */
-    public Position(final float posX, final float posY) {
-        this.posX = posX;
-        this.posY = posY;
+    public Position(final float x, final float y) {
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -38,59 +39,59 @@ public final class Position implements IDeepClonable<Position> {
      * @return The distance between the points.
      */
     public float distanceTo(final Position other) {
-        return distanceTo(other.getPosX(), other.getPosY());
+        return distanceTo(other.getX(), other.getY());
     }
 
     /**
      * Calculates the euclidean distance between two positions.
      *
-     * @param otherPosX The x-coordinate to compare distance to.
-     * @param otherPosY The y-coordinate to compare distance to.
+     * @param otherX The x-coordinate to compare distance to.
+     * @param otherY The y-coordinate to compare distance to.
      *
      * @return The distance between the points.
      */
-    public float distanceTo(final float otherPosX, final float otherPosY) {
-        final float distanceX = Math.abs(getPosX() - otherPosX);
-        final float distanceY = Math.abs(getPosY() - otherPosY);
+    public float distanceTo(final float otherX, final float otherY) {
+        final float distanceX = Math.abs(getX() - otherX);
+        final float distanceY = Math.abs(getY() - otherY);
         return (float) Math.sqrt(distanceX * distanceX + distanceY * distanceY);
     }
 
-    public float getPosX() {
-        return posX;
+    public float getX() {
+        return x;
     }
 
-    public void setPosX(final float posX) {
-        this.posX = posX;
+    public void setX(final float x) {
+        this.x = x;
     }
 
-    public float getPosY() {
-        return posY;
+    public float getY() {
+        return y;
     }
 
-    public void setPosY(final float posY) {
-        this.posY = posY;
+    public void setY(final float y) {
+        this.y = y;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(posX, posY);
+        return Objects.hash(x, y);
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
+    public boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (other == null || getClass() != other.getClass()) {
             return false;
         }
-        final Position position = (Position) o;
-        return Float.compare(position.posX, posX) == 0 && Float.compare(position.posY, posY) == 0;
+        final Position position = (Position) other;
+        return Float.compare(position.x, x) == 0 && Float.compare(position.y, y) == 0;
     }
 
     @Override
     public String toString() {
-        return "{" + "x=" + posX + ", y=" + posY + '}';
+        return "{" + "x=" + x + ", y=" + y + '}';
     }
 
     /**
@@ -100,7 +101,7 @@ public final class Position implements IDeepClonable<Position> {
      */
     @Override
     public Position deepClone() {
-        return new Position(this.posX, this.posY);
+        return new Position(this.x, this.y);
     }
 
     /**
@@ -115,9 +116,66 @@ public final class Position implements IDeepClonable<Position> {
      * @return The manhattan distance to the destination.
      */
     public int manhattanDistanceTo(final Position destination) {
-        final float distanceX = Math.abs(getPosX() - destination.getPosX());
-        final float distanceY = Math.abs(getPosY() - destination.getPosY());
+        final float distanceX = Math.abs(getX() - destination.getX());
+        final float distanceY = Math.abs(getY() - destination.getY());
         return Math.round(distanceX + distanceY);
+    }
+
+    /**
+     * Adds a position component-wise.
+     *
+     * @param other The position to add.
+     *
+     * @return The sum of the positions.
+     */
+    public Position add(final Position other) {
+        return add(other.getX(), other.getY());
+    }
+
+    /**
+     * Adds the given values to each component.
+     *
+     * @param otherX How much to add to the x-coordinate.
+     * @param otherY How much to add to the y-coordinate.
+     *
+     * @return A position with its coordinates added to.
+     */
+    public Position add(final float otherX, final float otherY) {
+        return new Position(x + otherX, y + otherY);
+    }
+
+    /**
+     * Subtracts a position component-wise.
+     *
+     * @param other The position to subtract.
+     *
+     * @return The difference.
+     */
+    public Position subtract(final Position other) {
+        return subtract(other.getX(), other.getY());
+    }
+
+    /**
+     * Subtracts components by the given values.
+     *
+     * @param otherX How much to subtract from the x-coordinate.
+     * @param otherY How much to subtract from the y-coordinate.
+     *
+     * @return A position with its coordinates subtracted from.
+     */
+    public Position subtract(final float otherX, final float otherY) {
+        return add(-otherX, -otherY);
+    }
+
+    /**
+     * Scales the position by a given value.
+     *
+     * @param scalar The factor to scale by.
+     *
+     * @return The scaled position.
+     */
+    public Position multiply(final float scalar) {
+        return new Position(x * scalar, y * scalar);
     }
 
 }

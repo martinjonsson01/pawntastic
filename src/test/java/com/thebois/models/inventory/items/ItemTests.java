@@ -31,4 +31,20 @@ public class ItemTests {
         assertThat(itemType.getWeight()).isEqualTo(item.getWeight());
     }
 
+    public static Stream<Arguments> getItemTypesToTestIfEqualAndExpectedResult() {
+        return Stream.of(
+            Arguments.of(ItemFactory.fromType(ItemType.LOG), ItemFactory.fromType(ItemType.LOG), true),
+            Arguments.of(ItemFactory.fromType(ItemType.LOG), ItemFactory.fromType(ItemType.ROCK), false),
+            Arguments.of(ItemFactory.fromType(ItemType.ROCK), ItemFactory.fromType(ItemType.ROCK), true),
+            Arguments.of(ItemFactory.fromType(ItemType.ROCK), null, false));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getItemTypesToTestIfEqualAndExpectedResult")
+    public void isEqual(final IItem itemA, final IItem itemB, final boolean expectedResult) {
+
+        // Assert
+        assertThat(itemA.equals(itemB)).isEqualTo(expectedResult);
+    }
+
 }

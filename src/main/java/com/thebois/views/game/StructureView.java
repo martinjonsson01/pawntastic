@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import com.thebois.Pawntastic;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.views.TextureUtils;
 
@@ -12,27 +13,21 @@ import com.thebois.views.TextureUtils;
  */
 public final class StructureView implements IView {
 
-    private final float tileSize;
+    private static final int TILE_SIZE = Pawntastic.getTileSize();
     private Iterable<IStructure> structures;
-    private final Color houseColor = Color.valueOf("#CD853F");
     private final Texture houseTexture;
     private final Texture ceilingTexture;
 
     /**
      * Creates an instance of a Structure view.
-     *
-     * @param tileSize The size of a single world tile in screen space.
      */
-    public StructureView(final float tileSize) {
-        this.tileSize = tileSize;
-
-        houseTexture = TextureUtils.createSquareTexture((int) tileSize);
-        ceilingTexture = TextureUtils.createTriangleTexture((int) tileSize);
+    public StructureView() {
+        houseTexture = TextureUtils.createSquareTexture(TILE_SIZE);
+        ceilingTexture = TextureUtils.createTriangleTexture(TILE_SIZE);
     }
 
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
-        batch.setColor(houseColor);
         for (final IStructure structure : structures) {
             drawHouse(batch, offsetX, offsetY, structure);
         }
@@ -49,21 +44,29 @@ public final class StructureView implements IView {
         batch.setColor(Color.BLACK);
         batch.draw(
             ceilingTexture,
-            offsetX + structure.getPosition().getPosX() * tileSize,
-            offsetY + structure.getPosition().getPosY() * tileSize + tileSize / 2,
-            tileSize,
-            tileSize / 2);
+            offsetX + structure.getPosition().getX() * TILE_SIZE,
+            offsetY + structure.getPosition().getY() * TILE_SIZE + TILE_SIZE / 2f,
+            TILE_SIZE,
+            TILE_SIZE / 2f);
     }
 
     private void drawBase(
         final Batch batch, final float offsetX, final float offsetY, final IStructure structure) {
-        batch.setColor(houseColor);
+        batch.setColor(getHouseColor(structure));
         batch.draw(
             houseTexture,
-            offsetX + structure.getPosition().getPosX() * tileSize,
-            offsetY + structure.getPosition().getPosY() * tileSize,
-            tileSize,
-            tileSize / 2);
+            offsetX + structure.getPosition().getX() * TILE_SIZE,
+            offsetY + structure.getPosition().getY() * TILE_SIZE,
+            TILE_SIZE,
+            TILE_SIZE / 2f);
+    }
+
+    // Houses get different colors based on built status
+    private Color getHouseColor(final IStructure structure) {
+        final Color houseColor = Color.valueOf("3B2916");
+        final Color blueprintColor = Color.valueOf("1B52AB");
+
+        return blueprintColor.lerp(houseColor, structure.getBuiltRatio());
     }
 
     /**

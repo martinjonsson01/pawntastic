@@ -32,15 +32,8 @@ public class AstarPathFinderTests {
             Arguments.of(mockPosition(29, 3), mockPosition(10, 23)));
     }
 
-    private static Position mockPosition(final int positionX, final int positionY) {
-        return new Position(positionX, positionY);
-    }
-
-    private ITile mockObstacle(final int positionX, final int positionY) {
-        final ITile mockTile = Mockito.mock(ITile.class);
-        when(mockTile.getPosition()).thenReturn(new Position(positionX, positionY));
-        when(mockTile.getCost()).thenReturn(100f);
-        return mockTile;
+    private static Position mockPosition(final int x, final int y) {
+        return new Position(x, y);
     }
 
     @Test

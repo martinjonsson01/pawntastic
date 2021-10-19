@@ -1,5 +1,6 @@
 package com.thebois.models.beings.roles;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import com.thebois.abstractions.IDeepClonable;
@@ -7,7 +8,7 @@ import com.thebois.abstractions.IDeepClonable;
 /**
  * Represents an assignment to a specific work task.
  */
-public abstract class AbstractRole implements IDeepClonable<AbstractRole> {
+public abstract class AbstractRole implements IDeepClonable<AbstractRole>, Serializable {
 
     @Override
     public int hashCode() {

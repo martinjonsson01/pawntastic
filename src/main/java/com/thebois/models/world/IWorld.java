@@ -1,11 +1,13 @@
 package com.thebois.models.world;
 
+import java.io.Serializable;
+
 import com.thebois.models.Position;
 
 /**
  * Represents a world containing tiles.
  */
-public interface IWorld {
+public interface IWorld extends Serializable {
 
     /**
      * Gets the neighbouring tiles.
@@ -28,11 +30,11 @@ public interface IWorld {
     /**
      * Gets the tile at a given location.
      *
-     * @param posX The x-coordinate to get the tile from.
-     * @param posY The y-coordinate to get the tile from.
+     * @param x The x-coordinate to get the tile from.
+     * @param y The y-coordinate to get the tile from.
      *
      * @return The tile at the given position.
      */
-    ITile getTileAt(int posX, int posY);
+    ITile getTileAt(int x, int y);
 
 }
