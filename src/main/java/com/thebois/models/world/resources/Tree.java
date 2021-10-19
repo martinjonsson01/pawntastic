@@ -22,11 +22,11 @@ public class Tree extends AbstractResource {
     /**
      * Instantiate a new tree resource at given position.
      *
-     * @param posX X coordinate for the tree resource.
-     * @param posY Y coordinate for the tree resource.
+     * @param x X coordinate for the tree resource.
+     * @param y Y coordinate for the tree resource.
      */
-    public Tree(final float posX, final float posY) {
-        this(new Position(posX, posY));
+    public Tree(final float x, final float y) {
+        this(new Position(x, y));
     }
 
     @Override

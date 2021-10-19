@@ -10,7 +10,7 @@ import java.util.Random;
 import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
-import com.thebois.models.IFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.world.generation.ResourceGenerator;
 import com.thebois.models.world.generation.TerrainGenerator;
@@ -25,12 +25,13 @@ import com.thebois.utils.MatrixUtils;
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
-public class World implements IWorld, IFinder, IResourceFinder, Serializable {
+public class World implements IWorld, IStructureFinder, IResourceFinder, Serializable {
 
     private final ITerrain[][] terrainMatrix;
     private final IStructure[][] structureMatrix;
     private final IResource[][] resourceMatrix;
     private final ITile[][] canonicalMatrix;
+    private Collection<IStructure> structuresCache = new ArrayList<>();
     private final int worldSize;
     private final Random random;
 
@@ -89,9 +90,9 @@ public class World implements IWorld, IFinder, IResourceFinder, Serializable {
     private void replaceTileInCanonicalMatrix(final ITile tile) {
         if (tile != null) {
             final Position position = tile.getPosition();
-            final int posY = (int) position.getPosY();
-            final int posX = (int) position.getPosX();
-            canonicalMatrix[posY][posX] = tile;
+            final int y = (int) position.getY();
+            final int x = (int) position.getX();
+            canonicalMatrix[y][x] = tile;
         }
     }
 
@@ -128,18 +129,9 @@ public class World implements IWorld, IFinder, IResourceFinder, Serializable {
     }
 
     private boolean isVacant(final Position position) {
-        final int x = (int) position.getPosX();
-        final int y = (int) position.getPosY();
+        final int x = (int) position.getX();
+        final int y = (int) position.getY();
         return canonicalMatrix[y][x].getCost() < Float.MAX_VALUE;
-    }
-
-    /**
-     * Locates an object in the world and returns it.
-     *
-     * @return Object.
-     */
-    public Object find() {
-        return null;
     }
 
     /**
@@ -160,13 +152,20 @@ public class World implements IWorld, IFinder, IResourceFinder, Serializable {
      * @return The list to be returned.
      */
     public Collection<IStructure> getStructures() {
-        final Collection<IStructure> copy = new ArrayList<>();
-        MatrixUtils.forEachElement(structureMatrix, maybeStructure -> {
-            if (maybeStructure != null) {
-                copy.add(maybeStructure.deepClone());
-            }
-        });
-        return copy;
+        return structuresCache;
+    }
+
+    private void generateStructuresCache() {
+        structuresCache = MatrixUtils.toCollection(this.structureMatrix);
+    }
+
+    /**
+     * Returns the resources in a Collection as the interface IResource.
+     *
+     * @return The list to be returned.
+     */
+    public Collection<IResource> getResources() {
+        return MatrixUtils.toCollection(this.resourceMatrix);
     }
 
     /**
@@ -178,7 +177,7 @@ public class World implements IWorld, IFinder, IResourceFinder, Serializable {
      * @return Whether the structure was built.
      */
     public boolean createStructure(final StructureType type, final Position position) {
-        return createStructure(type, (int) position.getPosX(), (int) position.getPosY());
+        return createStructure(type, (int) position.getX(), (int) position.getY());
     }
 
     /**
@@ -197,14 +196,15 @@ public class World implements IWorld, IFinder, IResourceFinder, Serializable {
 
             updateCanonicalMatrix();
             postObstacleEvent(x, y);
+            generateStructuresCache();
             return true;
         }
         return false;
     }
 
     private boolean isPositionPlaceable(final Position position) {
-        final int posIntX = (int) position.getPosX();
-        final int posIntY = (int) position.getPosY();
+        final int posIntX = (int) position.getX();
+        final int posIntY = (int) position.getY();
         if (posIntY < 0 || posIntY >= structureMatrix.length) {
             return false;
         }
@@ -214,9 +214,30 @@ public class World implements IWorld, IFinder, IResourceFinder, Serializable {
         return isVacant(position);
     }
 
-    private void postObstacleEvent(final int posX, final int posY) {
-        final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(posX, posY);
+    private void postObstacleEvent(final int x, final int y) {
+        final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(x, y);
         Pawntastic.getEventBus().post(obstacleEvent);
+    }
+
+    @Override
+    public Optional<IStructure> getNearbyStructureOfType(
+        final Position origin,
+        final StructureType type) {
+        return getStructures()
+            .stream()
+            .filter(structure -> structure.getType().equals(type))
+            .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
+                                           origin.distanceTo(o2.getPosition())));
+    }
+
+    @Override
+    public Optional<IStructure> getNearbyIncompleteStructure(
+        final Position origin) {
+        return getStructures()
+            .stream()
+            .filter(structure -> !structure.isCompleted())
+            .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
+                                           origin.distanceTo(o2.getPosition())));
     }
 
     @Override
@@ -228,32 +249,17 @@ public class World implements IWorld, IFinder, IResourceFinder, Serializable {
                                            origin.distanceTo(o2.getPosition())));
     }
 
-    /**
-     * Returns the resources in a Collection as the interface IResource.
-     *
-     * @return The list to be returned.
-     */
-    public Collection<IResource> getResources() {
-        final Collection<IResource> copy = new ArrayList<>();
-        MatrixUtils.forEachElement(resourceMatrix, maybeResource -> {
-            if (maybeResource != null) {
-                copy.add(maybeResource.deepClone());
-            }
-        });
-        return copy;
-    }
-
     @Override
     public Collection<ITile> getNeighboursOf(final ITile tile) {
         final ArrayList<ITile> tiles = new ArrayList<>(8);
         final Position position = tile.getPosition();
-        final int posY = (int) position.getPosY();
-        final int posX = (int) position.getPosX();
+        final int y = (int) position.getY();
+        final int x = (int) position.getX();
 
-        final int startY = Math.max(0, posY - 1);
-        final int endY = Math.min(worldSize - 1, posY + 1);
-        final int startX = Math.max(0, posX - 1);
-        final int endX = Math.min(worldSize - 1, posX + 1);
+        final int startY = Math.max(0, y - 1);
+        final int endY = Math.min(worldSize - 1, y + 1);
+        final int startX = Math.max(0, x - 1);
+        final int endX = Math.min(worldSize - 1, x + 1);
 
         for (int neighbourY = startY; neighbourY <= endY; neighbourY++) {
             for (int neighbourX = startX; neighbourX <= endX; neighbourX++) {
@@ -269,15 +275,15 @@ public class World implements IWorld, IFinder, IResourceFinder, Serializable {
 
     @Override
     public ITile getTileAt(final Position position) {
-        return getTileAt((int) position.getPosX(), (int) position.getPosY());
+        return getTileAt((int) position.getX(), (int) position.getY());
     }
 
     @Override
-    public ITile getTileAt(final int posX, final int posY) {
-        if (posX < 0 || posY < 0 || posX >= worldSize || posY >= worldSize) {
+    public ITile getTileAt(final int x, final int y) {
+        if (x < 0 || y < 0 || x >= worldSize || y >= worldSize) {
             throw new IndexOutOfBoundsException("Given position is outside of the world.");
         }
-        return canonicalMatrix[posY][posX];
+        return canonicalMatrix[y][x];
     }
 
     @Override
@@ -314,10 +320,10 @@ public class World implements IWorld, IFinder, IResourceFinder, Serializable {
     }
 
     private boolean isDiagonalTo(final ITile tile, final ITile neighbour) {
-        final int tileX = (int) tile.getPosition().getPosX();
-        final int tileY = (int) tile.getPosition().getPosY();
-        final int neighbourX = (int) neighbour.getPosition().getPosX();
-        final int neighbourY = (int) neighbour.getPosition().getPosY();
+        final int tileX = (int) tile.getPosition().getX();
+        final int tileY = (int) tile.getPosition().getY();
+        final int neighbourX = (int) neighbour.getPosition().getX();
+        final int neighbourY = (int) neighbour.getPosition().getY();
         final int deltaX = Math.abs(tileX - neighbourX);
         final int deltaY = Math.abs(tileY - neighbourY);
         return deltaX == 1 && deltaY == 1;

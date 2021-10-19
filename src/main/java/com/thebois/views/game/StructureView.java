@@ -15,7 +15,6 @@ public final class StructureView implements IView {
 
     private static final int TILE_SIZE = Pawntastic.getTileSize();
     private Iterable<IStructure> structures;
-    private final Color houseColor = Color.valueOf("#CD853F");
     private final Texture houseTexture;
     private final Texture ceilingTexture;
 
@@ -29,7 +28,6 @@ public final class StructureView implements IView {
 
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
-        batch.setColor(houseColor);
         for (final IStructure structure : structures) {
             drawHouse(batch, offsetX, offsetY, structure);
         }
@@ -46,21 +44,29 @@ public final class StructureView implements IView {
         batch.setColor(Color.BLACK);
         batch.draw(
             ceilingTexture,
-            offsetX + structure.getPosition().getPosX() * TILE_SIZE,
-            offsetY + structure.getPosition().getPosY() * TILE_SIZE + TILE_SIZE / 2f,
+            offsetX + structure.getPosition().getX() * TILE_SIZE,
+            offsetY + structure.getPosition().getY() * TILE_SIZE + TILE_SIZE / 2f,
             TILE_SIZE,
             TILE_SIZE / 2f);
     }
 
     private void drawBase(
         final Batch batch, final float offsetX, final float offsetY, final IStructure structure) {
-        batch.setColor(houseColor);
+        batch.setColor(getHouseColor(structure));
         batch.draw(
             houseTexture,
-            offsetX + structure.getPosition().getPosX() * TILE_SIZE,
-            offsetY + structure.getPosition().getPosY() * TILE_SIZE,
+            offsetX + structure.getPosition().getX() * TILE_SIZE,
+            offsetY + structure.getPosition().getY() * TILE_SIZE,
             TILE_SIZE,
             TILE_SIZE / 2f);
+    }
+
+    // Houses get different colors based on built status
+    private Color getHouseColor(final IStructure structure) {
+        final Color houseColor = Color.valueOf("3B2916");
+        final Color blueprintColor = Color.valueOf("1B52AB");
+
+        return blueprintColor.lerp(houseColor, structure.getBuiltRatio());
     }
 
     /**

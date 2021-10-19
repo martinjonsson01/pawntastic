@@ -20,6 +20,8 @@ import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.inventory.items.ItemFactory;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
 import com.thebois.models.world.resources.Tree;
@@ -49,12 +51,12 @@ public class WorldTests {
                                                               mockPosition(1, 2))));
     }
 
-    private static ITile mockTile(final int positionX, final int positionY) {
-        return new Grass(positionX, positionY);
+    private static ITile mockTile(final int x, final int y) {
+        return new Grass(x, y);
     }
 
-    private static Position mockPosition(final int positionX, final int positionY) {
-        return new Position(positionX, positionY);
+    private static Position mockPosition(final int x, final int y) {
+        return new Position(x, y);
     }
 
     public static Stream<Arguments> getPositionOutSideOfWorld() {
@@ -226,12 +228,12 @@ public class WorldTests {
         final Position firstBlockedRandomSpot = new Position(0, 1);
         final Position secondBlockedRandomSpot = new Position(1, 1);
         final Position thirdEmptyRandomSpot = new Position(2, 0);
-        when(mockRandom.nextInt(anyInt())).thenReturn((int) firstBlockedRandomSpot.getPosX(),
-                                                      (int) firstBlockedRandomSpot.getPosY(),
-                                                      (int) secondBlockedRandomSpot.getPosX(),
-                                                      (int) secondBlockedRandomSpot.getPosY(),
-                                                      (int) thirdEmptyRandomSpot.getPosX(),
-                                                      (int) thirdEmptyRandomSpot.getPosY());
+        when(mockRandom.nextInt(anyInt())).thenReturn((int) firstBlockedRandomSpot.getX(),
+                                                      (int) firstBlockedRandomSpot.getY(),
+                                                      (int) secondBlockedRandomSpot.getX(),
+                                                      (int) secondBlockedRandomSpot.getY(),
+                                                      (int) thirdEmptyRandomSpot.getX(),
+                                                      (int) thirdEmptyRandomSpot.getY());
         final World world = createTestWorld(3, mockRandom);
         world.createStructure(StructureType.HOUSE, firstBlockedRandomSpot);
         world.createStructure(StructureType.HOUSE, secondBlockedRandomSpot);
@@ -241,18 +243,6 @@ public class WorldTests {
 
         // Assert
         assertThat(vacantSpot).isEqualTo(thirdEmptyRandomSpot);
-    }
-
-    @Test
-    public void worldFind() {
-        // Arrange
-        final World world = createWorld(2);
-
-        // Act
-        final Object worldObject = world.find();
-
-        // Assert
-        assertThat(worldObject).isEqualTo(null);
     }
 
     private World createWorld(final int size) {
@@ -450,6 +440,142 @@ public class WorldTests {
 
         // Assert
         assertThat(actualNumberOfTerrainTiles).isEqualTo(expectedNumberOfTerrainTiles);
+    }
+    private static Stream<Arguments> getCorrectCoordinatesToTest() {
+        return Stream.of(
+            Arguments.of(
+                new Position(25,5),
+                new Position(0, 0),
+                new Position(20, 20)),
+            Arguments.of(
+                new Position(5,5),
+                new Position(0, 0),
+                new Position(8, 8)),
+            Arguments.of(
+                new Position(0,0),
+                new Position(5, 5),
+                new Position(3, 3)),
+            Arguments.of(
+                new Position(5,5),
+                new Position(0, 0),
+                new Position(8, 8)),
+            Arguments.of(
+                new Position(20,20),
+                new Position(5, 7),
+                new Position(15, 15))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("getCorrectCoordinatesToTest")
+    public void findNearestStructureReturnsCorrect(final Position startingPosition,
+                                                   final Position incorrectPosition,
+                                                   final Position expectedPosition) {
+
+        // Arrange
+        final World world = new TestWorld(50, mock(Random.class));
+        world.createStructure(StructureType.HOUSE, expectedPosition);
+        world.createStructure(StructureType.HOUSE, incorrectPosition);
+
+        // Act
+        final Optional<IStructure> foundStructure =
+            world.getNearbyStructureOfType(startingPosition, StructureType.HOUSE);
+
+        // Assert
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
+
+    }
+
+    @Test
+    public void returnsNoNearestStructureWhenWorldIsEmpty() {
+        // Arrange
+        final World world = new TestWorld(50, mock(Random.class));
+
+        // Act
+        final Optional<IStructure> structure = world.getNearbyStructureOfType(
+            new Position(20f, 20f), StructureType.HOUSE);
+
+        // Assert
+        assertThat(structure.isPresent()).isFalse();
+    }
+
+    private static Stream<Arguments> getPositionsAndNumberOfPositions() {
+        return Stream.of(Arguments.of(List.of(new Position(10, 10),
+                                              new Position(30, 5),
+                                              new Position(6, 33),
+                                              new Position(23, 23),
+                                              new Position(0, 0)), 5),
+                         Arguments.of(List.of(), 0));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsAndNumberOfPositions")
+    public void getStructureCollectionIsCorrectSize(
+        final Collection<Position> positions,
+        final int size) {
+        // Arrange
+        final World world = new TestWorld(50, mock(Random.class));
+
+        // Act
+        for (final Position position : positions) {
+            world.createStructure(StructureType.HOUSE, position);
+        }
+
+        // Assert
+        assertThat(world.getStructures().size()).isEqualTo(size);
+    }
+
+    @Test
+    public void findNearestIncompleteStructureReturnsCorrect() {
+        // Arrange
+        final World world = new TestWorld(50, mock(Random.class));
+        world.createStructure(StructureType.HOUSE, new Position(4, 2));
+        world.createStructure(StructureType.HOUSE, new Position(9, 5));
+
+        for (final IStructure structure : world.getStructures()) {
+            for (int i = 0; i < 10; i++) {
+                structure.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
+            }
+            for (int i = 0; i < 10; i++) {
+                structure.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
+            }
+        }
+
+        world.createStructure(StructureType.HOUSE, new Position(1, 3));
+        world.createStructure(StructureType.HOUSE, new Position(7, 9));
+
+        // Act
+        final Optional<IStructure> foundStructure =
+            world.getNearbyIncompleteStructure(new Position(0, 0));
+
+        // Assert
+        assertThat(foundStructure.orElseThrow()
+                                 .getPosition())
+            .isEqualTo(new Position(1, 3));
+    }
+
+    @Test
+    public void findNearestIncompleteStructureFindsNoIncompleteStructure() {
+        // Arrange
+        final World world = new TestWorld(50, mock(Random.class));
+        world.createStructure(StructureType.HOUSE, new Position(4, 2));
+        world.createStructure(StructureType.HOUSE, new Position(9, 5));
+
+        for (final IStructure structure : world.getStructures()) {
+            for (int i = 0; i < 10; i++) {
+                structure.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
+            }
+            for (int i = 0; i < 10; i++) {
+                structure.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
+            }
+        }
+
+        // Act
+        final Optional<IStructure> foundStructure =
+            world.getNearbyIncompleteStructure(new Position(0, 0));
+
+        // Assert
+        assertThat(foundStructure.isEmpty()).isTrue();
     }
 
     private void fillWorldWithStructures(final int worldSize, final World world) {

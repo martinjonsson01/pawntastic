@@ -4,39 +4,36 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import com.thebois.Pawntastic;
 import com.thebois.controllers.IController;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.world.World;
-import com.thebois.views.IProjector;
 import com.thebois.views.debug.BeingPathDebugView;
 import com.thebois.views.debug.FrameCounterView;
 import com.thebois.views.game.GameView;
 import com.thebois.views.game.IView;
+import com.thebois.views.info.IActorView;
 
 /**
  * Container class for controllers that manage the world.
  */
-public class WorldController implements IController<GameView> {
+public class WorldController implements IController<IActorView> {
 
     private final Collection<IController<IView>> controllers;
-    private final Collection<InputProcessor> inputProcessors;
     private final GameView gameView;
 
     /**
      * Instantiate with all controllers and views used for the world.
      *
-     * @param world     The world that the controllers manage.
-     * @param colony    The colony that the controllers update and get information from.
-     * @param projector Projector used for converting screen coordinates to world coordinates.
-     * @param font      The font used for game widgets.
+     * @param world  The world that the controllers manage.
+     * @param colony The colony that the controllers update and get information from.
+     * @param font   The font used for game widgets.
      */
     public WorldController(
-        final World world, final Colony colony, final IProjector projector, final BitmapFont font) {
-        final StructureController structureController = new StructureController(world, projector);
+        final World world, final Colony colony, final BitmapFont font) {
+        final StructureController structureController = new StructureController(world);
         final TerrainController terrainController = new TerrainController(world);
         final ColonyController colonyController = new ColonyController(colony);
         final ResourceController resourceController = new ResourceController(world);
@@ -45,10 +42,8 @@ public class WorldController implements IController<GameView> {
                               resourceController,
                               structureController,
                               colonyController);
-        inputProcessors = List.of(structureController);
 
         gameView = createGameView(world, colony, font);
-        structureController.setGameWidget(gameView);
     }
 
     private GameView createGameView(
@@ -71,7 +66,7 @@ public class WorldController implements IController<GameView> {
     }
 
     @Override
-    public GameView getView() {
+    public IActorView getView() {
         return gameView;
     }
 
@@ -80,10 +75,6 @@ public class WorldController implements IController<GameView> {
         for (final IController<IView> controller : controllers) {
             controller.update();
         }
-    }
-
-    public Iterable<InputProcessor> getInputProcessors() {
-        return inputProcessors;
     }
 
 }

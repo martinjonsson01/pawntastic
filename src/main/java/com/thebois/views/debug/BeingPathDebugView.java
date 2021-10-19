@@ -53,8 +53,8 @@ public class BeingPathDebugView implements IView {
                                                               being.getDestination());
             for (final Position position : path) {
                 batch.draw(circleTexture,
-                           position.getPosX() * TILE_SIZE + offsetX + TILE_SIZE / 2f,
-                           position.getPosY() * TILE_SIZE + offsetY + TILE_SIZE / 2f);
+                           position.getX() * TILE_SIZE + offsetX + TILE_SIZE / 2f,
+                           position.getY() * TILE_SIZE + offsetY + TILE_SIZE / 2f);
             }
         }
     }

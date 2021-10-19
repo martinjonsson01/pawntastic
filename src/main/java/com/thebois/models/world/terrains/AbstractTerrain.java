@@ -21,10 +21,10 @@ public abstract class AbstractTerrain implements ITerrain {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final AbstractTerrain terrain = (AbstractTerrain) o;
+    public boolean equals(final Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        final AbstractTerrain terrain = (AbstractTerrain) other;
         return Objects.equals(position, terrain.position);
     }
 

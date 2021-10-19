@@ -268,12 +268,14 @@ public class ColonyTests {
         final IBeing being = Mockito.mock(IBeing.class);
         final Colony colony = mockColony();
 
-        // Act
         colony.addBeing(being);
-        colony.update();
+        final float deltaTime = 0.1f;
+
+        // Act
+        colony.update(deltaTime);
 
         // Assert
-        verify(being, times(1)).update();
+        verify(being, times(1)).update(deltaTime);
     }
 
 }

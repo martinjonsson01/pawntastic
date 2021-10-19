@@ -33,8 +33,10 @@ public interface IBeing extends Serializable {
 
     /**
      * Updates the objects internal state.
+     *
+     * @param deltaTime The amount of time that has passed since the last update, in seconds.
      */
-    void update();
+    void update(float deltaTime);
 
     /**
      * Gets the current destination.

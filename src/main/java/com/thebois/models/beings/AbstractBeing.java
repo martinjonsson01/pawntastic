@@ -12,8 +12,15 @@ import com.thebois.models.inventory.items.IItem;
  */
 public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
-    // The max speed of the AbstractBeing
-    private static final float MAX_WALKING_DISTANCE = 0.1f;
+    /**
+     * The max speed of the being, in tiles/second.
+     */
+    private static final float SPEED = 6f;
+    /**
+     * The distance at which the being stops moving towards a destination and considers itself
+     * arrived.
+     */
+    private static final float DESTINATION_REACHED_DISTANCE = 0.01f;
     private final IInventory inventory;
     private Position position;
     private AbstractRole role;
@@ -40,10 +47,10 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AbstractBeing)) return false;
-        final AbstractBeing that = (AbstractBeing) o;
+    public boolean equals(final Object other) {
+        if (this == other) return true;
+        if (!(other instanceof AbstractBeing)) return false;
+        final AbstractBeing that = (AbstractBeing) other;
         return Objects.equals(getPosition(), that.getPosition()) && Objects.equals(getRole(),
                                                                                    that.getRole());
     }
@@ -67,9 +74,9 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     }
 
     @Override
-    public void update() {
+    public void update(final float deltaTime) {
         role.obtainNextAction(this).perform(this);
-        move();
+        move(deltaTime);
     }
 
     public Position getDestination() {
@@ -86,36 +93,57 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         inventory.add(item);
     }
 
-    private void move() {
-        // Calculate delta of distance between current position and the destination
-        final float deltaX = destination.getPosX() - this.position.getPosX();
-        final float deltaY = destination.getPosY() - this.position.getPosY();
 
-        // Pythagorean theorem
-        final float totalDistance = (float) Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    /**
+     * Calculates and sets new position.
+     *
+     * @param deltaTime How much time the being should move at its speed forward, in seconds.
+     */
+    protected void move(final float deltaTime) {
 
-        // Calculate walking distance based on distance to destination
-        final float updatedWalkingDistance = Math.min(MAX_WALKING_DISTANCE,
-                                                      Math.abs(totalDistance));
+        final float distanceToDestination = destination.distanceTo(getPosition());
 
-        // Calculate norm of distance vector
-        final float normDeltaX = deltaX / totalDistance;
-        final float normDeltaY = deltaY / totalDistance;
-
-        // To avoid the position being set to NaN
-        if (totalDistance == 0) {
-            this.position = destination;
+        if (distanceToDestination < DESTINATION_REACHED_DISTANCE) {
+            onArrivedAtDestination(destination);
+            return;
         }
-        else {
 
-            // Calculate new position
-            final float newPosX = this.position.getPosX() + normDeltaX * updatedWalkingDistance;
-            final float newPosY = this.position.getPosY() + normDeltaY * updatedWalkingDistance;
+        movePositionTowardsDestination(deltaTime, destination, distanceToDestination);
+    }
 
-            // Apply new position to current position
-            this.position.setPosX(newPosX);
-            this.position.setPosY(newPosY);
+    private void onArrivedAtDestination(final Position segmentDestination) {
+        position = segmentDestination;
+    }
+
+    private void movePositionTowardsDestination(
+        final float deltaTime, final Position segmentDestination, final float totalDistance) {
+        // Calculate how much to move and in what direction.
+        final Position delta = segmentDestination.subtract(position);
+        final Position direction = delta.multiply(1f / totalDistance);
+        final Position velocity = direction.multiply(SPEED);
+        final Position movement = velocity.multiply(deltaTime);
+
+        Position newPosition = position.add(movement);
+
+        if (hasOvershotDestination(segmentDestination, delta, newPosition)) {
+            // Clamp position to destination,
+            // to prevent walking past the destination during large time skips.
+            newPosition = segmentDestination;
         }
+
+        position = newPosition;
+    }
+
+    private boolean hasOvershotDestination(
+        final Position destination, final Position delta, final Position newPosition) {
+        // Destination has been overshot if the delta has changed sign before and after moving.
+        final Position newDelta = destination.subtract(newPosition);
+        return hasChangedSign(newDelta.getX(), delta.getX()) || hasChangedSign(newDelta.getY(),
+                                                                               delta.getY());
+    }
+
+    private boolean hasChangedSign(final float posX, final float posX2) {
+        return Math.signum(posX) != Math.signum(posX2);
     }
 
 }

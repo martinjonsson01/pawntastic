@@ -21,7 +21,7 @@ public final class PositionAdapter {
      * @return The same position in Vector form.
      */
     public static Vector2 toVector(Position position) {
-        return new Vector2(position.getPosX(), position.getPosY());
+        return new Vector2(position.getX(), position.getY());
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.thebois.models.inventory;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -172,12 +173,11 @@ public class InventoryTests {
     public void addMultipleItemsToInventory() {
         // Arrange
         final Inventory inventory = new Inventory();
-        final ArrayList<IItem> items = new ArrayList<>();
-        items.add(ItemFactory.fromType(ItemType.LOG));
-        items.add(ItemFactory.fromType(ItemType.LOG));
 
         // Act
-        inventory.addMultiple(items);
+        inventory.addMultiple(List.of(
+            ItemFactory.fromType(ItemType.LOG),
+            ItemFactory.fromType(ItemType.LOG)));
 
         // Assert
         assertThat(inventory.hasItem(ItemType.LOG, 2)).isTrue();
