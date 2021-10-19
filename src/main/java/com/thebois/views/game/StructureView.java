@@ -1,5 +1,6 @@
 package com.thebois.views.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -17,6 +18,7 @@ public final class StructureView implements IView {
     private Iterable<IStructure> structures;
     private final Texture houseTexture;
     private final Texture ceilingTexture;
+    private final Texture townHallTexture = new Texture(Gdx.files.internal("town-hall.png"));
 
     /**
      * Creates an instance of a Structure view.
@@ -29,7 +31,11 @@ public final class StructureView implements IView {
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         for (final IStructure structure : structures) {
-            drawHouse(batch, offsetX, offsetY, structure);
+            switch (structure.getType()) {
+                case HOUSE -> drawHouse(batch, offsetX, offsetY, structure);
+                case TOWN_HALL -> drawTownHall(batch, offsetX, offsetY, structure);
+                // drawDefault(batch, offsetX, offsetY, structure);
+            }
         }
     }
 
@@ -69,6 +75,17 @@ public final class StructureView implements IView {
         return blueprintColor.lerp(houseColor, structure.getBuiltRatio());
     }
 
+    private void drawTownHall(
+        final Batch batch, final float offsetX, final float offsetY, final IStructure structure) {
+        batch.setColor(Color.valueOf("CFCFCF"));
+        batch.draw(
+            townHallTexture,
+            offsetX + structure.getPosition().getX() * TILE_SIZE,
+            offsetY + structure.getPosition().getY() * TILE_SIZE,
+            TILE_SIZE,
+            TILE_SIZE);
+    }
+
     /**
      * Updates the structures that should be displayed in the game.
      *
@@ -81,6 +98,8 @@ public final class StructureView implements IView {
     @Override
     public void dispose() {
         houseTexture.dispose();
+        ceilingTexture.dispose();
+        townHallTexture.dispose();
     }
 
 }
