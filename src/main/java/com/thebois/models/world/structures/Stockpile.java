@@ -39,4 +39,5 @@ public class Stockpile extends AbstractStructure {
         return Float.MAX_VALUE;
     }
 
+    // store and collect methods
 }
