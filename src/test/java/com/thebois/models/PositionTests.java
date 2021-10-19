@@ -66,31 +66,31 @@ public class PositionTests {
     @Test
     public void constructorSetsCoordinates() {
         // Arrange
-        final float posX = 1.5f;
-        final float posY = 2.8f;
+        final float x = 1.5f;
+        final float y = 2.8f;
 
         // Act
-        final Position position = new Position(posX, posY);
+        final Position position = new Position(x, y);
 
         // Assert
-        assertThat(position.getPosX()).isEqualTo(posX);
-        assertThat(position.getPosY()).isEqualTo(posY);
+        assertThat(position.getX()).isEqualTo(x);
+        assertThat(position.getY()).isEqualTo(y);
     }
 
     @Test
     public void getSetPositionChangesCoordinates() {
         // Arrange
         final Position position = new Position(0, 0);
-        final int posX = 123;
-        final int posY = 456;
+        final int x = 123;
+        final int y = 456;
 
         // Act
-        position.setPosX(posX);
-        position.setPosY(posY);
+        position.setX(x);
+        position.setY(y);
 
         // Assert
-        assertThat(position.getPosX()).isEqualTo(posX);
-        assertThat(position.getPosY()).isEqualTo(posY);
+        assertThat(position.getX()).isEqualTo(x);
+        assertThat(position.getY()).isEqualTo(y);
     }
 
     @Test

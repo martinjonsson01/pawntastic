@@ -10,8 +10,8 @@ import com.thebois.abstractions.IDeepClonable;
  */
 public final class Position implements IDeepClonable<Position>, Serializable {
 
-    private float posX;
-    private float posY;
+    private float x;
+    private float y;
 
     /**
      * Creates position at 0,0.
@@ -23,12 +23,12 @@ public final class Position implements IDeepClonable<Position>, Serializable {
     /**
      * Creates position at specified coordinates.
      *
-     * @param posX The x-coordinate.
-     * @param posY The y-coordinate.
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
      */
-    public Position(final float posX, final float posY) {
-        this.posX = posX;
-        this.posY = posY;
+    public Position(final float x, final float y) {
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -39,42 +39,42 @@ public final class Position implements IDeepClonable<Position>, Serializable {
      * @return The distance between the points.
      */
     public float distanceTo(final Position other) {
-        return distanceTo(other.getPosX(), other.getPosY());
+        return distanceTo(other.getX(), other.getY());
     }
 
     /**
      * Calculates the euclidean distance between two positions.
      *
-     * @param otherPosX The x-coordinate to compare distance to.
-     * @param otherPosY The y-coordinate to compare distance to.
+     * @param otherX The x-coordinate to compare distance to.
+     * @param otherY The y-coordinate to compare distance to.
      *
      * @return The distance between the points.
      */
-    public float distanceTo(final float otherPosX, final float otherPosY) {
-        final float distanceX = Math.abs(getPosX() - otherPosX);
-        final float distanceY = Math.abs(getPosY() - otherPosY);
+    public float distanceTo(final float otherX, final float otherY) {
+        final float distanceX = Math.abs(getX() - otherX);
+        final float distanceY = Math.abs(getY() - otherY);
         return (float) Math.sqrt(distanceX * distanceX + distanceY * distanceY);
     }
 
-    public float getPosX() {
-        return posX;
+    public float getX() {
+        return x;
     }
 
-    public void setPosX(final float posX) {
-        this.posX = posX;
+    public void setX(final float x) {
+        this.x = x;
     }
 
-    public float getPosY() {
-        return posY;
+    public float getY() {
+        return y;
     }
 
-    public void setPosY(final float posY) {
-        this.posY = posY;
+    public void setY(final float y) {
+        this.y = y;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(posX, posY);
+        return Objects.hash(x, y);
     }
 
     @Override
@@ -86,12 +86,12 @@ public final class Position implements IDeepClonable<Position>, Serializable {
             return false;
         }
         final Position position = (Position) other;
-        return Float.compare(position.posX, posX) == 0 && Float.compare(position.posY, posY) == 0;
+        return Float.compare(position.x, x) == 0 && Float.compare(position.y, y) == 0;
     }
 
     @Override
     public String toString() {
-        return "{" + "x=" + posX + ", y=" + posY + '}';
+        return "{" + "x=" + x + ", y=" + y + '}';
     }
 
     /**
@@ -101,7 +101,7 @@ public final class Position implements IDeepClonable<Position>, Serializable {
      */
     @Override
     public Position deepClone() {
-        return new Position(this.posX, this.posY);
+        return new Position(this.x, this.y);
     }
 
     /**
@@ -116,8 +116,8 @@ public final class Position implements IDeepClonable<Position>, Serializable {
      * @return The manhattan distance to the destination.
      */
     public int manhattanDistanceTo(final Position destination) {
-        final float distanceX = Math.abs(getPosX() - destination.getPosX());
-        final float distanceY = Math.abs(getPosY() - destination.getPosY());
+        final float distanceX = Math.abs(getX() - destination.getX());
+        final float distanceY = Math.abs(getY() - destination.getY());
         return Math.round(distanceX + distanceY);
     }
 
@@ -129,7 +129,7 @@ public final class Position implements IDeepClonable<Position>, Serializable {
      * @return The sum of the positions.
      */
     public Position add(final Position other) {
-        return add(other.getPosX(), other.getPosY());
+        return add(other.getX(), other.getY());
     }
 
     /**
@@ -141,7 +141,7 @@ public final class Position implements IDeepClonable<Position>, Serializable {
      * @return A position with its coordinates added to.
      */
     public Position add(final float otherX, final float otherY) {
-        return new Position(posX + otherX, posY + otherY);
+        return new Position(x + otherX, y + otherY);
     }
 
     /**
@@ -152,7 +152,7 @@ public final class Position implements IDeepClonable<Position>, Serializable {
      * @return The difference.
      */
     public Position subtract(final Position other) {
-        return subtract(other.getPosX(), other.getPosY());
+        return subtract(other.getX(), other.getY());
     }
 
     /**
@@ -175,7 +175,7 @@ public final class Position implements IDeepClonable<Position>, Serializable {
      * @return The scaled position.
      */
     public Position multiply(final float scalar) {
-        return new Position(posX * scalar, posY * scalar);
+        return new Position(x * scalar, y * scalar);
     }
 
 }

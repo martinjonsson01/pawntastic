@@ -44,8 +44,8 @@ public final class StructureView implements IView {
         batch.setColor(Color.BLACK);
         batch.draw(
             ceilingTexture,
-            offsetX + structure.getPosition().getPosX() * TILE_SIZE,
-            offsetY + structure.getPosition().getPosY() * TILE_SIZE + TILE_SIZE / 2f,
+            offsetX + structure.getPosition().getX() * TILE_SIZE,
+            offsetY + structure.getPosition().getY() * TILE_SIZE + TILE_SIZE / 2f,
             TILE_SIZE,
             TILE_SIZE / 2f);
     }
@@ -55,8 +55,8 @@ public final class StructureView implements IView {
         batch.setColor(getHouseColor(structure));
         batch.draw(
             houseTexture,
-            offsetX + structure.getPosition().getPosX() * TILE_SIZE,
-            offsetY + structure.getPosition().getPosY() * TILE_SIZE,
+            offsetX + structure.getPosition().getX() * TILE_SIZE,
+            offsetY + structure.getPosition().getY() * TILE_SIZE,
             TILE_SIZE,
             TILE_SIZE / 2f);
     }

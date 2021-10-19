@@ -33,8 +33,8 @@ public class TerrainView implements IView {
             batch.setColor(viewableTerrain.getColor());
             batch.draw(
                 viewableTerrain.getTexture(),
-                offsetX + terrain.getPosition().getPosX() * TILE_SIZE,
-                offsetY + terrain.getPosition().getPosY() * TILE_SIZE,
+                offsetX + terrain.getPosition().getX() * TILE_SIZE,
+                offsetY + terrain.getPosition().getY() * TILE_SIZE,
                 TILE_SIZE,
                 TILE_SIZE);
         }
