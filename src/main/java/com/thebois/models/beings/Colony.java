@@ -53,12 +53,10 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
         this.pathFinder = pathFinder;
         this.structureFinder = structureFinder;
         this.positionFinder = positionFinder;
-        final Collection<IBeing> pawns = new ConcurrentLinkedQueue<>();
         final Random random = new Random();
         for (final Position vacantPosition : vacantPositions) {
             super.addBeing(new Pawn(vacantPosition, vacantPosition, random, pathFinder, structureFinder));
         }
-        //        setBeings(pawns);
         Pawntastic.getEventBus().register(this);
     }
 
