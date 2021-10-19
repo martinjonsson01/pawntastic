@@ -19,7 +19,6 @@ import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.terrains.Grass;
-import com.thebois.models.world.World;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,7 +33,10 @@ public class ColonyTests {
     @Test
     public void isFullReturnsFalse() {
         // Arrange
-        final Colony colony = new Colony(List.of(), mock(IPathFinder.class));
+        final Colony colony = new Colony(
+            List.of(),
+            mock(IPathFinder.class),
+            mock(IStructureFinder.class));
 
         // Act
         final boolean isFull = colony.isFull();
@@ -77,6 +79,13 @@ public class ColonyTests {
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
+    }
+
+    private Colony mockColony() {
+        final List<Position> positions = new ArrayList<>();
+        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
+        return new Colony(positions, pathFinder, structureFinder);
     }
 
     @Test
@@ -132,13 +141,6 @@ public class ColonyTests {
 
         // Assert
         assertThat(count).isEqualTo(0);
-    }
-
-    private Colony mockColony() {
-        final List<Position> positions = new ArrayList<>();
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
-        return new Colony(positions, pathFinder, structureFinder);
     }
 
     @Test
