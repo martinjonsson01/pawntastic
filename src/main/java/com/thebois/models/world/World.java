@@ -86,9 +86,9 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
     private void replaceTileInCanonicalMatrix(final ITile tile) {
         if (tile != null) {
             final Position position = tile.getPosition();
-            final int posY = (int) position.getPosY();
-            final int posX = (int) position.getPosX();
-            canonicalMatrix[posY][posX] = tile;
+            final int y = (int) position.getY();
+            final int x = (int) position.getX();
+            canonicalMatrix[y][x] = tile;
         }
     }
 
@@ -114,8 +114,8 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
     }
 
     private boolean isPositionEmpty(final Position position) {
-        final int x = (int) position.getPosX();
-        final int y = (int) position.getPosY();
+        final int x = (int) position.getX();
+        final int y = (int) position.getY();
         return canonicalMatrix[y][x].getCost() < Float.MAX_VALUE;
     }
 
@@ -171,7 +171,7 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
      * @return Whether the structure was built.
      */
     public boolean createStructure(final StructureType type, final Position position) {
-        return createStructure(type, (int) position.getPosX(), (int) position.getPosY());
+        return createStructure(type, (int) position.getX(), (int) position.getY());
     }
 
     /**
@@ -197,8 +197,8 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
     }
 
     private boolean isPositionPlaceable(final Position position) {
-        final int posIntX = (int) position.getPosX();
-        final int posIntY = (int) position.getPosY();
+        final int posIntX = (int) position.getX();
+        final int posIntY = (int) position.getY();
         if (posIntY < 0 || posIntY >= structureMatrix.length) {
             return false;
         }
@@ -208,8 +208,8 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
         return isPositionEmpty(position);
     }
 
-    private void postObstacleEvent(final int posX, final int posY) {
-        final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(posX, posY);
+    private void postObstacleEvent(final int x, final int y) {
+        final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(x, y);
         Pawntastic.getEventBus().post(obstacleEvent);
     }
 
@@ -238,13 +238,13 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
     public Iterable<ITile> getNeighboursOf(final ITile tile) {
         final ArrayList<ITile> tiles = new ArrayList<>(8);
         final Position position = tile.getPosition();
-        final int posY = (int) position.getPosY();
-        final int posX = (int) position.getPosX();
+        final int y = (int) position.getY();
+        final int x = (int) position.getX();
 
-        final int startY = Math.max(0, posY - 1);
-        final int endY = Math.min(worldSize - 1, posY + 1);
-        final int startX = Math.max(0, posX - 1);
-        final int endX = Math.min(worldSize - 1, posX + 1);
+        final int startY = Math.max(0, y - 1);
+        final int endY = Math.min(worldSize - 1, y + 1);
+        final int startX = Math.max(0, x - 1);
+        final int endX = Math.min(worldSize - 1, x + 1);
 
         for (int neighbourY = startY; neighbourY <= endY; neighbourY++) {
             for (int neighbourX = startX; neighbourX <= endX; neighbourX++) {
@@ -260,22 +260,22 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
 
     @Override
     public ITile getTileAt(final Position position) {
-        return getTileAt((int) position.getPosX(), (int) position.getPosY());
+        return getTileAt((int) position.getX(), (int) position.getY());
     }
 
     @Override
-    public ITile getTileAt(final int posX, final int posY) {
-        if (posX < 0 || posY < 0 || posX >= worldSize || posY >= worldSize) {
+    public ITile getTileAt(final int x, final int y) {
+        if (x < 0 || y < 0 || x >= worldSize || y >= worldSize) {
             throw new IndexOutOfBoundsException("Given position is outside of the world.");
         }
-        return canonicalMatrix[posY][posX];
+        return canonicalMatrix[y][x];
     }
 
     private boolean isDiagonalTo(final ITile tile, final ITile neighbour) {
-        final int tileX = (int) tile.getPosition().getPosX();
-        final int tileY = (int) tile.getPosition().getPosY();
-        final int neighbourX = (int) neighbour.getPosition().getPosX();
-        final int neighbourY = (int) neighbour.getPosition().getPosY();
+        final int tileX = (int) tile.getPosition().getX();
+        final int tileY = (int) tile.getPosition().getY();
+        final int neighbourX = (int) neighbour.getPosition().getX();
+        final int neighbourY = (int) neighbour.getPosition().getY();
         final int deltaX = Math.abs(tileX - neighbourX);
         final int deltaY = Math.abs(tileY - neighbourY);
         return deltaX == 1 && deltaY == 1;

@@ -62,17 +62,17 @@ public class ColonyView implements IView {
 
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
-        float posX;
-        float posY;
+        float x;
+        float y;
 
         if (colony != null) {
             for (final IBeing pawn : colony.getBeings()) {
-                posX = pawn.getPosition().getPosX() * Pawntastic.getTileSize();
-                posY = pawn.getPosition().getPosY() * Pawntastic.getTileSize();
+                x = pawn.getPosition().getX() * Pawntastic.getTileSize();
+                y = pawn.getPosition().getY() * Pawntastic.getTileSize();
 
                 batch.setColor(ROLE_COLORS.get(pawn.getRole().getType()));
 
-                batch.draw(beingTexture, offsetX + posX, offsetY + posY, radius * 2, radius * 2);
+                batch.draw(beingTexture, offsetX + x, offsetY + y, radius * 2, radius * 2);
             }
         }
     }

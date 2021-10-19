@@ -7,30 +7,30 @@ import com.thebois.models.Position;
  */
 public class ObstaclePlacedEvent {
 
-    private final int posX;
-    private final int posY;
+    private final int x;
+    private final int y;
 
     /**
      * Instantiates with a position for the new obstacle.
      *
-     * @param posX The x-coordinate of the new obstacle.
-     * @param posY The y-coordinate of the new obstacle.
+     * @param x The x-coordinate of the new obstacle.
+     * @param y The y-coordinate of the new obstacle.
      */
-    public ObstaclePlacedEvent(final int posX, final int posY) {
-        this.posX = posX;
-        this.posY = posY;
+    public ObstaclePlacedEvent(final int x, final int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public Position getPosition() {
-        return new Position(getPosX(), getPosY());
+        return new Position(getX(), getY());
     }
 
-    public int getPosX() {
-        return posX;
+    public int getX() {
+        return x;
     }
 
-    public int getPosY() {
-        return posY;
+    public int getY() {
+        return y;
     }
 
 }

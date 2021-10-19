@@ -46,12 +46,12 @@ public class WorldTests {
                                                               mockPosition(1, 2))));
     }
 
-    private static Position mockPosition(final int positionX, final int positionY) {
-        return new Position(positionX, positionY);
+    private static Position mockPosition(final int x, final int y) {
+        return new Position(x, y);
     }
 
-    private static ITile mockTile(final int positionX, final int positionY) {
-        return new Grass(positionX, positionY);
+    private static ITile mockTile(final int x, final int y) {
+        return new Grass(x, y);
     }
 
     public static Stream<Arguments> getPositionOutSideOfWorld() {

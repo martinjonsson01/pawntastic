@@ -23,16 +23,16 @@ public class GrassTests {
     @Test
     public void getPositionReturnsCorrectCoordinates() {
         // Arrange
-        final int posX = 123;
-        final int posY = 456;
-        final Grass grass = new Grass(posX, posY);
+        final int x = 123;
+        final int y = 456;
+        final Grass grass = new Grass(x, y);
 
         // Act
         final Position actualPosition = grass.getPosition();
 
         // Assert
-        assertThat(actualPosition.getPosX()).isEqualTo(posX);
-        assertThat(actualPosition.getPosY()).isEqualTo(posY);
+        assertThat(actualPosition.getX()).isEqualTo(x);
+        assertThat(actualPosition.getY()).isEqualTo(y);
     }
 
     @Test
