@@ -16,6 +16,7 @@ public class Stockpile extends AbstractStructure {
 
     Stockpile(final Position position, IInventory inventory) {
         super(position, StructureType.STOCKPILE, getNeededItemsMap());
+        this.inventory = inventory;
     }
 
     private static Map<ItemType, Integer> getNeededItemsMap() {
@@ -39,5 +40,8 @@ public class Stockpile extends AbstractStructure {
         return Float.MAX_VALUE;
     }
 
-    // store and collect methods
+    public IInventory getInventory() {
+        return inventory;
+    }
+
 }

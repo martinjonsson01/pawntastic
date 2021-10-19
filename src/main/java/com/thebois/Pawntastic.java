@@ -117,7 +117,7 @@ public class Pawntastic extends Game {
 
         // Controllers
         this.worldController = new WorldController(world, colony, font);
-        this.infoController = new InfoController(colony, uiSkin);
+        this.infoController = new InfoController(world, colony, uiSkin);
         this.toolbarController = new ToolbarController(world, uiSkin, projector);
 
         // Screens

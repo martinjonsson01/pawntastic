@@ -2,7 +2,6 @@ package com.thebois.models.beings;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -15,17 +14,11 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.models.inventory.IInventory;
-import com.thebois.models.inventory.Inventory;
-import com.thebois.models.inventory.items.IItem;
-import com.thebois.models.inventory.items.ItemType;
 
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
  */
-public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInventory {
-
-    private final IInventory inventory = new Inventory();
+public class Colony extends AbstractBeingGroup implements IRoleAllocator {
 
     /**
      * Creates a colony and fills it with pawns in the provided open positions.
@@ -42,10 +35,6 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
             pawns.add(new Pawn(vacantPosition, vacantPosition, random, pathFinder, finder));
         }
         setBeings(pawns);
-    }
-
-    public IInventory getInventory() {
-        return inventory;
     }
 
     @Override
@@ -130,41 +119,6 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
             .stream()
             .filter(being -> role.equals(being.getRole()))
             .collect(Collectors.toList());
-    }
-
-    @Override
-    public void add(final IItem item) {
-        inventory.add(item);
-    }
-
-    @Override
-    public void addMultiple(final List<IItem> stack) {
-        inventory.addMultiple(stack);
-    }
-
-    @Override
-    public IItem take(final ItemType itemType) {
-        return inventory.take(itemType);
-    }
-
-    @Override
-    public ArrayList<IItem> takeAmount(final ItemType itemType, final int amount) {
-        return inventory.takeAmount(itemType, amount);
-    }
-
-    @Override
-    public boolean hasItem(final ItemType itemType) {
-        return inventory.hasItem(itemType);
-    }
-
-    @Override
-    public boolean hasItem(final ItemType itemType, final int amount) {
-        return inventory.hasItem(itemType, amount);
-    }
-
-    @Override
-    public int numberOf(final ItemType itemType) {
-        return inventory.numberOf(itemType);
     }
 
 }
