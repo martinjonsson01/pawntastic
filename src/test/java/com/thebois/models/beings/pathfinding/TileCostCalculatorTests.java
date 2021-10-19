@@ -25,9 +25,9 @@ public class TileCostCalculatorTests {
             Arguments.of(mockTile(0, 0), mockTile(1, 0), mockTile(0, 0)));
     }
 
-    private static ITile mockTile(final int positionX, final int positionY) {
+    private static ITile mockTile(final int x, final int y) {
         final ITile tile = Mockito.mock(ITile.class);
-        when(tile.getPosition()).thenReturn(new Position(positionX, positionY));
+        when(tile.getPosition()).thenReturn(new Position(x, y));
         return tile;
     }
 
