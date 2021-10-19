@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,7 +54,12 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
         this.positionFinder = positionFinder;
         final Random random = new Random();
         for (final Position vacantPosition : vacantPositions) {
-            super.addBeing(new Pawn(vacantPosition, vacantPosition, random, pathFinder, structureFinder));
+            super.addBeing(new Pawn(
+                vacantPosition,
+                vacantPosition,
+                random,
+                pathFinder,
+                structureFinder));
         }
         Pawntastic.getEventBus().register(this);
     }
@@ -190,7 +194,11 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
      */
     @Subscribe
     public void onSpawnPawnsEvent(final SpawnPawnsEvent event) {
-        final Iterable<Position> vacantPositions = positionFinder.findEmptyPositions(10);
+        // final Iterable<Position> vacantPositions = positionFinder.findEmptyPositions(10);
+        final Iterable<Position> vacantPositions =
+            positionFinder.tryGetEmptyPositionsNextTo(event.getSpawnPosition(),
+                                                      event.getNumberOfPawns(),
+                                                      event.getSpawnRadius());
         final Random random = new Random();
         for (final Position vacantPosition : vacantPositions) {
             addBeing(new Pawn(vacantPosition, vacantPosition, random, pathFinder, structureFinder));

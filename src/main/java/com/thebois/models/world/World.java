@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
@@ -101,6 +102,15 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
             }
         });
         return emptyPositions;
+    }
+
+    @Override
+    public Iterable<Position> tryGetEmptyPositionsNextTo(
+        final Position position, final int count, final float radius) {
+        return MatrixUtils.toCollection(canonicalMatrix)
+                          .stream().filter(iTile -> iTile.getCost() < Float.MAX_VALUE
+                                                    && radius > position.distanceTo(
+            iTile.getPosition())).limit(count).map(ITile::getPosition).collect(Collectors.toList());
     }
 
     private boolean isPositionEmpty(final Position position) {

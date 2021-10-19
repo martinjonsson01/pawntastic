@@ -103,7 +103,7 @@ abstract class AbstractStructure implements IStructure {
     }
 
     private void postSpawnPawnsEvent(final Position spawnPosition) {
-        final SpawnPawnsEvent spawnPawnsEvent = new SpawnPawnsEvent(1, spawnPosition, 5f);
+        final SpawnPawnsEvent spawnPawnsEvent = new SpawnPawnsEvent(2, spawnPosition, 2f);
         Pawntastic.getEventBus().post(spawnPawnsEvent);
     }
 
