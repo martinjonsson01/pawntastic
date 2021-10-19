@@ -19,6 +19,7 @@ public final class StructureView implements IView {
     private final Texture houseTexture;
     private final Texture ceilingTexture;
     private final Texture townHallTexture = new Texture(Gdx.files.internal("town-hall.png"));
+    private final Texture defaultTexture = new Texture(Gdx.files.internal("default-structure.png"));
 
     /**
      * Creates an instance of a Structure view.
@@ -32,9 +33,9 @@ public final class StructureView implements IView {
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
         for (final IStructure structure : structures) {
             switch (structure.getType()) {
-                case HOUSE -> drawHouse(batch, offsetX, offsetY, structure);
+                //case HOUSE -> drawHouse(batch, offsetX, offsetY, structure);
                 case TOWN_HALL -> drawTownHall(batch, offsetX, offsetY, structure);
-                // drawDefault(batch, offsetX, offsetY, structure);
+                default -> drawDefault(batch, offsetX, offsetY, structure);
             }
         }
     }
@@ -76,10 +77,27 @@ public final class StructureView implements IView {
     }
 
     private void drawTownHall(
-        final Batch batch, final float offsetX, final float offsetY, final IStructure structure) {
+        final Batch batch,
+        final float offsetX,
+        final float offsetY,
+        final IStructure structure) {
         batch.setColor(Color.valueOf("CFCFCF"));
         batch.draw(
             townHallTexture,
+            offsetX + structure.getPosition().getX() * TILE_SIZE,
+            offsetY + structure.getPosition().getY() * TILE_SIZE,
+            TILE_SIZE,
+            TILE_SIZE);
+    }
+
+    private void drawDefault(
+        final Batch batch,
+        final float offsetX,
+        final float offsetY,
+        final IStructure structure) {
+        batch.setColor(Color.valueOf("CC1A29"));
+        batch.draw(
+            defaultTexture,
             offsetX + structure.getPosition().getX() * TILE_SIZE,
             offsetY + structure.getPosition().getY() * TILE_SIZE,
             TILE_SIZE,
