@@ -15,6 +15,8 @@ import com.thebois.views.TextureUtils;
 
 /**
  * Used to display all pawns.
+ *
+ * @author Martin
  */
 public class ColonyView implements IView {
 
@@ -39,8 +41,8 @@ public class ColonyView implements IView {
     }
 
     private final int radius;
-    private IBeingGroup colony;
     private final Texture beingTexture;
+    private IBeingGroup colony;
 
     /**
      * Instantiates a new ColonyView.

@@ -6,6 +6,8 @@ import com.thebois.listeners.events.IEvent;
  * Represents a source of events that can be listened to.
  *
  * @param <TEvent> The type of the events generated
+ *
+ * @author Martin
  */
 public interface IEventSource<TEvent extends IEvent> {
 

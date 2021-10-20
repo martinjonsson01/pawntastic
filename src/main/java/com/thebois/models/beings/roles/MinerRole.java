@@ -2,6 +2,8 @@ package com.thebois.models.beings.roles;
 
 /**
  * The miner digs stone out of rocks.
+ *
+ * @author Martin
  */
 class MinerRole extends AbstractRole {
 

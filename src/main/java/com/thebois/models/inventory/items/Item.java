@@ -5,6 +5,8 @@ import java.util.Objects;
 
 /**
  * A generic item of a specific type.
+ *
+ * @author Martin
  */
 public class Item implements IItem, Serializable {
 
@@ -25,16 +27,16 @@ public class Item implements IItem, Serializable {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(type);
+    }
+
+    @Override
     public boolean equals(final Object other) {
         if (this == other) return true;
         if (other == null) return false;
         final Item item = (Item) other;
         return type == item.type;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type);
     }
 
 }

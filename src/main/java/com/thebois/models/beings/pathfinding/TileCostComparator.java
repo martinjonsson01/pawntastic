@@ -7,6 +7,8 @@ import com.thebois.models.world.ITile;
 
 /**
  * Compares two tiles to determine which costs more to move to.
+ *
+ * @author Martin
  */
 class TileCostComparator implements Comparator<ITile>, Serializable {
 

@@ -13,6 +13,8 @@ import com.thebois.views.game.IView;
 
 /**
  * Displays the paths of all beings.
+ *
+ * @author Martin
  */
 public class BeingPathDebugView implements IView {
 

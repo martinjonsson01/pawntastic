@@ -2,6 +2,8 @@ package com.thebois.models.beings.roles;
 
 /**
  * The guard attacks enemies.
+ *
+ * @author Martin
  */
 class GuardRole extends AbstractRole {
 

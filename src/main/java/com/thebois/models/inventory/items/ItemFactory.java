@@ -2,6 +2,8 @@ package com.thebois.models.inventory.items;
 
 /**
  * Creates items of specific types.
+ *
+ * @author Martin
  */
 public final class ItemFactory {
 

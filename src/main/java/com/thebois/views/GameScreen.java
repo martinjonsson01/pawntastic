@@ -16,6 +16,7 @@ import com.thebois.views.info.IActorView;
 /**
  * The main screen displaying the world and UI.
  *
+ * @author Martin
  * @author Mathias
  */
 public class GameScreen implements Screen {

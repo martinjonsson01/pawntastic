@@ -8,6 +8,8 @@ import com.thebois.views.game.IView;
 
 /**
  * Displays an FPS counter on screen.
+ *
+ * @author Martin
  */
 public class FrameCounterView implements IView {
 

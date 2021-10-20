@@ -6,6 +6,8 @@ import com.thebois.listeners.events.IEvent;
  * Represents a way of being notified of new events.
  *
  * @param <TEvent> The type of the events to listen for
+ *
+ * @author Martin
  */
 public interface IEventListener<TEvent extends IEvent> {
 

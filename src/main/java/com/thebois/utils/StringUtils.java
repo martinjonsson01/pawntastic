@@ -2,6 +2,8 @@ package com.thebois.utils;
 
 /**
  * Utilities for operating on strings.
+ *
+ * @author Martin
  */
 public final class StringUtils {
 

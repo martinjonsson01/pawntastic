@@ -12,14 +12,17 @@ import com.google.common.eventbus.Subscribe;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
-import com.thebois.models.IStructureFinder;
 
 /**
  * An abstract implementation of IBeing.
+ *
+ * @author Jacob
+ * @author Martin
  */
 public abstract class AbstractBeing implements IBeing {
 
@@ -33,10 +36,10 @@ public abstract class AbstractBeing implements IBeing {
      */
     private static final float DESTINATION_REACHED_DISTANCE = 0.01f;
     private final IPathFinder pathFinder;
+    private final IStructureFinder finder;
     private Position position;
     private Stack<Position> path;
     private AbstractRole role;
-    private final IStructureFinder finder;
 
     /**
      * Creates an AbstractBeing with an initial position.
@@ -210,9 +213,7 @@ public abstract class AbstractBeing implements IBeing {
 
     protected Position nearestNeighborOf(final Position destination) {
         final int[][] positionOffsets = {
-            {-1, -1}, {0, -1}, {1, -1},
-            {-1, 0}, {1, 0},
-            {-1, 1}, {0, 1}, {1, 1},
+            { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 },
             };
 
         Position nearestNeighbor = new Position(Float.MAX_VALUE, Float.MAX_VALUE);

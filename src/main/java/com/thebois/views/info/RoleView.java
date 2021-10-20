@@ -16,6 +16,8 @@ import com.thebois.utils.StringUtils;
 
 /**
  * Displays all the different roles and the controls used to assign them.
+ *
+ * @author Martin
  */
 public class RoleView implements IActorView {
 

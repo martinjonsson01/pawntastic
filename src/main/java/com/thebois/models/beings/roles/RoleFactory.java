@@ -5,6 +5,8 @@ import java.util.Collection;
 
 /**
  * Creates requested instances of specific roles.
+ *
+ * @author Martin
  */
 public final class RoleFactory {
 

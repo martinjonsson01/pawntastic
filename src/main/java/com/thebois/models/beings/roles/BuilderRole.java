@@ -2,6 +2,8 @@ package com.thebois.models.beings.roles;
 
 /**
  * The builder constructs buildings.
+ *
+ * @author Martin
  */
 class BuilderRole extends AbstractRole {
 

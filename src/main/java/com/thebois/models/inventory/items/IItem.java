@@ -6,7 +6,7 @@ package com.thebois.models.inventory.items;
 public interface IItem {
 
     /**
-     * Returns the speceifc type of item.
+     * Returns the specific type of item.
      *
      * @return The item type
      */

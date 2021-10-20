@@ -2,6 +2,8 @@ package com.thebois.models.beings.roles;
 
 /**
  * Keeps track of and allows for allocating of roles to beings.
+ *
+ * @author Martin
  */
 public interface IRoleAllocator {
 

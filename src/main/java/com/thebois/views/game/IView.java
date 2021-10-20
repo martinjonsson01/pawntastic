@@ -5,6 +5,8 @@ import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Ensures views can be rendered.
+ *
+ * @author Martin
  */
 public interface IView extends Disposable {
 

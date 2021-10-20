@@ -14,6 +14,8 @@ import com.thebois.models.world.IWorld;
 
 /**
  * Finds paths between locations using the A* algorithm.
+ *
+ * @author Martin
  */
 public class AstarPathFinder implements IPathFinder {
 
