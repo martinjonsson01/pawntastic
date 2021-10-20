@@ -75,7 +75,8 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     @Override
     public void update(final float deltaTime) {
-        role.obtainNextAction(this).perform(this);
+        role.obtainNextAction(this)
+            .perform(this);
         move(deltaTime);
     }
 
@@ -93,7 +94,6 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         inventory.add(item);
     }
 
-
     /**
      * Calculates and sets new position.
      *
@@ -108,34 +108,32 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
             return;
         }
 
-        movePositionTowardsDestination(deltaTime, destination, distanceToDestination);
+        movePositionTowardsDestination(deltaTime, distanceToDestination);
     }
 
     private void onArrivedAtDestination(final Position segmentDestination) {
         position = segmentDestination;
     }
 
-    private void movePositionTowardsDestination(
-        final float deltaTime, final Position segmentDestination, final float totalDistance) {
+    private void movePositionTowardsDestination(final float deltaTime, final float totalDistance) {
         // Calculate how much to move and in what direction.
-        final Position delta = segmentDestination.subtract(position);
+        final Position delta = destination.subtract(position);
         final Position direction = delta.multiply(1f / totalDistance);
         final Position velocity = direction.multiply(SPEED);
         final Position movement = velocity.multiply(deltaTime);
 
         Position newPosition = position.add(movement);
 
-        if (hasOvershotDestination(segmentDestination, delta, newPosition)) {
+        if (hasOvershotDestination(delta, newPosition)) {
             // Clamp position to destination,
             // to prevent walking past the destination during large time skips.
-            newPosition = segmentDestination;
+            newPosition = destination;
         }
 
         position = newPosition;
     }
 
-    private boolean hasOvershotDestination(
-        final Position destination, final Position delta, final Position newPosition) {
+    private boolean hasOvershotDestination(final Position delta, final Position newPosition) {
         // Destination has been overshot if the delta has changed sign before and after moving.
         final Position newDelta = destination.subtract(newPosition);
         return hasChangedSign(newDelta.getX(), delta.getX()) || hasChangedSign(newDelta.getY(),
