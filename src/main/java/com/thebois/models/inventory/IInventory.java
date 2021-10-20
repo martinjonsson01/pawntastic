@@ -86,4 +86,14 @@ public interface IInventory extends Serializable {
      * @return The counter.
      */
     int numberOf(ItemType itemType);
+
+    /**
+     * Checks if item can fit inside inventory.
+     *
+     * @param itemType The type of item.
+     *
+     * @return Whether the item could be fitted or not.
+     */
+    boolean canFitItem(ItemType itemType);
+
 }

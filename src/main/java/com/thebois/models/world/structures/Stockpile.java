@@ -53,6 +53,11 @@ class Stockpile extends AbstractStructure implements IReceiver, IGiver {
     }
 
     @Override
+    public boolean canFitItem(final ItemType itemType) {
+        return inventory.canFitItem(itemType);
+    }
+
+    @Override
     public IItem takeItem(final ItemType itemType) {
         return inventory.take(itemType);
     }

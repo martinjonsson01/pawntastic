@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
 
 /**
@@ -121,6 +122,13 @@ public class Inventory implements IInventory {
             }
         }
         return count;
+    }
+
+    @Override
+    public boolean canFitItem(final ItemType itemType) {
+        final IItem item = ItemFactory.fromType(itemType);
+        final float weight = calculateTotalWeight();
+        return !isAboveCapacity(item.getWeight() + weight);
     }
 
     private boolean isAboveCapacity(final float weight) {

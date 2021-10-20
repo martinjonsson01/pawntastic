@@ -12,7 +12,6 @@ import com.thebois.models.world.resources.IResource;
 public class HarvestAction implements IAction, Serializable {
 
     private final IResource resource;
-    private boolean harvested = false;
 
     /**
      * Instantiates with a resource to harvest.
@@ -26,12 +25,11 @@ public class HarvestAction implements IAction, Serializable {
     @Override
     public void perform(final IActionPerformer performer) {
         performer.addItem(resource.harvest());
-        harvested = true;
     }
 
     @Override
     public boolean isCompleted(final IActionPerformer performer) {
-        return harvested;
+        return !performer.canFitItem(resource.getType().getItemType());
     }
 
     @Override
@@ -41,7 +39,7 @@ public class HarvestAction implements IAction, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(resource, harvested);
+        return Objects.hash(resource);
     }
 
     @Override
@@ -49,7 +47,7 @@ public class HarvestAction implements IAction, Serializable {
         if (this == o) return true;
         if (!(o instanceof HarvestAction)) return false;
         final HarvestAction that = (HarvestAction) o;
-        return harvested == that.harvested && resource.equals(that.resource);
+        return resource.equals(that.resource);
     }
 
 }

@@ -8,6 +8,7 @@ import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
+import com.thebois.models.beings.IReceiver;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionSource;
@@ -50,7 +51,8 @@ abstract class AbstractHarvesterRole extends AbstractRole {
     protected Collection<IActionSource> getTaskGenerators() {
         return List.of(this::createMoveToResource,
                        this::createHarvestResource,
-                       this::createMoveToStockpile);
+                       this::createMoveToStockpile,
+                       this::createEmptyInventory);
     }
 
     private IAction createMoveToResource(final IActionPerformer performer) {
@@ -91,6 +93,23 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         if (closestSpotNextToStructure.isEmpty()) return ActionFactory.createDoNothing();
 
         return ActionFactory.createMoveTo(closestSpotNextToStructure.get());
+    }
+
+    private IAction createEmptyInventory(final IActionPerformer performer) {
+        final Position position = performer.getPosition();
+        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(position,
+                                                                                             StructureType.STOCKPILE);
+        if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
+        final IStructure structure = maybeStructure.get();
+        final IReceiver receiver;
+        if (structure instanceof IReceiver) {
+            receiver = (IReceiver) structure;
+        }
+        else {
+            return ActionFactory.createDoNothing();
+        }
+
+        return ActionFactory.createGiveItem(receiver, resourceType.getItemType());
     }
 
     private Optional<IResource> findNearbyResource(final IActionPerformer performer) {

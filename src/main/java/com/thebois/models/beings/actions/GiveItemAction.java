@@ -1,5 +1,7 @@
 package com.thebois.models.beings.actions;
 
+import java.io.Serializable;
+
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.IReceiver;
 import com.thebois.models.inventory.items.ItemType;
@@ -7,7 +9,7 @@ import com.thebois.models.inventory.items.ItemType;
 /**
  * Action give item from performer to receiver.
  */
-public class GiveItemAction implements IAction {
+public class GiveItemAction implements IAction, Serializable {
 
     private static final float MINIMUM_GIVE_DISTANCE = 2f;
     private final IReceiver receiver;

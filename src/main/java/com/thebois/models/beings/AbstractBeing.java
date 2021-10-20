@@ -112,6 +112,11 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         return inventory.take(itemType);
     }
 
+    @Override
+    public boolean canFitItem(final ItemType itemType) {
+        return inventory.canFitItem(itemType);
+    }
+
     /**
      * Calculates and sets new position.
      *
