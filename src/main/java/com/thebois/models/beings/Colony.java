@@ -8,6 +8,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.thebois.listeners.IEventSource;
+import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -23,7 +25,8 @@ import com.thebois.models.inventory.items.ItemType;
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
  */
-public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInventory {
+public class Colony extends AbstractBeingGroup
+    implements IRoleAllocator, IInventory {
 
     private final IInventory inventory = new Inventory();
 
@@ -34,8 +37,10 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
      * @param pathFinder      The pathfinder that the pawns will use.
      * @param finder          Used to find things in the world.
      */
-    public Colony(final Iterable<Position> vacantPositions, final IPathFinder pathFinder,
-                  final IStructureFinder finder) {
+    public Colony(
+        final Iterable<Position> vacantPositions,
+        final IPathFinder pathFinder,
+        final IStructureFinder finder) {
         final Collection<IBeing> pawns = new ArrayList<>();
         final Random random = new Random();
         for (final Position vacantPosition : vacantPositions) {

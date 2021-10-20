@@ -3,12 +3,18 @@ package com.thebois.models.beings;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.thebois.listeners.IEventListener;
+import com.thebois.listeners.IEventSource;
+import com.thebois.listeners.events.OnDeathEvent;
+
 /**
  * An abstract implementation of IBeingGroup.
  */
-public abstract class AbstractBeingGroup implements IBeingGroup {
+public abstract class AbstractBeingGroup implements IBeingGroup, IEventSource<OnDeathEvent> {
 
     private Collection<IBeing> beings = new ArrayList<>();
+    private final Collection<IEventListener<OnDeathEvent>> onDeathEventListeners =
+        new ArrayList<>();
 
     /**
      * Adds a being to the internal collection of beings.
@@ -25,6 +31,7 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
         beings.forEach(being -> {
             if (being.getHealthRatio() == 0) {
                 deadBeings.add(being);
+                notifyOnDeathListeners(being);
             }
             else {
                 being.update(deltaTime);
@@ -42,6 +49,21 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
 
     protected void setBeings(final Collection<IBeing> beings) {
         this.beings = beings;
+    }
+
+    @Override
+    public void registerListener(final IEventListener<OnDeathEvent> listener) {
+        onDeathEventListeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(final IEventListener<OnDeathEvent> listener) {
+        onDeathEventListeners.add(listener);
+    }
+
+    private void notifyOnDeathListeners(final IBeing deadBeing) {
+        final OnDeathEvent event = new OnDeathEvent(deadBeing);
+        onDeathEventListeners.forEach(listener -> listener.onEvent(event));
     }
 
 }
