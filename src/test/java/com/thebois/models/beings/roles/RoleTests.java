@@ -44,9 +44,10 @@ public class RoleTests {
                                                      mock(IWorld.class)),
                                       new FisherRole(mock(IResourceFinder.class),
                                                      mock(IWorld.class))),
-                         Arguments.of(
-                             new BuilderRole(mock(IStructureFinder.class), mock(IWorld.class)),
-                             new BuilderRole(mock(IStructureFinder.class), mock(IWorld.class))),
+                         Arguments.of(new BuilderRole(mock(IStructureFinder.class),
+                                                      mock(IWorld.class)),
+                                      new BuilderRole(mock(IStructureFinder.class),
+                                                      mock(IWorld.class))),
                          Arguments.of(new IdleRole(mock(IWorld.class)),
                                       new IdleRole(mock(IWorld.class))));
     }
@@ -56,17 +57,16 @@ public class RoleTests {
         final IWorld world = mock(IWorld.class);
         return Stream.of(Arguments.of(new LumberjackRole(resourceFinder, world), new FarmerRole()),
                          Arguments.of(new FarmerRole(), new LumberjackRole(resourceFinder, world)),
-                         Arguments.of(
-                             new FisherRole(mock(IResourceFinder.class), mock(IWorld.class)),
-                             new BuilderRole(mock(IStructureFinder.class), mock(IWorld.class))),
-                         Arguments.of(new BuilderRole(
-                                          mock(IStructureFinder.class),
-                                          mock(IWorld.class)),
+                         Arguments.of(new FisherRole(mock(IResourceFinder.class),
+                                                     mock(IWorld.class)),
+                                      new BuilderRole(mock(IStructureFinder.class),
+                                                      mock(IWorld.class))),
+                         Arguments.of(new BuilderRole(mock(IStructureFinder.class),
+                                                      mock(IWorld.class)),
                                       new FisherRole(mock(IResourceFinder.class),
                                                      mock(IWorld.class))),
-                         Arguments.of(new BuilderRole(
-                             mock(IStructureFinder.class),
-                             mock(IWorld.class)), null));
+                         Arguments.of(new BuilderRole(mock(IStructureFinder.class),
+                                                      mock(IWorld.class)), null));
     }
 
     public static Stream<Arguments> getRoleAndNames() {
@@ -136,7 +136,8 @@ public class RoleTests {
         final IAction flipper = mock(IAction.class);
         when(flipper.canPerform(any())).thenReturn(true);
         // Behaves as if completed first time, and as if not completed second time.
-        when(flipper.isCompleted(any())).thenReturn(true).thenReturn(false);
+        when(flipper.isCompleted(any())).thenReturn(true)
+                                        .thenReturn(false);
         final IAction secondCompleted = mockTask(true);
         final IAction thirdCompleted = mockTask(true);
         final AbstractRole role = mockTestRole(flipper, secondCompleted, thirdCompleted);
@@ -155,10 +156,9 @@ public class RoleTests {
 
     private AbstractRole mockTestRole(final IAction... params) {
         final List<IAction> tasks = List.of(params);
-        final List<IActionSource> taskGenerators = tasks
-            .stream()
-            .map(task -> (IActionSource) performer -> task)
-            .collect(Collectors.toList());
+        final List<IActionSource> taskGenerators = tasks.stream()
+                                                        .map(task -> (IActionSource) performer -> task)
+                                                        .collect(Collectors.toList());
         return new TestRole(taskGenerators);
     }
 
@@ -205,14 +205,15 @@ public class RoleTests {
     public void obtainNextActionReturnsIdleActionWhenPreviouslyPerformableBecomesUnperformable() {
         // Arrange
         final IAction switchPerformableAction = MockFactory.createAction(false, true);
-        when(switchPerformableAction.canPerform(any())).thenReturn(true).thenReturn(false);
+        when(switchPerformableAction.canPerform(any())).thenReturn(true)
+                                                       .thenReturn(false);
         final AbstractRole role = mockTestRole(switchPerformableAction);
         final IActionPerformer performer = mock(IActionPerformer.class);
         when(performer.getPosition()).thenReturn(new Position(0, 0));
 
         final ITile randomTile = mock(ITile.class);
         when(randomTile.getPosition()).thenReturn(new Position(10, 10));
-        when(world.getRandomVacantSpot()).thenReturn(randomTile);
+        when(world.getRandomVacantSpotInRadiusOf(any(), anyInt())).thenReturn(randomTile);
         final AbstractRole idleRole = RoleFactory.idle();
         final IAction idleAction = idleRole.obtainNextAction(performer);
 
@@ -234,7 +235,7 @@ public class RoleTests {
 
         final ITile randomTile = mock(ITile.class);
         when(randomTile.getPosition()).thenReturn(new Position(10, 10));
-        when(world.getRandomVacantSpot()).thenReturn(randomTile);
+        when(world.getRandomVacantSpotInRadiusOf(any(), anyInt())).thenReturn(randomTile);
         final AbstractRole idleRole = RoleFactory.idle();
         final IAction idleAction = idleRole.obtainNextAction(performer);
 
@@ -258,7 +259,8 @@ public class RoleTests {
         final IAction actualTaskSecondTime = role.obtainNextAction(performer);
 
         // Assert
-        assertThat(actualTaskFirstTime).isEqualTo(actualTaskSecondTime).isEqualTo(uncompletedTask);
+        assertThat(actualTaskFirstTime).isEqualTo(actualTaskSecondTime)
+                                       .isEqualTo(uncompletedTask);
     }
 
     /**

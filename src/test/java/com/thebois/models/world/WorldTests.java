@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.ThrowableAssert;
@@ -46,12 +46,10 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(
-                             mockTile(1, 1),
-                             List.of(mockPosition(1, 0),
-                                     mockPosition(0, 1),
-                                     mockPosition(2, 1),
-                                     mockPosition(1, 2))));
+                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
+                                                              mockPosition(0, 1),
+                                                              mockPosition(2, 1),
+                                                              mockPosition(1, 2))));
     }
 
     private static ITile mockTile(final int x, final int y) {
@@ -116,6 +114,19 @@ public class WorldTests {
                                               new Position(0, 0)), 5), Arguments.of(List.of(), 0));
     }
 
+    /**
+     * Assumes a world size of 20x20.
+     */
+    public static Stream<Arguments> getSearchPerimeterWithCorrectCoordinateRanges() {
+        //                                 origin, radius, minX, maxX, minY, maxY
+        return Stream.of(Arguments.of(new Position(0, 0), 1, 0, 1, 0, 1),
+                         Arguments.of(new Position(0, 0), 10, 0, 10, 0, 10),
+                         Arguments.of(new Position(5, 5), 3, 2, 8, 2, 8),
+                         Arguments.of(new Position(15, 15), 9, 6, 19, 6, 19),
+                         Arguments.of(new Position(5, 0), 3, 2, 8, 0, 3),
+                         Arguments.of(new Position(0, 5), 3, 0, 3, 2, 8));
+    }
+
     @BeforeEach
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
@@ -147,7 +158,7 @@ public class WorldTests {
           * * * * * * *
           * * * * * * *
          */
-        final World world = createTestWorld(7, mock(Random.class));
+        final World world = createTestWorld(7);
         world.createStructure(StructureType.HOUSE, 2, 4);
         world.createStructure(StructureType.HOUSE, 4, 4);
         world.createStructure(StructureType.HOUSE, 2, 2);
@@ -162,14 +173,18 @@ public class WorldTests {
         assertThat(actualNeighbour).hasValue(closestNeighbour);
     }
 
-    private World createTestWorld(final int size, final Random random) {
+    private World createTestWorld(final int size) {
+        return createTestWorld(size, mock(ThreadLocalRandom.class));
+    }
+
+    private World createTestWorld(final int size, final ThreadLocalRandom random) {
         return new TestWorld(size, random);
     }
 
     @Test
     public void getClosestNeighbourOfReturnsEmptyWhenAllNeighboursOccupied() {
         // Arrange
-        final World world = createTestWorld(3, mock(Random.class));
+        final World world = createTestWorld(3);
         world.createStructure(StructureType.HOUSE, 1, 0);
         world.createStructure(StructureType.HOUSE, 0, 1);
         world.createStructure(StructureType.HOUSE, 2, 1);
@@ -187,7 +202,7 @@ public class WorldTests {
     @Test
     public void getNearbyOfTypeResourceReturnsEmptyWhenNothingNearby() {
         // Arrange
-        final IResourceFinder finder = createTestWorld(10, mock(Random.class));
+        final IResourceFinder finder = createTestWorld(10);
         final Position origin = new Position();
 
         // Act
@@ -200,13 +215,15 @@ public class WorldTests {
     @Test
     public void getNearbyOfTypeResourceReturnsItWhenSingleNearby() {
         // Arrange
-        final World world = new ResourceTestWorld(mock(Random.class));
-        final IResource expectedResource = world.getResources().stream().findFirst().orElseThrow();
+        final World world = new ResourceTestWorld(mock(ThreadLocalRandom.class));
+        final IResource expectedResource = world.getResources()
+                                                .stream()
+                                                .findFirst()
+                                                .orElseThrow();
         final Position origin = new Position();
-        final IResourceFinder finder = world;
 
         // Act
-        final Optional<IResource> maybeResource = finder.getNearbyOfType(origin, ResourceType.TREE);
+        final Optional<IResource> maybeResource = world.getNearbyOfType(origin, ResourceType.TREE);
 
         // Assert
         assertThat(maybeResource).hasValue(expectedResource);
@@ -215,56 +232,83 @@ public class WorldTests {
     @Test
     public void getNearbyOfTypeResourceReturnsClosestWhenMultipleNearby() {
         // Arrange
-        final World world = new ResourceTestWorld(mock(Random.class));
+        final World world = new ResourceTestWorld(mock(ThreadLocalRandom.class));
         final Position expectedResourcePosition = new Position(9, 9);
-        final IResource expectedResource = world.getResources().stream().filter(resource -> resource
-            .getPosition()
-            .equals(expectedResourcePosition)).findFirst().orElseThrow();
+        final IResource expectedResource = world.getResources()
+                                                .stream()
+                                                .filter(resource -> resource.getPosition()
+                                                                            .equals(
+                                                                                expectedResourcePosition))
+                                                .findFirst()
+                                                .orElseThrow();
         final Position from = new Position(8, 8);
-        final IResourceFinder finder = world;
 
         // Act
-        final Optional<IResource> maybeResource = finder.getNearbyOfType(from, ResourceType.TREE);
+        final Optional<IResource> maybeResource = world.getNearbyOfType(from, ResourceType.TREE);
 
         // Assert
         assertThat(maybeResource).hasValue(expectedResource);
     }
 
-    @Test
-    public void getRandomVacantSpotReturnsRandomTileWhenThereAreNoObstacles() {
+    @ParameterizedTest
+    @MethodSource("getSearchPerimeterWithCorrectCoordinateRanges")
+    public void getRandomVacantSpotCallsRandomWithCorrectRange(
+        final Position origin,
+        final int radius,
+        final int minX,
+        final int maxX,
+        final int minY,
+        final int maxY) {
         // Arrange
-        final Random mockRandom = mock(Random.class);
+        final ThreadLocalRandom mockRandom = mock(ThreadLocalRandom.class);
+        final IWorld world = createTestWorld(20, mockRandom);
+
+        // Act
+        world.getRandomVacantSpotInRadiusOf(origin, radius);
+
+        // Assert
+        // nextInt is [min, max), hence the +1
+        verify(mockRandom, atLeastOnce()).nextInt(minX, maxX + 1);
+        verify(mockRandom, atLeastOnce()).nextInt(minY, maxY + 1);
+    }
+
+    @Test
+    public void getRandomVacantSpotReturnsRandomTileInRadiusWhenThereAreNoObstacles() {
+        // Arrange
+        final ThreadLocalRandom mockRandom = mock(ThreadLocalRandom.class);
         final int randomCoordinate = 1;
-        when(mockRandom.nextInt(anyInt())).thenReturn(randomCoordinate);
+        when(mockRandom.nextInt(anyInt(), anyInt())).thenReturn(randomCoordinate);
         final IWorld world = createTestWorld(3, mockRandom);
         final Position expectedSpot = new Position(randomCoordinate, randomCoordinate);
 
         // Act
-        final Position vacantSpot = world.getRandomVacantSpot().getPosition();
+        final Position vacantSpot = world.getRandomVacantSpotInRadiusOf(new Position(), 10)
+                                         .getPosition();
 
         // Assert
         assertThat(vacantSpot).isEqualTo(expectedSpot);
     }
 
     @Test
-    public void getRandomVacantSpotReturnsRandomTileWhenThereObstacles() {
+    public void getRandomVacantSpotReturnsRandomTileInRadiusWhenThereObstacles() {
         // Arrange
-        final Random mockRandom = mock(Random.class);
+        final ThreadLocalRandom mockRandom = mock(ThreadLocalRandom.class);
         final Position firstBlockedRandomSpot = new Position(0, 1);
         final Position secondBlockedRandomSpot = new Position(1, 1);
         final Position thirdEmptyRandomSpot = new Position(2, 0);
-        when(mockRandom.nextInt(anyInt())).thenReturn((int) firstBlockedRandomSpot.getX(),
-                                                      (int) firstBlockedRandomSpot.getY(),
-                                                      (int) secondBlockedRandomSpot.getX(),
-                                                      (int) secondBlockedRandomSpot.getY(),
-                                                      (int) thirdEmptyRandomSpot.getX(),
-                                                      (int) thirdEmptyRandomSpot.getY());
+        when(mockRandom.nextInt(anyInt(), anyInt())).thenReturn((int) firstBlockedRandomSpot.getX(),
+                                                                (int) firstBlockedRandomSpot.getY(),
+                                                                (int) secondBlockedRandomSpot.getX(),
+                                                                (int) secondBlockedRandomSpot.getY(),
+                                                                (int) thirdEmptyRandomSpot.getX(),
+                                                                (int) thirdEmptyRandomSpot.getY());
         final World world = createTestWorld(3, mockRandom);
         world.createStructure(StructureType.HOUSE, firstBlockedRandomSpot);
         world.createStructure(StructureType.HOUSE, secondBlockedRandomSpot);
 
         // Act
-        final Position vacantSpot = world.getRandomVacantSpot().getPosition();
+        final Position vacantSpot = world.getRandomVacantSpotInRadiusOf(new Position(), 10)
+                                         .getPosition();
 
         // Assert
         assertThat(vacantSpot).isEqualTo(thirdEmptyRandomSpot);
@@ -288,10 +332,10 @@ public class WorldTests {
     }
 
     private World createWorld(final int size, final int seed) {
-        return createWorld(size, seed, mock(Random.class));
+        return createWorld(size, seed, mock(ThreadLocalRandom.class));
     }
 
-    private World createWorld(final int size, final int seed, final Random random) {
+    private World createWorld(final int size, final int seed, final ThreadLocalRandom random) {
         return new World(size, seed, random);
     }
 
@@ -304,7 +348,8 @@ public class WorldTests {
 
         // Act
         for (final Position position : expectedTilePositions) {
-            actualTilePositions.add(world.getTileAt(position).getPosition());
+            actualTilePositions.add(world.getTileAt(position)
+                                         .getPosition());
         }
         // Assert
         assertThat(actualTilePositions).containsExactlyInAnyOrderElementsOf(expectedTilePositions);
@@ -398,7 +443,8 @@ public class WorldTests {
         final Colony colony = mockColonyWithMockBeings();
 
         // Assert
-        assertThat(colony.getBeings()).size().isEqualTo(5);
+        assertThat(colony.getBeings()).size()
+                                      .isEqualTo(5);
     }
 
     private Colony mockColonyWithMockBeings() {
@@ -422,7 +468,7 @@ public class WorldTests {
     @Test
     public void findEmptyPositionsReturnsPositionWithNoResourcesOn() {
         // Arrange
-        final World world = createWorld(10, 15, new Random());
+        final World world = createWorld(10, 15, ThreadLocalRandom.current());
         final Collection<IResource> resources = world.getResources();
         final Collection<Position> occupiedPositions = new ArrayList<>();
         for (final IResource resource : resources) {
@@ -439,7 +485,7 @@ public class WorldTests {
     @Test
     public void findEmptyPositionsReturnsEarlyIfAmountOfEmptyPositionsHaveBeenMet() {
         // Arrange
-        final Random random = mock(Random.class);
+        final ThreadLocalRandom random = mock(ThreadLocalRandom.class);
         when(random.nextInt(anyInt())).thenReturn(0, 0, 0, 1, 1, 0, 1, 1);
         final World world = createWorld(2, 15, random);
         final int numberOfWantedPositions = 3;
@@ -448,7 +494,8 @@ public class WorldTests {
         final Iterable<Position> emptyPositions = world.findEmptyPositions(numberOfWantedPositions);
 
         // Assert
-        final int numberOfEmptyPositions = Lists.newArrayList(emptyPositions).size();
+        final int numberOfEmptyPositions = Lists.newArrayList(emptyPositions)
+                                                .size();
         assertThat(numberOfEmptyPositions).isEqualTo(numberOfWantedPositions);
     }
 
@@ -461,7 +508,8 @@ public class WorldTests {
         final int expectedNumberOfTerrainTiles = worldSize * worldSize;
 
         // Act
-        final int actualNumberOfTerrainTiles = world.getTerrainTiles().size();
+        final int actualNumberOfTerrainTiles = world.getTerrainTiles()
+                                                    .size();
 
         // Assert
         assertThat(actualNumberOfTerrainTiles).isEqualTo(expectedNumberOfTerrainTiles);
@@ -483,30 +531,28 @@ public class WorldTests {
         final Position expectedPosition) {
 
         // Arrange
-        final World world = new TestWorld(50, mock(Random.class));
+        final World world = createTestWorld(50);
         world.createStructure(StructureType.HOUSE, expectedPosition);
         world.createStructure(StructureType.HOUSE, incorrectPosition);
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyStructureOfType(
-            startingPosition,
-            StructureType.HOUSE);
+        final Optional<IStructure> foundStructure = world.getNearbyStructureOfType(startingPosition,
+                                                                                   StructureType.HOUSE);
 
         // Assert
-        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
+        assertThat(foundStructure.orElseThrow()
+                                 .getPosition()).isEqualTo(expectedPosition);
     }
 
     @Test
     public void returnsNoNearestStructureWhenWorldIsEmpty() {
         // Arrange
-        final World world = new TestWorld(50, mock(Random.class));
+        final World world = createWorld(50);
 
         // Act
-        final Optional<IStructure> structure = world.getNearbyStructureOfType(
-            new Position(
-                20f,
-                20f),
-            StructureType.HOUSE);
+        final Optional<IStructure> structure = world.getNearbyStructureOfType(new Position(20f,
+                                                                                           20f),
+                                                                              StructureType.HOUSE);
 
         // Assert
         assertThat(structure.isPresent()).isFalse();
@@ -517,7 +563,7 @@ public class WorldTests {
     public void getStructureCollectionIsCorrectSize(
         final Collection<Position> positions, final int size) {
         // Arrange
-        final World world = new TestWorld(50, mock(Random.class));
+        final World world = createTestWorld(50);
 
         // Act
         for (final Position position : positions) {
@@ -525,13 +571,14 @@ public class WorldTests {
         }
 
         // Assert
-        assertThat(world.getStructures().size()).isEqualTo(size);
+        assertThat(world.getStructures()
+                        .size()).isEqualTo(size);
     }
 
     @Test
     public void findNearestIncompleteStructureReturnsCorrect() {
         // Arrange
-        final World world = new TestWorld(50, mock(Random.class));
+        final World world = createTestWorld(50);
         world.createStructure(StructureType.HOUSE, new Position(4, 2));
         world.createStructure(StructureType.HOUSE, new Position(9, 5));
 
@@ -548,18 +595,18 @@ public class WorldTests {
         world.createStructure(StructureType.HOUSE, new Position(7, 9));
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(
-            0,
-            0));
+        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(0,
+                                                                                                    0));
 
         // Assert
-        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(1, 3));
+        assertThat(foundStructure.orElseThrow()
+                                 .getPosition()).isEqualTo(new Position(1, 3));
     }
 
     @Test
     public void findNearestIncompleteStructureFindsNoIncompleteStructure() {
         // Arrange
-        final World world = new TestWorld(50, mock(Random.class));
+        final World world = createTestWorld(50);
         world.createStructure(StructureType.HOUSE, new Position(4, 2));
         world.createStructure(StructureType.HOUSE, new Position(9, 5));
 
@@ -573,9 +620,8 @@ public class WorldTests {
         }
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(
-            0,
-            0));
+        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(0,
+                                                                                                    0));
 
         // Assert
         assertThat(foundStructure.isEmpty()).isTrue();
@@ -583,7 +629,7 @@ public class WorldTests {
 
     private static class ResourceTestWorld extends World {
 
-        ResourceTestWorld(final Random random) {
+        ResourceTestWorld(final ThreadLocalRandom random) {
             super(10, 0, random);
         }
 

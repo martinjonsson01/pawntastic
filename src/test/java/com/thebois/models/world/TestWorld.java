@@ -1,6 +1,6 @@
 package com.thebois.models.world;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.terrains.Grass;
@@ -15,7 +15,7 @@ public class TestWorld extends World {
      * @param worldSize The amount of tiles in length for X and Y, e.g. worldSize x worldSize.
      * @param random    The source of random numbers.
      */
-    public TestWorld(final int worldSize, final Random random) {
+    public TestWorld(final int worldSize, final ThreadLocalRandom random) {
         super(worldSize, 0, random);
     }
 

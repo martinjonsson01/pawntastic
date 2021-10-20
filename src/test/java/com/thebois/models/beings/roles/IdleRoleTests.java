@@ -44,7 +44,7 @@ public class IdleRoleTests {
         final ITile mockTile = mock(ITile.class);
         final Position randomPosition = new Position(2, 3);
         when(mockTile.getPosition()).thenReturn(randomPosition);
-        when(mockWorld.getRandomVacantSpot()).thenReturn(mockTile);
+        when(mockWorld.getRandomVacantSpotInRadiusOf(any(), anyInt())).thenReturn(mockTile);
         final AbstractRole role = RoleFactory.idle();
         final IAction expectedTask = ActionFactory.createMoveTo(randomPosition);
         final IActionPerformer performer = mock(IActionPerformer.class);

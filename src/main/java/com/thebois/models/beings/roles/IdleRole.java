@@ -3,11 +3,11 @@ package com.thebois.models.beings.roles;
 import java.util.Collection;
 import java.util.List;
 
-import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionSource;
+import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 
 /**
@@ -15,6 +15,10 @@ import com.thebois.models.world.IWorld;
  */
 class IdleRole extends AbstractRole {
 
+    /**
+     * The radius at which random positions to move to are picked, in tiles.
+     */
+    private static final int RANDOM_MOVE_RADIUS = 2;
     private final IWorld world;
 
     /**
@@ -37,10 +41,9 @@ class IdleRole extends AbstractRole {
     }
 
     private IAction getRandomMove(final IActionPerformer performer) {
-        final Position randomPosition = world
-            .getRandomVacantSpot()
-            .getPosition();
-        return ActionFactory.createMoveTo(randomPosition);
+        final ITile randomVacantTile = world.getRandomVacantSpotInRadiusOf(performer.getPosition(),
+                                                                           RANDOM_MOVE_RADIUS);
+        return ActionFactory.createMoveTo(randomVacantTile.getPosition());
     }
 
 }

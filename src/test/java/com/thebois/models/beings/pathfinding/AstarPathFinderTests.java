@@ -2,7 +2,7 @@ package com.thebois.models.beings.pathfinding;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -52,10 +52,10 @@ public class AstarPathFinderTests {
     }
 
     private World createTestWorld(final int size) {
-        return createTestWorld(size, mock(Random.class));
+        return createTestWorld(size, mock(ThreadLocalRandom.class));
     }
 
-    private World createTestWorld(final int size, final Random random) {
+    private World createTestWorld(final int size, final ThreadLocalRandom random) {
         return new TestWorld(size, random);
     }
 

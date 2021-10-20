@@ -46,7 +46,7 @@ public class GuardRoleTests {
         when(performer.getPosition()).thenReturn(new Position(0, 0));
 
         final ITile tile = MockFactory.createTile(10, 10);
-        when(world.getRandomVacantSpot()).thenReturn(tile);
+        when(world.getRandomVacantSpotInRadiusOf(any(), anyInt())).thenReturn(tile);
 
         final AbstractRole role = RoleFactory.guard();
         final AbstractRole idleRole = RoleFactory.idle();

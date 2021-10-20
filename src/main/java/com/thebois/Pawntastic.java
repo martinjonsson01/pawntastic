@@ -1,7 +1,7 @@
 package com.thebois;
 
 import java.io.IOException;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -123,11 +123,12 @@ public class Pawntastic extends Game {
         this.toolbarController = new ToolbarController(world, uiSkin, projector);
 
         // Screens
-        gameScreen = new GameScreen(viewport,
-                                    camera,
-                                    worldController.getView(),
-                                    infoController.getView(),
-                                    toolbarController.getView());
+        gameScreen = new GameScreen(
+            viewport,
+            camera,
+            worldController.getView(),
+            infoController.getView(),
+            toolbarController.getView());
         this.setScreen(gameScreen);
         // Set up Input Processors
         initInputProcessors();
@@ -148,7 +149,7 @@ public class Pawntastic extends Game {
             loadModelsFromSaveFile();
         }
         catch (final IOException exception) {
-            final Random random = new Random();
+            final ThreadLocalRandom random = ThreadLocalRandom.current();
             world = new World(WORLD_SIZE, random.nextInt(Integer.MAX_VALUE), random);
             RoleFactory.setWorld(world);
             RoleFactory.setResourceFinder(world);
@@ -181,8 +182,7 @@ public class Pawntastic extends Game {
         generator.scaleForPixelHeight(DEFAULT_FONT_SIZE);
         font = generator.generateFont(parameter);
         // To smooth out the text.
-        font
-            .getRegion()
+        font.getRegion()
             .getTexture()
             .setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         generator.dispose();

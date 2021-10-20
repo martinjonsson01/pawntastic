@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
@@ -31,9 +31,9 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
     private final IStructure[][] structureMatrix;
     private final IResource[][] resourceMatrix;
     private final ITile[][] canonicalMatrix;
-    private Collection<IStructure> structuresCache = new ArrayList<>();
     private final int worldSize;
-    private final Random random;
+    private final ThreadLocalRandom random;
+    private Collection<IStructure> structuresCache = new ArrayList<>();
 
     /**
      * Initiates the world with the given size.
@@ -42,7 +42,7 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
      * @param seed      The seed used to generate the world.
      * @param random    A generator of random numbers.
      */
-    public World(final int worldSize, final int seed, final Random random) {
+    public World(final int worldSize, final int seed, final ThreadLocalRandom random) {
         this.worldSize = worldSize;
         this.random = random;
         terrainMatrix = setUpTerrain(worldSize, seed);
@@ -114,7 +114,7 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
 
         final List<Position> emptyPositions = new ArrayList<>();
         while (emptyPositions.size() < count) {
-            final ITile vacantTile = getRandomVacantSpot();
+            final ITile vacantTile = getRandomVacantSpotInRadiusOf(new Position(0, 0), worldSize);
             final Position vacantPosition = vacantTile.getPosition();
 
             emptyPositions.add(vacantPosition);
@@ -122,9 +122,10 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
         return emptyPositions;
     }
 
-    private Position createRandomPosition() {
-        final int randomX = random.nextInt(worldSize);
-        final int randomY = random.nextInt(worldSize);
+    private Position createRandomPosition(
+        final int minX, final int maxX, final int minY, final int maxY) {
+        final int randomX = random.nextInt(minX, maxX + 1);
+        final int randomY = random.nextInt(minY, maxY + 1);
         return new Position(randomX, randomY);
     }
 
@@ -144,28 +145,6 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
         MatrixUtils.forEachElement(terrainMatrix,
                                    maybeTerrain -> copy.add(maybeTerrain.deepClone()));
         return copy;
-    }
-
-    /**
-     * Returns the structures in a Collection as the interface IStructure.
-     *
-     * @return The list to be returned.
-     */
-    public Collection<IStructure> getStructures() {
-        return structuresCache;
-    }
-
-    private void generateStructuresCache() {
-        structuresCache = MatrixUtils.toCollection(this.structureMatrix);
-    }
-
-    /**
-     * Returns the resources in a Collection as the interface IResource.
-     *
-     * @return The list to be returned.
-     */
-    public Collection<IResource> getResources() {
-        return MatrixUtils.toCollection(this.resourceMatrix);
     }
 
     /**
@@ -216,37 +195,58 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
 
     private void postObstacleEvent(final int x, final int y) {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(x, y);
-        Pawntastic.getEventBus().post(obstacleEvent);
+        Pawntastic.getEventBus()
+                  .post(obstacleEvent);
+    }
+
+    private void generateStructuresCache() {
+        structuresCache = MatrixUtils.toCollection(this.structureMatrix);
     }
 
     @Override
     public Optional<IStructure> getNearbyStructureOfType(
-        final Position origin,
-        final StructureType type) {
-        return getStructures()
-            .stream()
-            .filter(structure -> structure.getType().equals(type))
-            .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
-                                           origin.distanceTo(o2.getPosition())));
+        final Position origin, final StructureType type) {
+        return getStructures().stream()
+                              .filter(structure -> structure.getType()
+                                                            .equals(type))
+                              .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
+                                                             origin.distanceTo(o2.getPosition())));
+    }
+
+    /**
+     * Returns the structures in a Collection as the interface IStructure.
+     *
+     * @return The list to be returned.
+     */
+    public Collection<IStructure> getStructures() {
+        return structuresCache;
     }
 
     @Override
     public Optional<IStructure> getNearbyIncompleteStructure(
         final Position origin) {
-        return getStructures()
-            .stream()
-            .filter(structure -> !structure.isCompleted())
-            .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
-                                           origin.distanceTo(o2.getPosition())));
+        return getStructures().stream()
+                              .filter(structure -> !structure.isCompleted())
+                              .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
+                                                             origin.distanceTo(o2.getPosition())));
     }
 
     @Override
     public Optional<IResource> getNearbyOfType(final Position origin, final ResourceType type) {
-        return getResources()
-            .stream()
-            .filter(resource -> resource.getType().equals(type))
-            .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
-                                           origin.distanceTo(o2.getPosition())));
+        return getResources().stream()
+                             .filter(resource -> resource.getType()
+                                                         .equals(type))
+                             .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
+                                                            origin.distanceTo(o2.getPosition())));
+    }
+
+    /**
+     * Returns the resources in a Collection as the interface IResource.
+     *
+     * @return The list to be returned.
+     */
+    public Collection<IResource> getResources() {
+        return MatrixUtils.toCollection(this.resourceMatrix);
     }
 
     @Override
@@ -287,10 +287,16 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
     }
 
     @Override
-    public ITile getRandomVacantSpot() {
+    public ITile getRandomVacantSpotInRadiusOf(final Position origin, final int radius) {
+        final int x = (int) origin.getX();
+        final int y = (int) origin.getY();
+        final int minX = Math.max(0, x - radius);
+        final int maxX = Math.min(worldSize - 1, x + radius);
+        final int minY = Math.max(0, y - radius);
+        final int maxY = Math.min(worldSize - 1, y + radius);
         Position randomPosition;
         do {
-            randomPosition = createRandomPosition();
+            randomPosition = createRandomPosition(minX, maxX, minY, maxY);
         } while (!isVacant(randomPosition));
 
         return getTileAt(randomPosition);
@@ -300,13 +306,14 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
     public Optional<Position> getClosestNeighbourOf(final ITile tile, final Position from) {
         final Collection<ITile> neighbours = getNeighboursOf(tile);
 
-        final Optional<ITile> firstVacantNeighbour = neighbours
-            .stream()
-            .filter(neighbourTile -> isVacant(neighbourTile.getPosition()))
-            .findFirst();
+        final Optional<ITile> firstVacantNeighbour = neighbours.stream()
+                                                               .filter(neighbourTile -> isVacant(
+                                                                   neighbourTile.getPosition()))
+                                                               .findFirst();
         if (firstVacantNeighbour.isEmpty()) return Optional.empty();
 
-        Position closest = firstVacantNeighbour.get().getPosition();
+        Position closest = firstVacantNeighbour.get()
+                                               .getPosition();
 
         for (final ITile neighbour : neighbours) {
             final Position current = neighbour.getPosition();
@@ -320,10 +327,14 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
     }
 
     private boolean isDiagonalTo(final ITile tile, final ITile neighbour) {
-        final int tileX = (int) tile.getPosition().getX();
-        final int tileY = (int) tile.getPosition().getY();
-        final int neighbourX = (int) neighbour.getPosition().getX();
-        final int neighbourY = (int) neighbour.getPosition().getY();
+        final int tileX = (int) tile.getPosition()
+                                    .getX();
+        final int tileY = (int) tile.getPosition()
+                                    .getY();
+        final int neighbourX = (int) neighbour.getPosition()
+                                              .getX();
+        final int neighbourY = (int) neighbour.getPosition()
+                                              .getY();
         final int deltaX = Math.abs(tileX - neighbourX);
         final int deltaY = Math.abs(tileY - neighbourY);
         return deltaX == 1 && deltaY == 1;
