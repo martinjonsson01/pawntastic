@@ -1,9 +1,13 @@
 package com.thebois.models.beings.actions;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 
 import com.thebois.models.Position;
@@ -21,6 +25,23 @@ public class BuildActionTests {
     private IActionPerformer performer;
     private IStructure structure;
     private IAction action;
+
+    public static Stream<Arguments> getEqualBuilds() {
+        final IStructure sameStructure = MockFactory.createStructure(new Position(), false);
+        final IAction sameInstance = ActionFactory.createBuild(sameStructure);
+        return Stream.of(Arguments.of(sameInstance, sameInstance),
+                         Arguments.of(ActionFactory.createBuild(sameStructure),
+                                      ActionFactory.createBuild(sameStructure)));
+    }
+
+    public static Stream<Arguments> getNotEqualBuilds() {
+        final IStructure sameStructure = MockFactory.createStructure(new Position(), false);
+        return Stream.of(Arguments.of(ActionFactory.createBuild(mock(IStructure.class)),
+                                      ActionFactory.createBuild(sameStructure)),
+                         Arguments.of(ActionFactory.createBuild(sameStructure), null),
+                         Arguments.of(ActionFactory.createBuild(sameStructure),
+                                      mock(IAction.class)));
+    }
 
     @BeforeEach
     public void setup() {
@@ -98,6 +119,20 @@ public class BuildActionTests {
 
         // Assert
         assertThat(canPerform).isFalse();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getEqualBuilds")
+    public void equalsIsTrueForEquals(final IAction first, final IAction second) {
+        // Assert
+        assertThat(first).isEqualTo(second);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getNotEqualBuilds")
+    public void equalsIsFalseForNotEquals(final IAction first, final IAction second) {
+        // Assert
+        assertThat(first).isNotEqualTo(second);
     }
 
 }

@@ -3,6 +3,7 @@ package com.thebois.models.beings.actions;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.thebois.models.beings.IActionPerformer;
@@ -30,6 +31,19 @@ public class BuildAction implements IAction, Serializable {
      */
     public BuildAction(final IStructure toBuild) {
         this.toBuild = toBuild;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(toBuild);
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) return true;
+        if (!(other instanceof BuildAction)) return false;
+        final BuildAction that = (BuildAction) other;
+        return toBuild.equals(that.toBuild);
     }
 
     @Override
