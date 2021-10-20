@@ -120,5 +120,4 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
             .filter(being -> role.equals(being.getRole()))
             .collect(Collectors.toList());
     }
-
 }
