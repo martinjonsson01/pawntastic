@@ -3,7 +3,6 @@ package com.thebois.models.beings;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
@@ -86,7 +85,7 @@ public class BeingTests {
     }
 
     private static AbstractBeing createBeing(final IInventory inventory) {
-        final AbstractRole role = RoleFactory.idle();
+        final AbstractRole role = new NothingRole();
         return createBeing(new Position(), inventory, role);
     }
 
@@ -162,15 +161,8 @@ public class BeingTests {
     public void updateDoesNotOvershootDestinationWhenDeltaTimeIsLarge(
         final Position startPosition, final Position destination) {
         // Arrange
-        final Random mockRandom = mock(Random.class);
-        when(mockRandom.nextInt(anyInt())).thenReturn(0);
-        final IPathFinder pathFinder = mock(IPathFinder.class);
-        when(pathFinder.path(any(), any())).thenReturn(List.of(destination));
-        final AbstractBeing being = new Pawn(startPosition,
-                                             destination,
-                                             mockRandom,
-                                             pathFinder,
-                                             mock(IStructureFinder.class));
+        final AbstractBeing being = createBeing();
+        being.setDestination(destination);
 
         final float distanceBefore = startPosition.distanceTo(destination);
 
@@ -188,15 +180,8 @@ public class BeingTests {
         // Arrange
         final Position startPosition = new Position(0, 0);
         final Position destination = new Position(10, 0);
-        final Random mockRandom = mock(Random.class);
-        when(mockRandom.nextInt(anyInt())).thenReturn(0);
-        final IPathFinder pathFinder = mock(IPathFinder.class);
-        when(pathFinder.path(any(), any())).thenReturn(List.of(destination));
-        final AbstractBeing being = new Pawn(startPosition,
-                                             destination,
-                                             mockRandom,
-                                             pathFinder,
-                                             mock(IStructureFinder.class));
+        final AbstractBeing being = createBeing();
+        being.setDestination(destination);
 
         // Act
         being.update(0f);
@@ -210,20 +195,10 @@ public class BeingTests {
     public void updateMovesFurtherTowardsDestinationWhenDeltaTimeIsGreater() {
         // Arrange
         final Position destination = new Position(10, 0);
-        final Random mockRandom = mock(Random.class);
-        when(mockRandom.nextInt(anyInt())).thenReturn(0);
-        final IPathFinder pathFinder = mock(IPathFinder.class);
-        when(pathFinder.path(any(), any())).thenReturn(List.of(destination));
-        final AbstractBeing slowerBeing = new Pawn(new Position(0, 0),
-                                                   destination,
-                                                   mockRandom,
-                                                   pathFinder,
-                                                   mock(IStructureFinder.class));
-        final AbstractBeing fasterBeing = new Pawn(new Position(0, 0),
-                                                   destination,
-                                                   mockRandom,
-                                                   pathFinder,
-                                                   mock(IStructureFinder.class));
+        final AbstractBeing slowerBeing = createBeing();
+        final AbstractBeing fasterBeing = createBeing();
+        slowerBeing.setDestination(destination);
+        fasterBeing.setDestination(destination);
 
         // Act
         slowerBeing.update(0.01f);
@@ -371,8 +346,18 @@ public class BeingTests {
     private static class NothingRole extends AbstractRole {
 
         @Override
+        public boolean equals(final Object obj) {
+            return obj instanceof NothingRole;
+        }
+
+        @Override
         public RoleType getType() {
             return null;
+        }
+
+        @Override
+        public AbstractRole deepClone() {
+            return new NothingRole();
         }
 
         @Override
