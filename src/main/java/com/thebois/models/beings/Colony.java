@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
@@ -45,10 +44,12 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
 
     @Override
     public boolean tryIncreaseAllocation(final RoleType roleType) {
-        final Optional<IBeing> idleBeing = findIdleBeings().stream().findAny();
+        final Optional<IBeing> idleBeing = findIdleBeings().stream()
+                                                           .findAny();
         if (idleBeing.isPresent()) {
             final AbstractRole role = RoleFactory.fromType(roleType);
-            idleBeing.get().setRole(role);
+            idleBeing.get()
+                     .setRole(role);
             return true;
         }
 
@@ -67,9 +68,11 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     @Override
     public boolean tryDecreaseAllocation(final RoleType roleType) {
         final AbstractRole role = RoleFactory.fromType(roleType);
-        final Optional<IBeing> beingWithRole = findBeingsWithRole(role).stream().findFirst();
+        final Optional<IBeing> beingWithRole = findBeingsWithRole(role).stream()
+                                                                       .findFirst();
         if (beingWithRole.isPresent()) {
-            beingWithRole.get().setRole(RoleFactory.idle());
+            beingWithRole.get()
+                         .setRole(RoleFactory.idle());
             return true;
         }
         return false;
@@ -87,7 +90,9 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     @Override
     public int countBeingsWithRole(final RoleType roleType) {
         final AbstractRole role = RoleFactory.fromType(roleType);
-        return (int) getBeings().stream().filter(being -> role.equals(being.getRole())).count();
+        return (int) getBeings().stream()
+                                .filter(being -> role.equals(being.getRole()))
+                                .count();
     }
 
     @Override
@@ -112,19 +117,21 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     }
 
     private Collection<IBeing> findIdleBeings() {
-        final Stream<IBeing> idleBeings = getBeings().stream().filter(this::isIdle);
+        final Stream<IBeing> idleBeings = getBeings().stream()
+                                                     .filter(this::isIdle);
         return idleBeings.collect(Collectors.toList());
     }
 
     private boolean isIdle(final IBeing being) {
-        return being.getRole().getType().equals(RoleType.IDLE);
+        return being.getRole()
+                    .getType()
+                    .equals(RoleType.IDLE);
     }
 
     private Collection<IBeing> findBeingsWithRole(final AbstractRole role) {
-        return getBeings()
-            .stream()
-            .filter(being -> role.equals(being.getRole()))
-            .collect(Collectors.toList());
+        return getBeings().stream()
+                          .filter(being -> role.equals(being.getRole()))
+                          .collect(Collectors.toList());
     }
 
     @Override
