@@ -12,7 +12,7 @@ import com.thebois.models.inventory.items.ItemType;
 /**
  * An independent agent that can act in the world according to its assigned role.
  */
-public abstract class AbstractBeing implements IBeing, IActionPerformer, IReceiver, IGiver {
+public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     /**
      * The max speed of the being, in tiles/second.
