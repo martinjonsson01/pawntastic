@@ -3,7 +3,6 @@ package com.thebois.models.world.structures;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import com.thebois.models.Position;
@@ -44,11 +43,6 @@ abstract class AbstractStructure implements IStructure {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(position, structureType);
-    }
-
-    @Override
     public StructureType getType() {
         return structureType;
     }
@@ -69,7 +63,6 @@ abstract class AbstractStructure implements IStructure {
 
     private int countAllNeededItems() {
         return allNeededItems.values().stream().reduce(0, Integer::sum);
-
     }
 
     @Override
@@ -81,6 +74,7 @@ abstract class AbstractStructure implements IStructure {
         }
         return false;
     }
+
     @Override
     public float getBuiltRatio() {
         final float totalNeeded = countAllNeededItems();
