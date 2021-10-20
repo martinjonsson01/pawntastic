@@ -40,8 +40,14 @@ public abstract class AbstractBeing implements IBeing {
     private static final float MAX_CARRYING_CAPACITY = 100f;
     private static final float MAX_HEALTH = 100f;
     private static final float MAX_HUNGER = 100f;
-    private static final float HUNGER_FACTOR = 10f;
-    private static final float HEALTH_FACTOR = 10f;
+    /**
+     * How much hunger the pawn should lose per second.
+     */
+    private static final float HUNGER_FACTOR = 1f;
+    /**
+     * How much health the pawn should gain or lose per second.
+     */
+    private static final float HEALTH_FACTOR = 1f;
     private final IPathFinder pathFinder;
     private final IInventory inventory = new Inventory(MAX_CARRYING_CAPACITY);
     private Stack<Position> path;
@@ -138,6 +144,11 @@ public abstract class AbstractBeing implements IBeing {
         return isAlive;
     }
 
+    @Override
+    public float getHealthRatio() {
+        return currentHealth / MAX_HEALTH;
+    }
+
     private void updateIsAlive() {
         if (currentHealth <= 0f) {
             isAlive = false;
@@ -147,21 +158,16 @@ public abstract class AbstractBeing implements IBeing {
     private void updateHealth(final float deltaTime) {
         final float changeHealthValue = HEALTH_FACTOR * deltaTime;
         if (currentHunger <= 0) {
-            currentHealth -= changeHealthValue;
+            currentHealth = Math.max(currentHealth - changeHealthValue, 0);
         }
         else {
-            currentHealth += changeHealthValue;
+            currentHealth = Math.min(currentHealth + changeHealthValue, MAX_HEALTH);
         }
     }
 
     private void updateHunger(final float deltaTime) {
         final float changeHungerValue = HUNGER_FACTOR * deltaTime;
-        if (changeHungerValue >= currentHunger) {
-            currentHunger -= changeHungerValue;
-        }
-        else {
-            currentHunger = 0;
-        }
+        currentHunger = Math.max(currentHunger - changeHungerValue, 0f);
     }
 
     /**
@@ -265,7 +271,7 @@ public abstract class AbstractBeing implements IBeing {
 
     protected Position nearestNeighborOf(final Position destination) {
         final int[][] positionOffsets = {
-            { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 },
+            {-1, -1 }, {0, -1 }, {1, -1 }, {-1, 0 }, {1, 0 }, {-1, 1 }, {0, 1 }, {1, 1 },
             };
 
         Position nearestNeighbor = new Position(Float.MAX_VALUE, Float.MAX_VALUE);

@@ -66,9 +66,8 @@ public class Pawn extends AbstractBeing {
     }
 
     protected IStructure findNearestIncompleteStructure() {
-        final Optional<IStructure> structure =
-            getStructureFinder().getNearbyIncompleteStructure(
-                this.getPosition());
+        final Optional<IStructure> structure = getStructureFinder().getNearbyIncompleteStructure(
+            this.getPosition());
         return structure.orElse(null);
     }
 

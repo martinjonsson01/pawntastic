@@ -33,10 +33,9 @@ public class ColonyTests {
     @Test
     public void isFullReturnsFalse() {
         // Arrange
-        final Colony colony = new Colony(
-            List.of(),
-            mock(IPathFinder.class),
-            mock(IStructureFinder.class));
+        final Colony colony = new Colony(List.of(),
+                                         mock(IPathFinder.class),
+                                         mock(IStructureFinder.class));
 
         // Act
         final boolean isFull = colony.isFull();
@@ -270,9 +269,10 @@ public class ColonyTests {
     }
 
     @Test
-    public void ensureBeingsUpdatesWhenColonyUpdates() {
+    public void ensureAliveBeingsUpdatesWhenColonyUpdates() {
         // Arrange
         final IBeing being = Mockito.mock(IBeing.class);
+        when(being.isAlive()).then(returnValue -> true);
         final Colony colony = mockColony();
 
         colony.addBeing(being);
@@ -283,6 +283,25 @@ public class ColonyTests {
 
         // Assert
         verify(being, times(1)).update(deltaTime);
+    }
+
+    @Test
+    public void beingGroupRemovesDeadBeings() {
+        // Arrange
+        final IBeing being = Mockito.mock(IBeing.class);
+        when(being.isAlive()).then(returnValue -> false);
+        final Colony colony = mockColony();
+
+        colony.addBeing(being);
+        final float deltaTime = 0.1f;
+        final int expectedAmountOfBeings = 0;
+
+        // Act
+        colony.update(deltaTime);
+        final int actualAmountOfBeings = colony.getBeings().size();
+
+        // Assert
+        assertThat(actualAmountOfBeings).isEqualTo(expectedAmountOfBeings);
     }
 
 }
