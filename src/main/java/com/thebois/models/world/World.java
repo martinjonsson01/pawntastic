@@ -112,6 +112,8 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
         return MatrixUtils.toCollection(canonicalMatrix).stream().filter(iTile -> !iTile
             .getPosition()
             .equals(position)
+                && !(iTile.getPosition().getX() > worldSize) && !(iTile.getPosition().getX() < 0)
+                && !(iTile.getPosition().getY() > worldSize) && !(iTile.getPosition().getY() < 0)
                 && iTile.getCost() < Float.MAX_VALUE
                 && radius > position.distanceTo(
             iTile.getPosition()))

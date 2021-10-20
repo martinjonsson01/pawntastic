@@ -40,27 +40,16 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     /**
      * Creates a colony and fills it with pawns in the provided open positions.
      *
-     * @param vacantPositions Positions in the world where pawns can be created.
      * @param pathFinder      The pathfinder that the pawns will use.
      * @param structureFinder          Used to find structures in the world.
      * @param positionFinder          Used to find positions in the world.
      */
     public Colony(
-        final Iterable<Position> vacantPositions,
         final IPathFinder pathFinder,
         final IStructureFinder structureFinder, final IPositionFinder positionFinder) {
         this.pathFinder = pathFinder;
         this.structureFinder = structureFinder;
         this.positionFinder = positionFinder;
-        final Random random = new Random();
-        for (final Position vacantPosition : vacantPositions) {
-            super.addBeing(new Pawn(
-                vacantPosition,
-                vacantPosition,
-                random,
-                pathFinder,
-                structureFinder));
-        }
         Pawntastic.getEventBus().register(this);
     }
 

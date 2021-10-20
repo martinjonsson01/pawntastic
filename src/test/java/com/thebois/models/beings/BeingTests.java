@@ -618,11 +618,9 @@ public class BeingTests {
     @Test
     public void addBeingIncreasesBeingCount() {
         // Arrange
-        final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final World world = new TestWorld(50);
-        final AbstractBeingGroup colony = new Colony(vacantPositions,
-                                                     pathFinder,
+        final AbstractBeingGroup colony = new Colony(pathFinder,
                                                      world, world);
         final IStructureFinder finder = Mockito.mock(IStructureFinder.class);
 
@@ -638,8 +636,7 @@ public class BeingTests {
         final int after = colony.getBeings().size();
 
         // Assert
-        assertThat(before).isEqualTo(1);
-        assertThat(after).isEqualTo(2);
+        assertThat(after).isEqualTo(before+1);
     }
 
     @Test

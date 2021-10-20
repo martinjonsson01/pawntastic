@@ -44,7 +44,6 @@ public class ColonyTests {
     public void isFullReturnsFalse() {
         // Arrange
         final Colony colony = new Colony(
-            List.of(),
             mock(IPathFinder.class),
             mock(IStructureFinder.class),
             mock(IPositionFinder.class));
@@ -56,28 +55,28 @@ public class ColonyTests {
         assertThat(isFull).isFalse();
     }
 
-    @Test
-    public void constructWithTilesCreatesOneBeingPerPosition() {
-        // Arrange
-        final int beingCount = 25;
-        final List<Position> positions = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            positions.add(new Position(0, 0));
-        }
-        final IWorld mockWorld = mock(IWorld.class);
-        when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
-
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-
-        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
-        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-
-        // Act
-        final Colony colony = new Colony(positions, pathFinder, structureFinder, positionFinder);
-
-        // Assert
-        assertThat(colony.getBeings().size()).isEqualTo(beingCount);
-    }
+//    @Test
+//    public void constructWithTilesCreatesOneBeingPerPosition() {
+//        // Arrange
+//        final int beingCount = 25;
+//        final List<Position> positions = new ArrayList<>(beingCount);
+//        for (int i = 0; i < beingCount; i++) {
+//            positions.add(new Position(0, 0));
+//        }
+//        final IWorld mockWorld = mock(IWorld.class);
+//        when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
+//
+//        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+//
+//        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
+//        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
+//
+//        // Act
+//        final Colony colony = new Colony(pathFinder, structureFinder, positionFinder);
+//
+//        // Assert
+//        assertThat(colony.getBeings().size()).isEqualTo(beingCount);
+//    }
 
     @ParameterizedTest
     @MethodSource("getItemTypes")
@@ -94,11 +93,10 @@ public class ColonyTests {
     }
 
     private Colony mockColony() {
-        final List<Position> positions = new ArrayList<>();
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
         final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-        return new Colony(positions, pathFinder, structureFinder, positionFinder);
+        return new Colony(pathFinder, structureFinder, positionFinder);
     }
 
 
@@ -305,7 +303,7 @@ public class ColonyTests {
         final World world = new TestWorld(3);
         final IPathFinder pathFinder = new AstarPathFinder(world);
 
-        final Colony colony = new Colony(List.of(), pathFinder, world, world);
+        final Colony colony = new Colony(pathFinder, world, world);
 
         colony.addBeing(new Pawn(new Position(), new Position(), new Random(), pathFinder, world));
 

@@ -40,7 +40,6 @@ public class Pawntastic extends Game {
     private static final float VIEWPORT_WIDTH = 1300;
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
-    private static final int PAWN_POSITIONS = 0;
     private static final int TOOLBAR_HEIGHT = 40;
     private static final int TILE_SIZE = (int) (Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH)
                                                 - TOOLBAR_HEIGHT) / WORLD_SIZE;
@@ -145,8 +144,7 @@ public class Pawntastic extends Game {
         }
         catch (final IOException exception) {
             world = new World(WORLD_SIZE, 0);
-            colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS),
-                                new AstarPathFinder(world),
+            colony = new Colony(new AstarPathFinder(world),
                                 world, world);
         }
     }

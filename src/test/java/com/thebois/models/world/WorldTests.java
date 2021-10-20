@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Stream;
 
 import org.assertj.core.util.Lists;
@@ -18,6 +19,7 @@ import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
+import com.thebois.models.beings.Pawn;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.inventory.items.ItemFactory;
@@ -196,42 +198,12 @@ public class WorldTests {
         assertThat(structures.size()).isEqualTo(0);
     }
 
-    @Test
-    public void instantiateWithPawnCountCreatesCorrectNumberOfBeings() {
-        // Arrange
-        final Colony colony = mockColonyWithMockBeings();
-
-        // Assert
-        assertThat(colony.getBeings()).size().isEqualTo(5);
-    }
-
     private Colony mockColonyWithMockBeings() {
-        final List<Position> vacantPositions = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            vacantPositions.add(new Position(0, 0));
-        }
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
         final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
 
-        return new Colony(vacantPositions, pathFinder, mockFinder, positionFinder);
-    }
-
-    @Test
-    public void instantiateWithPawnCountCreatesOnlyAsManyBeingsAsFitInTheWorld() {
-        // Arrange
-        final int pawnFitCount = 4;
-        final World world = new World(2, 15);
-        final Iterable<Position> vacantPositions = world.findEmptyPositions(5);
-        final IPathFinder pathFinder = new AstarPathFinder(world);
-        final IStructureFinder mockFinder = Mockito.mock(IStructureFinder.class);
-        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-
-        // Act
-        final Colony colony = new Colony(vacantPositions, pathFinder, mockFinder, positionFinder);
-
-        // Assert
-        assertThat(colony.getBeings()).size().isEqualTo(pawnFitCount);
+        return new Colony(pathFinder, mockFinder, positionFinder);
     }
 
     @Test
@@ -500,6 +472,29 @@ public class WorldTests {
 
         // Assert
         assertThat(returnedPositions.size()).isEqualTo(count);
+    }
+
+    @Test
+    public void tryGetEmptyPositionsNextDoesNotReturnPositionsOutsideOfTheWorld() {
+        // Arrange
+        final World world = new TestWorld(50);
+        world.tryCreateStructure(StructureType.TOWN_HALL, new Position(10, 10));
+        final Position origin = new Position(0, 0);
+        final int count = 50;
+        final float radius = 10;
+
+        // Act
+        final Collection<Position> returnedPositions = world.tryGetEmptyPositionsNextTo(
+            origin,
+            count,
+            radius);
+
+        // Assert
+        assertThat(returnedPositions
+                       .stream()
+                       .noneMatch(position ->
+                                      (position.getX() > 50 || position.getX() < 0)
+                                      || (position.getY() > 50 || position.getY() < 0))).isTrue();
     }
 
 }
