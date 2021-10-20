@@ -16,7 +16,7 @@ import com.thebois.models.beings.actions.IActionSource;
  */
 public abstract class AbstractRole implements IDeepClonable<AbstractRole>, Serializable {
 
-    private transient Queue<IActionSource> tasks = new LinkedList<>();
+    private transient Queue<IActionSource> tasks;
     private IAction currentAction;
 
     @Override
@@ -32,9 +32,11 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole>, Seria
         if (obj == null) {
             return false;
         }
-        if (this.getClass().equals(obj.getClass())) {
+        if (this.getClass()
+                .equals(obj.getClass())) {
             final AbstractRole other = (AbstractRole) obj;
-            return this.getType().equals(other.getType());
+            return this.getType()
+                       .equals(other.getType());
         }
         return false;
     }
@@ -52,7 +54,8 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole>, Seria
      * @return The title of the role occupation.
      */
     public String getName() {
-        final String className = this.getClass().getSimpleName();
+        final String className = this.getClass()
+                                     .getSimpleName();
         final int roleSuffixLength = 4;
         return className.substring(0, className.length() - roleSuffixLength);
     }
@@ -75,7 +78,8 @@ public abstract class AbstractRole implements IDeepClonable<AbstractRole>, Seria
         }
 
         if (!currentAction.canPerform(performer)) {
-            currentAction = RoleFactory.idle().obtainNextAction(performer);
+            currentAction = RoleFactory.idle()
+                                       .obtainNextAction(performer);
         }
 
         return currentAction;
