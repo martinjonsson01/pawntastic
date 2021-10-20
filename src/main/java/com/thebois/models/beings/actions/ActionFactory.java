@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.resources.IResource;
+import com.thebois.models.world.structures.IStructure;
 
 /**
  * Creates actions.
@@ -51,6 +52,17 @@ public final class ActionFactory {
      */
     public static IAction createHarvest(final IResource resource) {
         return new HarvestAction(resource);
+    }
+
+    /**
+     * Creates a construction-task for a given structure.
+     *
+     * @param toBuild What to construct.
+     *
+     * @return The construction-task.
+     */
+    public static IAction createBuild(final IStructure toBuild) {
+        return new BuildAction(toBuild);
     }
 
 }
