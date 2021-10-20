@@ -32,7 +32,9 @@ public class BuildActionTests {
     @Test
     public void performDeliversAllNeededItemsToStructure() {
         // Arrange
-        final Position besidesStructure = structure.getPosition().subtract(1, 0);
+        final Position besidesStructure = structure
+            .getPosition()
+            .subtract(1, 0);
         when(performer.getPosition()).thenReturn(besidesStructure);
 
         when(structure.tryDeliverItem(any())).thenReturn(true);
@@ -47,7 +49,9 @@ public class BuildActionTests {
         verify(structure, atLeastOnce()).tryDeliverItem(itemCaptor.capture());
 
         final List<IItem> deliveredItems = itemCaptor.getAllValues();
-        assertThat(deliveredItems).map(IItem::getType).containsExactlyElementsOf(neededItemTypes);
+        assertThat(deliveredItems)
+            .map(IItem::getType)
+            .containsExactlyElementsOf(neededItemTypes);
     }
 
     @Test
@@ -67,9 +71,33 @@ public class BuildActionTests {
     }
 
     @Test
-    public void canPerformReturnsTrue() {
+    public void canPerformReturnsTrueWhenNearby() {
+        // Arrange
+        final Position besideStructure = structure
+            .getPosition()
+            .subtract(1, 0);
+        when(performer.getPosition()).thenReturn(besideStructure);
+
+        // Act
+        final boolean canPerform = action.canPerform(performer);
+
         // Assert
-        assertThat(action.canPerform(performer)).isTrue();
+        assertThat(canPerform).isTrue();
+    }
+
+    @Test
+    public void canPerformReturnsFalseWhenFarAway() {
+        // Arrange
+        final Position awayFromStructure = structure
+            .getPosition()
+            .add(10, 10);
+        when(performer.getPosition()).thenReturn(awayFromStructure);
+
+        // Act
+        final boolean canPerform = action.canPerform(performer);
+
+        // Assert
+        assertThat(canPerform).isFalse();
     }
 
 }

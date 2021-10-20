@@ -16,6 +16,11 @@ import com.thebois.models.world.structures.IStructure;
  */
 public class BuildAction implements IAction, Serializable {
 
+    /**
+     * The minimum distance at which a being has to be from a structure to be able to build it, in
+     * tiles.
+     */
+    private static final float MINIMUM_BUILD_DISTANCE = 2f;
     private final IStructure toBuild;
 
     /**
@@ -45,9 +50,11 @@ public class BuildAction implements IAction, Serializable {
     @Override
     public boolean canPerform(final IActionPerformer performer) {
         // Note: when items have to be fetched from stockpiles (instead of magically created),
-        // this will have to be based on whether the performer has the required items
+        // this will have to take into account whether the performer has the required items
         // in its inventory.
-        return true;
+        return performer
+                   .getPosition()
+                   .distanceTo(toBuild.getPosition()) < MINIMUM_BUILD_DISTANCE;
     }
 
 }
