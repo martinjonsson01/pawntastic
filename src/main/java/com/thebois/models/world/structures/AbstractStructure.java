@@ -70,14 +70,14 @@ abstract class AbstractStructure implements IStructure {
     @Override
     public boolean tryDeliverItem(final IItem deliveredItem) {
         final Collection<ItemType> neededItems = getNeededItems();
+        boolean successfulDelivery = false;
         if (neededItems.contains(deliveredItem.getType())) {
-            return deliveredItems.tryAdd(deliveredItem);
-            if (isCompleted()) {
-                postSpawnPawnsEvent(getPosition());
-            }
-            return true;
+            successfulDelivery = deliveredItems.tryAdd(deliveredItem);
         }
-        return false;
+        if (isCompleted()) {
+            postSpawnPawnsEvent(getPosition());
+        }
+        return successfulDelivery;
     }
 
     @Override

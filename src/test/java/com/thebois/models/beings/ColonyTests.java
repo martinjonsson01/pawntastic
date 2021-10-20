@@ -37,7 +37,8 @@ public class ColonyTests {
         final Colony colony = new Colony(
             List.of(),
             mock(IPathFinder.class),
-            mock(IStructureFinder.class));
+            mock(IStructureFinder.class),
+            mock(IPositionFinder.class));
 
         // Act
         final boolean isFull = colony.isFull();
@@ -87,8 +88,10 @@ public class ColonyTests {
         final List<Position> positions = new ArrayList<>();
         final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
         final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
-        return new Colony(positions, pathFinder, structureFinder);
+        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
+        return new Colony(positions, pathFinder, structureFinder, positionFinder);
     }
+
 
     @Test
     public void canAddAndTakeItemToInventory() {
@@ -143,14 +146,6 @@ public class ColonyTests {
 
         // Assert
         assertThat(count).isEqualTo(0);
-    }
-
-    private Colony mockColony() {
-        final List<Position> positions = new ArrayList<>();
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
-        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-        return new Colony(positions, pathFinder, structureFinder, positionFinder);
     }
 
     @Test
