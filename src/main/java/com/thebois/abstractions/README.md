@@ -1,4 +1,4 @@
-# com.thebois.views
+# com.thebois.abstractions
 
 ## UML Class Diagram
 

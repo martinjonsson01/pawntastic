@@ -39,11 +39,11 @@ public interface IBeing extends Serializable {
     void update(float deltaTime);
 
     /**
-     * Gets a copy of the path the being is currently walking.
+     * Gets the current destination.
      *
-     * @return The positions in the path.
+     * @return The destination location.
      */
-    Iterable<Position> getPath();
+    Position getDestination();
 
     /**
      * Gets the health ratio, where 0 is dead and 1 is full health.
