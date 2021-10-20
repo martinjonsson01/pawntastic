@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import com.thebois.controllers.IController;
 import com.thebois.models.beings.Colony;
+import com.thebois.models.inventory.IInventory;
 import com.thebois.views.info.IActorView;
 import com.thebois.views.info.InfoView;
 
@@ -22,13 +23,14 @@ public class InfoController implements IController<IActorView> {
     /**
      * Instantiate with all controller and views used for all panels.
      *
-     * @param colony The colony that controllers manage.
-     * @param skin   The skin to style widgets with.
+     * @param inventory The inventory shared with all stockpiles.
+     * @param colony    The colony that controllers manage.
+     * @param skin      The skin to style widgets with.
      */
-    public InfoController(final Colony colony, final Skin skin) {
+    public InfoController(final IInventory inventory, final Colony colony, final Skin skin) {
 
         final RoleController roleController = new RoleController(colony, skin);
-        final InventoryController inventoryController = new InventoryController(colony, skin);
+        final InventoryController inventoryController = new InventoryController(inventory, skin);
 
         controllers = List.of(roleController, inventoryController);
         infoView = createInfoView();
