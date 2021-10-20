@@ -12,14 +12,14 @@ import com.thebois.models.inventory.items.ItemType;
  */
 public class Stockpile extends AbstractStructure {
 
-    private IInventory inventory;
+    private final IInventory inventory;
 
-    Stockpile(final Position position, IInventory inventory) {
-        super(position, StructureType.STOCKPILE, getNeededItemsMap());
+    Stockpile(final Position position, final IInventory inventory) {
+        super(position, StructureType.STOCKPILE, neededItems());
         this.inventory = inventory;
     }
 
-    private static Map<ItemType, Integer> getNeededItemsMap() {
+    private static Map<ItemType, Integer> neededItems() {
         final Map<ItemType, Integer> neededItems = new EnumMap<>(ItemType.class);
 
         final int numberOfItems = 4;
