@@ -175,8 +175,9 @@ public class Pawntastic extends Game {
 
     private void loadModelsFromSaveFile() throws IOException, ClassNotFoundException {
         final LoadSystem loadSystem = new LoadSystem();
-        world = loadSystem.loadWorld();
-        colony = loadSystem.loadColony();
+        world = (World) loadSystem.read();
+        colony = (Colony) loadSystem.read();
+        inventory = (IInventory) loadSystem.read();
         loadSystem.dispose();
     }
 
@@ -198,6 +199,7 @@ public class Pawntastic extends Game {
         final SaveSystem saveSystem = new SaveSystem();
         saveSystem.save(world);
         saveSystem.save(colony);
+        saveSystem.save(inventory);
         saveSystem.dispose();
     }
 
