@@ -67,7 +67,7 @@ public class HarvesterRoleTests {
         final IActionPerformer performer = mock(IActionPerformer.class);
         when(performer.getPosition()).thenReturn(new Position(0, 0));
         final Position treePosition = new Position(5, 3);
-        final Position besidesPosition = new Position(4, 3);
+        final Position besidesPosition = treePosition.subtract(1, 0);
         final IResource tree = mockTree(treePosition);
         when(mockWorld.getClosestNeighbourOf(tree, performer.getPosition())).thenReturn(Optional.of(
             besidesPosition));
@@ -118,7 +118,7 @@ public class HarvesterRoleTests {
 
         final IActionPerformer performer = mock(IActionPerformer.class);
         final Position treePosition = new Position(5, 3);
-        final Position besidesPosition = new Position(4, 3);
+        final Position besidesPosition = treePosition.subtract(1, 0);
         when(performer.getPosition()).thenReturn(besidesPosition);
 
         final IResource tree = mockTree(treePosition);
@@ -141,7 +141,7 @@ public class HarvesterRoleTests {
 
         final IActionPerformer performer = mock(IActionPerformer.class);
         final Position treePosition = new Position(5, 3);
-        final Position besidesPosition = new Position(4, 3);
+        final Position besidesPosition = treePosition.subtract(1, 0);
         when(performer.getPosition()).thenReturn(besidesPosition);
 
         final IResource tree = mockTree(treePosition);
