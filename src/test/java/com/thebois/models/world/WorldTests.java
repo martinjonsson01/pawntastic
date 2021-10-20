@@ -443,4 +443,23 @@ public class WorldTests {
         assertThat(foundStructure.isEmpty()).isTrue();
     }
 
+    @Test
+    public void tryCreateStructureOfTypeTownHallCreatesAStructureIfTownHallIsAlreadyPresent() {
+        // Arrange
+        final World world = new TestWorld(50);
+        world.tryCreateStructure(StructureType.TOWN_HALL, new Position(10, 10));
+        final Position createTownHallPosition = new Position(12, 12);
+
+        // Act
+        world.tryCreateStructure(StructureType.TOWN_HALL, createTownHallPosition);
+
+        // Assert
+        assertThat(world
+                       .getStructures()
+                       .stream()
+                       .anyMatch(structure -> structure
+                           .getType()
+                           .equals(StructureType.HOUSE))).isTrue();
+    }
+
 }
