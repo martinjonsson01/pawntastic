@@ -3,18 +3,16 @@ package com.thebois.models.beings;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.thebois.listeners.IEventListener;
-import com.thebois.listeners.IEventSource;
+import com.google.common.eventbus.Subscribe;
+
 import com.thebois.listeners.events.OnDeathEvent;
 
 /**
  * An abstract implementation of IBeingGroup.
  */
-public abstract class AbstractBeingGroup implements IBeingGroup, IEventSource<OnDeathEvent> {
+public abstract class AbstractBeingGroup implements IBeingGroup {
 
     private Collection<IBeing> beings = new ArrayList<>();
-    private final Collection<IEventListener<OnDeathEvent>> onDeathEventListeners =
-        new ArrayList<>();
 
     /**
      * Adds a being to the internal collection of beings.
@@ -31,7 +29,6 @@ public abstract class AbstractBeingGroup implements IBeingGroup, IEventSource<On
         beings.forEach(being -> {
             if (being.getHealthRatio() == 0) {
                 deadBeings.add(being);
-                notifyOnDeathListeners(being);
             }
             else {
                 being.update(deltaTime);
@@ -47,23 +44,19 @@ public abstract class AbstractBeingGroup implements IBeingGroup, IEventSource<On
         return clonedBeings;
     }
 
+    /**
+     * Listens to the OnDeathEvent in order to remove dead beings.
+     *
+     * @param event The published event.
+     */
+    @Subscribe
+    public void onDeathEvent(final OnDeathEvent event) {
+        final IBeing deadBeing = event.getDeadBeing();
+        beings.remove(deadBeing);
+    }
+
     protected void setBeings(final Collection<IBeing> beings) {
         this.beings = beings;
-    }
-
-    @Override
-    public void registerListener(final IEventListener<OnDeathEvent> listener) {
-        onDeathEventListeners.add(listener);
-    }
-
-    @Override
-    public void removeListener(final IEventListener<OnDeathEvent> listener) {
-        onDeathEventListeners.add(listener);
-    }
-
-    private void notifyOnDeathListeners(final IBeing deadBeing) {
-        final OnDeathEvent event = new OnDeathEvent(deadBeing);
-        onDeathEventListeners.forEach(listener -> listener.onEvent(event));
     }
 
 }

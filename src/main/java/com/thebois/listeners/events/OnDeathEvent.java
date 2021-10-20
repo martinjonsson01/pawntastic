@@ -5,7 +5,7 @@ import com.thebois.models.beings.IBeing;
 /**
  * Contains information about a being that has died.
  */
-public class OnDeathEvent implements IEvent {
+public class OnDeathEvent {
 
     private final IBeing deadBeing;
 

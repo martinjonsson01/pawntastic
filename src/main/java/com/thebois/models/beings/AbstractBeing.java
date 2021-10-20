@@ -12,6 +12,7 @@ import com.google.common.eventbus.Subscribe;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
+import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -142,6 +143,9 @@ public abstract class AbstractBeing implements IBeing {
         final float changeHealthValue = HEALTH_RATES * deltaTime;
         if (hunger <= 0) {
             health = Math.max(health - changeHealthValue, 0);
+            if (health == 0f) {
+                Pawntastic.getEventBus().post(new OnDeathEvent(this));
+            }
         }
         else {
             health = Math.min(health + changeHealthValue, MAX_HEALTH);
