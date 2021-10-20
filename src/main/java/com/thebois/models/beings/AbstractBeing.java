@@ -18,7 +18,7 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IStructureFinder;
 
 /**
  * An abstract implementation of IBeing.

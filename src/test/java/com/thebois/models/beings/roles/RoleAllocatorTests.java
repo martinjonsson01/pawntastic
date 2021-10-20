@@ -7,13 +7,12 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import com.thebois.models.IPositionFinder;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IPositionFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
 import com.thebois.models.beings.pathfinding.IPathFinder;
-import com.thebois.models.world.World;
 
 import static org.assertj.core.api.Assertions.*;
 

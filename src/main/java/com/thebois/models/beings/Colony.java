@@ -14,8 +14,8 @@ import com.google.common.eventbus.Subscribe;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.SpawnPawnsEvent;
-import com.thebois.models.IPositionFinder;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IPositionFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;

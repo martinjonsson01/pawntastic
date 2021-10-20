@@ -1,7 +1,8 @@
-package com.thebois.models;
+package com.thebois.abstractions;
 
 import java.util.Optional;
 
+import com.thebois.models.Position;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.structures.StructureType;
 

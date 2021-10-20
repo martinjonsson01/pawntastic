@@ -1,4 +1,6 @@
-package com.thebois.models;
+package com.thebois.abstractions;
+
+import com.thebois.models.Position;
 
 /**
  * Allows for locating certain types of positions in the world.

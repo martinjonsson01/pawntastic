@@ -1,7 +1,6 @@
 package com.thebois.models.world;
 
 import java.io.Serializable;
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,8 +9,8 @@ import java.util.stream.Collectors;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
-import com.thebois.models.IPositionFinder;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IPositionFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.world.generation.ResourceGenerator;
 import com.thebois.models.world.generation.TerrainGenerator;
