@@ -48,6 +48,18 @@ public class ColonyTests {
     }
 
     @Test
+    public void isFullReturnsFalse() {
+        // Arrange
+        final Colony colony = new Colony(List.of());
+
+        // Act
+        final boolean isFull = colony.isFull();
+
+        // Assert
+        assertThat(isFull).isFalse();
+    }
+
+    @Test
     public void constructWithTilesCreatesOneBeingPerPosition() {
         // Arrange
         final int beingCount = 25;
@@ -90,7 +102,7 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
         final IItem item = colony.take(ItemType.LOG);
 
         // Assert
@@ -115,8 +127,8 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(ItemFactory.fromType(ItemType.LOG));
-        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
 
         final int count = colony.numberOf(ItemType.LOG);
 
@@ -130,8 +142,8 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(ItemFactory.fromType(ItemType.LOG));
-        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
 
         final int count = colony.numberOf(ItemType.ROCK);
 
@@ -145,8 +157,8 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(ItemFactory.fromType(ItemType.LOG));
-        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
 
         final ArrayList<IItem> result = colony.takeAmount(ItemType.LOG, 2);
 
@@ -162,8 +174,8 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(ItemFactory.fromType(ItemType.LOG));
-        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
 
         final Exception exception = assertThrows(IllegalArgumentException.class,
                                                  () -> colony.takeAmount(ItemType.ROCK, 2));
@@ -179,7 +191,7 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
         final boolean result = colony.hasItem(ItemType.LOG);
 
         assertThat(result).isTrue();
@@ -202,8 +214,8 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(ItemFactory.fromType(ItemType.LOG));
-        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
 
         final boolean result = colony.hasItem(ItemType.LOG, 2);
 
@@ -229,7 +241,7 @@ public class ColonyTests {
         final Colony colony = mockColony();
 
         // Act
-        colony.add(ItemFactory.fromType(ItemType.LOG));
+        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
         final boolean result = colony.hasItem(ItemType.LOG, 2);
 
         // Assert

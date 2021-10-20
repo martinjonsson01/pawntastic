@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
 
 /**
@@ -21,7 +22,11 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
      * arrived.
      */
     private static final float DESTINATION_REACHED_DISTANCE = 0.01f;
-    private final IInventory inventory;
+    /**
+     * How many kilograms a being can carry.
+     */
+    private static final float MAX_CARRYING_CAPACITY = 100f;
+    private final IInventory inventory = new Inventory(MAX_CARRYING_CAPACITY);
     private Position position;
     private AbstractRole role;
     private Position destination;
@@ -30,14 +35,12 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
      * Instantiates with an initial position and role.
      *
      * @param startPosition The initial position.
-     * @param inventory     A storage place for items harvested.
      * @param role          The starting role.
      */
     public AbstractBeing(
-        final Position startPosition, final IInventory inventory, final AbstractRole role) {
+        final Position startPosition, final AbstractRole role) {
         this.position = startPosition;
         this.destination = startPosition;
-        this.inventory = inventory;
         this.role = role;
     }
 
@@ -91,7 +94,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     @Override
     public void addItem(final IItem item) {
-        inventory.add(item);
+        inventory.tryAdd(item);
     }
 
     /**

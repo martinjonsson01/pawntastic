@@ -22,8 +22,6 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.models.inventory.IInventory;
-import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.IWorld;
 import com.thebois.testutils.InMemorySerialize;
 import com.thebois.testutils.MockFactory;
@@ -76,22 +74,13 @@ public class BeingTests {
     }
 
     private static AbstractBeing createBeing() {
-        return createBeing(mock(IInventory.class));
+        final AbstractRole role = new NothingRole();
+        return createBeing(new Position(), role);
     }
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
-        return createBeing(currentPosition, mock(IInventory.class), role);
-    }
-
-    private static AbstractBeing createBeing(final IInventory inventory) {
-        final AbstractRole role = new NothingRole();
-        return createBeing(new Position(), inventory, role);
-    }
-
-    private static AbstractBeing createBeing(
-        final Position currentPosition, final IInventory inventory, final AbstractRole role) {
-        return new Pawn(currentPosition.deepClone(), inventory, role);
+        return new Pawn(currentPosition.deepClone(), role);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
@@ -140,20 +129,6 @@ public class BeingTests {
         final Position actualPosition = being.getPosition();
         final float distanceToDestinationAfter = actualPosition.distanceTo(being.getDestination());
         assertThat(distanceToDestinationAfter).isLessThan(distanceToDestinationBefore);
-    }
-
-    @Test
-    public void addItemCallsInjectedInventory() {
-        // Arrange
-        final IInventory inventory = mock(IInventory.class);
-        final IActionPerformer being = createBeing(inventory);
-        final IItem item = mock(IItem.class);
-
-        // Act
-        being.addItem(item);
-
-        // Assert
-        verify(inventory, times(1)).add(item);
     }
 
     @ParameterizedTest
@@ -205,8 +180,10 @@ public class BeingTests {
         fasterBeing.update(0.1f);
 
         // Assert
-        final float slowerDistanceAfterUpdate = slowerBeing.getPosition().distanceTo(destination);
-        final float fasterDistanceAfterUpdate = fasterBeing.getPosition().distanceTo(destination);
+        final float slowerDistanceAfterUpdate = slowerBeing.getPosition()
+                                                           .distanceTo(destination);
+        final float fasterDistanceAfterUpdate = fasterBeing.getPosition()
+                                                           .distanceTo(destination);
         assertThat(slowerDistanceAfterUpdate).isGreaterThan(fasterDistanceAfterUpdate);
     }
 
@@ -318,9 +295,11 @@ public class BeingTests {
         final IBeing being = createBeing();
 
         // Act
-        final int before = colony.getBeings().size();
+        final int before = colony.getBeings()
+                                 .size();
         colony.addBeing(being);
-        final int after = colony.getBeings().size();
+        final int after = colony.getBeings()
+                                .size();
 
         // Assert
         assertThat(before).isEqualTo(1);

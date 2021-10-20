@@ -33,7 +33,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
         final Collection<IBeing> pawns = new ArrayList<>();
         for (final Position vacantPosition : vacantPositions) {
             final AbstractRole role = RoleFactory.idle();
-            pawns.add(new Pawn(vacantPosition, this, role));
+            pawns.add(new Pawn(vacantPosition, role));
         }
         setBeings(pawns);
     }
@@ -135,8 +135,13 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator, IInven
     }
 
     @Override
-    public void add(final IItem item) {
-        inventory.add(item);
+    public boolean isFull() {
+        return inventory.isFull();
+    }
+
+    @Override
+    public boolean tryAdd(final IItem item) {
+        return inventory.tryAdd(item);
     }
 
     @Override

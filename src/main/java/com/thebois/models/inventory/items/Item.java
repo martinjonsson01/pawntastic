@@ -25,6 +25,11 @@ public class Item implements IItem, Serializable {
     }
 
     @Override
+    public float getWeight() {
+        return getType().getWeight();
+    }
+
+    @Override
     public boolean equals(final Object other) {
         if (this == other) return true;
         if (other == null) return false;
