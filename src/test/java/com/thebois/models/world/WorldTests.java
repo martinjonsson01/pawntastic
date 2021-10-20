@@ -462,4 +462,44 @@ public class WorldTests {
                            .equals(StructureType.HOUSE))).isTrue();
     }
 
+    @Test
+    public void tryGetEmptyPositionsNextToReturnsNoPositionsOutsideOfGivenRadius() {
+        // Arrange
+        final World world = new TestWorld(50);
+        world.tryCreateStructure(StructureType.TOWN_HALL, new Position(10, 10));
+        final Position origin = new Position(12, 12);
+        final int count = 5;
+        final float radius = 5;
+
+        // Act
+        final Collection<Position> returnedPositions = world.tryGetEmptyPositionsNextTo(
+            origin,
+            count,
+            radius);
+
+        // Assert
+        assertThat(returnedPositions
+                       .stream()
+                       .noneMatch(position -> position.distanceTo(origin) > radius)).isTrue();
+    }
+
+    @Test
+    public void tryGetEmptyPositionsNextToReturnsNoMoreThanGivenMaxCount() {
+        // Arrange
+        final World world = new TestWorld(50);
+        world.tryCreateStructure(StructureType.TOWN_HALL, new Position(10, 10));
+        final Position origin = new Position(15, 15);
+        final int count = 24;
+        final float radius = 3;
+
+        // Act
+        final Collection<Position> returnedPositions = world.tryGetEmptyPositionsNextTo(
+            origin,
+            count,
+            radius);
+
+        // Assert
+        assertThat(returnedPositions.size()).isEqualTo(count);
+    }
+
 }

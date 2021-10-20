@@ -95,7 +95,7 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
     }
 
     @Override
-    public Iterable<Position> findEmptyPositions(final int count) {
+    public Collection<Position> findEmptyPositions(final int count) {
         final List<Position> emptyPositions = new ArrayList<>();
         MatrixUtils.forEachElement(canonicalMatrix, tile -> {
             if (emptyPositions.size() >= count) return;
@@ -107,12 +107,16 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
     }
 
     @Override
-    public Iterable<Position> tryGetEmptyPositionsNextTo(
-        final Position position, final int count, final float radius) {
+    public Collection<Position> tryGetEmptyPositionsNextTo(
+        final Position position, final int maxCount, final float radius) {
         return MatrixUtils.toCollection(canonicalMatrix).stream().filter(iTile -> !iTile
             .getPosition()
-            .equals(position) && iTile.getCost() < Float.MAX_VALUE && radius > position.distanceTo(
-            iTile.getPosition())).limit(count).map(ITile::getPosition).collect(Collectors.toList());
+            .equals(position)
+                && iTile.getCost() < Float.MAX_VALUE
+                && radius > position.distanceTo(
+            iTile.getPosition()))
+                          .limit(maxCount)
+                          .map(ITile::getPosition).collect(Collectors.toList());
     }
 
     private boolean isPositionEmpty(final Position position) {
