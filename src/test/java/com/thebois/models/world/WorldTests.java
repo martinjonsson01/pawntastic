@@ -156,7 +156,7 @@ public class WorldTests {
         final Position position = new Position(1, 1);
 
         // Act
-        final boolean isBuilt = world.createStructure(StructureType.HOUSE, position);
+        final boolean isBuilt = world.tryCreateStructure(StructureType.HOUSE, position);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
@@ -171,7 +171,7 @@ public class WorldTests {
         final World world = new World(2, 0);
 
         // Act
-        final boolean isBuilt = world.createStructure(StructureType.HOUSE, placementPosition);
+        final boolean isBuilt = world.tryCreateStructure(StructureType.HOUSE, placementPosition);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
@@ -187,8 +187,8 @@ public class WorldTests {
         final Position position2 = new Position(-1, -1);
 
         // Act
-        world.createStructure(StructureType.HOUSE, position1);
-        world.createStructure(StructureType.HOUSE, position2);
+        world.tryCreateStructure(StructureType.HOUSE, position1);
+        world.tryCreateStructure(StructureType.HOUSE, position2);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
@@ -269,7 +269,7 @@ public class WorldTests {
     private void fillWorldWithStructures(final int worldSize, final World world) {
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
-                world.createStructure(StructureType.HOUSE, x, y);
+                world.tryCreateStructure(StructureType.HOUSE, x, y);
             }
         }
     }
@@ -337,8 +337,8 @@ public class WorldTests {
 
         // Arrange
         final World world = new TestWorld(50);
-        world.createStructure(StructureType.HOUSE, expectedPosition);
-        world.createStructure(StructureType.HOUSE, incorrectPosition);
+        world.tryCreateStructure(StructureType.HOUSE, expectedPosition);
+        world.tryCreateStructure(StructureType.HOUSE, incorrectPosition);
 
         // Act
         final Optional<IStructure> foundStructure =
@@ -381,7 +381,7 @@ public class WorldTests {
 
         // Act
         for (final Position position : positions) {
-            world.createStructure(StructureType.HOUSE, position);
+            world.tryCreateStructure(StructureType.HOUSE, position);
         }
 
         // Assert
@@ -392,8 +392,8 @@ public class WorldTests {
     public void findNearestIncompleteStructureReturnsCorrect() {
         // Arrange
         final World world = new TestWorld(50);
-        world.createStructure(StructureType.HOUSE, new Position(4, 2));
-        world.createStructure(StructureType.HOUSE, new Position(9, 5));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(4, 2));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(9, 5));
 
         for (final IStructure structure : world.getStructures()) {
             for (int i = 0; i < 10; i++) {
@@ -404,8 +404,8 @@ public class WorldTests {
             }
         }
 
-        world.createStructure(StructureType.HOUSE, new Position(1, 3));
-        world.createStructure(StructureType.HOUSE, new Position(7, 9));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(1, 3));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(7, 9));
 
         // Act
         final Optional<IStructure> foundStructure =
@@ -421,8 +421,8 @@ public class WorldTests {
     public void findNearestIncompleteStructureFindsNoIncompleteStructure() {
         // Arrange
         final World world = new TestWorld(50);
-        world.createStructure(StructureType.HOUSE, new Position(4, 2));
-        world.createStructure(StructureType.HOUSE, new Position(9, 5));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(4, 2));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(9, 5));
 
         for (final IStructure structure : world.getStructures()) {
             for (int i = 0; i < 10; i++) {

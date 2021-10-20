@@ -74,8 +74,8 @@ public class AstarPathFinderTests {
     private IWorld testWorld3x3WithObstacles() {
         final World world = new TestWorld(3);
 
-        world.createStructure(StructureType.HOUSE, 1, 0);
-        world.createStructure(StructureType.HOUSE, 1, 1);
+        world.tryCreateStructure(StructureType.HOUSE, 1, 0);
+        world.tryCreateStructure(StructureType.HOUSE, 1, 1);
 
         return world;
     }

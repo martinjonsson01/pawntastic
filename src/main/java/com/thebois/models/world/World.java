@@ -1,6 +1,7 @@
 package com.thebois.models.world;
 
 import java.io.Serializable;
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,6 +26,8 @@ import com.thebois.utils.MatrixUtils;
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
 public class World implements IWorld, IStructureFinder, IPositionFinder, Serializable {
+
+    private static final StructureType DEFAULT_STRUCTURE_TYPE = StructureType.HOUSE;
 
     private final ITerrain[][] terrainMatrix;
     private final IStructure[][] structureMatrix;
@@ -170,8 +173,8 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
      *
      * @return Whether the structure was built.
      */
-    public boolean createStructure(final StructureType type, final Position position) {
-        return createStructure(type, (int) position.getX(), (int) position.getY());
+    public boolean tryCreateStructure(final StructureType type, final Position position) {
+        return tryCreateStructure(type, (int) position.getX(), (int) position.getY());
     }
 
     /**
@@ -183,10 +186,18 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
      *
      * @return Whether the structure was built.
      */
-    public boolean createStructure(final StructureType type, final int x, final int y) {
+    public boolean tryCreateStructure(final StructureType type, final int x, final int y) {
         final Position position = new Position(x, y);
+        StructureType typeToCreate = type;
+        if (!isTownHallPlaced()) {
+            typeToCreate = StructureType.TOWN_HALL;
+        }
+        else if (type.equals(StructureType.TOWN_HALL)) {
+            typeToCreate = DEFAULT_STRUCTURE_TYPE;
+        }
+
         if (isPositionPlaceable(position)) {
-            structureMatrix[y][x] = StructureFactory.createStructure(type, x, y);
+            structureMatrix[y][x] = StructureFactory.createStructure(typeToCreate, x, y);
 
             updateCanonicalMatrix();
             postObstacleEvent(x, y);
@@ -206,6 +217,17 @@ public class World implements IWorld, IStructureFinder, IPositionFinder, Seriali
             return false;
         }
         return isPositionEmpty(position);
+    }
+
+    /**
+     * Calculates and returns whether the first and only town hall has been placed.
+     *
+     * @return Returns whether the first and only town hall has been placed.
+     */
+    public boolean isTownHallPlaced() {
+        return getStructures().stream().anyMatch(iStructure -> iStructure
+            .getType()
+            .equals(StructureType.TOWN_HALL));
     }
 
     private void postObstacleEvent(final int x, final int y) {

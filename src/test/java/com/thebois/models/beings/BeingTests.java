@@ -317,7 +317,7 @@ public class BeingTests {
         assertThat(oldPath).contains(obstaclePosition);
 
         // Act
-        world.createStructure(StructureType.HOUSE, obstaclePosition);
+        world.tryCreateStructure(StructureType.HOUSE, obstaclePosition);
 
         // Assert
         final Iterable<Position> newPath = being.getPath();

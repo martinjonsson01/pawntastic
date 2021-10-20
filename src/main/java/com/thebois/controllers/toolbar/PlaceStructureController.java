@@ -47,12 +47,6 @@ public class PlaceStructureController extends AbstractInputProcessor
     public boolean touchDown(final int x, final int y, final int pointer, final int button) {
         boolean successful = false;
         if (button == LEFT_CLICK) {
-            if (!isTownHallPlaced()) {
-                selectedStructure = StructureType.TOWN_HALL;
-            }
-            else if (selectedStructure.equals(StructureType.TOWN_HALL)) {
-                selectedStructure = StructureType.HOUSE;
-            }
             successful = tryPlaceStructure(x, y, pointer);
         }
         return successful;
@@ -65,7 +59,7 @@ public class PlaceStructureController extends AbstractInputProcessor
         final float offsetY = gameContainer.getY() + toolbarWidget.getHeight();
         final int worldPosX = (int) ((worldSpaceCoordinates.x - offsetX) / TILE_SIZE);
         final int worldPosY = (int) ((worldSpaceCoordinates.y - offsetY) / TILE_SIZE);
-        return world.createStructure(selectedStructure, worldPosX, worldPosY);
+        return world.tryCreateStructure(selectedStructure, worldPosX, worldPosY);
     }
 
     /**
@@ -79,15 +73,7 @@ public class PlaceStructureController extends AbstractInputProcessor
 
     @Override
     public void onEvent(final OnClickEvent<StructureType> event) {
-        if (isTownHallPlaced()) {
-            selectedStructure = event.getValue();
-        }
-    }
-
-    private boolean isTownHallPlaced() {
-        return world.getStructures().stream().anyMatch(iStructure -> iStructure
-            .getType()
-            .equals(StructureType.TOWN_HALL));
+        selectedStructure = event.getValue();
     }
 
     @Override
@@ -97,7 +83,7 @@ public class PlaceStructureController extends AbstractInputProcessor
 
     @Override
     public void update() {
-
+        structureToolbarView.setButtonsActive(!world.isTownHallPlaced());
     }
 
 }

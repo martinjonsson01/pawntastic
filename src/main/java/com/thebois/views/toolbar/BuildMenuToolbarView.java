@@ -16,6 +16,9 @@ import com.thebois.views.info.IActorView;
 public class BuildMenuToolbarView implements IActorView {
 
     private final Actor structureButtonContainer;
+    private boolean buttonsActive = false;
+    final ButtonGroup<StructureButton> structureButtonGroup = createButtonGroup();
+
 
     /**
      * Instantiate with buttons for each structure.
@@ -33,9 +36,9 @@ public class BuildMenuToolbarView implements IActorView {
 
         final Table toolbarTable = createTable();
 
-        final ButtonGroup<StructureButton> buttonGroup = createButtonGroup();
+//        structureButtonGroup = createButtonGroup();
 
-        createStructureButtons(skin, listener, toolbarTable, buttonGroup);
+        createStructureButtons(skin, listener, toolbarTable, structureButtonGroup);
         return toolbarTable;
     }
 
@@ -71,6 +74,16 @@ public class BuildMenuToolbarView implements IActorView {
     @Override
     public Actor getWidgetContainer() {
         return structureButtonContainer;
+    }
+
+    /**
+     * Allows for the buttons to be activated or disabled.
+     *
+     * @param activate Whether the buttons are to be disabled or not.
+     */
+    public void setButtonsActive(final boolean activate) {
+        structureButtonGroup.getButtons().forEach(structureButton -> structureButton.setDisabled(
+            activate));
     }
 
 }
