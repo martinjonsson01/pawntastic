@@ -44,13 +44,13 @@ public class DoNothingActionTests {
     }
 
     @Test
-    public void canPerformReturnsTrue() {
+    public void canPerformReturnsFalse() {
         // Act
         doNothing.perform(performer);
         final boolean canPerform = doNothing.canPerform(performer);
 
         // Assert
-        assertThat(canPerform).isTrue();
+        assertThat(canPerform).isFalse();
     }
 
     @Test

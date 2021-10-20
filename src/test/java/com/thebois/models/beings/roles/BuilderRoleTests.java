@@ -14,6 +14,7 @@ import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.testutils.MockFactory;
@@ -41,6 +42,11 @@ public class BuilderRoleTests {
 
         role = RoleFactory.builder();
         performer = mock(IActionPerformer.class);
+        when(performer.getPosition()).thenReturn(new Position(0, 0));
+
+        final ITile vacantTile = mock(ITile.class);
+        when(vacantTile.getPosition()).thenReturn(new Position(3, 5));
+        when(world.getRandomVacantSpotInRadiusOf(any(), anyInt())).thenReturn(vacantTile);
     }
 
     @AfterEach
@@ -52,7 +58,7 @@ public class BuilderRoleTests {
     }
 
     @Test
-    public void obtainNextActionReturnsDoNothingWhenAllStructuresAreComplete() {
+    public void obtainNextActionReturnsIdleActionWhenAllStructuresAreComplete() {
         // Arrange
         final Random mockRandom = mock(Random.class);
         when(mockRandom.nextInt(anyInt())).thenReturn(5);
@@ -67,13 +73,14 @@ public class BuilderRoleTests {
 
         when(structureFinder.getNearbyIncompleteStructure(any())).thenReturn(Optional.empty());
 
-        final IAction doNothing = ActionFactory.createDoNothing();
+        final IAction expectedAction = RoleFactory.idle()
+                                                  .obtainNextAction(performer);
 
         // Act
         final IAction actualAction = role.obtainNextAction(performer);
 
         // Assert
-        assertThat(actualAction).isEqualTo(doNothing);
+        assertThat(actualAction).isEqualTo(expectedAction);
     }
 
     @Test
@@ -102,7 +109,7 @@ public class BuilderRoleTests {
     }
 
     @Test
-    public void obtainNextActionReturnsDoNothingWhenNearestIncompleteStructureHasNoVacantNeighbours() {
+    public void obtainNextActionReturnsIdleActionWhenNearestIncompleteStructureHasNoVacantNeighbours() {
         // Arrange
         final Position performerPosition = new Position(0, 0);
         when(performer.getPosition()).thenReturn(performerPosition);
@@ -115,7 +122,8 @@ public class BuilderRoleTests {
         when(structureFinder.getNearbyIncompleteStructure(performerPosition)).thenReturn(Optional.of(
             structure));
 
-        final IAction expectedAction = ActionFactory.createDoNothing();
+        final IAction expectedAction = RoleFactory.idle()
+                                                  .obtainNextAction(performer);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);
@@ -148,7 +156,7 @@ public class BuilderRoleTests {
     }
 
     @Test
-    public void obtainNextActionReturnsDoNothingWhenNextToStructureAndStructureIsNoLongerIncomplete() {
+    public void obtainNextActionReturnsIdleActionWhenNextToStructureAndStructureIsNoLongerIncomplete() {
         // Arrange
         final Position structurePosition = new Position(5, 3);
         final Position besidesPosition = structurePosition.subtract(1, 0);
@@ -158,11 +166,12 @@ public class BuilderRoleTests {
                                          performer.getPosition())).thenReturn(Optional.of(
             besidesPosition));
 
-        when(structureFinder.getNearbyIncompleteStructure(besidesPosition))
-            .thenReturn(Optional.of(structure))
-            .thenReturn(Optional.empty());
+        when(structureFinder.getNearbyIncompleteStructure(besidesPosition)).thenReturn(Optional.of(
+                                                                               structure))
+                                                                           .thenReturn(Optional.empty());
 
-        final IAction expectedAction = ActionFactory.createDoNothing();
+        final IAction expectedAction = RoleFactory.idle()
+                                                  .obtainNextAction(performer);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);

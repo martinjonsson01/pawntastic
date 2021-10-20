@@ -7,11 +7,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.abstractions.IResourceFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
@@ -31,6 +33,12 @@ public class HarvesterRoleTests {
         RoleFactory.setWorld(mockWorld);
         finder = mock(IResourceFinder.class);
         RoleFactory.setResourceFinder(finder);
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
+
+        final ITile mockTile = mock(ITile.class);
+        final Position randomPosition = new Position(2, 3);
+        when(mockTile.getPosition()).thenReturn(randomPosition);
+        when(mockWorld.getRandomVacantSpotInRadiusOf(any(), anyInt())).thenReturn(mockTile);
     }
 
     @AfterEach
@@ -38,16 +46,19 @@ public class HarvesterRoleTests {
         ActionFactory.setPathFinder(null);
         RoleFactory.setWorld(null);
         RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
     }
 
     @Test
-    public void obtainNextActionIsDoNothingWhenNoTreeExists() {
+    public void obtainNextActionIsIdleActionWhenNoTreeExists() {
         // Arrange
         final AbstractRole role = createRole();
         final IActionPerformer performer = mock(IActionPerformer.class);
         when(performer.getPosition()).thenReturn(new Position());
         when(finder.getNearbyOfType(any(), eq(ResourceType.TREE))).thenReturn(Optional.empty());
-        final IAction expectedAction = ActionFactory.createDoNothing();
+
+        final IAction expectedAction = RoleFactory.idle()
+                                                  .obtainNextAction(performer);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);
@@ -93,7 +104,7 @@ public class HarvesterRoleTests {
     }
 
     @Test
-    public void obtainNextActionIsDoNothingWhenTreeExistsButHasNoVacantNeighbours() {
+    public void obtainNextActionIsIdleActionWhenTreeExistsButHasNoVacantNeighbours() {
         // Arrange
         final AbstractRole role = createRole();
         final IActionPerformer performer = mock(IActionPerformer.class);
@@ -102,7 +113,9 @@ public class HarvesterRoleTests {
         final IResource tree = mockTree(treePosition);
         when(mockWorld.getClosestNeighbourOf(tree,
                                              performer.getPosition())).thenReturn(Optional.empty());
-        final IAction expectedAction = ActionFactory.createDoNothing();
+
+        final IAction expectedAction = RoleFactory.idle()
+                                                  .obtainNextAction(performer);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);
@@ -135,7 +148,7 @@ public class HarvesterRoleTests {
     }
 
     @Test
-    public void obtainNextActionIsDoNothingWhenPerformerNextToTreeButTreeIsGone() {
+    public void obtainNextActionIsIdleActionWhenPerformerNextToTreeButTreeIsGone() {
         // Arrange
         final AbstractRole role = createRole();
 
@@ -149,17 +162,17 @@ public class HarvesterRoleTests {
             besidesPosition));
 
         // Simulate tree getting removed by only returning it the first time.
-        when(finder.getNearbyOfType(any(), eq(ResourceType.TREE)))
-            .thenReturn(Optional.of(tree))
-            .thenReturn(Optional.empty());
+        when(finder.getNearbyOfType(any(), eq(ResourceType.TREE))).thenReturn(Optional.of(tree))
+                                                                  .thenReturn(Optional.empty());
 
-        final IAction expected = ActionFactory.createDoNothing();
+        final IAction expectedAction = RoleFactory.idle()
+                                                  .obtainNextAction(performer);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);
 
         // Assert
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isEqualTo(expectedAction);
     }
 
     /**

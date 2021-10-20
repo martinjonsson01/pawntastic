@@ -18,7 +18,7 @@ class IdleRole extends AbstractRole {
     /**
      * The radius at which random positions to move to are picked, in tiles.
      */
-    private static final int RANDOM_MOVE_RADIUS = 2;
+    private static final int RANDOM_MOVE_RADIUS = 5;
     private final IWorld world;
 
     /**
