@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.abstractions.IResourceFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
@@ -45,12 +46,14 @@ public class RoleAllocatorTests {
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
         RoleFactory.setResourceFinder(mock(IResourceFinder.class));
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
     }
 
     @AfterEach
     public void teardown() {
         RoleFactory.setWorld(null);
         RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
     }
 
     @Test

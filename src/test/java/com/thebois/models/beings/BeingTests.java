@@ -69,6 +69,7 @@ public class BeingTests {
         ActionFactory.setPathFinder(mock(IPathFinder.class));
         RoleFactory.setWorld(mock(IWorld.class));
         RoleFactory.setResourceFinder(mock(IResourceFinder.class));
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
     }
 
     private static AbstractBeing createBeing(
@@ -112,18 +113,6 @@ public class BeingTests {
                          Arguments.of(new Position(-99, -99)));
     }
 
-    @BeforeEach
-    public void setup() {
-        mockFactoryDependencies();
-    }
-
-    @AfterEach
-    public void teardown() {
-        ActionFactory.setPathFinder(null);
-        RoleFactory.setWorld(null);
-        RoleFactory.setResourceFinder(null);
-    }
-
     private static Stream<Arguments> getStartingPositionFinalExpectedPositionAndHousePosition() {
         return Stream.of(Arguments.of(new Position(6f, 0f),
                                       new Position(7f, 0f),
@@ -134,6 +123,19 @@ public class BeingTests {
                          Arguments.of(new Position(3f, 3f),
                                       new Position(4f, 4f),
                                       new Position(5f, 5f)));
+    }
+
+    @BeforeEach
+    public void setup() {
+        mockFactoryDependencies();
+    }
+
+    @AfterEach
+    public void teardown() {
+        ActionFactory.setPathFinder(null);
+        RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
     }
 
     @ParameterizedTest

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.abstractions.IResourceFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
@@ -26,6 +27,7 @@ public class FarmerRoleTests {
         world = mock(IWorld.class);
         RoleFactory.setWorld(world);
         RoleFactory.setResourceFinder(mock(IResourceFinder.class));
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
         ActionFactory.setPathFinder(mock(IPathFinder.class));
     }
 
@@ -33,6 +35,7 @@ public class FarmerRoleTests {
     public void teardown() {
         RoleFactory.setWorld(null);
         RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
         ActionFactory.setPathFinder(null);
     }
 

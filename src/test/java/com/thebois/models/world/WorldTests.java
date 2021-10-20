@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.abstractions.IResourceFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.roles.RoleFactory;
@@ -45,10 +46,12 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
-                                                              mockPosition(0, 1),
-                                                              mockPosition(2, 1),
-                                                              mockPosition(1, 2))));
+                         Arguments.of(
+                             mockTile(1, 1),
+                             List.of(mockPosition(1, 0),
+                                     mockPosition(0, 1),
+                                     mockPosition(2, 1),
+                                     mockPosition(1, 2))));
     }
 
     private static ITile mockTile(final int x, final int y) {
@@ -93,16 +96,38 @@ public class WorldTests {
                          Arguments.of(new Position(4, 0), new Position(4, 3)));
     }
 
+    private static Stream<Arguments> getCorrectCoordinatesToTest() {
+        return Stream.of(Arguments.of(new Position(25, 5),
+                                      new Position(0, 0),
+                                      new Position(20, 20)),
+                         Arguments.of(new Position(5, 5), new Position(0, 0), new Position(8, 8)),
+                         Arguments.of(new Position(0, 0), new Position(5, 5), new Position(3, 3)),
+                         Arguments.of(new Position(5, 5), new Position(0, 0), new Position(8, 8)),
+                         Arguments.of(new Position(20, 20),
+                                      new Position(5, 7),
+                                      new Position(15, 15)));
+    }
+
+    private static Stream<Arguments> getPositionsAndNumberOfPositions() {
+        return Stream.of(Arguments.of(List.of(new Position(10, 10),
+                                              new Position(30, 5),
+                                              new Position(6, 33),
+                                              new Position(23, 23),
+                                              new Position(0, 0)), 5), Arguments.of(List.of(), 0));
+    }
+
     @BeforeEach
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
         RoleFactory.setResourceFinder(mock(IResourceFinder.class));
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
     }
 
     @AfterEach
     public void teardown() {
         RoleFactory.setWorld(null);
         RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
     }
 
     @ParameterizedTest
@@ -245,18 +270,6 @@ public class WorldTests {
         assertThat(vacantSpot).isEqualTo(thirdEmptyRandomSpot);
     }
 
-    private World createWorld(final int size) {
-        return createWorld(size, 0);
-    }
-
-    private World createWorld(final int size, final int seed) {
-        return createWorld(size, seed, mock(Random.class));
-    }
-
-    private World createWorld(final int size, final int seed, final Random random) {
-        return new World(size, seed, random);
-    }
-
     @ParameterizedTest
     @MethodSource("getTileAndNeighbours")
     public void getNeighboursOfReturnsExpectedNeighbours(
@@ -272,6 +285,14 @@ public class WorldTests {
         }
         // Assert
         assertThat(positions).containsExactlyInAnyOrderElementsOf(expectedNeighbours);
+    }
+
+    private World createWorld(final int size, final int seed) {
+        return createWorld(size, seed, mock(Random.class));
+    }
+
+    private World createWorld(final int size, final int seed, final Random random) {
+        return new World(size, seed, random);
     }
 
     @Test
@@ -296,6 +317,10 @@ public class WorldTests {
         positions.add(new Position(1, 0));
         positions.add(new Position(1, 1));
         return positions;
+    }
+
+    private World createWorld(final int size) {
+        return createWorld(size, 0);
     }
 
     @ParameterizedTest
@@ -441,36 +466,21 @@ public class WorldTests {
         // Assert
         assertThat(actualNumberOfTerrainTiles).isEqualTo(expectedNumberOfTerrainTiles);
     }
-    private static Stream<Arguments> getCorrectCoordinatesToTest() {
-        return Stream.of(
-            Arguments.of(
-                new Position(25,5),
-                new Position(0, 0),
-                new Position(20, 20)),
-            Arguments.of(
-                new Position(5,5),
-                new Position(0, 0),
-                new Position(8, 8)),
-            Arguments.of(
-                new Position(0,0),
-                new Position(5, 5),
-                new Position(3, 3)),
-            Arguments.of(
-                new Position(5,5),
-                new Position(0, 0),
-                new Position(8, 8)),
-            Arguments.of(
-                new Position(20,20),
-                new Position(5, 7),
-                new Position(15, 15))
-        );
+
+    private void fillWorldWithStructures(final int worldSize, final World world) {
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
+                world.createStructure(StructureType.HOUSE, x, y);
+            }
+        }
     }
 
     @ParameterizedTest
     @MethodSource("getCorrectCoordinatesToTest")
-    public void findNearestStructureReturnsCorrect(final Position startingPosition,
-                                                   final Position incorrectPosition,
-                                                   final Position expectedPosition) {
+    public void findNearestStructureReturnsCorrect(
+        final Position startingPosition,
+        final Position incorrectPosition,
+        final Position expectedPosition) {
 
         // Arrange
         final World world = new TestWorld(50, mock(Random.class));
@@ -478,12 +488,12 @@ public class WorldTests {
         world.createStructure(StructureType.HOUSE, incorrectPosition);
 
         // Act
-        final Optional<IStructure> foundStructure =
-            world.getNearbyStructureOfType(startingPosition, StructureType.HOUSE);
+        final Optional<IStructure> foundStructure = world.getNearbyStructureOfType(
+            startingPosition,
+            StructureType.HOUSE);
 
         // Assert
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
-
     }
 
     @Test
@@ -493,26 +503,19 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> structure = world.getNearbyStructureOfType(
-            new Position(20f, 20f), StructureType.HOUSE);
+            new Position(
+                20f,
+                20f),
+            StructureType.HOUSE);
 
         // Assert
         assertThat(structure.isPresent()).isFalse();
     }
 
-    private static Stream<Arguments> getPositionsAndNumberOfPositions() {
-        return Stream.of(Arguments.of(List.of(new Position(10, 10),
-                                              new Position(30, 5),
-                                              new Position(6, 33),
-                                              new Position(23, 23),
-                                              new Position(0, 0)), 5),
-                         Arguments.of(List.of(), 0));
-    }
-
     @ParameterizedTest
     @MethodSource("getPositionsAndNumberOfPositions")
     public void getStructureCollectionIsCorrectSize(
-        final Collection<Position> positions,
-        final int size) {
+        final Collection<Position> positions, final int size) {
         // Arrange
         final World world = new TestWorld(50, mock(Random.class));
 
@@ -545,13 +548,12 @@ public class WorldTests {
         world.createStructure(StructureType.HOUSE, new Position(7, 9));
 
         // Act
-        final Optional<IStructure> foundStructure =
-            world.getNearbyIncompleteStructure(new Position(0, 0));
+        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(
+            0,
+            0));
 
         // Assert
-        assertThat(foundStructure.orElseThrow()
-                                 .getPosition())
-            .isEqualTo(new Position(1, 3));
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(1, 3));
     }
 
     @Test
@@ -571,19 +573,12 @@ public class WorldTests {
         }
 
         // Act
-        final Optional<IStructure> foundStructure =
-            world.getNearbyIncompleteStructure(new Position(0, 0));
+        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(
+            0,
+            0));
 
         // Assert
         assertThat(foundStructure.isEmpty()).isTrue();
-    }
-
-    private void fillWorldWithStructures(final int worldSize, final World world) {
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
-                world.createStructure(StructureType.HOUSE, x, y);
-            }
-        }
     }
 
     private static class ResourceTestWorld extends World {

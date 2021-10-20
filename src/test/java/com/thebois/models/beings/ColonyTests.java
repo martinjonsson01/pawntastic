@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import com.thebois.abstractions.IResourceFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.inventory.IInventory;
@@ -36,12 +37,14 @@ public class ColonyTests {
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
         RoleFactory.setResourceFinder(mock(IResourceFinder.class));
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
     }
 
     @AfterEach
     public void teardown() {
         RoleFactory.setWorld(null);
         RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
     }
 
     @Test

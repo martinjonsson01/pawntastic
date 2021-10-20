@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.abstractions.IResourceFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
@@ -22,9 +23,8 @@ public class RoleFactoryTests {
         return Stream.of(Arguments.of(RoleType.BUILDER, new BuilderRole()),
                          Arguments.of(RoleType.FARMER, new FarmerRole()),
                          Arguments.of(RoleType.FISHER,
-                                      new FisherRole(
-                                          mock(IResourceFinder.class),
-                                          mock(IWorld.class))),
+                                      new FisherRole(mock(IResourceFinder.class),
+                                                     mock(IWorld.class))),
                          Arguments.of(RoleType.GUARD, new GuardRole()),
                          Arguments.of(RoleType.LUMBERJACK,
                                       new LumberjackRole(mock(IResourceFinder.class),
@@ -39,12 +39,14 @@ public class RoleFactoryTests {
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
         RoleFactory.setResourceFinder(mock(IResourceFinder.class));
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
     }
 
     @AfterEach
     public void teardown() {
         RoleFactory.setWorld(null);
         RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
     }
 
     @Test

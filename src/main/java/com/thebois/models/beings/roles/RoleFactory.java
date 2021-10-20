@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 import com.thebois.abstractions.IResourceFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.world.IWorld;
 
 /**
@@ -14,6 +15,7 @@ public final class RoleFactory {
 
     private static IWorld world;
     private static IResourceFinder resourceFinder;
+    private static IStructureFinder structureFinder;
 
     private RoleFactory() {
     }
@@ -24,6 +26,10 @@ public final class RoleFactory {
 
     public static void setResourceFinder(final IResourceFinder finder) {
         RoleFactory.resourceFinder = finder;
+    }
+
+    public static void setStructureFinder(final IStructureFinder structureFinder) {
+        RoleFactory.structureFinder = structureFinder;
     }
 
     /**
@@ -133,6 +139,9 @@ public final class RoleFactory {
         Objects.requireNonNull(
             resourceFinder,
             "Resource Finder can not be null. Call RoleFactory.setResourceFinder to set it.");
+        Objects.requireNonNull(
+            structureFinder,
+            "Structure Finder can not be null. Call RoleFactory.setStructureFinder to set it.");
     }
 
 }
