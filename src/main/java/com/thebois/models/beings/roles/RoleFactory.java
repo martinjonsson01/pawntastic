@@ -120,7 +120,7 @@ public final class RoleFactory {
      * @return A new builder role.
      */
     public static AbstractRole builder() {
-        return new BuilderRole(structureFinder, structureType);
+        return new BuilderRole(structureFinder, world);
     }
 
     /**
