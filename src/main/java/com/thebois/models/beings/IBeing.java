@@ -47,9 +47,6 @@ public interface IBeing extends Serializable {
 
     /**
      * Gets the health ratio, where 0 is dead and 1 is full health.
-     * <p>
-     * The Health ratio is current health divided by max health.
-     * </p>
      *
      * @return The current ratio a number between 1 and 0.
      */
