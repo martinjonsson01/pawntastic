@@ -66,6 +66,28 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
         this.add(addButton);
     }
 
+    /**
+     * Try to increase the value of the spinner.
+     *
+     * @return Whether the increase was successful or not.
+     */
+    public boolean tryIncrease() {
+        if (addButton.isDisabled()) return false;
+        updateValue(value + 1);
+        return true;
+    }
+
+    /**
+     * Try to decrease the value of the spinner.
+     *
+     * @return Whether the decrease was successful or not.
+     */
+    public boolean tryDecrease() {
+        if (removeButton.isDisabled()) return false;
+        updateValue(value - 1);
+        return true;
+    }
+
     public void setCanIncrease(final Predicate<Integer> canIncrease) {
         this.canIncrease = canIncrease;
     }
@@ -84,15 +106,13 @@ public class SpinnerButton extends Table implements IEventSource<ValueChangedEve
         addButton.addListener(new ClickListener() {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
-                if (addButton.isDisabled()) return;
-                updateValue(value + 1);
+                tryIncrease();
             }
         });
         removeButton.addListener(new ClickListener() {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
-                if (removeButton.isDisabled()) return;
-                updateValue(value - 1);
+                tryDecrease();
             }
         });
     }
