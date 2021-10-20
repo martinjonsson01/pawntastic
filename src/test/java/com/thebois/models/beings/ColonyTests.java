@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.mockito.Mockito;
 
 import com.thebois.Pawntastic;
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
@@ -23,10 +24,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ColonyTests {
-
-    public static Stream<Arguments> getItemTypes() {
-        return Stream.of(Arguments.of(ItemType.LOG), Arguments.of(ItemType.ROCK));
-    }
 
     @BeforeEach
     public void setup() {

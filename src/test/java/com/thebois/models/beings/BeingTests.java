@@ -191,10 +191,8 @@ public class BeingTests {
         fasterBeing.update(0.1f);
 
         // Assert
-        final float slowerDistanceAfterUpdate = slowerBeing.getPosition()
-                                                           .distanceTo(destination);
-        final float fasterDistanceAfterUpdate = fasterBeing.getPosition()
-                                                           .distanceTo(destination);
+        final float slowerDistanceAfterUpdate = slowerBeing.getPosition().distanceTo(destination);
+        final float fasterDistanceAfterUpdate = fasterBeing.getPosition().distanceTo(destination);
         assertThat(slowerDistanceAfterUpdate).isGreaterThan(fasterDistanceAfterUpdate);
     }
 
@@ -306,11 +304,9 @@ public class BeingTests {
         final IBeing being = createBeing();
 
         // Act
-        final int before = colony.getBeings()
-                                 .size();
+        final int before = colony.getBeings().size();
         colony.addBeing(being);
-        final int after = colony.getBeings()
-                                .size();
+        final int after = colony.getBeings().size();
 
         // Assert
         assertThat(before).isEqualTo(1);
@@ -361,11 +357,7 @@ public class BeingTests {
     @Test
     public void beingsLosesHealthWhenTimePasses() {
         // Arrange
-        final IBeing being = new Pawn(new Position(0, 0),
-                                      new Position(0, 0),
-                                      Mockito.mock(Random.class),
-                                      Mockito.mock(IPathFinder.class),
-                                      Mockito.mock(IStructureFinder.class));
+        final IBeing being = createBeing();
         final float timeToPass = 50f;
         final float startHealthRatio = being.getHealthRatio();
 
@@ -382,11 +374,7 @@ public class BeingTests {
     @Test
     public void beingHealthRatioIsZeroAfterLongTimePasses() {
         // Arrange
-        final IBeing being = new Pawn(new Position(0, 0),
-                                      new Position(0, 0),
-                                      Mockito.mock(Random.class),
-                                      Mockito.mock(IPathFinder.class),
-                                      Mockito.mock(IStructureFinder.class));
+        final IBeing being = createBeing();
         final float timeToPass = 1000f;
         final float expectedHealthRatio = 0;
 
