@@ -8,6 +8,9 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * A structure of type House.
+ *
+ * @author Jacob
+ * @author Mathias
  */
 class House extends AbstractStructure {
 

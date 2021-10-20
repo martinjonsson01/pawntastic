@@ -4,6 +4,8 @@ import com.thebois.models.Position;
 
 /**
  * Resource of type water.
+ *
+ * @author Mathias
  */
 public class Water extends AbstractResource {
 

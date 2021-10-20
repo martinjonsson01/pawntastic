@@ -12,6 +12,8 @@ import com.thebois.views.info.IActorView;
 
 /**
  * A view of the game world.
+ *
+ * @author Mathias
  */
 public class GameView extends Widget implements Disposable, IActorView {
 

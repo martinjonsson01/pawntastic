@@ -7,6 +7,11 @@ import com.thebois.abstractions.IDeepClonable;
 
 /**
  * A two-dimensional location.
+ *
+ * @author Jacob
+ * @author Jonathan
+ * @author Martin
+ * @author Mathias
  */
 public final class Position implements IDeepClonable<Position>, Serializable {
 

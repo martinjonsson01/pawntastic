@@ -7,6 +7,8 @@ import com.thebois.utils.MatrixUtils;
 
 /**
  * Generator that uses noise to generate terrain.
+ *
+ * @author Mathias
  */
 public class TerrainGenerator extends AbstractGenerator {
 

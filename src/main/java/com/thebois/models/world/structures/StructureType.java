@@ -2,6 +2,8 @@ package com.thebois.models.world.structures;
 
 /**
  * All the different types of structures in the game.
+ *
+ * @author Mathias
  */
 public enum StructureType {
     /**

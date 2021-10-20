@@ -21,6 +21,11 @@ import com.thebois.utils.MatrixUtils;
 
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
+ *
+ * @author Jacob
+ * @author Jonathan
+ * @author Martin
+ * @author Mathias
  */
 public class World implements IWorld, IStructureFinder, Serializable {
 
@@ -210,8 +215,7 @@ public class World implements IWorld, IStructureFinder, Serializable {
 
     @Override
     public Optional<IStructure> getNearbyStructureOfType(
-        final Position origin,
-        final StructureType type) {
+        final Position origin, final StructureType type) {
         return getStructures()
             .stream()
             .filter(structure -> structure.getType().equals(type))

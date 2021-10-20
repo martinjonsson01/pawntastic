@@ -4,6 +4,8 @@ package com.thebois.listeners.events;
  * Contains information about a value that has been clicked.
  *
  * @param <TValue> The type of the value
+ *
+ * @author Mathias
  */
 public class OnClickEvent<TValue> implements IEvent {
 

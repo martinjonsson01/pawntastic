@@ -7,6 +7,8 @@ import com.thebois.models.world.ITile;
 
 /**
  * Represents a Structure. E.g. a house.
+ *
+ * @author Mathias
  */
 public interface IStructure extends ITile, IBuildable, IDeepClonable<IStructure>, Serializable {
 

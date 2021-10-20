@@ -4,6 +4,8 @@ import com.thebois.models.Position;
 
 /**
  * A factory that instantiates structures.
+ *
+ * @author Mathias
  */
 public final class StructureFactory {
 

@@ -2,6 +2,8 @@ package com.thebois.models.world.generation.noises;
 
 /**
  * Noise used to generate a value with given X and Y value.
+ *
+ * @author Mathias
  */
 public interface INoise {
 

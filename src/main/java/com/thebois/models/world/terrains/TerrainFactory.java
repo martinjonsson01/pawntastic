@@ -2,6 +2,8 @@ package com.thebois.models.world.terrains;
 
 /**
  * A factory that creates terrain tiles.
+ *
+ * @author Mathias
  */
 public final class TerrainFactory {
 

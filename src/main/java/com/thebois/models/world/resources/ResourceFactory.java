@@ -19,6 +19,7 @@ public final class ResourceFactory {
      * @return The created resource.
      *
      * @throws NullPointerException If the type of resource is null.
+     * @author Mathias
      */
     public static IResource createResource(final ResourceType type, final int x, final int y) {
         return switch (type) {

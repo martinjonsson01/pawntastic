@@ -15,6 +15,8 @@ import com.thebois.views.info.IActorView;
 
 /**
  * The main screen displaying the world and UI.
+ *
+ * @author Mathias
  */
 public class GameScreen implements Screen {
 
@@ -35,7 +37,7 @@ public class GameScreen implements Screen {
      * @param camera      The camera used to display the game.
      * @param gameView    The view of the game world to render
      * @param infoView    The view displaying info about the colony
-     * @param toolbarView The view that displays the tool bar.
+     * @param toolbarView The view that displays the toolbar.
      */
     public GameScreen(
         final FitViewport viewport,

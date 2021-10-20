@@ -18,6 +18,8 @@ import com.thebois.views.info.IActorView;
 
 /**
  * Container class for controllers that manage the world.
+ *
+ * @author Mathias
  */
 public class WorldController implements IController<IActorView> {
 

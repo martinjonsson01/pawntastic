@@ -5,6 +5,8 @@ import com.thebois.models.world.generation.noises.NoiseFactory;
 
 /**
  * All types of resources.
+ *
+ * @author Mathias
  */
 public enum ResourceType {
     /**

@@ -8,6 +8,8 @@ import com.thebois.Pawntastic;
 
 /**
  * Helpers for creating and using textures.
+ *
+ * @author Mathias
  */
 public final class TextureUtils {
 

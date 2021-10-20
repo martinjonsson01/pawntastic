@@ -4,6 +4,8 @@ import com.thebois.models.Position;
 
 /**
  * Dirt tile.
+ *
+ * @author Mathias
  */
 public class Dirt extends AbstractTerrain {
 

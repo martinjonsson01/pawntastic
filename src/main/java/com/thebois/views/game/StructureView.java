@@ -10,6 +10,8 @@ import com.thebois.views.TextureUtils;
 
 /**
  * Responsible for displaying structures.
+ *
+ * @author Mathias
  */
 public final class StructureView implements IView {
 

@@ -12,6 +12,8 @@ import com.thebois.views.info.IActorView;
 
 /**
  * View that renders structure buttons used for selecting what structure to build.
+ *
+ * @author Mathias
  */
 public class BuildMenuToolbarView implements IActorView {
 

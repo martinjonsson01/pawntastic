@@ -4,6 +4,8 @@ import com.thebois.models.Position;
 
 /**
  * Resource of type rock.
+ *
+ * @author Mathias
  */
 public class Rock extends AbstractResource {
 

@@ -4,6 +4,8 @@ import com.thebois.models.Position;
 
 /**
  * Resource of type tree.
+ *
+ * @author Mathias
  */
 public class Tree extends AbstractResource {
 

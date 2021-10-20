@@ -13,6 +13,9 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Base structure for the game.
+ *
+ * @author Jacob
+ * @author Mathias
  */
 abstract class AbstractStructure implements IStructure {
 
@@ -63,7 +66,6 @@ abstract class AbstractStructure implements IStructure {
 
     private int countAllNeededItems() {
         return allNeededItems.values().stream().reduce(0, Integer::sum);
-
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.thebois.models.world.generation.noises;
 
 /**
  * Factory that creates noises used for generation.
+ *
+ * @author Mathias
  */
 public final class NoiseFactory {
 
