@@ -10,7 +10,7 @@ import com.thebois.models.world.ITile;
 public interface IResource extends ITile, IDeepClonable<IResource> {
 
     /**
-     * Get the resource type.
+     * Gets the resource type.
      *
      * @return The type of resource.
      */
@@ -22,5 +22,12 @@ public interface IResource extends ITile, IDeepClonable<IResource> {
      * @return The harvested item.
      */
     IItem harvest();
+
+    /**
+     * Gets the time it takes to completely harvest, in seconds.
+     *
+     * @return How many seconds it takes to harvest one item.
+     */
+    float getHarvestTime();
 
 }

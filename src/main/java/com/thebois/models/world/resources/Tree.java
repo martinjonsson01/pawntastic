@@ -11,13 +11,9 @@ import com.thebois.models.inventory.items.ItemType;
 public class Tree extends AbstractResource {
 
     /**
-     * Instantiate a new tree resource at given position.
-     *
-     * @param position The position where the tree resource should be created.
+     * The time it takes to harvest, in seconds.
      */
-    public Tree(final Position position) {
-        super(position);
-    }
+    private static final float HARVEST_TIME = 0.5f;
 
     /**
      * Instantiate a new tree resource at given position.
@@ -27,6 +23,15 @@ public class Tree extends AbstractResource {
      */
     public Tree(final float x, final float y) {
         this(new Position(x, y));
+    }
+
+    /**
+     * Instantiate a new tree resource at given position.
+     *
+     * @param position The position where the tree resource should be created.
+     */
+    public Tree(final Position position) {
+        super(position);
     }
 
     @Override
@@ -47,6 +52,11 @@ public class Tree extends AbstractResource {
     @Override
     public IItem harvest() {
         return ItemFactory.fromType(ItemType.LOG);
+    }
+
+    @Override
+    public float getHarvestTime() {
+        return HARVEST_TIME;
     }
 
 }
