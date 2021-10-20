@@ -15,11 +15,11 @@ class Stockpile extends AbstractStructure {
     private final IInventory inventory;
 
     Stockpile(final Position position, final IInventory inventory) {
-        super(position, StructureType.STOCKPILE, neededItems());
+        super(position, StructureType.STOCKPILE, getBuildMaterials());
         this.inventory = inventory;
     }
 
-    private static Map<ItemType, Integer> neededItems() {
+    private static Map<ItemType, Integer> getBuildMaterials() {
         final Map<ItemType, Integer> neededItems = new EnumMap<>(ItemType.class);
 
         final int numberOfItems = 4;

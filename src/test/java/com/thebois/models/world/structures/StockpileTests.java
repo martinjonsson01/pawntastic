@@ -70,7 +70,7 @@ public class StockpileTests {
     }
 
     @Test
-    public void stockpileNeededItemsFollowRecipe(){
+    public void stockpileNeededItemsAreTheSameAsGetBuildMaterials(){
         // Arrange
         final Stockpile stockpile =
             (Stockpile) StructureFactory.createStructure(StructureType.STOCKPILE, 0, 0);
