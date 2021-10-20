@@ -58,7 +58,7 @@ public class InventoryController implements IController<IActorView> {
 
                 newItemCounts.put(itemType, inventory.numberOf(itemType));
             }
-            // Break with the current implementation where all stockpile inventories are the same.
+            // Break with the current implementation because all stockpile inventories are the same.
             // In the future where inventories are unique, only small changes are needed.
             break;
         }
