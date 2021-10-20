@@ -4,13 +4,15 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.thebois.models.Position;
+import com.thebois.models.beings.IReceiver;
 import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 
 /**
  * A structure used for storing items.
  */
-class Stockpile extends AbstractStructure {
+class Stockpile extends AbstractStructure implements IReceiver {
 
     private final IInventory inventory;
 
@@ -42,6 +44,11 @@ class Stockpile extends AbstractStructure {
 
     public IInventory getInventory() {
         return inventory;
+    }
+
+    @Override
+    public boolean tryGiveItem(final IItem item) {
+        return inventory.tryAdd(item);
     }
 
 }
