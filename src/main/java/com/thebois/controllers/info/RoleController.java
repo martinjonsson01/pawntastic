@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import com.thebois.Pawntastic;
 import com.thebois.controllers.IController;
 import com.thebois.listeners.events.ValueChangedEvent;
 import com.thebois.models.beings.roles.AbstractRole;
@@ -35,6 +36,7 @@ public class RoleController implements IController<IActorView> {
     public RoleController(final IRoleAllocator roleAllocator, final Skin skin) {
         this.roleAllocator = roleAllocator;
         this.roleView = new RoleView(skin);
+        Pawntastic.getEventBus().register(this);
 
         roleView.updateRoles(createRoleCountMap());
 
