@@ -2,6 +2,7 @@ package com.thebois.models.beings.pathfinding;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,28 @@ public class AstarPathFinderTests {
 
     private static Position mockPosition(final int x, final int y) {
         return new Position(x, y);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsAndDestinations")
+    public void pathContainsDestinationLast(final Position start, final Position destination) {
+        // Arrange
+        final IWorld world = createTestWorld(30);
+        final IPathFinder cut = new AstarPathFinder(world);
+
+        // Act
+        final Collection<Position> path = cut.path(start, destination);
+
+        // Assert
+        assertThat(path).last().isEqualTo(destination);
+    }
+
+    private World createTestWorld(final int size) {
+        return createTestWorld(size, mock(ThreadLocalRandom.class));
+    }
+
+    private World createTestWorld(final int size, final ThreadLocalRandom random) {
+        return new TestWorld(size, random);
     }
 
     @Test
@@ -72,7 +95,7 @@ public class AstarPathFinderTests {
      * @return The mocked world.
      */
     private IWorld testWorld3x3WithObstacles() {
-        final World world = new TestWorld(3);
+        final World world = createTestWorld(3);
 
         world.tryCreateStructure(StructureType.HOUSE, 1, 0);
         world.tryCreateStructure(StructureType.HOUSE, 1, 1);
@@ -104,7 +127,7 @@ public class AstarPathFinderTests {
     public void pathReturnsPositionsThatLeadToDestination(
         final Position from, final Position destination) {
         // Arrange
-        final IWorld world = new TestWorld(30);
+        final IWorld world = createTestWorld(30);
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act
@@ -120,7 +143,7 @@ public class AstarPathFinderTests {
         final Position from, final Position destination) {
 
         // Arrange
-        final IWorld world = new TestWorld(30);
+        final IWorld world = createTestWorld(30);
         final IPathFinder cut = new AstarPathFinder(world);
 
         // Act

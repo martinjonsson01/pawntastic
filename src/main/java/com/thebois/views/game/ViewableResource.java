@@ -24,7 +24,7 @@ public enum ViewableResource {
     /**
      * Viewable Rock tile.
      */
-    ROCK(ResourceType.ROCK, TextureUtils.createTriangleTexture(Color.valueOf("#808080")));
+    ROCK(ResourceType.STONE, TextureUtils.createTriangleTexture(Color.valueOf("#808080")));
     private static final Map<ResourceType, ViewableResource> BY_TYPE = new HashMap<>();
 
     static {

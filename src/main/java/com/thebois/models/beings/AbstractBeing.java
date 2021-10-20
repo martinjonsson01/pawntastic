@@ -1,29 +1,19 @@
 package com.thebois.models.beings;
 
-import java.io.IOException;
-import java.io.Serial;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Stack;
 
-import com.google.common.eventbus.Subscribe;
-
-import com.thebois.Pawntastic;
-import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
-import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
-import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
+import com.thebois.models.inventory.items.IItem;
 import com.thebois.abstractions.IStructureFinder;
 
 /**
- * An abstract implementation of IBeing.
+ * An independent agent that can act in the world according to its assigned role.
  */
-public abstract class AbstractBeing implements IBeing {
+public abstract class AbstractBeing implements IBeing, IActionPerformer {
+
     /**
      * The max speed of the being, in tiles/second.
      */
@@ -37,45 +27,22 @@ public abstract class AbstractBeing implements IBeing {
      * How many kilograms a being can carry.
      */
     private static final float MAX_CARRYING_CAPACITY = 100f;
-    private final IPathFinder pathFinder;
     private final IInventory inventory = new Inventory(MAX_CARRYING_CAPACITY);
-    private Stack<Position> path;
     private Position position;
     private AbstractRole role;
-    private final IStructureFinder finder;
+    private Position destination;
 
     /**
-     * Creates an AbstractBeing with an initial position.
+     * Instantiates with an initial position and role.
      *
-     * @param startPosition The initial position of the AbstractBeing.
-     * @param destination   The initial destination of the AbstractBeing.
-     * @param pathFinder    The generator of paths to positions in the world.
-     * @param finder        Used to find structures in the world.
+     * @param startPosition The initial position.
+     * @param role          The starting role.
      */
     public AbstractBeing(
-        final Position startPosition,
-        final Position destination,
-        final IPathFinder pathFinder,
-        final IStructureFinder finder) {
+        final Position startPosition, final AbstractRole role) {
         this.position = startPosition;
-        this.role = RoleFactory.idle();
-        this.pathFinder = pathFinder;
-        this.finder = finder;
-        setPath(pathFinder.path(startPosition, destination));
-        Pawntastic.getEventBus().register(this);
-    }
-
-    /**
-     * Listens to the ObstaclePlacedEvent in order to update pathfinding.
-     *
-     * @param event The published event.
-     */
-    @Subscribe
-    public void onObstaclePlaced(final ObstaclePlacedEvent event) {
-        if (path.contains(event.getPosition())) {
-            // Find new path to current goal.
-            setPath(pathFinder.path(position, path.firstElement()));
-        }
+        this.destination = startPosition;
+        this.role = role;
     }
 
     @Override
@@ -112,7 +79,23 @@ public abstract class AbstractBeing implements IBeing {
 
     @Override
     public void update(final float deltaTime) {
+        role.obtainNextAction(this)
+            .perform(this);
         move(deltaTime);
+    }
+
+    public Position getDestination() {
+        return destination;
+    }
+
+    @Override
+    public void setDestination(final Position destination) {
+        this.destination = destination;
+    }
+
+    @Override
+    public void addItem(final IItem item) {
+        inventory.tryAdd(item);
     }
 
     /**
@@ -121,46 +104,40 @@ public abstract class AbstractBeing implements IBeing {
      * @param deltaTime How much time the being should move at its speed forward, in seconds.
      */
     protected void move(final float deltaTime) {
-        if (path.isEmpty()) return;
 
-        final Position segmentDestination = path.peek();
-
-        final float distanceToDestination = segmentDestination.distanceTo(getPosition());
+        final float distanceToDestination = destination.distanceTo(getPosition());
 
         if (distanceToDestination < DESTINATION_REACHED_DISTANCE) {
-            onArrivedAtDestination(segmentDestination);
+            onArrivedAtDestination(destination);
             return;
         }
 
-        movePositionTowardsDestination(deltaTime, segmentDestination, distanceToDestination);
+        movePositionTowardsDestination(deltaTime, distanceToDestination);
     }
 
     private void onArrivedAtDestination(final Position segmentDestination) {
         position = segmentDestination;
-        path.pop();
     }
 
-    private void movePositionTowardsDestination(
-        final float deltaTime, final Position segmentDestination, final float totalDistance) {
+    private void movePositionTowardsDestination(final float deltaTime, final float totalDistance) {
         // Calculate how much to move and in what direction.
-        final Position delta = segmentDestination.subtract(position);
+        final Position delta = destination.subtract(position);
         final Position direction = delta.multiply(1f / totalDistance);
         final Position velocity = direction.multiply(SPEED);
         final Position movement = velocity.multiply(deltaTime);
 
         Position newPosition = position.add(movement);
 
-        if (hasOvershotDestination(segmentDestination, delta, newPosition)) {
+        if (hasOvershotDestination(delta, newPosition)) {
             // Clamp position to destination,
             // to prevent walking past the destination during large time skips.
-            newPosition = segmentDestination;
+            newPosition = destination;
         }
 
         position = newPosition;
     }
 
-    private boolean hasOvershotDestination(
-        final Position destination, final Position delta, final Position newPosition) {
+    private boolean hasOvershotDestination(final Position delta, final Position newPosition) {
         // Destination has been overshot if the delta has changed sign before and after moving.
         final Position newDelta = destination.subtract(newPosition);
         return hasChangedSign(newDelta.getX(), delta.getX()) || hasChangedSign(newDelta.getY(),
@@ -169,72 +146,6 @@ public abstract class AbstractBeing implements IBeing {
 
     private boolean hasChangedSign(final float posX, final float posX2) {
         return Math.signum(posX) != Math.signum(posX2);
-    }
-
-    @Override
-    public Iterable<Position> getPath() {
-        final ArrayList<Position> positions = new ArrayList<>(path.size());
-        for (final Position pathPosition : path) {
-            positions.add(pathPosition.deepClone());
-        }
-        return positions;
-    }
-
-    protected void setPath(final Collection<Position> path) {
-        this.path = new Stack<>();
-        this.path.addAll(path);
-    }
-
-    @Serial
-    private void readObject(final java.io.ObjectInputStream in) throws
-                                                                IOException,
-                                                                ClassNotFoundException {
-        // Registers every time on deserialization because it might be registered to an old instance
-        // of the event bus.
-        // (caused by saving/loading).
-        Pawntastic.getEventBus().register(this);
-        in.defaultReadObject();
-    }
-
-    protected Optional<Position> getDestination() {
-        if (path.isEmpty()) return Optional.empty();
-        return Optional.of(path.peek().deepClone());
-    }
-
-    protected Position getFinalDestination() {
-        if (path.isEmpty()) return null;
-        return path.firstElement().deepClone();
-    }
-
-    protected IPathFinder getPathFinder() {
-        return pathFinder;
-    }
-
-    protected IStructureFinder getStructureFinder() {
-        return this.finder;
-    }
-
-    protected Position nearestNeighborOf(final Position destination) {
-        final int[][] positionOffsets = {
-            {-1, -1}, {0, -1}, {1, -1},
-            {-1, 0}, {1, 0},
-            {-1, 1}, {0, 1}, {1, 1},
-            };
-
-        Position nearestNeighbor = new Position(Float.MAX_VALUE, Float.MAX_VALUE);
-        Position lastPosition;
-
-        for (final int[] positionOffset : positionOffsets) {
-            final float x = destination.getX() + positionOffset[0];
-            final float y = destination.getY() + positionOffset[1];
-            lastPosition = new Position(x, y);
-
-            if (getPosition().distanceTo(nearestNeighbor)
-                > getPosition().distanceTo(lastPosition)) {
-                nearestNeighbor = lastPosition;
-            }
-        }
-        return nearestNeighbor;
     }
 
 }

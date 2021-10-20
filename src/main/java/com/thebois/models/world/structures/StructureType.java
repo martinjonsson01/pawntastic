@@ -7,5 +7,13 @@ public enum StructureType {
     /**
      * A structure in form of a house.
      */
-    HOUSE, TOWN_HALL
+    HOUSE,
+    /**
+     * A piece of land designated to storing items.
+     */
+    STOCKPILE,
+    /**
+     * The Colonies starting structure.
+     */
+    TOWN_HALL
 }

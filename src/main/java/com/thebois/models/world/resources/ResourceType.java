@@ -8,17 +8,17 @@ import com.thebois.models.world.generation.noises.NoiseFactory;
  */
 public enum ResourceType {
     /**
-     * Water Resource.
+     * A body of water.
      */
     WATER(0.5f, 0, NoiseFactory.createLargeChunksNoise()),
     /**
-     * Tree Resource.
+     * A natural tree.
      */
     TREE(0.5f, 31, NoiseFactory.createSmallChunksNoise()),
     /**
-     * Rock Resource.
+     * A large stone on the ground.
      */
-    ROCK(0.5f, 27, NoiseFactory.createVerySmallChunksNoise());
+    STONE(0.5f, 27, NoiseFactory.createVerySmallChunksNoise());
     private final float threshold;
     private final int seedPermutation;
     private final INoise noise;

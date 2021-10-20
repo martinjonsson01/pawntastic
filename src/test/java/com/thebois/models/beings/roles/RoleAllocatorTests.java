@@ -5,18 +5,24 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.thebois.abstractions.IPositionFinder;
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IStructureFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
 import com.thebois.models.beings.Pawn;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class RoleAllocatorTests {
 
@@ -34,22 +40,44 @@ public class RoleAllocatorTests {
         assertThat(cut.getBeings()).anyMatch(being -> role.equals(being.getRole().getType()));
     }
 
+//    private Colony mockColonyWithBeings(final int beingCount) {
+//        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
+//        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
+//        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
+//
+//        final Colony colony = new Colony(pathFinder, structureFinder, positionFinder);
+//
+//        for (int i = 0; i < beingCount; i++) {
+//            colony.addBeing(new Pawn(
+//                new Position(),
+//                new Position(),
+//                new Random(),
+//                pathFinder,
+//                structureFinder));
+//        }
+//        return colony;
+//    }
+
     private Colony mockColonyWithBeings(final int beingCount) {
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
-        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-
-        final Colony colony = new Colony(pathFinder, structureFinder, positionFinder);
-
+        final List<Position> vacantPositions = new ArrayList<>();
         for (int i = 0; i < beingCount; i++) {
-            colony.addBeing(new Pawn(
-                new Position(),
-                new Position(),
-                new Random(),
-                pathFinder,
-                structureFinder));
+            vacantPositions.add(new Position(0, 0));
         }
-        return colony;
+        return new Colony(vacantPositions);
+    }
+
+    @BeforeEach
+    public void setup() {
+        RoleFactory.setWorld(mock(IWorld.class));
+        RoleFactory.setResourceFinder(mock(IResourceFinder.class));
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
+    }
+
+    @AfterEach
+    public void teardown() {
+        RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
     }
 
     @Test

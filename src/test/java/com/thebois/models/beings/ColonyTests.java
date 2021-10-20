@@ -10,15 +10,18 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.abstractions.IResourceFinder;
+import com.thebois.models.IStructureFinder;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
+import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.inventory.IInventory;
@@ -31,7 +34,6 @@ import com.thebois.models.world.World;
 import com.thebois.models.world.terrains.Grass;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class ColonyTests {
@@ -40,245 +42,41 @@ public class ColonyTests {
         return Stream.of(Arguments.of(ItemType.LOG), Arguments.of(ItemType.ROCK));
     }
 
-    @Test
-    public void isFullReturnsFalse() {
-        // Arrange
-        final Colony colony = new Colony(
-            mock(IPathFinder.class),
-            mock(IStructureFinder.class),
-            mock(IPositionFinder.class));
-
-        // Act
-        final boolean isFull = colony.isFull();
-
-        // Assert
-        assertThat(isFull).isFalse();
+    @BeforeEach
+    public void setup() {
+        RoleFactory.setWorld(mock(IWorld.class));
+        RoleFactory.setResourceFinder(mock(IResourceFinder.class));
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
     }
 
-//    @Test
-//    public void constructWithTilesCreatesOneBeingPerPosition() {
-//        // Arrange
-//        final int beingCount = 25;
-//        final List<Position> positions = new ArrayList<>(beingCount);
-//        for (int i = 0; i < beingCount; i++) {
-//            positions.add(new Position(0, 0));
-//        }
-//        final IWorld mockWorld = mock(IWorld.class);
-//        when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
-//
-//        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-//
-//        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
-//        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-//
-//        // Act
-//        final Colony colony = new Colony(pathFinder, structureFinder, positionFinder);
-//
-//        // Assert
-//        assertThat(colony.getBeings().size()).isEqualTo(beingCount);
-//    }
+    @AfterEach
+    public void teardown() {
+        RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
+    }
 
-    @ParameterizedTest
-    @MethodSource("getItemTypes")
-    public void emptyColonyInventoryIsEmpty(final ItemType itemType) {
+    @Test
+    public void constructWithTilesCreatesOneBeingPerPosition() {
         // Arrange
-        final Colony colony = mockColony();
+        final int beingCount = 25;
+        final List<Position> positions = new ArrayList<>(beingCount);
+        for (int i = 0; i < beingCount; i++) {
+            positions.add(new Position(0, 0));
+        }
+        final IWorld mockWorld = mock(IWorld.class);
+        when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
 
         // Act
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                                                 () -> colony.take(itemType));
+        final Colony colony = new Colony(positions);
 
         // Assert
-        assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
+        assertThat(colony.getBeings().size()).isEqualTo(beingCount);
     }
 
     private Colony mockColony() {
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
         final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-        return new Colony(pathFinder, structureFinder, positionFinder);
-    }
-
-
-    @Test
-    public void canAddAndTakeItemToInventory() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-        final IItem item = colony.take(ItemType.LOG);
-
-        // Assert
-        assertThat(item.getType()).isEqualTo(ItemType.LOG);
-    }
-
-    @Test
-    public void countIsZeroWhenInventoryIsEmpty() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        final int count = colony.numberOf(ItemType.ROCK);
-
-        // Assert
-        assertThat(count).isEqualTo(0);
-    }
-
-    @Test
-    public void countIsCorrectCountWhenInventoryGotSpecifiedItemTypeInIt() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-
-        final int count = colony.numberOf(ItemType.LOG);
-
-        // Assert
-        assertThat(count).isEqualTo(2);
-    }
-
-    @Test
-    public void countIsCorrectValueWhenInventoryDoesNotHaveSpecifiedItemType() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-
-        final int count = colony.numberOf(ItemType.ROCK);
-
-        // Assert
-        assertThat(count).isEqualTo(0);
-    }
-
-    @Test
-    public void takeMultipleItemsFromColony() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-
-        final ArrayList<IItem> result = colony.takeAmount(ItemType.LOG, 2);
-
-        // Assert
-        assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0).getType()).isEqualTo(ItemType.LOG);
-        assertThat(result.get(1).getType()).isEqualTo(ItemType.LOG);
-    }
-
-    @Test
-    public void canNotTakeMultipleItemsFromColony() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                                                 () -> colony.takeAmount(ItemType.ROCK, 2));
-
-        // Assert
-        assertThat(exception.getMessage()).isEqualTo(
-            "Not enough of the specified ItemType in the inventory");
-    }
-
-    @Test
-    public void colonyHasItem() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-        final boolean result = colony.hasItem(ItemType.LOG);
-
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    public void colonyDoesNotHaveItem() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        final boolean result = colony.hasItem(ItemType.LOG);
-
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    public void colonyHasMultipleOfItem() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-
-        final boolean result = colony.hasItem(ItemType.LOG, 2);
-
-        // Assert
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    public void emptyInventoryDoesNotHaveItemsSuccess() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        final boolean result = colony.hasItem(ItemType.LOG, 2);
-
-        // Assert
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    public void falseWhenInventoryDoesNotHaveRequestedAmountOfItemsSuccess() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        colony.tryAdd(ItemFactory.fromType(ItemType.LOG));
-        final boolean result = colony.hasItem(ItemType.LOG, 2);
-
-        // Assert
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    public void addMultipleItemsToColony() {
-        // Arrange
-        final Colony colony = mockColony();
-        final ArrayList<IItem> items = new ArrayList<>();
-        items.add(ItemFactory.fromType(ItemType.LOG));
-        items.add(ItemFactory.fromType(ItemType.LOG));
-
-        // Act
-        colony.addMultiple(items);
-
-        // Assert
-        assertThat(colony.hasItem(ItemType.LOG, 2)).isTrue();
-    }
-
-    @Test
-    public void getInventoryReturnsTheColonyInventory() {
-        // Arrange
-        final Colony colony = mockColony();
-
-        // Act
-        final IInventory inventory = colony.getInventory();
-        final boolean colonyResult = colony.hasItem(ItemType.LOG, 2);
-        final boolean inventoryResult = inventory.hasItem(ItemType.LOG, 2);
-
-        // Assert
-        assertThat(colonyResult).isEqualTo(inventoryResult);
+        return new Colony(positionFinder);
     }
 
     @Test

@@ -14,7 +14,7 @@ public class ResourceFactoryTests {
 
     public static Stream<Arguments> getResourceTypeAndExpectedResource() {
         return Stream.of(
-            Arguments.of(ResourceType.ROCK, new Rock(0, 0)),
+            Arguments.of(ResourceType.STONE, new Stone(0, 0)),
             Arguments.of(ResourceType.WATER, new Water(0, 0)),
             Arguments.of(ResourceType.TREE, new Tree(0, 0)));
     }
