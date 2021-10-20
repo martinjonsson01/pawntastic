@@ -47,7 +47,7 @@ public class BuildAction implements IAction, Serializable {
     }
 
     @Override
-    public void perform(final IActionPerformer performer) {
+    public void perform(final IActionPerformer performer, final float deltaTime) {
         final Collection<ItemType> neededItemTypes = toBuild.getNeededItems();
         final List<IItem> neededItems = neededItemTypes
             .stream()

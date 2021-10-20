@@ -24,7 +24,7 @@ public class HarvestAction implements IAction, Serializable {
     }
 
     @Override
-    public void perform(final IActionPerformer performer) {
+    public void perform(final IActionPerformer performer, final float deltaTime) {
         performer.addItem(resource.harvest());
         harvested = true;
     }

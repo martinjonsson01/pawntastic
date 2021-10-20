@@ -34,7 +34,7 @@ public class HarvestActionTests {
         final IResource sameResource = mock(IResource.class);
         final IAction sameResourceNotHarvested = ActionFactory.createHarvest(sameResource);
         final IAction sameResourceHarvested = ActionFactory.createHarvest(sameResource);
-        sameResourceHarvested.perform(mock(IActionPerformer.class));
+        sameResourceHarvested.perform(mock(IActionPerformer.class), 0.1f);
         return Stream.of(Arguments.of(ActionFactory.createHarvest(mock(IResource.class)),
                                       ActionFactory.createHarvest(sameResource)),
                          Arguments.of(ActionFactory.createHarvest(sameResource), null),
@@ -83,7 +83,7 @@ public class HarvestActionTests {
         when(resource.harvest()).thenReturn(resourceItem);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 0.1f);
 
         // Assert
         verify(performer, times(1)).addItem(eq(resourceItem));
@@ -108,7 +108,7 @@ public class HarvestActionTests {
         final IItem resourceItem = mock(IItem.class);
         when(resource.harvest()).thenReturn(resourceItem);
 
-        action.perform(performer);
+        action.perform(performer, 0.1f);
 
         // Act
         final boolean completed = action.isCompleted(performer);

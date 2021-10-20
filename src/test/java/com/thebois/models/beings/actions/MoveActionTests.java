@@ -98,7 +98,7 @@ public class MoveActionTests {
         when(pathFinder.path(start, end)).thenReturn(noPath);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 0.1f);
         final boolean canPerform = action.canPerform(performer);
 
         // Assert
@@ -125,7 +125,7 @@ public class MoveActionTests {
         when(pathFinder.path(start, end)).thenReturn(noPath);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 0.1f);
         final boolean canPerform = action.canPerform(performer);
 
         // Assert
@@ -162,7 +162,7 @@ public class MoveActionTests {
 
         // Act
         for (final Position pathPosition : path) {
-            action.perform(performer);
+            action.perform(performer, 0.1f);
             // Simulate moving to path position.
             when(performer.getPosition()).thenReturn(pathPosition);
         }
@@ -183,7 +183,7 @@ public class MoveActionTests {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 0.1f);
         Pawntastic.getEventBus().post(obstacleEvent);
         final boolean canPerform = action.canPerform(performer);
 
@@ -200,7 +200,7 @@ public class MoveActionTests {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 0.1f);
         Pawntastic.getEventBus().post(obstacleEvent);
 
         // Assert
@@ -216,7 +216,7 @@ public class MoveActionTests {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(1, 1);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 0.1f);
         Pawntastic.getEventBus().post(obstacleEvent);
 
         // Assert
@@ -229,7 +229,7 @@ public class MoveActionTests {
         when(performer.getPosition()).thenReturn(end);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 0.1f);
 
         // Assert
         verify(performer, times(0)).setDestination(any());
@@ -241,7 +241,7 @@ public class MoveActionTests {
         when(performer.getPosition()).thenReturn(end);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 0.1f);
         final boolean completed = action.isCompleted(performer);
 
         // Assert
@@ -255,7 +255,7 @@ public class MoveActionTests {
         when(pathFinder.path(start, end)).thenReturn(workingPath);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 0.1f);
         final boolean completed = action.isCompleted(performer);
 
         // Assert

@@ -8,11 +8,12 @@ import com.thebois.models.beings.IActionPerformer;
 public interface IAction {
 
     /**
-     * Performs the task on a given performer.
+     * Performs the action on a given performer.
      *
-     * @param performer The entity to execute the task for.
+     * @param performer The entity to execute the action for.
+     * @param deltaTime How much time to spend progressing the progress of the action.
      */
-    void perform(IActionPerformer performer);
+    void perform(IActionPerformer performer, float deltaTime);
 
     /**
      * Checks if the task is finished.

@@ -63,7 +63,7 @@ public class BuildActionTests {
         when(structure.getNeededItems()).thenReturn(neededItemTypes);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 0.1f);
 
         // Assert
         final ArgumentCaptor<IItem> itemCaptor = ArgumentCaptor.forClass(IItem.class);

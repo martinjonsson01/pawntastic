@@ -57,7 +57,7 @@ class MoveAction implements IAction, Serializable {
     }
 
     @Override
-    public void perform(final IActionPerformer performer) {
+    public void perform(final IActionPerformer performer, final float deltaTime) {
         if (isCompleted(performer)) return;
 
         final Position position = performer.getPosition();
