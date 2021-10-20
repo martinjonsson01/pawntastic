@@ -2,9 +2,6 @@ package com.thebois.models.beings;
 
 import java.io.IOException;
 import java.io.Serial;
-import java.io.IOException;
-import java.io.Serial;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,13 +12,11 @@ import com.google.common.eventbus.Subscribe;
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.SpawnPawnsEvent;
 import com.thebois.abstractions.IPositionFinder;
-import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
-import com.thebois.models.beings.pathfinding.IPathFinder;
-import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.beings.roles.AbstractRole;
 
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
@@ -136,9 +131,8 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
             positionFinder.tryGetEmptyPositionsNextTo(event.getSpawnPosition(),
                                                       event.getNumberOfPawns(),
                                                       event.getSpawnRadius());
-        final Random random = new Random();
         for (final Position vacantPosition : vacantPositions) {
-            addBeing(new Pawn(vacantPosition, vacantPosition, random, pathFinder, structureFinder));
+            addBeing(new Pawn(vacantPosition, RoleFactory.idle()));
         }
     }
 

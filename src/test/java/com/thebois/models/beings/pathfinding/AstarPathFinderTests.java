@@ -5,13 +5,18 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.abstractions.IResourceFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
+import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.TestWorld;
@@ -31,6 +36,20 @@ public class AstarPathFinderTests {
             Arguments.of(mockPosition(0, 0), mockPosition(10, 10)),
             Arguments.of(mockPosition(0, 0), mockPosition(11, 23)),
             Arguments.of(mockPosition(29, 3), mockPosition(10, 23)));
+    }
+
+    @BeforeEach
+    public void setup() {
+        RoleFactory.setWorld(mock(IWorld.class));
+        RoleFactory.setResourceFinder(mock(IResourceFinder.class));
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
+    }
+
+    @AfterEach
+    public void teardown() {
+        RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
     }
 
     private static Position mockPosition(final int x, final int y) {

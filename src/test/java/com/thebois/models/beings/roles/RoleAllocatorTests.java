@@ -3,23 +3,27 @@ package com.thebois.models.beings.roles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.lwjgl.system.CallbackI;
 import org.mockito.Mockito;
 
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IStructureFinder;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
 import com.thebois.models.beings.Pawn;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.IWorld;
+import com.thebois.models.world.TestWorld;
+import com.thebois.models.world.World;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -40,7 +44,15 @@ public class RoleAllocatorTests {
         assertThat(cut.getBeings()).anyMatch(being -> role.equals(being.getRole().getType()));
     }
 
-//    private Colony mockColonyWithBeings(final int beingCount) {
+    private World createTestWorld(final int size) {
+        return createTestWorld(size, mock(ThreadLocalRandom.class));
+    }
+
+    private World createTestWorld(final int size, final ThreadLocalRandom random) {
+        return new TestWorld(size, random);
+    }
+
+    //    private Colony mockColonyWithBeings(final int beingCount) {
 //        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
 //        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
 //        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
@@ -59,11 +71,11 @@ public class RoleAllocatorTests {
 //    }
 
     private Colony mockColonyWithBeings(final int beingCount) {
-        final List<Position> vacantPositions = new ArrayList<>();
+        final Colony colony = new Colony(createTestWorld(50));
         for (int i = 0; i < beingCount; i++) {
-            vacantPositions.add(new Position(0, 0));
+            colony.addBeing(new Pawn(new Position(), RoleFactory.idle()));
         }
-        return new Colony(vacantPositions);
+        return colony;
     }
 
     @BeforeEach

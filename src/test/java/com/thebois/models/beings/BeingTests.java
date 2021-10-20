@@ -12,8 +12,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IResourceFinder;
-import com.thebois.models.IStructureFinder;
 import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.actions.ActionFactory;
@@ -301,8 +301,8 @@ public class BeingTests {
     @Test
     public void addBeingIncreasesBeingCount() {
         // Arrange
-        final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
-        final AbstractBeingGroup colony = new Colony(vacantPositions);
+        final IPositionFinder positionFinder = mock(IPositionFinder.class);
+        final AbstractBeingGroup colony = new Colony(positionFinder);
 
         final IBeing being = createBeing();
 
