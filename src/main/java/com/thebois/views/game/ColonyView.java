@@ -30,11 +30,9 @@ public class ColonyView implements IView {
     static {
         ROLE_COLORS = new HashMap<>();
         ROLE_COLORS.put(RoleType.BUILDER, Color.ORANGE);
-        ROLE_COLORS.put(RoleType.FARMER, Color.GREEN);
         ROLE_COLORS.put(RoleType.FISHER, Color.BLUE);
-        ROLE_COLORS.put(RoleType.GUARD, Color.BLACK);
         ROLE_COLORS.put(RoleType.LUMBERJACK, Color.BROWN);
-        ROLE_COLORS.put(RoleType.MINER, Color.GRAY);
+        ROLE_COLORS.put(RoleType.MINER, Color.BLACK);
         ROLE_COLORS.put(RoleType.IDLE, Color.WHITE);
     }
 
