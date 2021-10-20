@@ -519,12 +519,15 @@
         <module name="UnusedImports" />
 
         <!-- Javadoc Comments -->
-        <module name="AtclauseOrder" />
+        <module name="AtclauseOrder">
+            <property name="tagOrder"
+                value="deprecated, exception, param, return, see, serial, serialData, serialField, since, throws, version, author" />
+        </module>
         <module name="InvalidJavadocPosition" />
         <module name="JavadocBlockTagLocation">
             <!-- default tags -->
-            <property name="tags" value="author, deprecated, exception, hidden, param, provides" />
-            <property name="tags" value="return, see, serial, serialData, serialField, since, throws" />
+            <property name="tags" value="deprecated, exception, hidden, param, provides" />
+            <property name="tags" value="return, see, serial, serialData, serialField, since, throws, author" />
             <property name="tags" value="uses, version" />
             <!-- additional tags used in the project -->
             <property name="tags" value="noinspection" />
