@@ -2,9 +2,8 @@ package com.thebois.models.beings.actions;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.inventory.items.IItem;
@@ -15,13 +14,17 @@ import com.thebois.models.world.structures.IStructure;
 /**
  * Used to build structures.
  */
-public class BuildAction implements IAction, Serializable {
+public class BuildAction extends AbstractTimeAction implements Serializable {
 
     /**
      * The minimum distance at which a being has to be from a structure to be able to build it, in
      * tiles.
      */
     private static final float MINIMUM_BUILD_DISTANCE = 2f;
+    /**
+     * How many seconds it takes to transfer a single item to the structure.
+     */
+    private static final float ITEM_TRANSFER_TIME = 5f;
     private final IStructure toBuild;
 
     /**
@@ -30,6 +33,7 @@ public class BuildAction implements IAction, Serializable {
      * @param toBuild What to build.
      */
     public BuildAction(final IStructure toBuild) {
+        super(ITEM_TRANSFER_TIME);
         this.toBuild = toBuild;
     }
 
@@ -47,18 +51,13 @@ public class BuildAction implements IAction, Serializable {
     }
 
     @Override
-    public void perform(final IActionPerformer performer, final float deltaTime) {
+    protected void onPerformCompleted(final IActionPerformer performer) {
         final Collection<ItemType> neededItemTypes = toBuild.getNeededItems();
-        final List<IItem> neededItems = neededItemTypes
-            .stream()
-            .map(ItemFactory::fromType)
-            .collect(Collectors.toList());
-        neededItems.forEach(toBuild::tryDeliverItem);
-    }
-
-    @Override
-    public boolean isCompleted(final IActionPerformer performer) {
-        return toBuild.isCompleted();
+        final Optional<ItemType> neededItemType = neededItemTypes.stream().findFirst();
+        if (neededItemType.isPresent()) {
+            final IItem item = ItemFactory.fromType(neededItemType.get());
+            toBuild.tryDeliverItem(item);
+        }
     }
 
     @Override
@@ -66,9 +65,7 @@ public class BuildAction implements IAction, Serializable {
         // Note: when items have to be fetched from stockpiles (instead of magically created),
         // this will have to take into account whether the performer has the required items
         // in its inventory.
-        return performer
-                   .getPosition()
-                   .distanceTo(toBuild.getPosition()) < MINIMUM_BUILD_DISTANCE;
+        return performer.getPosition().distanceTo(toBuild.getPosition()) < MINIMUM_BUILD_DISTANCE;
     }
 
 }
