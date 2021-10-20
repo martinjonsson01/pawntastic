@@ -10,7 +10,6 @@ public class TownHallTests {
 
     @Test
     public void TownHallIsAlwaysCompleted() {
-
         // Arrange
         final IStructure house = StructureFactory.createStructure(
             StructureType.TOWN_HALL,
@@ -25,7 +24,6 @@ public class TownHallTests {
 
     @Test
     public void TownHallHasAlways1AsBuiltRatio() {
-
         // Arrange
         final IStructure house = StructureFactory.createStructure(
             StructureType.TOWN_HALL,
@@ -36,6 +34,20 @@ public class TownHallTests {
 
         // Assert
         assertThat(Float.compare(builtRatio, 1) >= 0).isTrue();
+    }
+
+    @Test
+    public void DeepCopyReturnsObjectOfTypeTownHall() {
+        // Arrange
+        final IStructure townHall = StructureFactory.createStructure(
+            StructureType.TOWN_HALL,
+            new Position(20f, 50f));
+
+        // Act
+        final IStructure townHallDeepCopy = townHall.deepClone();
+
+        // Assert
+        assertThat(townHallDeepCopy).isInstanceOf(TownHall.class);
     }
 
 }
