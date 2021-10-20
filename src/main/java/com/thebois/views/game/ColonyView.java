@@ -29,7 +29,7 @@ public class ColonyView implements IView {
 
     static {
         ROLE_COLORS = new HashMap<>();
-        ROLE_COLORS.put(RoleType.BUILDER, Color.LIGHT_GRAY);
+        ROLE_COLORS.put(RoleType.BUILDER, Color.ORANGE);
         ROLE_COLORS.put(RoleType.FARMER, Color.GREEN);
         ROLE_COLORS.put(RoleType.FISHER, Color.BLUE);
         ROLE_COLORS.put(RoleType.GUARD, Color.BLACK);
@@ -39,8 +39,8 @@ public class ColonyView implements IView {
     }
 
     private final int radius;
-    private IBeingGroup colony;
     private final Texture beingTexture;
+    private IBeingGroup colony;
 
     /**
      * Instantiates a new ColonyView.
@@ -67,10 +67,16 @@ public class ColonyView implements IView {
 
         if (colony != null) {
             for (final IBeing pawn : colony.getBeings()) {
-                x = pawn.getPosition().getX() * Pawntastic.getTileSize();
-                y = pawn.getPosition().getY() * Pawntastic.getTileSize();
+                x = pawn
+                        .getPosition()
+                        .getX() * Pawntastic.getTileSize();
+                y = pawn
+                        .getPosition()
+                        .getY() * Pawntastic.getTileSize();
 
-                batch.setColor(ROLE_COLORS.get(pawn.getRole().getType()));
+                batch.setColor(ROLE_COLORS.get(pawn
+                                                   .getRole()
+                                                   .getType()));
 
                 batch.draw(beingTexture, offsetX + x, offsetY + y, radius * 2, radius * 2);
             }
