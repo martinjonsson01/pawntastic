@@ -18,7 +18,6 @@ public class BuildMenuToolbarView implements IActorView {
     private final Actor structureButtonContainer;
     private final ButtonGroup<StructureButton> structureButtonGroup = createButtonGroup();
 
-
     /**
      * Instantiate with buttons for each structure.
      *
