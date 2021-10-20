@@ -468,6 +468,8 @@ public class BeingTests {
         // Act
         // Find and calculate neighbor position of house
         pawn.update(0.1f);
+        // Pawn walks to set out destination.
+        pawn.update(0.1f);
 
         // Assert
         assertThat(pawn.getFinalDestination()).isEqualTo(expectedPosition);
