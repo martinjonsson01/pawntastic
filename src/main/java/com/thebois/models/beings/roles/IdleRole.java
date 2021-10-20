@@ -18,7 +18,7 @@ class IdleRole extends AbstractRole {
     /**
      * The radius at which random positions to move to are picked, in tiles.
      */
-    private static final int RANDOM_MOVE_RADIUS = 5;
+    private static final int ROAM_RADIUS = 5;
     private final IWorld world;
 
     /**
@@ -42,7 +42,7 @@ class IdleRole extends AbstractRole {
 
     private IAction getRandomMove(final IActionPerformer performer) {
         final ITile randomVacantTile = world.getRandomVacantSpotInRadiusOf(performer.getPosition(),
-                                                                           RANDOM_MOVE_RADIUS);
+                                                                           ROAM_RADIUS);
         return ActionFactory.createMoveTo(randomVacantTile.getPosition());
     }
 
