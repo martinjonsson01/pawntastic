@@ -25,6 +25,7 @@ public class HarvesterRoleTests {
 
     private IWorld mockWorld;
     private IResourceFinder finder;
+    private IStructureFinder structureFinder;
 
     @BeforeEach
     public void setup() {
@@ -33,7 +34,8 @@ public class HarvesterRoleTests {
         RoleFactory.setWorld(mockWorld);
         finder = mock(IResourceFinder.class);
         RoleFactory.setResourceFinder(finder);
-        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
+        structureFinder = mock(IStructureFinder.class);
+        RoleFactory.setStructureFinder(structureFinder);
 
         final ITile mockTile = mock(ITile.class);
         final Position randomPosition = new Position(2, 3);
@@ -57,8 +59,7 @@ public class HarvesterRoleTests {
         when(performer.getPosition()).thenReturn(new Position());
         when(finder.getNearbyOfType(any(), eq(ResourceType.TREE))).thenReturn(Optional.empty());
 
-        final IAction expectedAction = RoleFactory.idle()
-                                                  .obtainNextAction(performer);
+        final IAction expectedAction = RoleFactory.idle().obtainNextAction(performer);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);
@@ -68,7 +69,7 @@ public class HarvesterRoleTests {
     }
 
     private AbstractRole createRole() {
-        return new TestHarvesterRole(finder, mockWorld);
+        return new TestHarvesterRole(finder, structureFinder, mockWorld);
     }
 
     @Test
@@ -114,8 +115,7 @@ public class HarvesterRoleTests {
         when(mockWorld.getClosestNeighbourOf(tree,
                                              performer.getPosition())).thenReturn(Optional.empty());
 
-        final IAction expectedAction = RoleFactory.idle()
-                                                  .obtainNextAction(performer);
+        final IAction expectedAction = RoleFactory.idle().obtainNextAction(performer);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);
@@ -165,8 +165,7 @@ public class HarvesterRoleTests {
         when(finder.getNearbyOfType(any(), eq(ResourceType.TREE))).thenReturn(Optional.of(tree))
                                                                   .thenReturn(Optional.empty());
 
-        final IAction expectedAction = RoleFactory.idle()
-                                                  .obtainNextAction(performer);
+        final IAction expectedAction = RoleFactory.idle().obtainNextAction(performer);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);
@@ -180,8 +179,11 @@ public class HarvesterRoleTests {
      */
     private static final class TestHarvesterRole extends AbstractHarvesterRole {
 
-        TestHarvesterRole(final IResourceFinder finder, final IWorld world) {
-            super(finder, world, ResourceType.TREE);
+        TestHarvesterRole(
+            final IResourceFinder finder,
+            final IStructureFinder structureFinder,
+            final IWorld world) {
+            super(finder, structureFinder, world, ResourceType.TREE);
         }
 
         @Override
