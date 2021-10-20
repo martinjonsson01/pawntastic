@@ -21,9 +21,16 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
 
     @Override
     public void update(final float deltaTime) {
+        final Collection<IBeing> beingsToRemove = new ArrayList<>();
         for (final IBeing being : this.beings) {
-            being.update(deltaTime);
+            if (!being.isAlive()) {
+                beingsToRemove.add(being);
+            }
+            else {
+                being.update(deltaTime);
+            }
         }
+        beings.removeAll(beingsToRemove);
     }
 
     @Override
@@ -36,4 +43,5 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
     protected void setBeings(final Collection<IBeing> beings) {
         this.beings = beings;
     }
+
 }

@@ -45,4 +45,11 @@ public interface IBeing extends Serializable {
      */
     Iterable<Position> getPath();
 
+    /**
+     * Returns true if the being is alive and false if it's dead.
+     *
+     * @return Whether the being is alive or not.
+     */
+    boolean isAlive();
+
 }

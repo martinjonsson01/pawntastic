@@ -12,18 +12,19 @@ import com.google.common.eventbus.Subscribe;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
+import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
-import com.thebois.models.IStructureFinder;
 
 /**
  * An abstract implementation of IBeing.
  */
 public abstract class AbstractBeing implements IBeing {
+
     /**
      * The max speed of the being, in tiles/second.
      */
@@ -37,12 +38,19 @@ public abstract class AbstractBeing implements IBeing {
      * How many kilograms a being can carry.
      */
     private static final float MAX_CARRYING_CAPACITY = 100f;
+    private static final float MAX_HEALTH = 100f;
+    private static final float MAX_HUNGER = 100f;
+    private static final float HUNGER_FACTOR = 10f;
+    private static final float HEALTH_FACTOR = 10f;
     private final IPathFinder pathFinder;
     private final IInventory inventory = new Inventory(MAX_CARRYING_CAPACITY);
     private Stack<Position> path;
     private Position position;
     private AbstractRole role;
     private final IStructureFinder finder;
+    private float currentHunger;
+    private float currentHealth;
+    private boolean isAlive;
 
     /**
      * Creates an AbstractBeing with an initial position.
@@ -63,6 +71,10 @@ public abstract class AbstractBeing implements IBeing {
         this.finder = finder;
         setPath(pathFinder.path(startPosition, destination));
         Pawntastic.getEventBus().register(this);
+
+        currentHealth = MAX_HEALTH;
+        currentHunger = MAX_HUNGER;
+        isAlive = true;
     }
 
     /**
@@ -112,7 +124,44 @@ public abstract class AbstractBeing implements IBeing {
 
     @Override
     public void update(final float deltaTime) {
-        move(deltaTime);
+
+        updateHunger(deltaTime);
+        updateHealth(deltaTime);
+        updateIsAlive();
+        if (isAlive) {
+            move(deltaTime);
+        }
+    }
+
+    @Override
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    private void updateIsAlive() {
+        if (currentHealth <= 0f) {
+            isAlive = false;
+        }
+    }
+
+    private void updateHealth(final float deltaTime) {
+        final float changeHealthValue = HEALTH_FACTOR * deltaTime;
+        if (currentHunger <= 0) {
+            currentHealth -= changeHealthValue;
+        }
+        else {
+            currentHealth += changeHealthValue;
+        }
+    }
+
+    private void updateHunger(final float deltaTime) {
+        final float changeHungerValue = HUNGER_FACTOR * deltaTime;
+        if (changeHungerValue >= currentHunger) {
+            currentHunger -= changeHungerValue;
+        }
+        else {
+            currentHunger = 0;
+        }
     }
 
     /**
@@ -216,9 +265,7 @@ public abstract class AbstractBeing implements IBeing {
 
     protected Position nearestNeighborOf(final Position destination) {
         final int[][] positionOffsets = {
-            {-1, -1}, {0, -1}, {1, -1},
-            {-1, 0}, {1, 0},
-            {-1, 1}, {0, 1}, {1, 1},
+            { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 },
             };
 
         Position nearestNeighbor = new Position(Float.MAX_VALUE, Float.MAX_VALUE);
