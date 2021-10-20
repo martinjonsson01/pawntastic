@@ -20,7 +20,6 @@ class BuilderRole extends AbstractRole {
 
     private final IStructureFinder finder;
     private final IWorld world;
-    private IStructure toBuild;
 
     /**
      * Instantiates with a way of finding structures to build.
@@ -48,10 +47,10 @@ class BuilderRole extends AbstractRole {
         final Optional<IStructure> maybeStructure = findNearbyIncompleteStructure(performer);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
 
-        final IStructure resource = maybeStructure.get();
+        final IStructure structure = maybeStructure.get();
 
         final Position position = performer.getPosition();
-        final Optional<Position> closestSpotNextToResource = world.getClosestNeighbourOf(resource,
+        final Optional<Position> closestSpotNextToResource = world.getClosestNeighbourOf(structure,
                                                                                          position);
 
         if (closestSpotNextToResource.isEmpty()) return ActionFactory.createDoNothing();
@@ -60,7 +59,12 @@ class BuilderRole extends AbstractRole {
     }
 
     private IAction createBuildStructure(final IActionPerformer performer) {
-        return null;
+        final Optional<IStructure> maybeStructure = findNearbyIncompleteStructure(performer);
+        if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
+
+        final IStructure structure = maybeStructure.get();
+
+        return ActionFactory.createBuild(structure);
     }
 
     private Optional<IStructure> findNearbyIncompleteStructure(final IActionPerformer performer) {
@@ -68,10 +72,4 @@ class BuilderRole extends AbstractRole {
         return finder.getNearbyIncompleteStructure(position);
     }
 
-    /* private void tryDeliverItemToStructure(final IStructure structure) {
-        if (structure.getPosition().distanceTo(this.getPosition()) < 2f) {
-            structure.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
-            structure.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
-        }
-    }*/
 }

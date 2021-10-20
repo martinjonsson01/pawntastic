@@ -1,5 +1,7 @@
 package com.thebois.models.beings.actions;
 
+import java.io.Serializable;
+
 import com.thebois.models.beings.IActionPerformer;
 
 /**
@@ -9,7 +11,7 @@ import com.thebois.models.beings.IActionPerformer;
  * given to a being when it asks for an action but there is nothing more to do.
  * </p>
  */
-public class DoNothingAction implements IAction {
+public class DoNothingAction implements IAction, Serializable {
 
     private boolean isDone = false;
 

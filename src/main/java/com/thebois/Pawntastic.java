@@ -181,8 +181,10 @@ public class Pawntastic extends Game {
         generator.scaleForPixelHeight(DEFAULT_FONT_SIZE);
         font = generator.generateFont(parameter);
         // To smooth out the text.
-        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear,
-                                                Texture.TextureFilter.Linear);
+        font
+            .getRegion()
+            .getTexture()
+            .setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         generator.dispose();
     }
 
@@ -193,6 +195,7 @@ public class Pawntastic extends Game {
 
         RoleFactory.setWorld(world);
         RoleFactory.setResourceFinder(world);
+        RoleFactory.setStructureFinder(world);
 
         final IPathFinder pathFinder = new AstarPathFinder(world);
         ActionFactory.setPathFinder(pathFinder);
