@@ -16,8 +16,7 @@ import com.thebois.views.info.IActorView;
 public class BuildMenuToolbarView implements IActorView {
 
     private final Actor structureButtonContainer;
-    private boolean buttonsActive = false;
-    final ButtonGroup<StructureButton> structureButtonGroup = createButtonGroup();
+    private final ButtonGroup<StructureButton> structureButtonGroup = createButtonGroup();
 
 
     /**
@@ -35,9 +34,6 @@ public class BuildMenuToolbarView implements IActorView {
         final Skin skin, final IEventListener<OnClickEvent<StructureType>> listener) {
 
         final Table toolbarTable = createTable();
-
-//        structureButtonGroup = createButtonGroup();
-
         createStructureButtons(skin, listener, toolbarTable, structureButtonGroup);
         return toolbarTable;
     }
