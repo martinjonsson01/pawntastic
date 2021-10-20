@@ -12,6 +12,7 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.resources.IResource;
+import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -21,6 +22,7 @@ public class HarvestActionTests {
     private IActionPerformer performer;
     private IResource resource;
     private IAction action;
+    private IItem resourceItem;
 
     public static Stream<Arguments> getEqualHarvests() {
         final IResource sameResource = mock(IResource.class);
@@ -46,7 +48,8 @@ public class HarvestActionTests {
     @BeforeEach
     public void setup() {
         performer = mock(IActionPerformer.class);
-        resource = mock(IResource.class);
+        resourceItem = mock(IItem.class);
+        resource = MockFactory.createResource(new Position(1, 0), resourceItem, 10f);
         action = ActionFactory.createHarvest(resource);
     }
 
@@ -54,7 +57,6 @@ public class HarvestActionTests {
     public void canPerformReturnsFalseWhenFarAwayFromResource() {
         // Arrange
         when(performer.getPosition()).thenReturn(new Position(10, 10));
-        when(resource.getPosition()).thenReturn(new Position(1, 0));
 
         // Act
         final boolean canPerform = action.canPerform(performer);
@@ -66,8 +68,8 @@ public class HarvestActionTests {
     @Test
     public void canPerformReturnsTrueWhenNextToResource() {
         // Arrange
-        when(performer.getPosition()).thenReturn(new Position(0, 0));
-        when(resource.getPosition()).thenReturn(new Position(1, 0));
+        final Position besidesResource = resource.getPosition().subtract(1, 0);
+        when(performer.getPosition()).thenReturn(besidesResource);
 
         // Act
         final boolean canPerform = action.canPerform(performer);
@@ -77,13 +79,20 @@ public class HarvestActionTests {
     }
 
     @Test
-    public void performAddsHarvestedResourceToPerformer() {
-        // Arrange
-        final IItem resourceItem = mock(IItem.class);
-        when(resource.harvest()).thenReturn(resourceItem);
-
+    public void performDoesNotAddHarvestedResourceToPerformerBeforeHarvestTimeHasPassed() {
         // Act
-        action.perform(performer, 0.1f);
+        for (int i = 0; i < 3; i++) {
+            action.perform(performer, 0.1f);
+        }
+
+        // Assert
+        verify(performer, times(0)).addItem(any());
+    }
+
+    @Test
+    public void performAddsHarvestedResourceToPerformerAfterHarvestTimeHasPassed() {
+        // Act
+        action.perform(performer, resource.getHarvestTime());
 
         // Assert
         verify(performer, times(1)).addItem(eq(resourceItem));
@@ -91,10 +100,6 @@ public class HarvestActionTests {
 
     @Test
     public void isCompletedIsFalseBeforePerforming() {
-        // Arrange
-        final IItem resourceItem = mock(IItem.class);
-        when(resource.harvest()).thenReturn(resourceItem);
-
         // Act
         final boolean completed = action.isCompleted(performer);
 
@@ -103,12 +108,23 @@ public class HarvestActionTests {
     }
 
     @Test
-    public void isCompletedIsFalseAfterPerforming() {
-        // Arrange
-        final IItem resourceItem = mock(IItem.class);
-        when(resource.harvest()).thenReturn(resourceItem);
+    public void isCompletedIsTrueAfterPerformingHarvestDuration() {
+        action.perform(performer, resource.getHarvestTime());
 
-        action.perform(performer, 0.1f);
+        // Act
+        final boolean completed = action.isCompleted(performer);
+
+        // Assert
+        assertThat(completed).isTrue();
+    }
+
+    @Test
+    public void isCompletedIsTrueAfterPerformingMultipleTimesThatAddUpToHarvestDuration() {
+        final int fractions = 10;
+        final float timeSpentHarvesting = resource.getHarvestTime() / fractions;
+        for (int i = 0; i < fractions; i++) {
+            action.perform(performer, timeSpentHarvesting);
+        }
 
         // Act
         final boolean completed = action.isCompleted(performer);

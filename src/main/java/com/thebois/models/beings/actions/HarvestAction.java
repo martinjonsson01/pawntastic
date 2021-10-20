@@ -9,10 +9,9 @@ import com.thebois.models.world.resources.IResource;
 /**
  * Used to perform the harvesting of a given resource.
  */
-public class HarvestAction implements IAction, Serializable {
+public class HarvestAction extends AbstractTimeAction implements Serializable {
 
     private final IResource resource;
-    private boolean harvested = false;
 
     /**
      * Instantiates with a resource to harvest.
@@ -20,18 +19,13 @@ public class HarvestAction implements IAction, Serializable {
      * @param resource What to harvest.
      */
     public HarvestAction(final IResource resource) {
+        super(resource.getHarvestTime());
         this.resource = resource;
     }
 
     @Override
-    public void perform(final IActionPerformer performer, final float deltaTime) {
+    protected void onPerformCompleted(final IActionPerformer performer) {
         performer.addItem(resource.harvest());
-        harvested = true;
-    }
-
-    @Override
-    public boolean isCompleted(final IActionPerformer performer) {
-        return harvested;
     }
 
     @Override
@@ -41,15 +35,16 @@ public class HarvestAction implements IAction, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(resource, harvested);
+        return Objects.hash(resource, getTimeSpentPerforming());
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HarvestAction)) return false;
-        final HarvestAction that = (HarvestAction) o;
-        return harvested == that.harvested && resource.equals(that.resource);
+    public boolean equals(final Object other) {
+        if (this == other) return true;
+        if (!(other instanceof HarvestAction)) return false;
+        final HarvestAction that = (HarvestAction) other;
+        return resource.equals(that.resource)
+               && getTimeSpentPerforming() == that.getTimeSpentPerforming();
     }
 
 }
