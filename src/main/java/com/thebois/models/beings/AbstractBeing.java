@@ -11,7 +11,7 @@ import com.thebois.models.inventory.items.IItem;
 /**
  * An independent agent that can act in the world according to its assigned role.
  */
-public abstract class AbstractBeing implements IBeing, IActionPerformer {
+public abstract class AbstractBeing implements IBeing, IActionPerformer, IReceiver {
 
     /**
      * The max speed of the being, in tiles/second.
@@ -78,8 +78,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     @Override
     public void update(final float deltaTime) {
-        role.obtainNextAction(this)
-            .perform(this);
+        role.obtainNextAction(this).perform(this);
         move(deltaTime);
     }
 
@@ -95,6 +94,11 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     @Override
     public void addItem(final IItem item) {
         inventory.tryAdd(item);
+    }
+
+    @Override
+    public boolean tryGiveItem(final IItem item) {
+        return inventory.tryAdd(item);
     }
 
     /**
