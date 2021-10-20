@@ -43,20 +43,19 @@ public abstract class AbstractBeing implements IBeing {
     /**
      * How much hunger the pawn should lose per second.
      */
-    private static final float HUNGER_FACTOR = 1f;
+    private static final float HUNGER_RATE = 1f;
     /**
      * How much health the pawn should gain or lose per second.
      */
-    private static final float HEALTH_FACTOR = 1f;
+    private static final float HEALTH_RATES = 1f;
     private final IPathFinder pathFinder;
     private final IInventory inventory = new Inventory(MAX_CARRYING_CAPACITY);
     private Stack<Position> path;
     private Position position;
     private AbstractRole role;
     private final IStructureFinder finder;
-    private float currentHunger;
-    private float currentHealth;
-    private boolean isAlive;
+    private float hunger = MAX_HUNGER;
+    private float health = MAX_HEALTH;
 
     /**
      * Creates an AbstractBeing with an initial position.
@@ -77,10 +76,6 @@ public abstract class AbstractBeing implements IBeing {
         this.finder = finder;
         setPath(pathFinder.path(startPosition, destination));
         Pawntastic.getEventBus().register(this);
-
-        currentHealth = MAX_HEALTH;
-        currentHunger = MAX_HUNGER;
-        isAlive = true;
     }
 
     /**
@@ -133,36 +128,29 @@ public abstract class AbstractBeing implements IBeing {
 
         updateHunger(deltaTime);
         updateHealth(deltaTime);
-        updateIsAlive();
-        if (isAlive) {
+        if (health > 0f) {
             move(deltaTime);
         }
     }
 
     @Override
     public float getHealthRatio() {
-        return currentHealth / MAX_HEALTH;
-    }
-
-    private void updateIsAlive() {
-        if (currentHealth <= 0f) {
-            isAlive = false;
-        }
+        return health / MAX_HEALTH;
     }
 
     private void updateHealth(final float deltaTime) {
-        final float changeHealthValue = HEALTH_FACTOR * deltaTime;
-        if (currentHunger <= 0) {
-            currentHealth = Math.max(currentHealth - changeHealthValue, 0);
+        final float changeHealthValue = HEALTH_RATES * deltaTime;
+        if (hunger <= 0) {
+            health = Math.max(health - changeHealthValue, 0);
         }
         else {
-            currentHealth = Math.min(currentHealth + changeHealthValue, MAX_HEALTH);
+            health = Math.min(health + changeHealthValue, MAX_HEALTH);
         }
     }
 
     private void updateHunger(final float deltaTime) {
-        final float changeHungerValue = HUNGER_FACTOR * deltaTime;
-        currentHunger = Math.max(currentHunger - changeHungerValue, 0f);
+        final float changeHungerValue = HUNGER_RATE * deltaTime;
+        hunger = Math.max(hunger - changeHungerValue, 0f);
     }
 
     /**
