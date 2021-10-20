@@ -20,6 +20,7 @@ import com.thebois.controllers.info.InfoController;
 import com.thebois.controllers.toolbar.ToolbarController;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
+import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
 import com.thebois.models.world.World;
 import com.thebois.models.world.structures.StructureFactory;
@@ -53,6 +54,7 @@ public class Pawntastic extends Game {
     // Model
     private World world;
     private Colony colony;
+    private IInventory inventory;
     // Screens
     private GameScreen gameScreen;
     // Controllers
@@ -117,7 +119,7 @@ public class Pawntastic extends Game {
 
         // Controllers
         this.worldController = new WorldController(world, colony, font);
-        this.infoController = new InfoController(world, colony, uiSkin);
+        this.infoController = new InfoController(inventory, colony, uiSkin);
         this.toolbarController = new ToolbarController(world, uiSkin, projector);
 
         // Screens
@@ -146,11 +148,12 @@ public class Pawntastic extends Game {
             loadModelsFromSaveFile();
         }
         catch (final IOException exception) {
-            StructureFactory.setInventory(new Inventory());
             world = new World(WORLD_SIZE, 0);
             colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS),
                                 new AstarPathFinder(world),
                                 world);
+            inventory = new Inventory();
+            StructureFactory.setInventory(inventory);
         }
     }
 

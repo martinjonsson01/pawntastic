@@ -8,9 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.thebois.controllers.IController;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.ItemType;
-import com.thebois.models.world.World;
-import com.thebois.models.world.structures.Stockpile;
-import com.thebois.models.world.structures.StructureType;
 import com.thebois.views.info.IActorView;
 import com.thebois.views.info.InventoryView;
 
@@ -20,18 +17,18 @@ import com.thebois.views.info.InventoryView;
 public class InventoryController implements IController<IActorView> {
 
     private final InventoryView inventoryView;
-    private final World world;
+    private final IInventory inventory;
     private Map<ItemType, Integer> itemCounts;
 
     /**
      * Instantiates the controller with the view and a colony reference.
      *
-     * @param world  The world to gather all stockpiles and compile the inventory item counts from.
-     * @param uiSkin The skin to style widgets with.
+     * @param inventory The inventory to get information from, e.g. item counts.
+     * @param uiSkin    The skin to style widgets with.
      */
-    public InventoryController(final World world, final Skin uiSkin) {
+    public InventoryController(final IInventory inventory, final Skin uiSkin) {
         this.inventoryView = new InventoryView(uiSkin);
-        this.world = world;
+        this.inventory = inventory;
         itemCounts = new HashMap<ItemType, Integer>();
     }
 
@@ -51,25 +48,10 @@ public class InventoryController implements IController<IActorView> {
 
     private Map<ItemType, Integer> createItemCounts() {
         final Map<ItemType, Integer> newItemCounts = new HashMap<ItemType, Integer>();
-        final Stockpile[] stockpiles = createStockpileArray();
-        for (final Stockpile stockpile : stockpiles) {
-            final IInventory inventory = stockpile.getInventory();
-            for (final ItemType itemType : ItemType.values()) {
-
-                newItemCounts.put(itemType, inventory.numberOf(itemType));
-            }
-            // Break with the current implementation because all stockpile inventories are the same.
-            // In the future where inventories are unique, only small changes are needed.
-            break;
+        for (final ItemType itemType : ItemType.values()) {
+            newItemCounts.put(itemType, inventory.numberOf(itemType));
         }
-
         return newItemCounts;
-    }
-
-    private Stockpile[] createStockpileArray() {
-        return world.getStructures().stream().filter(structure -> structure
-            .getType()
-            .equals(StructureType.STOCKPILE)).toArray(Stockpile[]::new);
     }
 
 }
