@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.lwjgl.system.CallbackI;
 import org.mockito.Mockito;
 
 import com.thebois.abstractions.IPositionFinder;
@@ -337,6 +338,7 @@ public class WorldTests {
 
         // Arrange
         final World world = new TestWorld(50);
+        world.tryCreateStructure(StructureType.TOWN_HALL, new Position());
         world.tryCreateStructure(StructureType.HOUSE, expectedPosition);
         world.tryCreateStructure(StructureType.HOUSE, incorrectPosition);
 
