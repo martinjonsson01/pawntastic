@@ -3,7 +3,10 @@ package com.thebois.models.beings.actions;
 import java.util.Objects;
 
 import com.thebois.models.Position;
+import com.thebois.models.beings.IGiver;
+import com.thebois.models.beings.IReceiver;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.IStructure;
 
@@ -63,6 +66,30 @@ public final class ActionFactory {
      */
     public static IAction createBuild(final IStructure toBuild) {
         return new BuildAction(toBuild);
+    }
+
+    /**
+     * Creates a give item task.
+     *
+     * @param receiver To where the items should be given.
+     * @param itemType What type of item to receive.
+     *
+     * @return The give item task.
+     */
+    public static IAction createGiveItem(final IReceiver receiver, final ItemType itemType) {
+        return new GiveItemAction(receiver, itemType);
+    }
+
+    /**
+     * Creates a take item task.
+     *
+     * @param giver    From where to items should be taken.
+     * @param itemType The type of item to take.
+     *
+     * @return The take item task.
+     */
+    public static IAction createTakeItem(final IGiver giver, final ItemType itemType) {
+        return new TakeItemAction(giver, itemType);
     }
 
 }
