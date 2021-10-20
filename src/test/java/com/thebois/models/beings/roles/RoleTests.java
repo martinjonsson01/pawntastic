@@ -44,7 +44,8 @@ public class RoleTests {
                                                      mock(IWorld.class)),
                                       new FisherRole(mock(IResourceFinder.class),
                                                      mock(IWorld.class))),
-                         Arguments.of(new BuilderRole(), new BuilderRole()),
+                         Arguments.of(new BuilderRole(structureFinder, structureType), new BuilderRole(
+                             structureFinder, structureType)),
                          Arguments.of(new IdleRole(mock(IWorld.class)),
                                       new IdleRole(mock(IWorld.class))));
     }
@@ -55,11 +56,12 @@ public class RoleTests {
         return Stream.of(Arguments.of(new LumberjackRole(resourceFinder, world), new FarmerRole()),
                          Arguments.of(new FarmerRole(), new LumberjackRole(resourceFinder, world)),
                          Arguments.of(new FisherRole(mock(IResourceFinder.class),
-                                                     mock(IWorld.class)), new BuilderRole()),
-                         Arguments.of(new BuilderRole(),
+                                                     mock(IWorld.class)), new BuilderRole(
+                             structureFinder, structureType)),
+                         Arguments.of(new BuilderRole(structureFinder, structureType),
                                       new FisherRole(mock(IResourceFinder.class),
                                                      mock(IWorld.class))),
-                         Arguments.of(new BuilderRole(), null));
+                         Arguments.of(new BuilderRole(structureFinder, structureType), null));
     }
 
     public static Stream<Arguments> getRoleAndNames() {

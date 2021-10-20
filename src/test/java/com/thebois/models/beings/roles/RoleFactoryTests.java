@@ -20,7 +20,8 @@ import static org.mockito.Mockito.*;
 public class RoleFactoryTests {
 
     public static Stream<Arguments> getRoleTypes() {
-        return Stream.of(Arguments.of(RoleType.BUILDER, new BuilderRole()),
+        return Stream.of(Arguments.of(RoleType.BUILDER, new BuilderRole(structureFinder,
+                                                                        structureType)),
                          Arguments.of(RoleType.FARMER, new FarmerRole()),
                          Arguments.of(RoleType.FISHER,
                                       new FisherRole(mock(IResourceFinder.class),
@@ -57,7 +58,7 @@ public class RoleFactoryTests {
         // Assert
         assertThat(roles).contains(new LumberjackRole(mock(IResourceFinder.class),
                                                       mock(IWorld.class)),
-                                   new BuilderRole(),
+                                   new BuilderRole(structureFinder, structureType),
                                    new FarmerRole(),
                                    new FisherRole(mock(IResourceFinder.class), mock(IWorld.class)),
                                    new MinerRole(mock(IResourceFinder.class), mock(IWorld.class)),
