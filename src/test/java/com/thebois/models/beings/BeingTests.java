@@ -710,22 +710,4 @@ public class BeingTests {
         assertThat(endHealthRatio).isEqualTo(expectedHealthRatio);
     }
 
-    @Test
-    public void beingDiesAfterLongTimePasses() {
-        // Arrange
-        final IBeing being = new Pawn(new Position(0, 0),
-                                      new Position(0, 0),
-                                      Mockito.mock(Random.class),
-                                      Mockito.mock(IPathFinder.class),
-                                      Mockito.mock(IStructureFinder.class));
-        final float timeToPass = 1000f;
-
-        // Act
-        being.update(timeToPass);
-        final boolean isAlive = being.isAlive();
-
-        //Assert
-        assertThat(isAlive).isFalse();
-    }
-
 }

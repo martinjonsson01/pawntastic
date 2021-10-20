@@ -140,11 +140,6 @@ public abstract class AbstractBeing implements IBeing {
     }
 
     @Override
-    public boolean isAlive() {
-        return isAlive;
-    }
-
-    @Override
     public float getHealthRatio() {
         return currentHealth / MAX_HEALTH;
     }

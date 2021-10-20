@@ -23,7 +23,7 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
     public void update(final float deltaTime) {
         final Collection<IBeing> deadBeings = new ArrayList<>();
         beings.forEach(being -> {
-            if (!being.isAlive()) {
+            if (being.getHealthRatio() == 0) {
                 deadBeings.add(being);
             }
             else {

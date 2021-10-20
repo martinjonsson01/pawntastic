@@ -272,7 +272,7 @@ public class ColonyTests {
     public void ensureAliveBeingsUpdatesWhenColonyUpdates() {
         // Arrange
         final IBeing being = Mockito.mock(IBeing.class);
-        when(being.isAlive()).then(returnValue -> true);
+        when(being.getHealthRatio()).then(returnValue -> 1f);
         final Colony colony = mockColony();
 
         colony.addBeing(being);
@@ -289,7 +289,7 @@ public class ColonyTests {
     public void beingGroupRemovesDeadBeings() {
         // Arrange
         final IBeing being = Mockito.mock(IBeing.class);
-        when(being.isAlive()).then(returnValue -> false);
+        when(being.getHealthRatio()).then(returnValue -> 0f);
         final Colony colony = mockColony();
 
         colony.addBeing(being);

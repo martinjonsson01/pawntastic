@@ -46,13 +46,6 @@ public interface IBeing extends Serializable {
     Iterable<Position> getPath();
 
     /**
-     * Returns true if the being is alive and false if it's dead.
-     *
-     * @return Whether the being is alive or not.
-     */
-    boolean isAlive();
-
-    /**
      * Gets the health ratio, where 0 is dead and 1 is full health.
      * <p>
      * The Health ratio is current health divided by max health.
