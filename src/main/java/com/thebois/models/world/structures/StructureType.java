@@ -9,7 +9,7 @@ public enum StructureType {
      */
     HOUSE,
     /**
-     * A piece of land designated to storing  items.
+     * A piece of land designated to storing items.
      */
     STOCKPILE
 }

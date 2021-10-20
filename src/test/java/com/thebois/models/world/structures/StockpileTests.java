@@ -1,5 +1,7 @@
 package com.thebois.models.world.structures;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.inventory.IInventory;
@@ -9,6 +11,17 @@ import com.thebois.models.inventory.items.ItemType;
 import static org.assertj.core.api.Assertions.*;
 
 public class StockpileTests {
+
+    @BeforeEach
+    public void setFactoryInventory(){
+        final Inventory sharedInventory = new Inventory();
+        StructureFactory.setInventory(sharedInventory);
+    }
+
+    @AfterEach
+    public void setFactoryInventoryToNull(){
+        StructureFactory.setInventory(null);
+    }
 
     @Test
     public void getCostIsHigh() {
@@ -68,8 +81,6 @@ public class StockpileTests {
         for (int i = 4; i < 8; i++){
             neededItems[i] = ItemType.ROCK;
         }
-
-
 
         // Act
         final ItemType[] stockpileNeededItems = stockpile.getNeededItems().toArray(new ItemType[8]);

@@ -44,8 +44,7 @@ public final class StructureFactory {
      *
      * @return The created structure
      */
-    public static IStructure createStructure(
-        final StructureType type, final int x, final int y) {
+    public static IStructure createStructure(final StructureType type, final int x, final int y) {
         return createStructure(type, new Position(x, y));
     }
 
