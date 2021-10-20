@@ -1,7 +1,5 @@
 package com.thebois.models.world.structures;
 
-import java.util.Collection;
-
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.inventory.IInventory;
