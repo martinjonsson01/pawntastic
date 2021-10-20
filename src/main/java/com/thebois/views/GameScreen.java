@@ -60,11 +60,7 @@ public class GameScreen implements Screen {
 
         final Table infoAndGameTable = new Table();
         infoAndGameTable.setFillParent(true);
-        infoAndGameTable
-            .add(infoView.getWidgetContainer())
-            .fillY()
-            .expandY()
-            .width(INFO_PANEL_WIDTH);
+        infoAndGameTable.add(infoView.getWidgetContainer()).fill().expand();
         infoAndGameTable.add(gameAndToolbarContainer).top().left().expandY().fillY();
         // Add to stage
         stage.addActor(infoAndGameTable);
