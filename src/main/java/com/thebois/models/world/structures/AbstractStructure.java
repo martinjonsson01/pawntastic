@@ -65,14 +65,13 @@ abstract class AbstractStructure implements IStructure {
 
     private int countAllNeededItems() {
         return allNeededItems.values().stream().reduce(0, Integer::sum);
-
     }
 
     @Override
     public boolean tryDeliverItem(final IItem deliveredItem) {
         final Collection<ItemType> neededItems = getNeededItems();
         if (neededItems.contains(deliveredItem.getType())) {
-            deliveredItems.add(deliveredItem);
+            return deliveredItems.tryAdd(deliveredItem);
             if (isCompleted()) {
                 postSpawnPawnsEvent(getPosition());
             }

@@ -6,10 +6,17 @@ package com.thebois.models.inventory.items;
 public interface IItem {
 
     /**
-     * Returns the speceifc type of item.
+     * Returns the specific type of item.
      *
-     * @return The item type
+     * @return The item type.
      */
     ItemType getType();
+
+    /**
+     * Gets the mass, described in kilograms.
+     *
+     * @return The mass in kilograms.
+     */
+    float getWeight();
 
 }
