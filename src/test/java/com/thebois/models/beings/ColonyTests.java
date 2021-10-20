@@ -2,13 +2,19 @@ package com.thebois.models.beings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.provider.Arguments;
 import org.mockito.Mockito;
 
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
-import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.terrains.Grass;
 
@@ -16,6 +22,24 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ColonyTests {
+
+    public static Stream<Arguments> getItemTypes() {
+        return Stream.of(Arguments.of(ItemType.LOG), Arguments.of(ItemType.ROCK));
+    }
+
+    @BeforeEach
+    public void setup() {
+        RoleFactory.setWorld(mock(IWorld.class));
+        RoleFactory.setResourceFinder(mock(IResourceFinder.class));
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
+    }
+
+    @AfterEach
+    public void teardown() {
+        RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
+    }
 
     @Test
     public void constructWithTilesCreatesOneBeingPerPosition() {
@@ -28,12 +52,8 @@ public class ColonyTests {
         final IWorld mockWorld = mock(IWorld.class);
         when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
 
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-
-        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
-
         // Act
-        final Colony colony = new Colony(positions, pathFinder, structureFinder);
+        final Colony colony = new Colony(positions);
 
         // Assert
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);
@@ -41,9 +61,7 @@ public class ColonyTests {
 
     private Colony mockColony() {
         final List<Position> positions = new ArrayList<>();
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
-        return new Colony(positions, pathFinder, structureFinder);
+        return new Colony(positions);
     }
 
     @Test

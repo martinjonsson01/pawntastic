@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
-import com.thebois.models.beings.pathfinding.IPathFinder;
-import com.thebois.models.world.World;
+import com.thebois.models.world.IWorld;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class RoleAllocatorTests {
 
@@ -37,9 +39,21 @@ public class RoleAllocatorTests {
         for (int i = 0; i < beingCount; i++) {
             vacantPositions.add(new Position(0, 0));
         }
-        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
-        return new Colony(vacantPositions, pathFinder, structureFinder);
+        return new Colony(vacantPositions);
+    }
+
+    @BeforeEach
+    public void setup() {
+        RoleFactory.setWorld(mock(IWorld.class));
+        RoleFactory.setResourceFinder(mock(IResourceFinder.class));
+        RoleFactory.setStructureFinder(mock(IStructureFinder.class));
+    }
+
+    @AfterEach
+    public void teardown() {
+        RoleFactory.setWorld(null);
+        RoleFactory.setResourceFinder(null);
+        RoleFactory.setStructureFinder(null);
     }
 
     @Test
