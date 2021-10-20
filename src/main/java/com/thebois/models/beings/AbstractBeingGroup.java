@@ -21,16 +21,16 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
 
     @Override
     public void update(final float deltaTime) {
-        final Collection<IBeing> beingsToRemove = new ArrayList<>();
-        for (final IBeing being : this.beings) {
+        final Collection<IBeing> deadBeings = new ArrayList<>();
+        beings.forEach(being -> {
             if (!being.isAlive()) {
-                beingsToRemove.add(being);
+                deadBeings.add(being);
             }
             else {
                 being.update(deltaTime);
             }
-        }
-        beings.removeAll(beingsToRemove);
+        });
+        beings.removeAll(deadBeings);
     }
 
     @Override
