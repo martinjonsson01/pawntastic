@@ -37,7 +37,7 @@ public class Pawntastic extends Game {
     private static final boolean DEBUG = false;
     private static final int WORLD_SIZE = 50;
     /* These two decide the aspect ratio that will be preserved. */
-    private static final float VIEWPORT_WIDTH = 1300;
+    private static final float VIEWPORT_WIDTH = 1200;
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int PAWN_POSITIONS = 50;
@@ -151,6 +151,15 @@ public class Pawntastic extends Game {
         }
     }
 
+    private void initInputProcessors() {
+        final InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(gameScreen.getInputProcessor());
+        for (final InputProcessor inputProcessor : toolbarController.getInputProcessors()) {
+            multiplexer.addProcessor(inputProcessor);
+        }
+        Gdx.input.setInputProcessor(multiplexer);
+    }
+
     private void generateFont() {
         final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(
             "fonts/arial.ttf"));
@@ -201,15 +210,6 @@ public class Pawntastic extends Game {
         colony.update(Gdx.graphics.getDeltaTime());
         worldController.update();
         infoController.update();
-    }
-
-    private void initInputProcessors() {
-        final InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(gameScreen.getInputProcessor());
-        for (final InputProcessor inputProcessor : toolbarController.getInputProcessors()) {
-            multiplexer.addProcessor(inputProcessor);
-        }
-        Gdx.input.setInputProcessor(multiplexer);
     }
 
 }
