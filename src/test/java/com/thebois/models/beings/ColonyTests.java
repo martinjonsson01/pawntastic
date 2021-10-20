@@ -10,6 +10,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.Pawntastic;
+import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
@@ -289,14 +291,13 @@ public class ColonyTests {
     public void beingGroupRemovesDeadBeings() {
         // Arrange
         final IBeing being = Mockito.mock(IBeing.class);
-        when(being.getHealthRatio()).then(returnValue -> 0f);
         final Colony colony = mockColony();
-
         colony.addBeing(being);
-        final float deltaTime = 0.1f;
         final int expectedAmountOfBeings = 0;
+        final float deltaTime = 0.1f;
 
         // Act
+        Pawntastic.getEventBus().post(new OnDeathEvent(being));
         colony.update(deltaTime);
         final int actualAmountOfBeings = colony.getBeings().size();
 

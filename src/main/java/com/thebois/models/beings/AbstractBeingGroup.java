@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import com.google.common.eventbus.Subscribe;
 
+import com.thebois.Pawntastic;
 import com.thebois.listeners.events.OnDeathEvent;
 
 /**
@@ -13,6 +14,11 @@ import com.thebois.listeners.events.OnDeathEvent;
 public abstract class AbstractBeingGroup implements IBeingGroup {
 
     private Collection<IBeing> beings = new ArrayList<>();
+    private Collection<IBeing> deadBeings = new ArrayList<>();
+
+    protected AbstractBeingGroup() {
+        Pawntastic.getEventBus().register(this);
+    }
 
     /**
      * Adds a being to the internal collection of beings.
@@ -25,16 +31,9 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
 
     @Override
     public void update(final float deltaTime) {
-        final Collection<IBeing> deadBeings = new ArrayList<>();
-        beings.forEach(being -> {
-            if (being.getHealthRatio() == 0) {
-                deadBeings.add(being);
-            }
-            else {
-                being.update(deltaTime);
-            }
-        });
         beings.removeAll(deadBeings);
+        deadBeings = new ArrayList<>();
+        beings.forEach(being -> being.update(deltaTime));
     }
 
     @Override
@@ -45,14 +44,14 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
     }
 
     /**
-     * Listens to the OnDeathEvent in order to remove dead beings.
+     * Listens to the OnDeathEvent in order to remove dead beings from the colony.
      *
      * @param event The published event.
      */
     @Subscribe
     public void onDeathEvent(final OnDeathEvent event) {
         final IBeing deadBeing = event.getDeadBeing();
-        beings.remove(deadBeing);
+        deadBeings.add(deadBeing);
     }
 
     protected void setBeings(final Collection<IBeing> beings) {

@@ -44,11 +44,11 @@ public abstract class AbstractBeing implements IBeing {
     /**
      * How much hunger the pawn should lose per second.
      */
-    private static final float HUNGER_RATE = 25f;
+    private static final float HUNGER_RATE = 1f;
     /**
      * How much health the pawn should gain or lose per second.
      */
-    private static final float HEALTH_RATES = 25f;
+    private static final float HEALTH_RATES = 1f;
     private final IPathFinder pathFinder;
     private final IInventory inventory = new Inventory(MAX_CARRYING_CAPACITY);
     private Stack<Position> path;

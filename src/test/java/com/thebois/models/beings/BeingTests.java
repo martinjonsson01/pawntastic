@@ -680,15 +680,17 @@ public class BeingTests {
                                       Mockito.mock(Random.class),
                                       Mockito.mock(IPathFinder.class),
                                       Mockito.mock(IStructureFinder.class));
-        final float timeToPass = 150f;
+        final float timeToPass = 50f;
         final float startHealthRatio = being.getHealthRatio();
 
         // Act
         being.update(timeToPass);
+        // Calling method in order for pawn to not insta die.
+        being.update(timeToPass);
         final float endHealthRatio = being.getHealthRatio();
 
         //Assert
-        assertThat(endHealthRatio).isLessThan(startHealthRatio);
+        assertThat(endHealthRatio).isLessThan(startHealthRatio).isGreaterThan(0);
     }
 
     @Test
