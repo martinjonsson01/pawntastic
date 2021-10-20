@@ -54,7 +54,7 @@ public class Pawntastic extends Game {
     // Model
     private World world;
     private Colony colony;
-    private IInventory inventory;
+    private IInventory playerInventory;
     // Screens
     private GameScreen gameScreen;
     // Controllers
@@ -119,7 +119,7 @@ public class Pawntastic extends Game {
 
         // Controllers
         this.worldController = new WorldController(world, colony, font);
-        this.infoController = new InfoController(inventory, colony, uiSkin);
+        this.infoController = new InfoController(playerInventory, colony, uiSkin);
         this.toolbarController = new ToolbarController(world, uiSkin, projector);
 
         // Screens
@@ -152,8 +152,8 @@ public class Pawntastic extends Game {
             colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS),
                                 new AstarPathFinder(world),
                                 world);
-            inventory = new Inventory();
-            StructureFactory.setInventory(inventory);
+            playerInventory = new Inventory();
+            StructureFactory.setInventory(playerInventory);
         }
     }
 
@@ -177,7 +177,7 @@ public class Pawntastic extends Game {
         final LoadSystem loadSystem = new LoadSystem();
         world = (World) loadSystem.read();
         colony = (Colony) loadSystem.read();
-        inventory = (IInventory) loadSystem.read();
+        playerInventory = (IInventory) loadSystem.read();
         loadSystem.dispose();
     }
 
@@ -199,7 +199,7 @@ public class Pawntastic extends Game {
         final SaveSystem saveSystem = new SaveSystem();
         saveSystem.save(world);
         saveSystem.save(colony);
-        saveSystem.save(inventory);
+        saveSystem.save(playerInventory);
         saveSystem.dispose();
     }
 
