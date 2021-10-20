@@ -24,7 +24,10 @@ import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.Inventory;
 import com.thebois.models.world.World;
+import com.thebois.models.world.structures.StructureFactory;
 import com.thebois.persistence.LoadSystem;
 import com.thebois.persistence.SaveSystem;
 import com.thebois.views.GameScreen;
@@ -41,7 +44,7 @@ public class Pawntastic extends Game {
     private static final boolean DEBUG = false;
     private static final int WORLD_SIZE = 50;
     /* These two decide the aspect ratio that will be preserved. */
-    private static final float VIEWPORT_WIDTH = 1300;
+    private static final float VIEWPORT_WIDTH = 1200;
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int PAWN_POSITIONS = 50;
@@ -55,6 +58,7 @@ public class Pawntastic extends Game {
     // Model
     private World world;
     private Colony colony;
+    private IInventory playerInventory;
     // Screens
     private GameScreen gameScreen;
     // Controllers
@@ -81,9 +85,9 @@ public class Pawntastic extends Game {
     }
 
     /**
-     * Whether or not the game is run in debug mode or not.
+     * Whether the game is run in debug mode or not.
      *
-     * @return Whether or not the game is running in debug mode.
+     * @return Whether the game is running in debug mode.
      */
     public static boolean isDebugEnabled() {
         return DEBUG;
@@ -119,7 +123,7 @@ public class Pawntastic extends Game {
 
         // Controllers
         this.worldController = new WorldController(world, colony, font);
-        this.infoController = new InfoController(colony, uiSkin);
+        this.infoController = new InfoController(playerInventory, colony, uiSkin);
         this.toolbarController = new ToolbarController(world, uiSkin, projector);
 
         // Screens
@@ -159,6 +163,9 @@ public class Pawntastic extends Game {
             ActionFactory.setPathFinder(pathFinder);
 
             colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS));
+
+            playerInventory = new Inventory();
+            StructureFactory.setInventory(playerInventory);
         }
     }
 
@@ -190,12 +197,14 @@ public class Pawntastic extends Game {
 
     private void loadModelsFromSaveFile() throws IOException, ClassNotFoundException {
         final LoadSystem loadSystem = new LoadSystem();
-        world = loadSystem.loadWorld();
-        colony = loadSystem.loadColony();
+        world = (World) loadSystem.read();
+        colony = (Colony) loadSystem.read();
+        playerInventory = (IInventory) loadSystem.read();
 
         RoleFactory.setWorld(world);
         RoleFactory.setResourceFinder(world);
         RoleFactory.setStructureFinder(world);
+        StructureFactory.setInventory(playerInventory);
 
         final IPathFinder pathFinder = new AstarPathFinder(world);
         ActionFactory.setPathFinder(pathFinder);
@@ -221,6 +230,7 @@ public class Pawntastic extends Game {
         final SaveSystem saveSystem = new SaveSystem();
         saveSystem.save(world);
         saveSystem.save(colony);
+        saveSystem.save(playerInventory);
         saveSystem.dispose();
     }
 
