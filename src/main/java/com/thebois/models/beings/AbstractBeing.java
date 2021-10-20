@@ -78,8 +78,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     @Override
     public void update(final float deltaTime) {
-        role.obtainNextAction(this)
-            .perform(this, 0.1f);
+        role.obtainNextAction(this).perform(this, deltaTime);
         move(deltaTime);
     }
 
