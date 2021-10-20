@@ -22,6 +22,7 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.IWorld;
 import com.thebois.testutils.InMemorySerialize;
 import com.thebois.testutils.MockFactory;
@@ -129,6 +130,16 @@ public class BeingTests {
         final Position actualPosition = being.getPosition();
         final float distanceToDestinationAfter = actualPosition.distanceTo(being.getDestination());
         assertThat(distanceToDestinationAfter).isLessThan(distanceToDestinationBefore);
+    }
+
+    @Test
+    public void addItemDoesNotThrow() {
+        // Arrange
+        final IActionPerformer being = createBeing();
+        final IItem item = mock(IItem.class);
+
+        // Act
+        being.addItem(item);
     }
 
     @ParameterizedTest
