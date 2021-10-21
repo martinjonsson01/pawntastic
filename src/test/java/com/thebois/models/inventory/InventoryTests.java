@@ -308,12 +308,39 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.addMultiple(List.of(
-            ItemFactory.fromType(ItemType.LOG),
-            ItemFactory.fromType(ItemType.LOG)));
+        inventory.addMultiple(List.of(ItemFactory.fromType(ItemType.LOG),
+                                      ItemFactory.fromType(ItemType.LOG)));
 
         // Assert
         assertThat(inventory.hasItem(ItemType.LOG, 2)).isTrue();
+    }
+
+    @Test
+    public void ItemDoesNotFitIfItemIsHeavierThanMaxCapacity() {
+        //Arrange
+        final ItemType itemType = ItemType.ROCK;
+        final float maxCapacity = itemType.getWeight() - 1;
+        final Inventory inventory = new Inventory(maxCapacity);
+
+        // Act
+        final boolean doesItemFit = inventory.canFitItem(itemType);
+
+        // Assert
+        assertThat(doesItemFit).isFalse();
+    }
+
+    @Test
+    public void ItemDoesFitIfInventoryHasLargerCapacityThenItem() {
+        //Arrange
+        final ItemType itemType = ItemType.ROCK;
+        final float maxCapacity = itemType.getWeight() + 1;
+        final Inventory inventory = new Inventory(maxCapacity);
+
+        // Act
+        final boolean doesItemFit = inventory.canFitItem(itemType);
+
+        // Assert
+        assertThat(doesItemFit).isTrue();
     }
 
 }
