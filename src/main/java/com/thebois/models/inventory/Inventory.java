@@ -127,6 +127,11 @@ public class Inventory implements IInventory {
     @Override
     public boolean canFitItem(final ItemType itemType) {
         final IItem item = ItemFactory.fromType(itemType);
+        return canFitItem(item);
+    }
+
+    @Override
+    public boolean canFitItem(final IItem item) {
         final float weight = calculateTotalWeight();
         return !isAboveCapacity(item.getWeight() + weight);
     }

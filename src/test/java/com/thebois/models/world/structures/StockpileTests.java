@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
+import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.Assertions.*;
@@ -93,6 +94,8 @@ public class StockpileTests {
     @Test
     public void stockpileDelegatesToInventoryForCanItemFitMethod() {
         // Arrange
+        final IItem item = mock(IItem.class);
+        when(item.getType()).thenReturn(ItemType.ROCK);
         final IInventory inventory = mock(Inventory.class);
         StructureFactory.setInventory(inventory);
         final IStructure stockpile = StructureFactory.createStructure(StructureType.STOCKPILE,
@@ -100,10 +103,10 @@ public class StockpileTests {
                                                                       0);
 
         // Act
-        stockpile.canFitItem(any());
+        stockpile.canFitItem(item.getType());
 
         // Assert
-        verify(inventory, times(1)).canFitItem(any());
+        verify(inventory, times(1)).canFitItem(item.getType());
     }
 
     @Test
