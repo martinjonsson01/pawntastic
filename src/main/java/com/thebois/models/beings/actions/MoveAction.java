@@ -22,6 +22,11 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
  */
 class MoveAction implements IAction, Serializable {
 
+    /**
+     * The minimum distance the performer has to be from the start of the path for it not to be
+     * recalculated.
+     */
+    private static final float MINIMUM_DISTANCE_TO_START = 2f;
     private final Position destination;
     private final IPathFinder pathFinder;
     private final IEventBusSource eventBusSource;
@@ -31,9 +36,9 @@ class MoveAction implements IAction, Serializable {
     /**
      * Instantiates with a destination to move towards.
      *
-     * @param destination The goal to move to.
-     * @param pathFinder  A way of generating paths to positions.
-     * @param eventBusSource    The eventbus to listen to.
+     * @param destination    The goal to move to.
+     * @param pathFinder     A way of generating paths to positions.
+     * @param eventBusSource The eventbus to listen to.
      */
     MoveAction(
         final Position destination,
@@ -67,7 +72,7 @@ class MoveAction implements IAction, Serializable {
         if (isCompleted(performer)) return;
 
         final Position position = performer.getPosition();
-        if (path.isEmpty()) {
+        if (needsNewPath(position)) {
             calculatePathFrom(position);
             if (path.isEmpty()) {
                 canReachDestination = false;
@@ -83,6 +88,25 @@ class MoveAction implements IAction, Serializable {
         performer.setDestination(path.element());
     }
 
+    private boolean needsNewPath(final Position position) {
+        return path.isEmpty() || !isNearStartOfPath(position);
+    }
+
+    private void calculatePathFrom(final Position start) {
+        final Collection<Position> newPath = pathFinder.path(start, destination);
+        setPath(newPath);
+    }
+
+    private boolean isNearStartOfPath(final Position current) {
+        final Position start = path.getFirst();
+        return current.distanceTo(start) < MINIMUM_DISTANCE_TO_START;
+    }
+
+    private void setPath(final Collection<Position> path) {
+        this.path = new LinkedList<>();
+        this.path.addAll(path);
+    }
+
     @Override
     public boolean isCompleted(final IActionPerformer performer) {
         return performer.getPosition().equals(destination);
@@ -91,16 +115,6 @@ class MoveAction implements IAction, Serializable {
     @Override
     public boolean canPerform(final IActionPerformer performer) {
         return canReachDestination;
-    }
-
-    private void calculatePathFrom(final Position start) {
-        final Collection<Position> newPath = pathFinder.path(start, destination);
-        setPath(newPath);
-    }
-
-    private void setPath(final Collection<Position> path) {
-        this.path = new LinkedList<>();
-        this.path.addAll(path);
     }
 
     /**

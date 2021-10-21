@@ -208,6 +208,26 @@ public class MoveActionTests {
     }
 
     @Test
+    public void pathIsRecalculatedFromCurrentPositionWhenPerformerNotNearStartOfPath() {
+        // Arrange
+        when(performer.getPosition()).thenReturn(start);
+        when(pathFinder.path(any(), any())).thenReturn(workingPath);
+
+        // Calculate initial path.
+        action.perform(performer);
+
+        // Simulate performer moving away from start of path.
+        final Position farAwayFromStart = start.add(10, 10);
+        when(performer.getPosition()).thenReturn(farAwayFromStart);
+
+        // Act
+        action.perform(performer);
+
+        // Assert
+        verify(pathFinder, times(1)).path(eq(farAwayFromStart), eq(end));
+    }
+
+    @Test
     public void pathIsNotRecalculatedWhenObstacleIsPlacedAndThereIsNoPath() {
         // Arrange
         when(performer.getPosition()).thenReturn(start);
