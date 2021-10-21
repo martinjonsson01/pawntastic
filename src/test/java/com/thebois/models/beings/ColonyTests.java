@@ -1,13 +1,12 @@
 package com.thebois.models.beings;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.provider.Arguments;
 import org.mockito.Mockito;
 
 import com.thebois.Pawntastic;
@@ -16,9 +15,9 @@ import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
-import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.terrains.Grass;
+import com.thebois.testutils.InMemorySerialize;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -95,6 +94,21 @@ public class ColonyTests {
 
         // Assert
         assertThat(actualAmountOfBeings).isEqualTo(expectedAmountOfBeings);
+    }
+
+    @Test
+    public void sameObjectAfterDeserialization() throws ClassNotFoundException, IOException {
+        // Arrange
+        final AbstractBeingGroup colony = mock(Colony.class);
+        final OnDeathEvent deathEvent = new OnDeathEvent(mock(IBeing.class));
+        //Act
+        final byte[] serializedColony = InMemorySerialize.serialize(colony);
+        final AbstractBeingGroup deserializedColony =
+            (AbstractBeingGroup) InMemorySerialize.deserialize(serializedColony);
+        Pawntastic.getEventBus().post(deathEvent);
+
+        // Assert
+        verify(deserializedColony, times(1)).onDeathEvent(deathEvent);
     }
 
 }

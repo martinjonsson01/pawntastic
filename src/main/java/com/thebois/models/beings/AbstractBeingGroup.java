@@ -1,5 +1,9 @@
 package com.thebois.models.beings;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -11,7 +15,7 @@ import com.thebois.listeners.events.OnDeathEvent;
 /**
  * An abstract implementation of IBeingGroup.
  */
-public abstract class AbstractBeingGroup implements IBeingGroup {
+public abstract class AbstractBeingGroup implements IBeingGroup, Serializable {
 
     private Collection<IBeing> beings = new ArrayList<>();
     private Collection<IBeing> deadBeings = new ArrayList<>();
@@ -56,6 +60,15 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
 
     protected void setBeings(final Collection<IBeing> beings) {
         this.beings = beings;
+    }
+
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        // Registers every time on deserialization because it might be registered to an old instance
+        // of the event bus.
+        // (caused by saving/loading).
+        Pawntastic.getEventBus().register(this);
+        in.defaultReadObject();
     }
 
 }
