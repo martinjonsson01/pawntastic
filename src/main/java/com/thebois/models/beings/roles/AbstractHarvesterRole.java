@@ -52,7 +52,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         return List.of(this::createMoveToResource,
                        this::createHarvestResource,
                        this::createMoveToStockpile,
-                       this::createEmptyInventory);
+                       this::createEmptyInventoryOfResource);
     }
 
     private IAction createMoveToResource(final IActionPerformer performer) {
@@ -96,7 +96,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         return ActionFactory.createMoveTo(closestSpotNextToStructure.get());
     }
 
-    private IAction createEmptyInventory(final IActionPerformer performer) {
+    private IAction createEmptyInventoryOfResource(final IActionPerformer performer) {
         final Position position = performer.getPosition();
         final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(
             position,
