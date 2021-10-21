@@ -11,6 +11,7 @@ import com.thebois.models.beings.IActionPerformer;
  * fly depending on current conditions.
  * </p>
  */
+@FunctionalInterface
 public interface IActionSource extends Serializable {
 
     /**

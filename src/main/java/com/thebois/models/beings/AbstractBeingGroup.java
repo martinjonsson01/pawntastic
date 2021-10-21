@@ -8,7 +8,7 @@ import java.util.Collection;
 
 import com.google.common.eventbus.Subscribe;
 
-import com.thebois.Pawntastic;
+import com.thebois.listeners.IEventBusSource;
 import com.thebois.listeners.events.OnDeathEvent;
 
 /**
@@ -16,11 +16,13 @@ import com.thebois.listeners.events.OnDeathEvent;
  */
 public abstract class AbstractBeingGroup implements IBeingGroup {
 
+    private final IEventBusSource eventBusSource;
     private Collection<IBeing> beings = new ArrayList<>();
     private Collection<IBeing> deadBeings = new ArrayList<>();
 
-    protected AbstractBeingGroup() {
-        Pawntastic.getEventBus().register(this);
+    protected AbstractBeingGroup(final IEventBusSource eventBusSource) {
+        this.eventBusSource = eventBusSource;
+        eventBusSource.getEventBus().register(this);
     }
 
     /**
@@ -46,6 +48,10 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
         return clonedBeings;
     }
 
+    protected void setBeings(final Collection<IBeing> beings) {
+        this.beings = beings;
+    }
+
     /**
      * Listens to the OnDeathEvent in order to remove dead beings from the colony.
      *
@@ -57,17 +63,13 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
         deadBeings.add(deadBeing);
     }
 
-    protected void setBeings(final Collection<IBeing> beings) {
-        this.beings = beings;
-    }
-
     @Serial
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
         // Registers every time on deserialization because it might be registered to an old instance
         // of the event bus.
         // (caused by saving/loading).
-        Pawntastic.getEventBus().register(this);
-        in.defaultReadObject();
+        eventBusSource.getEventBus().register(this);
     }
 
 }

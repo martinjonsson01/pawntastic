@@ -13,17 +13,9 @@ public enum RoleType {
      */
     BUILDER,
     /**
-     * Harvests crops.
-     */
-    FARMER,
-    /**
      * Catches fish.
      */
     FISHER,
-    /**
-     * Defends from attacks.
-     */
-    GUARD,
     /**
      * Chops down trees.
      */

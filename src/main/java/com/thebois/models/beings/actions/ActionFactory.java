@@ -2,6 +2,7 @@ package com.thebois.models.beings.actions;
 
 import java.util.Objects;
 
+import com.thebois.Pawntastic;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.resources.IResource;
@@ -31,7 +32,8 @@ public final class ActionFactory {
     public static IAction createMoveTo(final Position destination) {
         Objects.requireNonNull(pathFinder,
                                "PathFinder needs to be set before calling factory methods.");
-        return new MoveAction(destination, pathFinder);
+
+        return new MoveAction(destination, pathFinder, Pawntastic::getEventBus);
     }
 
     /**

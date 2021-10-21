@@ -37,7 +37,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     /**
      * How much hunger the pawn should lose per second.
      */
-    private static final float HUNGER_RATE = 50f;
+    private static final float HUNGER_RATE = 1f;
     /**
      * How much health the pawn should gain or lose per second.
      */
