@@ -41,14 +41,24 @@ public class PlaceStructureController extends AbstractInputProcessor
         this.projector = projector;
 
         structureToolbarView = new BuildMenuToolbarView(skin, this);
+        updateStructureToolbarView();
     }
 
     @Override
     public boolean touchDown(final int x, final int y, final int pointer, final int button) {
         boolean successful = false;
         if (button == LEFT_CLICK) {
+            if (!world.isTownHallPlaced()) {
+                selectedStructure = StructureType.TOWN_HALL;
+            }
             successful = tryPlaceStructure(x, y);
+
+            if (world.isTownHallPlaced() && selectedStructure.equals(StructureType.TOWN_HALL)) {
+                selectedStructure = StructureType.HOUSE;
+            }
         }
+
+        updateStructureToolbarView();
         return successful;
     }
 
@@ -83,6 +93,10 @@ public class PlaceStructureController extends AbstractInputProcessor
 
     @Override
     public void update() {
+        updateStructureToolbarView();
+    }
+
+    private void updateStructureToolbarView() {
         structureToolbarView.setButtonsActive(!world.isTownHallPlaced());
     }
 
