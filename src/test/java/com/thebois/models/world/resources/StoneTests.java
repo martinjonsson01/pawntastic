@@ -22,7 +22,7 @@ public class StoneTests {
     }
 
     @Test
-    public void getTypeFromRockResource() {
+    public void getTypeFromStoneResource() {
         // Arrange
         final Stone stone = new Stone(1, 1);
 

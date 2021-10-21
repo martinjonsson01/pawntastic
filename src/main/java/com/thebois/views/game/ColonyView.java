@@ -65,11 +65,18 @@ public class ColonyView implements IView {
                 final float x = pawn.getPosition().getX() * Pawntastic.getTileSize();
                 final float y = pawn.getPosition().getY() * Pawntastic.getTileSize();
 
-                batch.setColor(ROLE_COLORS.get(pawn.getRole().getType()));
+                batch.setColor(getPawnColor(pawn));
 
                 batch.draw(beingTexture, offsetX + x, offsetY + y, radius * 2, radius * 2);
             }
         }
+    }
+
+    private Color getPawnColor(final IBeing pawn) {
+        final Color deathColor = Color.valueOf("#FF0000");
+        final Color pawnColor = ROLE_COLORS.get(pawn.getRole().getType());
+
+        return deathColor.lerp(pawnColor, pawn.getHealthRatio());
     }
 
     @Override

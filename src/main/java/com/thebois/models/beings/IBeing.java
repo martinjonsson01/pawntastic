@@ -45,4 +45,11 @@ public interface IBeing extends Serializable {
      */
     Position getDestination();
 
+    /**
+     * Gets the health ratio, where 0 is dead and 1 is full health.
+     *
+     * @return The current ratio a number between 1 and 0.
+     */
+    float getHealthRatio();
+
 }

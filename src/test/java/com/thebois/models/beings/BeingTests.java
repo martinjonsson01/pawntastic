@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
@@ -299,7 +300,7 @@ public class BeingTests {
     public void addBeingIncreasesBeingCount() {
         // Arrange
         final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
-        final AbstractBeingGroup colony = new Colony(vacantPositions);
+        final AbstractBeingGroup colony = new Colony(vacantPositions, Pawntastic::getEventBus);
 
         final IBeing being = createBeing();
 
@@ -324,6 +325,38 @@ public class BeingTests {
 
         // Assert
         assertThat(being).isEqualTo(deserializedBeing);
+    }
+
+    @Test
+    public void beingsLosesHealthWhenTimePasses() {
+        // Arrange
+        final IBeing being = createBeing();
+        final float timeToPass = 50f;
+        final float startHealthRatio = being.getHealthRatio();
+
+        // Act
+        being.update(timeToPass);
+        // Calling method in order for pawn to not insta die.
+        being.update(timeToPass);
+        final float endHealthRatio = being.getHealthRatio();
+
+        //Assert
+        assertThat(endHealthRatio).isLessThan(startHealthRatio).isGreaterThan(0);
+    }
+
+    @Test
+    public void beingHealthRatioIsZeroAfterLongTimePasses() {
+        // Arrange
+        final IBeing being = createBeing();
+        final float timeToPass = 1000f;
+        final float expectedHealthRatio = 0;
+
+        // Act
+        being.update(timeToPass);
+        final float endHealthRatio = being.getHealthRatio();
+
+        //Assert
+        assertThat(endHealthRatio).isEqualTo(expectedHealthRatio);
     }
 
     /**
