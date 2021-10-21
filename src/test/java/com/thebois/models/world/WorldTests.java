@@ -16,6 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
@@ -450,7 +451,7 @@ public class WorldTests {
         for (int i = 0; i < 5; i++) {
             vacantPositions.add(new Position(0, 0));
         }
-        return new Colony(vacantPositions);
+        return new Colony(vacantPositions, Pawntastic::getEventBus);
     }
 
     @Test

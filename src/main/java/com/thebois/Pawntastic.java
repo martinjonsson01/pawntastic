@@ -93,15 +93,6 @@ public class Pawntastic extends Game {
         return DEBUG;
     }
 
-    /**
-     * Gets the global event bus that most events pass through.
-     *
-     * @return The event bus.
-     */
-    public static EventBus getEventBus() {
-        return BUS;
-    }
-
     @Override
     public void create() {
 
@@ -127,12 +118,11 @@ public class Pawntastic extends Game {
         this.toolbarController = new ToolbarController(world, uiSkin, projector);
 
         // Screens
-        gameScreen = new GameScreen(
-            viewport,
-            camera,
-            worldController.getView(),
-            infoController.getView(),
-            toolbarController.getView());
+        gameScreen = new GameScreen(viewport,
+                                    camera,
+                                    worldController.getView(),
+                                    infoController.getView(),
+                                    toolbarController.getView());
         this.setScreen(gameScreen);
         // Set up Input Processors
         initInputProcessors();
@@ -162,7 +152,7 @@ public class Pawntastic extends Game {
             final IPathFinder pathFinder = new AstarPathFinder(world);
             ActionFactory.setPathFinder(pathFinder);
 
-            colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS));
+            colony = new Colony(world.findEmptyPositions(PAWN_POSITIONS), Pawntastic::getEventBus);
 
             playerInventory = new Inventory();
             StructureFactory.setInventory(playerInventory);
@@ -189,9 +179,9 @@ public class Pawntastic extends Game {
         generator.scaleForPixelHeight(DEFAULT_FONT_SIZE);
         font = generator.generateFont(parameter);
         // To smooth out the text.
-        font.getRegion()
-            .getTexture()
-            .setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        font.getRegion().getTexture().setFilter(
+            Texture.TextureFilter.Linear,
+            Texture.TextureFilter.Linear);
         generator.dispose();
     }
 
@@ -210,6 +200,15 @@ public class Pawntastic extends Game {
         ActionFactory.setPathFinder(pathFinder);
 
         loadSystem.dispose();
+    }
+
+    /**
+     * Gets the global event bus that most events pass through.
+     *
+     * @return The event bus.
+     */
+    public static EventBus getEventBus() {
+        return BUS;
     }
 
     @Override

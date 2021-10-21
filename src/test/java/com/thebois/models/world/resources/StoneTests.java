@@ -22,7 +22,7 @@ public class StoneTests {
     }
 
     @Test
-    public void getTypeFromRockResource() {
+    public void getTypeFromStoneResource() {
         // Arrange
         final IResource stone = ResourceFactory.createResource(ResourceType.STONE, 1,1);
 
