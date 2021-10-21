@@ -9,6 +9,8 @@ import com.thebois.models.world.World;
 
 /**
  * Handles loading of saved objects in the save-file.
+ *
+ * @author Jonathan
  */
 public class LoadSystem extends AbstractPersistence {
 

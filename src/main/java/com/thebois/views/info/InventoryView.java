@@ -13,6 +13,8 @@ import com.thebois.utils.StringUtils;
 
 /**
  * Information view for an inventory.
+ *
+ * @author Jonathan
  */
 public class InventoryView implements IActorView {
 
