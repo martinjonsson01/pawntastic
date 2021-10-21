@@ -5,15 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,23 +17,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.Arguments;
 import org.mockito.Mockito;
 
-import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
-import com.thebois.listeners.IEventBusSource;
-import com.thebois.listeners.events.SpawnPawnsEvent;
 import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
-import com.thebois.models.beings.pathfinding.AstarPathFinder;
-import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
 import com.thebois.models.world.structures.StructureType;
-import com.thebois.models.world.terrains.Grass;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;

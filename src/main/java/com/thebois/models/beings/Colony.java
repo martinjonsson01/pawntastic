@@ -28,7 +28,6 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     private static final int NUMBER_OF_PAWNS_SPAWNED_BY_TOWN_HALL = 5;
 
     private final IPositionFinder positionFinder;
-    private final IEventBusSource eventBusSource;
 
     /**
      * Creates a colony and fills it with pawns in the provided open positions.
@@ -39,7 +38,6 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      */
     public Colony(final IPositionFinder positionFinder, final IEventBusSource eventBusSource) {
         this.positionFinder = positionFinder;
-        this.eventBusSource = eventBusSource;
         eventBusSource.getEventBus().register(this);
     }
 
@@ -156,15 +154,5 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
                 return 0;
             }
         }
-    }
-
-    @Serial
-    private void readObject(final java.io.ObjectInputStream in) throws IOException,
-                                                                       ClassNotFoundException {
-        // Registers every time on deserialization because it might be registered to an old instance
-        // of the event bus.
-        // (caused by saving/loading).
-        in.defaultReadObject();
-        eventBusSource.getEventBus().register(this);
     }
 }

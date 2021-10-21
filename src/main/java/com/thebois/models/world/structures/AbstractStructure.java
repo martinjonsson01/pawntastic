@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.thebois.Pawntastic;
-import com.thebois.listeners.events.SpawnPawnsEvent;
 import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.inventory.IInventory;
