@@ -101,6 +101,7 @@ public class HarvesterRoleTests {
     private IResource mockResource(final Position position) {
         final IResource resource = mock(IResource.class);
         when(resource.getPosition()).thenReturn(position);
+        when(resource.getType()).thenReturn(ResourceType.TREE);
         return resource;
     }
 
@@ -133,7 +134,8 @@ public class HarvesterRoleTests {
         final Position treePosition = new Position(5, 3);
         final Position besidesPosition = treePosition.subtract(1, 0);
         when(performer.getPosition()).thenReturn(besidesPosition);
-
+        // Makes sure the performer has inventory space left for harvested item.
+        when(performer.canFitItem(any())).thenReturn(true);
         final IResource tree = mockTree(treePosition);
         when(mockWorld.getClosestNeighbourOf(tree, performer.getPosition())).thenReturn(Optional.of(
             besidesPosition));

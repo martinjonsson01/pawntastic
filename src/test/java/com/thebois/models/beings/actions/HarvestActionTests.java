@@ -12,6 +12,7 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.resources.IResource;
+import com.thebois.models.world.resources.ResourceType;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -32,15 +33,13 @@ public class HarvestActionTests {
 
     public static Stream<Arguments> getNotEqualHarvests() {
         final IResource sameResource = mock(IResource.class);
-        final IAction sameResourceNotHarvested = ActionFactory.createHarvest(sameResource);
         final IAction sameResourceHarvested = ActionFactory.createHarvest(sameResource);
         sameResourceHarvested.perform(mock(IActionPerformer.class));
         return Stream.of(Arguments.of(ActionFactory.createHarvest(mock(IResource.class)),
                                       ActionFactory.createHarvest(sameResource)),
                          Arguments.of(ActionFactory.createHarvest(sameResource), null),
                          Arguments.of(ActionFactory.createHarvest(sameResource),
-                                      mock(IAction.class)),
-                         Arguments.of(sameResourceNotHarvested, sameResourceHarvested));
+                                      mock(IAction.class)));
     }
 
     @BeforeEach
@@ -90,10 +89,10 @@ public class HarvestActionTests {
     }
 
     @Test
-    public void isCompletedIsFalseBeforePerforming() {
+    public void isCompletedIsFalseIfInventoryOfPerformerIsNotFull() {
         // Arrange
-        final IItem resourceItem = mock(IItem.class);
-        when(resource.harvest()).thenReturn(resourceItem);
+        when(performer.canFitItem(any())).thenReturn(true);
+        when(resource.getType()).thenReturn(ResourceType.TREE);
 
         // Act
         final boolean completed = action.isCompleted(performer);
@@ -103,12 +102,10 @@ public class HarvestActionTests {
     }
 
     @Test
-    public void isCompletedIsFalseAfterPerforming() {
+    public void isCompletedIsTrueIfInventoryOfPerformerIsFull() {
         // Arrange
-        final IItem resourceItem = mock(IItem.class);
-        when(resource.harvest()).thenReturn(resourceItem);
-
-        action.perform(performer);
+        when(performer.canFitItem(any())).thenReturn(false);
+        when(resource.getType()).thenReturn(ResourceType.TREE);
 
         // Act
         final boolean completed = action.isCompleted(performer);
