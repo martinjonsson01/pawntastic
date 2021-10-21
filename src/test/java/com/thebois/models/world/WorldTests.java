@@ -28,8 +28,9 @@ import com.thebois.models.world.resources.ResourceFactory;
 import com.thebois.models.world.resources.ResourceType;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.structures.StructureType;
-import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
+import com.thebois.models.world.terrains.TerrainFactory;
+import com.thebois.models.world.terrains.TerrainType;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -55,7 +56,7 @@ public class WorldTests {
     }
 
     private static ITile mockTile(final int x, final int y) {
-        return new Grass(x, y);
+        return TerrainFactory.createTerrain(TerrainType.GRASS, x, y);
     }
 
     private static Position mockPosition(final int x, final int y) {
@@ -630,7 +631,7 @@ public class WorldTests {
             final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
             for (int y = 0; y < worldSize; y++) {
                 for (int x = 0; x < worldSize; x++) {
-                    terrainMatrix[y][x] = new Grass(x, y);
+                    terrainMatrix[y][x] = TerrainFactory.createTerrain(TerrainType.GRASS, x, y);
                 }
             }
             return terrainMatrix;
@@ -644,11 +645,12 @@ public class WorldTests {
                     resourceMatrix[y][x] = null;
                 }
             }
-            resourceMatrix[0][0] = ResourceFactory.createResource(ResourceType.TREE,0,0);
-            resourceMatrix[worldSize - 1][worldSize - 1] = ResourceFactory.createResource(
-                ResourceType.TREE,
-                worldSize - 1,
-                worldSize - 1);
+            resourceMatrix[0][0] = ResourceFactory.createResource(ResourceType.TREE, 0, 0);
+            resourceMatrix[worldSize - 1][worldSize - 1] = ResourceFactory.createResource(ResourceType.TREE,
+                                                                                          worldSize
+                                                                                          - 1,
+                                                                                          worldSize
+                                                                                          - 1);
             return resourceMatrix;
         }
 

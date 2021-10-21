@@ -3,8 +3,9 @@ package com.thebois.models.world;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.thebois.models.world.resources.IResource;
-import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
+import com.thebois.models.world.terrains.TerrainFactory;
+import com.thebois.models.world.terrains.TerrainType;
 import com.thebois.utils.MatrixUtils;
 
 public class TestWorld extends World {
@@ -22,7 +23,11 @@ public class TestWorld extends World {
     @Override
     protected ITerrain[][] setUpTerrain(final int worldSize, final int seed) {
         final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
-        MatrixUtils.populateElements(terrainMatrix, Grass::new);
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
+                terrainMatrix[y][x] = TerrainFactory.createTerrain(TerrainType.GRASS, x, y);
+            }
+        }
         return terrainMatrix;
     }
 

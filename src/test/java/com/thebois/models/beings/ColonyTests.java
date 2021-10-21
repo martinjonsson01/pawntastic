@@ -16,7 +16,8 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
-import com.thebois.models.world.terrains.Grass;
+import com.thebois.models.world.terrains.TerrainFactory;
+import com.thebois.models.world.terrains.TerrainType;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -50,7 +51,9 @@ public class ColonyTests {
             positions.add(new Position(0, 0));
         }
         final IWorld mockWorld = mock(IWorld.class);
-        when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
+        when(mockWorld.getTileAt(any())).thenReturn(TerrainFactory.createTerrain(
+            TerrainType.GRASS,
+            new Position()));
 
         // Act
         final Colony colony = new Colony(positions);
