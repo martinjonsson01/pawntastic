@@ -135,7 +135,7 @@ public class World
                           .stream()
                           .filter(iTile -> !iTile.getPosition().equals(position)
                                            && !isTileOutOfBounds(iTile)
-                                           && isTileOccupied(iTile)
+                                           && !isTileOccupied(iTile)
                                            && isTileWithinRadiusOf(iTile, position, radius))
                           .limit(maxCount)
                           .map(ITile::getPosition)
@@ -144,13 +144,13 @@ public class World
 
     private boolean isTileOutOfBounds(final ITile tile) {
         return tile.getPosition().getX() > worldSize
-               && !(tile.getPosition().getX() < 0)
-               && !(tile.getPosition().getY() > worldSize)
-               && !(tile.getPosition().getY() < 0);
+               || tile.getPosition().getX() < 0
+               || tile.getPosition().getY() > worldSize
+               || tile.getPosition().getY() < 0;
     }
 
     private boolean isTileOccupied(final ITile tile) {
-        return tile.getCost() < Float.MAX_VALUE;
+        return !(tile.getCost() < Float.MAX_VALUE);
     }
 
     private boolean isTileWithinRadiusOf(

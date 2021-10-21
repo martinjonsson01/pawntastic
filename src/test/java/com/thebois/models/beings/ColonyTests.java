@@ -14,7 +14,9 @@ import com.google.common.eventbus.EventBus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import com.thebois.abstractions.IResourceFinder;
@@ -27,6 +29,10 @@ import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
+import com.thebois.models.world.resources.ResourceType;
+import com.thebois.models.world.resources.Stone;
+import com.thebois.models.world.resources.Tree;
+import com.thebois.models.world.resources.Water;
 import com.thebois.models.world.structures.StructureType;
 
 import static org.assertj.core.api.Assertions.*;
@@ -123,25 +129,25 @@ public class ColonyTests {
         return objectInputStream.readObject();
     }
 
-    @Test
-    public void onSpawnPawnsEventColonySpawnsPawns() {
+    public static Stream<Arguments> getStructureCompletedEventsToTest() {
+        final Position position = new Position(10, 10);
+
+        return Stream.of(
+            Arguments.of(new StructureCompletedEvent(StructureType.HOUSE, position), 2),
+            Arguments.of(new StructureCompletedEvent(StructureType.TOWN_HALL, position), 5),
+            Arguments.of(new StructureCompletedEvent(StructureType.STOCKPILE, position), 0));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getStructureCompletedEventsToTest")
+    public void onSpawnPawnsEventColonySpawnsPawns(final StructureCompletedEvent event, final int numberOfBeings) {
         // Arrange
         final EventBus eventBus = new EventBus();
         final World world = new TestWorld(50, ThreadLocalRandom.current());
-        final IPositionFinder positionFinder = mock(IPositionFinder.class);
-
-//        when(positionFinder.tryGetEmptyPositionsNextTo(any(), anyInt(), anyFloat())).thenReturn();
-
         final Colony colony = new Colony(world, ()->eventBus);
-//        colony.addBeing(new Pawn(new Position(), RoleFactory.idle()));
-
-        final int numberOfBeings = 2;
-
-        final StructureCompletedEvent structureCompletedEvent = new StructureCompletedEvent(
-            StructureType.HOUSE, new Position(5, 5));
 
         // Act
-        colony.onStructureCompletedEvent(structureCompletedEvent);
+        colony.onStructureCompletedEvent(event);
         final Collection<IBeing> returnedBeings = colony.getBeings();
 
         // Assert
