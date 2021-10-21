@@ -32,7 +32,13 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
      * How many kilograms a being can carry.
      */
     private static final float MAX_CARRYING_CAPACITY = 100f;
+    /**
+     * How much health to start off with.
+     */
     private static final float MAX_HEALTH = 100f;
+    /**
+     * How much hunger to start off with.
+     */
     private static final float MAX_HUNGER = 100f;
     /**
      * How much hunger the pawn should lose per second.
