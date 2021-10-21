@@ -131,35 +131,33 @@ public class World
     @Override
     public Collection<Position> tryGetEmptyPositionsNextTo(
         final Position position, final int maxCount, final float radius) {
-        return MatrixUtils
-            .toCollection(canonicalMatrix)
-            .stream()
-            .filter(iTile -> !iTile
-                .getPosition()
-                .equals(position)
-                             && !(iTile
-                                      .getPosition()
-                                      .getX()
-                                  > worldSize)
-                             && !(iTile
-                                      .getPosition()
-                                      .getX()
-                                  < 0)
-                             && !(iTile
-                                      .getPosition()
-                                      .getY()
-                                  > worldSize)
-                             && !(iTile
-                                      .getPosition()
-                                      .getY()
-                                  < 0)
-                             && iTile.getCost()
-                                < Float.MAX_VALUE
-                             && radius
-                                > position.distanceTo(iTile.getPosition()))
-            .limit(maxCount)
-            .map(ITile::getPosition)
-            .collect(Collectors.toList());
+        return MatrixUtils.toCollection(canonicalMatrix)
+                          .stream()
+                          .filter(iTile -> !iTile.getPosition().equals(position)
+                                           && !isTileOutOfBounds(iTile)
+                                           && isTileOccupied(iTile)
+                                           && isTileWithinRadiusOf(iTile, position, radius))
+                          .limit(maxCount)
+                          .map(ITile::getPosition)
+                          .collect(Collectors.toList());
+    }
+
+    private boolean isTileOutOfBounds(final ITile tile) {
+        return tile.getPosition().getX() > worldSize
+               && !(tile.getPosition().getX() < 0)
+               && !(tile.getPosition().getY() > worldSize)
+               && !(tile.getPosition().getY() < 0);
+    }
+
+    private boolean isTileOccupied(final ITile tile) {
+        return tile.getCost() < Float.MAX_VALUE;
+    }
+
+    private boolean isTileWithinRadiusOf(
+        final ITile tile,
+        final Position position,
+        final float radius) {
+        return radius > position.distanceTo(tile.getPosition());
     }
 
     private Position createRandomPosition(

@@ -31,6 +31,8 @@ class House extends AbstractStructure {
         return neededItems;
     }
 
+
+
     @Override
     public House deepClone() {
         return new House(getPosition());

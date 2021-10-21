@@ -74,9 +74,6 @@ abstract class AbstractStructure implements IStructure {
         if (neededItems.contains(deliveredItem.getType())) {
             successfulDelivery = deliveredItems.tryAdd(deliveredItem);
         }
-        if (isCompleted()) {
-            postSpawnPawnsEvent(getPosition());
-        }
         return successfulDelivery;
     }
 
