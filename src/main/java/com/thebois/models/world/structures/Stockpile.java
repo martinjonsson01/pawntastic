@@ -46,7 +46,7 @@ class Stockpile extends AbstractStructure {
     }
 
     @Override
-    public void giveItem(final IItem item) {
+    public void addItem(final IItem item) {
         inventory.tryAdd(item);
     }
 

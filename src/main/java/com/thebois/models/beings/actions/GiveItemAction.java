@@ -30,7 +30,7 @@ public class GiveItemAction implements IAction, Serializable {
     @Override
     public void perform(final IActionPerformer performer) {
         if (performer.hasItem(itemType)) {
-            receiver.giveItem(performer.takeItem(itemType));
+            receiver.addItem(performer.takeItem(itemType));
         }
     }
 

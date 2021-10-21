@@ -18,7 +18,7 @@ public interface IReceiver extends IPositionable {
      *
      * @param item The item to give.
      */
-    void giveItem(IItem item);
+    void addItem(IItem item);
 
     /**
      * If the item can be added.

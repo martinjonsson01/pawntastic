@@ -28,7 +28,7 @@ public class TakeItemAction implements IAction, Serializable {
 
     @Override
     public void perform(final IActionPerformer performer) {
-        performer.giveItem(giver.takeItem(itemType));
+        performer.addItem(giver.takeItem(itemType));
     }
 
     @Override

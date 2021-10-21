@@ -116,7 +116,7 @@ public class StockpileTests {
                                                                       0);
 
         // Act
-        stockpile.giveItem(any());
+        stockpile.addItem(any());
 
         // Assert
         verify(inventory, times(1)).tryAdd(any());

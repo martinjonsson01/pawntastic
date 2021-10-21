@@ -24,11 +24,4 @@ public interface IActionPerformer extends Serializable, IGiver, IReceiver {
      */
     Position getPosition();
 
-    /**
-     * Gives an item.
-     *
-     * @param item The item to give.
-     */
-    void addItem(IItem item);
-
 }

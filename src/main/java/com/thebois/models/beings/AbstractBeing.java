@@ -98,11 +98,6 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     }
 
     @Override
-    public void giveItem(final IItem item) {
-        inventory.tryAdd(item);
-    }
-
-    @Override
     public boolean hasItem(final ItemType itemType) {
         return inventory.hasItem(itemType);
     }

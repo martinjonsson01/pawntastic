@@ -23,6 +23,8 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemFactory;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.testutils.InMemorySerialize;
 import com.thebois.testutils.MockFactory;
@@ -191,10 +193,8 @@ public class BeingTests {
         fasterBeing.update(0.1f);
 
         // Assert
-        final float slowerDistanceAfterUpdate = slowerBeing.getPosition()
-                                                           .distanceTo(destination);
-        final float fasterDistanceAfterUpdate = fasterBeing.getPosition()
-                                                           .distanceTo(destination);
+        final float slowerDistanceAfterUpdate = slowerBeing.getPosition().distanceTo(destination);
+        final float fasterDistanceAfterUpdate = fasterBeing.getPosition().distanceTo(destination);
         assertThat(slowerDistanceAfterUpdate).isGreaterThan(fasterDistanceAfterUpdate);
     }
 
@@ -306,11 +306,9 @@ public class BeingTests {
         final IBeing being = createBeing();
 
         // Act
-        final int before = colony.getBeings()
-                                 .size();
+        final int before = colony.getBeings().size();
         colony.addBeing(being);
-        final int after = colony.getBeings()
-                                .size();
+        final int after = colony.getBeings().size();
 
         // Assert
         assertThat(before).isEqualTo(1);
@@ -356,6 +354,82 @@ public class BeingTests {
             return List.of(performer -> nothingTask);
         }
 
+    }
+
+    @Test
+    public void beingCanFitItemIfInventoryIsEmpty() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+        final ItemType itemType = ItemType.ROCK;
+
+        // Act
+        final boolean canFitItem = being.canFitItem(itemType);
+
+        // Assert
+        assertThat(canFitItem).isTrue();
+    }
+
+    @Test
+    public void beingCanNotFitItemIfInventoryIsFull() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+        final ItemType itemType = ItemType.ROCK;
+
+        // Act
+        // Add items to fill inventory
+        being.addItem(ItemFactory.fromType(itemType));
+        being.addItem(ItemFactory.fromType(itemType));
+        being.addItem(ItemFactory.fromType(itemType));
+        being.addItem(ItemFactory.fromType(itemType));
+        being.addItem(ItemFactory.fromType(itemType));
+        being.addItem(ItemFactory.fromType(itemType));
+
+        final boolean canFitItem = being.canFitItem(itemType);
+
+        // Assert
+        assertThat(canFitItem).isFalse();
+    }
+
+    @Test
+    public void beingHaveItemIfItemHasBeenAdded() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+        final ItemType itemType = ItemType.ROCK;
+
+        // Act
+        being.addItem(ItemFactory.fromType(itemType));
+        final boolean hasItem = being.hasItem(itemType);
+
+        // Assert
+        assertThat(hasItem).isTrue();
+    }
+
+    @Test
+    public void beingDoesNotHaveItemIfItemHasBeenAdded() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+        final ItemType itemType = ItemType.ROCK;
+
+        // Act
+        final boolean hasItem = being.hasItem(itemType);
+
+        // Assert
+        assertThat(hasItem).isFalse();
+    }
+
+    @Test
+    public void beingCanTakeItemThatHasBeenAdded() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+        final ItemType itemType = ItemType.ROCK;
+        final IItem item = ItemFactory.fromType(itemType);
+
+        // Act
+        being.addItem(item);
+        final IItem takenItem = being.takeItem(itemType);
+
+        // Assert
+        assertThat(takenItem).isEqualTo(item);
     }
 
 }

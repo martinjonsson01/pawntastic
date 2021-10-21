@@ -8,7 +8,7 @@ import com.thebois.models.beings.roles.AbstractRole;
 /**
  * An entity.
  */
-public interface IBeing extends Serializable {
+public interface IBeing extends Serializable, IGiver, IReceiver {
 
     /**
      * Gets the current location.
