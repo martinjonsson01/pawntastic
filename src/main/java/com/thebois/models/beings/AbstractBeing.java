@@ -50,7 +50,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     private static final float HEALTH_RATES = 1f;
     private final IInventory inventory = new Inventory(MAX_CARRYING_CAPACITY);
     private final AbstractRole hungerRole;
-    private final AbstractRole assignedRole;
+    private AbstractRole assignedRole;
     private Position position;
     private AbstractRole role;
     private Position destination;
@@ -94,7 +94,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     @Override
     public AbstractRole getRole() {
-        return role.deepClone();
+        return assignedRole.deepClone();
     }
 
     @Override
@@ -102,6 +102,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         if (role == null) {
             throw new IllegalArgumentException("Role can not be null. Use IdleRole instead.");
         }
+        this.assignedRole = role;
         this.role = role;
     }
 
@@ -135,10 +136,10 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         if (food != null) eat(food);
 
         if (isHungry()) {
-            setRole(hungerRole);
+            role = hungerRole;
         }
         else {
-            setRole(assignedRole);
+            role = assignedRole;
         }
     }
 

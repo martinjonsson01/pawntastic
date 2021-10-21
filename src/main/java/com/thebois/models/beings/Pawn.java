@@ -15,7 +15,10 @@ public class Pawn extends AbstractBeing {
      * @param role          The starting role.
      * @param hungerRole    The role to perform when hungry.
      */
-    public Pawn(final Position startPosition, final AbstractRole role, final AbstractRole hungerRole) {
+    public Pawn(
+        final Position startPosition,
+        final AbstractRole role,
+        final AbstractRole hungerRole) {
         super(startPosition, role, hungerRole);
     }
 
