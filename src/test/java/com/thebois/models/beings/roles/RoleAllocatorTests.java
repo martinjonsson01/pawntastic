@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
@@ -39,7 +40,7 @@ public class RoleAllocatorTests {
         for (int i = 0; i < beingCount; i++) {
             vacantPositions.add(new Position(0, 0));
         }
-        return new Colony(vacantPositions);
+        return new Colony(vacantPositions, Pawntastic::getEventBus);
     }
 
     @BeforeEach

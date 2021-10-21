@@ -50,15 +50,10 @@ public class ColonyTests {
         when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
 
         // Act
-        final Colony colony = new Colony(positions);
+        final Colony colony = new Colony(positions, Pawntastic::getEventBus);
 
         // Assert
         assertThat(colony.getBeings().size()).isEqualTo(beingCount);
-    }
-
-    private Colony mockColony() {
-        final List<Position> positions = new ArrayList<>();
-        return new Colony(positions);
     }
 
     @Test
@@ -66,7 +61,7 @@ public class ColonyTests {
         // Arrange
         final IBeing being = Mockito.mock(IBeing.class);
         when(being.getHealthRatio()).then(returnValue -> 1f);
-        final Colony colony = mockColony();
+        final Colony colony = createColony();
 
         colony.addBeing(being);
         final float deltaTime = 0.1f;
@@ -78,11 +73,16 @@ public class ColonyTests {
         verify(being, times(1)).update(deltaTime);
     }
 
+    private Colony createColony() {
+        final List<Position> positions = new ArrayList<>();
+        return new Colony(positions, Pawntastic::getEventBus);
+    }
+
     @Test
     public void beingGroupRemovesDeadBeings() {
         // Arrange
         final IBeing being = Mockito.mock(IBeing.class);
-        final Colony colony = mockColony();
+        final Colony colony = createColony();
         colony.addBeing(being);
         final int expectedAmountOfBeings = 0;
         final float deltaTime = 0.1f;
@@ -97,10 +97,14 @@ public class ColonyTests {
     }
 
     @Test
-    public void sameObjectAfterDeserialization() throws ClassNotFoundException, IOException {
+    public void keepsListeningToDeathEventsAfterDeserialization() throws
+                                                                  ClassNotFoundException,
+                                                                  IOException {
         // Arrange
-        final AbstractBeingGroup colony = mock(Colony.class);
-        final OnDeathEvent deathEvent = new OnDeathEvent(mock(IBeing.class));
+        final AbstractBeingGroup colony = createColony();
+        final IBeing being = mock(IBeing.class);
+        colony.addBeing(being);
+        final OnDeathEvent deathEvent = new OnDeathEvent(being);
         //Act
         final byte[] serializedColony = InMemorySerialize.serialize(colony);
         final AbstractBeingGroup deserializedColony =
@@ -108,7 +112,7 @@ public class ColonyTests {
         Pawntastic.getEventBus().post(deathEvent);
 
         // Assert
-        verify(deserializedColony, times(1)).onDeathEvent(deathEvent);
+        assertThat(deserializedColony.getBeings()).doesNotContain(being);
     }
 
 }

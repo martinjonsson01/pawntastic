@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
@@ -299,7 +300,7 @@ public class BeingTests {
     public void addBeingIncreasesBeingCount() {
         // Arrange
         final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
-        final AbstractBeingGroup colony = new Colony(vacantPositions);
+        final AbstractBeingGroup colony = new Colony(vacantPositions, Pawntastic::getEventBus);
 
         final IBeing being = createBeing();
 
@@ -324,34 +325,6 @@ public class BeingTests {
 
         // Assert
         assertThat(being).isEqualTo(deserializedBeing);
-    }
-
-    /**
-     * A test role that does nothing.
-     */
-    private static class NothingRole extends AbstractRole {
-
-        @Override
-        public boolean equals(final Object obj) {
-            return obj instanceof NothingRole;
-        }
-
-        @Override
-        public RoleType getType() {
-            return null;
-        }
-
-        @Override
-        public AbstractRole deepClone() {
-            return new NothingRole();
-        }
-
-        @Override
-        protected Collection<IActionSource> getTaskGenerators() {
-            final IAction nothingTask = MockFactory.createAction(false, true);
-            return List.of(performer -> nothingTask);
-        }
-
     }
 
     @Test
@@ -384,6 +357,34 @@ public class BeingTests {
 
         //Assert
         assertThat(endHealthRatio).isEqualTo(expectedHealthRatio);
+    }
+
+    /**
+     * A test role that does nothing.
+     */
+    private static class NothingRole extends AbstractRole {
+
+        @Override
+        public boolean equals(final Object obj) {
+            return obj instanceof NothingRole;
+        }
+
+        @Override
+        public RoleType getType() {
+            return null;
+        }
+
+        @Override
+        public AbstractRole deepClone() {
+            return new NothingRole();
+        }
+
+        @Override
+        protected Collection<IActionSource> getTaskGenerators() {
+            final IAction nothingTask = MockFactory.createAction(false, true);
+            return List.of(performer -> nothingTask);
+        }
+
     }
 
 }
