@@ -25,7 +25,7 @@ public class ResourceTests {
     public void constructorTestWithFloatsInsteadOfPosition() {
         // Arrange
         final Position position = new Position(1, 1);
-        final IResource resource = ResourceFactory.createResource(ResourceType.WATER,1,1);
+        final IResource resource = ResourceFactory.createResource(ResourceType.WATER, 1, 1);
 
         // Act
         final Position actualPosition = resource.getPosition();
@@ -37,7 +37,7 @@ public class ResourceTests {
     @Test
     public void resourceIsEqualToItself() {
         // Arrange
-        final IResource resource = ResourceFactory.createResource(ResourceType.WATER,1,1);
+        final IResource resource = ResourceFactory.createResource(ResourceType.WATER, 1, 1);
 
         // Act
         final boolean isEqual = resource.equals(resource);
@@ -49,7 +49,7 @@ public class ResourceTests {
     @Test
     public void resourceIsNotEqualToNull() {
         // Arrange
-        final IResource resource = ResourceFactory.createResource(ResourceType.WATER,1,1);
+        final IResource resource = ResourceFactory.createResource(ResourceType.WATER, 1, 1);
 
         // Act
         final boolean isEqual = resource.equals(null);
@@ -61,7 +61,7 @@ public class ResourceTests {
     @Test
     public void resourceIsNotEqualToOtherObject() {
         // Arrange
-        final IResource resource = ResourceFactory.createResource(ResourceType.WATER,1,1);
+        final IResource resource = ResourceFactory.createResource(ResourceType.WATER, 1, 1);
         final Object object = new Object();
 
         // Act
