@@ -178,29 +178,4 @@ public final class Position implements IDeepClonable<Position>, Serializable {
         return new Position(x * scalar, y * scalar);
     }
 
-    /**
-     * Calculates if the other position is next to this one.
-     *
-     * @param other Position to test against.
-     * @return Returns if the other position is next to this one.
-     */
-    public boolean isNextTo(final Position other) {
-
-        final int[][] positionOffsets = {
-            {-1, -1}, {0, -1}, {1, -1},
-            {-1, 0}, {1, 0},
-            {-1, 1}, {0, 1}, {1, 1},
-            };
-
-        for (final int[] positionOffset : positionOffsets) {
-            final float x = positionOffset[0];
-            final float y = positionOffset[1];
-            if (this.add(x, y).equals(other)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
 }
