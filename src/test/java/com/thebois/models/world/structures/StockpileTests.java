@@ -5,17 +5,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class StockpileTests {
 
+    private final IInventory inventory = mock(IInventory.class);
+
     @BeforeEach
     public void setFactoryInventory() {
-        final Inventory sharedInventory = new Inventory();
-        StructureFactory.setInventory(sharedInventory);
+        StructureFactory.setInventory(inventory);
     }
 
     @AfterEach
@@ -88,5 +92,126 @@ public class StockpileTests {
         // Assert
         assertThat(stockpileNeededItems).isEqualTo(neededItems);
     }
-    
+
+    private IStructure createStockpile() {
+        return StructureFactory.createStructure(StructureType.STOCKPILE, 0, 0);
+    }
+
+    @Test
+    public void stockpileDelegatesTryAddToInventory() {
+        // Arrange
+        final IStructure structure = createStockpile();
+        final IStoreable stockpile = (IStoreable) structure;
+
+        // Act
+        stockpile.tryAdd(any());
+
+        // Assert
+        verify(inventory, times(1)).tryAdd(any());
+    }
+
+    @Test
+    public void stockpileDelegatesAddMultipleToInventory() {
+        // Arrange
+        final IStructure structure = createStockpile();
+        final IStoreable stockpile = (IStoreable) structure;
+
+        // Act
+        stockpile.addMultiple(any());
+
+        // Assert
+        verify(inventory, times(1)).addMultiple(any());
+    }
+
+    @Test
+    public void stockpileDelegatesCanFitItemToInventory() {
+        // Arrange
+        final IStructure structure = createStockpile();
+        final IStoreable stockpile = (IStoreable) structure;
+
+        // Act
+        stockpile.canFitItem(any());
+
+        // Assert
+        verify(inventory, times(1)).canFitItem(any());
+    }
+
+    @Test
+    public void stockpileDelegatesIsFullToInventory() {
+        // Arrange
+        final IStructure structure = createStockpile();
+        final IStoreable stockpile = (IStoreable) structure;
+
+        // Act
+        stockpile.isFull();
+
+        // Assert
+        verify(inventory, times(1)).isFull();
+    }
+
+    @Test
+    public void stockpileDelegatesHasItemToInventory() {
+        // Arrange
+        final IStructure structure = createStockpile();
+        final ITakeable stockpile = (ITakeable) structure;
+
+        // Act
+        stockpile.hasItem(any());
+
+        // Assert
+        verify(inventory, times(1)).hasItem(any());
+    }
+
+    @Test
+    public void stockpileDelegatesHasItemAmountToInventory() {
+        // Arrange
+        final IStructure structure = createStockpile();
+        final ITakeable stockpile = (ITakeable) structure;
+
+        // Act
+        stockpile.hasItem(any(), anyInt());
+
+        // Assert
+        verify(inventory, times(1)).hasItem(any(), anyInt());
+    }
+
+    @Test
+    public void stockpileDelegatesNumberOfToInventory() {
+        // Arrange
+        final IStructure structure = createStockpile();
+        final ITakeable stockpile = (ITakeable) structure;
+
+        // Act
+        stockpile.numberOf(any());
+
+        // Assert
+        verify(inventory, times(1)).numberOf(any());
+    }
+
+    @Test
+    public void stockpileDelegatesTakeToInventory() {
+        // Arrange
+        final IStructure structure = createStockpile();
+        final ITakeable stockpile = (ITakeable) structure;
+
+        // Act
+        stockpile.take(any());
+
+        // Assert
+        verify(inventory, times(1)).take(any());
+    }
+
+    @Test
+    public void stockpileDelegatesTakeAmountToInventory() {
+        // Arrange
+        final IStructure structure = createStockpile();
+        final ITakeable stockpile = (ITakeable) structure;
+
+        // Act
+        stockpile.takeAmount(any(), anyInt());
+
+        // Assert
+        verify(inventory, times(1)).takeAmount(any(), anyInt());
+    }
+
 }
