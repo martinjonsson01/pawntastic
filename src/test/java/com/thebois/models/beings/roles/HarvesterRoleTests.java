@@ -13,11 +13,15 @@ import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.Inventory;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.StructureFactory;
 import com.thebois.models.world.structures.StructureType;
 
 import static org.assertj.core.api.Assertions.*;
@@ -218,6 +222,43 @@ public class HarvesterRoleTests {
             Optional.empty());
 
         final IAction expected = RoleFactory.idle().obtainNextAction(performer);
+
+        // Act
+        final IAction actual = role.obtainNextAction(performer);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    // Almost passing test
+    @Test
+    public void obtainNextActionGiveItemWhenPerformerIsStandingNextToStockpile() {
+        final AbstractRole role = createRole();
+        final IActionPerformer performer = mock(IActionPerformer.class);
+        // Set up performer
+        final Position performerPosition = new Position(5, 5);
+        when(performer.getPosition()).thenReturn(performerPosition);
+        final Position besidesPosition = performerPosition.subtract(1, 0);
+        // Set up tree
+        final IResource tree = mockTree(besidesPosition);
+        when(mockWorld.getClosestNeighbourOf(tree, performer.getPosition())).thenReturn(Optional.of(
+            performerPosition));
+        //Full inventory
+        when(performer.canFitItem(any())).thenReturn(false);
+        // Stockpilenext to pawn
+        IInventory inventory = new Inventory(10f);
+        StructureFactory.setInventory(inventory);
+        final IStructure stockpile = StructureFactory.createStructure(StructureType.STOCKPILE,
+                                                                      besidesPosition);
+        when(structureFinder.getNearbyStructureOfType(performerPosition,
+                                                      StructureType.STOCKPILE)).thenReturn(Optional.of(
+            stockpile));
+        when(mockWorld.getClosestNeighbourOf(stockpile, performerPosition)).thenReturn(Optional.of(
+            performerPosition));
+
+        final IAction expected = ActionFactory.createGiveItem(
+            (IStoreable) stockpile,
+            besidesPosition);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);

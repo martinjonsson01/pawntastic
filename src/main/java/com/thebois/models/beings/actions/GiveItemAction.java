@@ -1,6 +1,7 @@
 package com.thebois.models.beings.actions;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
@@ -43,6 +44,20 @@ public class GiveItemAction implements IAction, Serializable {
     @Override
     public boolean canPerform(final IActionPerformer performer) {
         return performer.getPosition().distanceTo(storablePosition) < MINIMUM_GIVE_DISTANCE;
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        final GiveItemAction that = (GiveItemAction) other;
+        return Objects.equals(storeable, that.storeable) && Objects.equals(storablePosition,
+                                                                           that.storablePosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(storeable, storablePosition);
     }
 
 }
