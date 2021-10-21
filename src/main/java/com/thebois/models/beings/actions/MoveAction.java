@@ -143,6 +143,7 @@ class MoveAction implements IAction, Serializable {
         // of the event bus.
         // (caused by saving/loading).
         in.defaultReadObject();
+        // IMPORTANT: Has to subscribe after being read.
         eventBusSource.getEventBus().register(this);
     }
 
