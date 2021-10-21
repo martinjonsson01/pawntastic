@@ -11,6 +11,10 @@ public interface IGiver extends IPositionable {
 
     /**
      * Take item of given type.
+     * <p>
+     * May return null if giver doesn't have item, make sure to call hasItem before using this
+     * method.
+     * </p>
      *
      * @param itemType The type of item to take.
      *

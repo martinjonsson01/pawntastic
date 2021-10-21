@@ -1,9 +1,10 @@
 package com.thebois.models.world.structures;
 
 import org.junit.jupiter.api.Test;
-import org.lwjgl.system.CallbackI;
 
 import com.thebois.models.Position;
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -117,9 +118,8 @@ public class StructureTests {
         // Arrange
         final Position expectedPosition = new Position(20f, 15f);
 
-        final IStructure house = StructureFactory.createStructure(
-            StructureType.HOUSE,
-            expectedPosition);
+        final IStructure house = StructureFactory.createStructure(StructureType.HOUSE,
+                                                                  expectedPosition);
 
         // Act
         final IStructure houseDeepClone = house.deepClone();
@@ -127,7 +127,46 @@ public class StructureTests {
         // Assert
         assertThat(houseDeepClone.getPosition()).isEqualTo(houseDeepClone.getPosition());
         assertThat(houseDeepClone.getType()).isEqualTo(houseDeepClone.getType());
+    }
 
+    @Test
+    public void hasItemReturnsFalse() {
+        // Arrange
+        final ItemType itemType = ItemType.FISH;
+        final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE, 0, 0);
+
+        // Act
+        final boolean hasItem = structure.hasItem(itemType);
+
+        // Assert
+        assertThat(hasItem).isFalse();
+    }
+
+    @Test
+    public void takeItemReturnsNull() {
+        // Arrange
+        final ItemType itemType = ItemType.FISH;
+        final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE, 0, 0);
+        final IItem expectedValue = null;
+
+        // Act
+        final IItem actualValue = structure.takeItem(itemType);
+
+        // Assert
+        assertThat(actualValue).isEqualTo(expectedValue);
+    }
+
+    @Test
+    public void canItemFitReturnsFalse() {
+        // Arrange
+        final ItemType itemType = ItemType.FISH;
+        final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE, 0, 0);
+
+        // Act
+        final boolean canFitItem = structure.canFitItem(itemType);
+
+        // Assert
+        assertThat(canFitItem).isFalse();
     }
 
 }

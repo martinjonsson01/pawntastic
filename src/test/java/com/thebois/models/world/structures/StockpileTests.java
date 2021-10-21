@@ -9,17 +9,18 @@ import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class StockpileTests {
 
     @BeforeEach
-    public void setFactoryInventory(){
+    public void setFactoryInventory() {
         final Inventory sharedInventory = new Inventory();
         StructureFactory.setInventory(sharedInventory);
     }
 
     @AfterEach
-    public void setFactoryInventoryToNull(){
+    public void setFactoryInventoryToNull() {
         StructureFactory.setInventory(null);
     }
 
@@ -52,7 +53,7 @@ public class StockpileTests {
     @Test
     public void getInventoryReturnsSharedInventory() {
         // Arrange
-       final Inventory sharedInventory = new Inventory();
+        final Inventory sharedInventory = new Inventory();
 
         // Act
         StructureFactory.setInventory(sharedInventory);
@@ -70,15 +71,15 @@ public class StockpileTests {
     }
 
     @Test
-    public void stockpileNeededItemsAreTheSameAsGetBuildMaterials(){
+    public void stockpileNeededItemsAreTheSameAsGetBuildMaterials() {
         // Arrange
         final Stockpile stockpile =
             (Stockpile) StructureFactory.createStructure(StructureType.STOCKPILE, 0, 0);
         final ItemType[] neededItems = new ItemType[8];
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 4; i++) {
             neededItems[i] = ItemType.LOG;
         }
-        for (int i = 4; i < 8; i++){
+        for (int i = 4; i < 8; i++) {
             neededItems[i] = ItemType.ROCK;
         }
 
@@ -87,6 +88,70 @@ public class StockpileTests {
 
         // Assert
         assertThat(stockpileNeededItems).isEqualTo(neededItems);
+    }
+
+    @Test
+    public void stockpileDelegatesToInventoryForCanItemFitMethod() {
+        // Arrange
+        final IInventory inventory = mock(Inventory.class);
+        StructureFactory.setInventory(inventory);
+        final IStructure stockpile = StructureFactory.createStructure(StructureType.STOCKPILE,
+                                                                      0,
+                                                                      0);
+
+        // Act
+        stockpile.canFitItem(any());
+
+        // Assert
+        verify(inventory, times(1)).canFitItem(any());
+    }
+
+    @Test
+    public void stockpileDelegatesToInventoryForGiveItemMethod() {
+        // Arrange
+        final IInventory inventory = mock(Inventory.class);
+        StructureFactory.setInventory(inventory);
+        final IStructure stockpile = StructureFactory.createStructure(StructureType.STOCKPILE,
+                                                                      0,
+                                                                      0);
+
+        // Act
+        stockpile.giveItem(any());
+
+        // Assert
+        verify(inventory, times(1)).tryAdd(any());
+    }
+
+    @Test
+    public void stockpileDelegatesToInventoryForHasItemMethod() {
+        // Arrange
+        final IInventory inventory = mock(Inventory.class);
+        StructureFactory.setInventory(inventory);
+        final IStructure stockpile = StructureFactory.createStructure(StructureType.STOCKPILE,
+                                                                      0,
+                                                                      0);
+
+        // Act
+        stockpile.hasItem(any());
+
+        // Assert
+        verify(inventory, times(1)).hasItem(any());
+    }
+
+    @Test
+    public void stockpileDelegatesToInventoryForTakeItemMethod() {
+        // Arrange
+        final IInventory inventory = mock(Inventory.class);
+        StructureFactory.setInventory(inventory);
+        final IStructure stockpile = StructureFactory.createStructure(StructureType.STOCKPILE,
+                                                                      0,
+                                                                      0);
+
+        // Act
+        stockpile.takeItem(any());
+
+        // Assert
+        verify(inventory, times(1)).take(any());
     }
 
 }

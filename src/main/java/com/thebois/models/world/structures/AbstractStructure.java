@@ -95,4 +95,23 @@ abstract class AbstractStructure implements IStructure {
         return Optional.empty();
     }
 
+    @Override
+    public void giveItem(final IItem item) {
+    }
+
+    @Override
+    public boolean canFitItem(final ItemType itemType) {
+        return false;
+    }
+
+    @Override
+    public IItem takeItem(final ItemType itemType) {
+        return null;
+    }
+
+    @Override
+    public boolean hasItem(final ItemType itemType) {
+        return false;
+    }
+
 }

@@ -12,11 +12,13 @@ public interface IReceiver extends IPositionable {
     /**
      * Try to give the receiver an item.
      *
-     * @param item The item to give.
+     * <p>
+     * Item may not be received, make sure to use canFitItem before calling this method.
+     * </p>
      *
-     * @return Whether the item could be given or not.
+     * @param item The item to give.
      */
-    boolean tryGiveItem(IItem item);
+    void giveItem(IItem item);
 
     /**
      * If the item can be added.
