@@ -5,6 +5,7 @@ package com.thebois.utils;
  *
  * @param <TElement> The type of element in the matrix.
  */
+@FunctionalInterface
 public interface IMatrixSupplier<TElement> {
 
     /**
