@@ -11,13 +11,6 @@ import com.thebois.models.beings.roles.AbstractRole;
 public interface IBeing extends Serializable, IGiver, IReceiver {
 
     /**
-     * Gets the current location.
-     *
-     * @return The current location
-     */
-    Position getPosition();
-
-    /**
      * Gets the role.
      *
      * @return The role
