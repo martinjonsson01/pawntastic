@@ -33,21 +33,20 @@ public class BuildMenuToolbarView implements IActorView {
         final Skin skin, final IEventListener<OnClickEvent<StructureType>> listener) {
 
         final Table toolbarTable = createTable();
-        createStructureButtons(skin, listener, toolbarTable, structureButtonGroup);
+        createStructureButtons(skin, listener, toolbarTable);
         return toolbarTable;
     }
 
     private void createStructureButtons(
         final Skin skin,
         final IEventListener<OnClickEvent<StructureType>> listener,
-        final Table toolbarTable,
-        final ButtonGroup<StructureButton> buttonGroup) {
+        final Table toolbarTable) {
         for (final StructureType type : StructureType.values()) {
             // Don't add a button for the town hall structure.
             if (type.equals(StructureType.TOWN_HALL)) break;
             final StructureButton structureButton = new StructureButton(type, skin);
             toolbarTable.add(structureButton).expand().fill();
-            buttonGroup.add(structureButton);
+            structureButtonGroup.add(structureButton);
             structureButton.registerListener(listener);
         }
     }

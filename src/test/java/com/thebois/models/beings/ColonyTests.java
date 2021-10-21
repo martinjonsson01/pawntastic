@@ -101,34 +101,6 @@ public class ColonyTests {
         verify(being, times(1)).update(deltaTime);
     }
 
-    @Test
-    public void colonyContainsSamePawnsAfterDeserialization() throws ClassNotFoundException, IOException {
-        // Arrange
-        final World world = new TestWorld(3, ThreadLocalRandom.current());
-        final Colony colony = new Colony(world, EventBus::new);
-        colony.addBeing(new Pawn(new Position(), RoleFactory.idle()));
-
-        // Act
-        final byte[] serialized1 = serialize(colony);
-        final Colony deserialized1 = (Colony) deserialize(serialized1);
-
-        // Assert
-        assertThat(colony.getBeings()).isEqualTo(deserialized1.getBeings());
-    }
-
-    private byte[] serialize(final Object object) throws IOException {
-        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        final ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-        outputStream.writeObject(object);
-        return byteArrayOutputStream.toByteArray();
-    }
-
-    private Object deserialize(final byte[] bytes) throws IOException, ClassNotFoundException {
-        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-        final ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-        return objectInputStream.readObject();
-    }
-
     public static Stream<Arguments> getStructureCompletedEventsToTest() {
         final Position position = new Position(10, 10);
 

@@ -40,7 +40,7 @@ public class TownHallTests {
         final float builtRatio = townHall.getBuiltRatio();
 
         // Assert
-        assertThat(Float.compare(builtRatio, 1) >= 0).isTrue();
+        assertThat(builtRatio).isGreaterThanOrEqualTo(1f);
     }
 
     @Test
