@@ -13,7 +13,7 @@ public class SpawnPawnsEvent {
     private final Position spawnPosition;
 
     /**
-     * Instantiates with a position for the new obstacle.
+     * Instantiates with information to be sent in the SpawnPawnsEvent.
      *
      * @param numberOfPawns The number of pawns to spawn.
      * @param spawnPosition The position to spawn pawns at.

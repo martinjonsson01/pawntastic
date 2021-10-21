@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public abstract class AbstractBeingGroup implements IBeingGroup {
 
-    private final ConcurrentLinkedQueue<IBeing> beings = new ConcurrentLinkedQueue<>();
+    private final Collection<IBeing> beings = new ConcurrentLinkedQueue<>();
 
     /**
      * Adds a being to the internal collection of beings.

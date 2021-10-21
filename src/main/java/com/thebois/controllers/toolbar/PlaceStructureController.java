@@ -47,12 +47,12 @@ public class PlaceStructureController extends AbstractInputProcessor
     public boolean touchDown(final int x, final int y, final int pointer, final int button) {
         boolean successful = false;
         if (button == LEFT_CLICK) {
-            successful = tryPlaceStructure(x, y, pointer);
+            successful = tryPlaceStructure(x, y);
         }
         return successful;
     }
 
-    private boolean tryPlaceStructure(final int x, final int y, final int pointer) {
+    private boolean tryPlaceStructure(final int x, final int y) {
         final Vector2 worldSpaceCoordinates = projector.unproject(x, y);
         final Actor gameContainer = toolbarWidget.getParent();
         final float offsetX = gameContainer.getX();

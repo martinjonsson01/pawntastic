@@ -8,7 +8,7 @@ import com.thebois.models.Position;
 public interface IPositionFinder {
 
     /**
-     * Creates a list of tiles that are not occupied by a structure or resource.
+     * Creates a list of positions that are not occupied.
      *
      * @param count The amount of empty positions that needs to be found.
      *
@@ -17,7 +17,7 @@ public interface IPositionFinder {
     Iterable<Position> findEmptyPositions(int count);
 
     /**
-     * Creates a list of tiles that are not occupied by a structure or resource.
+     * Creates a list of positions that are not occupied.
      *
      * @param position The position to check around.
      * @param maxCount The max number of empty positions that needs to be found.
