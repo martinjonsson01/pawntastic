@@ -39,6 +39,7 @@ public class World
     private final int worldSize;
     private final ThreadLocalRandom random;
     private Collection<IStructure> structuresCache = new ArrayList<>();
+    private boolean townHallPlaced = calculateIsTownHallPlaced();
 
     /**
      * Initiates the world with the given size.
@@ -208,17 +209,14 @@ public class World
      */
     public boolean tryCreateStructure(final StructureType type, final int x, final int y) {
         final Position position = new Position(x, y);
-        StructureType typeToCreate = type;
-        if (!isTownHallPlaced()) {
-            typeToCreate = StructureType.TOWN_HALL;
+        if (isTownHallPlaced() && type.equals(StructureType.TOWN_HALL)) {
+            return false;
         }
-        else if (type.equals(StructureType.TOWN_HALL)) {
-            typeToCreate = DEFAULT_STRUCTURE_TYPE;
-        }
-
         if (isPositionPlaceable(position)) {
-            structureMatrix[y][x] = StructureFactory.createStructure(typeToCreate, x, y);
-
+            structureMatrix[y][x] = StructureFactory.createStructure(type, x, y);
+            if (type.equals(StructureType.TOWN_HALL)) {
+                townHallPlaced = true;
+            }
             updateCanonicalMatrix();
             postObstacleEvent(x, y);
             generateStructuresCache();
@@ -245,6 +243,10 @@ public class World
      * @return Returns whether the first and only town hall has been placed.
      */
     public boolean isTownHallPlaced() {
+        return townHallPlaced;
+    }
+
+    private boolean calculateIsTownHallPlaced() {
         return getStructures().stream().anyMatch(iStructure -> iStructure
             .getType()
             .equals(StructureType.TOWN_HALL));
