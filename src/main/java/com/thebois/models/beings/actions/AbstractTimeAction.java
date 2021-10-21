@@ -6,6 +6,8 @@ import com.thebois.models.beings.IActionPerformer;
 
 /**
  * An action that takes time to perform.
+ *
+ * @author Martin
  */
 public abstract class AbstractTimeAction implements IAction, Serializable {
 
