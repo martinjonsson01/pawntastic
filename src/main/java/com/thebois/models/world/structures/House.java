@@ -17,10 +17,10 @@ class House extends AbstractStructure {
      * @param position The position of the house.
      */
     House(final Position position) {
-        super(position, StructureType.HOUSE, getNeededItemsMap());
+        super(position, StructureType.HOUSE, getBuildMaterials());
     }
 
-    private static Map<ItemType, Integer> getNeededItemsMap() {
+    private static Map<ItemType, Integer> getBuildMaterials() {
         final Map<ItemType, Integer> neededItems = new EnumMap<>(ItemType.class);
 
         final int numberOfItems = 10;
