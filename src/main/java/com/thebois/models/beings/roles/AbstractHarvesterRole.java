@@ -81,8 +81,9 @@ abstract class AbstractHarvesterRole extends AbstractRole {
 
     private IAction createMoveToStockpile(final IActionPerformer performer) {
         final Position position = performer.getPosition();
-        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(position,
-                                                                                             StructureType.STOCKPILE);
+        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(
+            position,
+            StructureType.STOCKPILE);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
 
         final IStructure structure = maybeStructure.get();
@@ -97,8 +98,9 @@ abstract class AbstractHarvesterRole extends AbstractRole {
 
     private IAction createEmptyInventory(final IActionPerformer performer) {
         final Position position = performer.getPosition();
-        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(position,
-                                                                                             StructureType.STOCKPILE);
+        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(
+            position,
+            StructureType.STOCKPILE);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
         final IStoreable storeable;

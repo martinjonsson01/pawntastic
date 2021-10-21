@@ -39,8 +39,10 @@ public class TakeItemAction implements IAction, Serializable {
 
     @Override
     public void perform(final IActionPerformer performer) {
-        performer.tryAdd(takeable.take(itemType));
-        amountToTake--;
+        if (takeable.hasItem(itemType)) {
+            performer.tryAdd(takeable.take(itemType));
+            amountToTake--;
+        }
     }
 
     @Override

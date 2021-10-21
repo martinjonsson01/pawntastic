@@ -5,55 +5,59 @@ import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
-import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class GiveItemActionTests {
+public class TakeItemActionTests {
 
     private IActionPerformer performer;
     private IAction action;
-    private IStoreable storeable;
+    private ITakeable takeable;
     private Position position = new Position(0, 0);
+    private int amount;
+    final ItemType itemType = ItemType.ROCK;
 
     @BeforeEach
     public void setup() {
-        final ItemType itemType = ItemType.ROCK;
-        storeable = mock(IStoreable.class);
+        takeable = mock(ITakeable.class);
         performer = mock(IActionPerformer.class);
-        action = ActionFactory.createGiveItem(storeable, itemType, position);
+        amount = 5;
+        action = ActionFactory.createTakeItem(takeable, itemType, amount, position);
     }
 
     @Test
-    public void StorableGetsItemIfPerformerHaveItem() {
+    public void performerTakesItemIfTakeableHasItem() {
         // Arrange
-        when(performer.hasItem(any())).thenReturn(true);
+        when(takeable.hasItem(any())).thenReturn(true);
 
         // Act
         action.perform(performer);
 
         // Assert
-        verify(storeable, times(1)).tryAdd(any());
+        verify(takeable, times(1)).take(any());
     }
 
     @Test
-    public void StorableDoNoTGetItemIfPerformerDoNotHaveItem() {
+    public void performerDoesNotTakeItemIfTakableDoesNotHaveItem() {
         // Arrange
-        when(performer.hasItem(any())).thenReturn(false);
+        when(takeable.hasItem(any())).thenReturn(false);
 
         // Act
         action.perform(performer);
 
         // Assert
-        verify(storeable, times(0)).tryAdd(any());
+        verify(takeable, times(0)).take(any());
     }
 
     @Test
-    public void isCompletedIfPerformerHasNoMoreItemsOfItemType() {
+    public void isCompletedIfTakeableDoesNotHaveMoreOfItemType() {
         // Arrange
-        when(performer.hasItem(any())).thenReturn(false);
+        action = ActionFactory.createTakeItem(takeable, itemType, 5, position);
+        when(takeable.hasItem(itemType)).thenReturn(false);
 
         // Act
         final boolean isCompleted = action.isCompleted(performer);
@@ -63,9 +67,23 @@ public class GiveItemActionTests {
     }
 
     @Test
-    public void isNotCompletedIfPerformerHasMoreItemsOfItemType() {
+    public void isCompletedIfPerformerHasTakenAllItemsNeeded() {
         // Arrange
-        when(performer.hasItem(any())).thenReturn(true);
+        action = ActionFactory.createTakeItem(takeable, itemType, 0, position);
+        when(takeable.hasItem(itemType)).thenReturn(true);
+
+        // Act
+        final boolean isCompleted = action.isCompleted(performer);
+
+        // Assert
+        assertThat(isCompleted).isTrue();
+    }
+
+    @Test
+    public void isNotCompletedIfPerformerStillNeedMoreOfItemType() {
+        // Arrange
+        action = ActionFactory.createTakeItem(takeable, itemType, 5, position);
+        when(takeable.hasItem(itemType)).thenReturn(true);
 
         // Act
         final boolean isCompleted = action.isCompleted(performer);
@@ -75,7 +93,7 @@ public class GiveItemActionTests {
     }
 
     @Test
-    public void canPerformIfPerformerIsCloseEnoughToStorable() {
+    public void canPerformIfPerformerIsCloseEnoughToTakeable() {
         // Arrange
         final Position position = new Position(0, 0);
         when(performer.getPosition()).thenReturn(position);
@@ -88,7 +106,7 @@ public class GiveItemActionTests {
     }
 
     @Test
-    public void canNotPerformIfPerformerIsTooFarAwayFromStorable() {
+    public void canNotPerformIfPerformerIsTooFarAwayFromTakeable() {
         // Arrange
         final Position position = this.position.add(4, 0);
         when(performer.getPosition()).thenReturn(position);
