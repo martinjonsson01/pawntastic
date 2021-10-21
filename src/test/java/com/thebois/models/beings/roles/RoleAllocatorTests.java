@@ -6,6 +6,8 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 
+import com.google.common.eventbus.EventBus;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IStructureFinder;
 import com.thebois.abstractions.IStructureFinder;
+import com.thebois.listeners.IEventBusSource;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
@@ -71,7 +74,11 @@ public class RoleAllocatorTests {
 //    }
 
     private Colony mockColonyWithBeings(final int beingCount) {
-        final Colony colony = new Colony(createTestWorld(50));
+        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
+
+        final EventBus mockEventBusSource = mock(EventBus.class);
+
+        final Colony colony = new Colony(createTestWorld(50), ()->mockEventBusSource);
         for (int i = 0; i < beingCount; i++) {
             colony.addBeing(new Pawn(new Position(), RoleFactory.idle()));
         }

@@ -6,10 +6,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +21,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.Arguments;
 import org.mockito.Mockito;
 
+import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
+import com.thebois.listeners.IEventBusSource;
+import com.thebois.listeners.events.SpawnPawnsEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
@@ -57,7 +64,8 @@ public class ColonyTests {
 //    public void constructWithTilesCreatesOneBeingPerPosition() {
 //        // Arrange
 //        final int beingCount = 25;
-//        IPositionFinder positionFinder = mock(IPositionFinder.class);
+//        final EventBus mockEventBusSource = mock(EventBus.class);
+//        final IPositionFinder positionFinder = mock(IPositionFinder.class);
 //        final List<Position> positions = new ArrayList<>(beingCount);
 //        for (int i = 0; i < beingCount; i++) {
 //            positions.add(new Position(0, 0));
@@ -66,7 +74,7 @@ public class ColonyTests {
 //        when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
 //
 //        // Act
-//        final Colony colony = new Colony(positionFinder);
+//        final Colony colony = new Colony(positionFinder, ()->mockEventBusSource);
 //
 //        // Assert
 //        assertThat(colony.getBeings().size()).isEqualTo(beingCount);
@@ -74,7 +82,9 @@ public class ColonyTests {
 
     private Colony mockColony() {
         final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-        return new Colony(positionFinder);
+
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        return new Colony(positionFinder, ()->mockEventBusSource);
     }
 
     @Test
@@ -93,23 +103,20 @@ public class ColonyTests {
         verify(being, times(1)).update(deltaTime);
     }
 
-//    @Test
-//    public void colonyContainsSamePawnsAfterDeserialization() throws ClassNotFoundException, IOException {
-//        // Arrange
-//        final World world = new TestWorld(3, mock(ThreadLocalRandom.class));
-//        final IPathFinder pathFinder = new AstarPathFinder(world);
-//
-//        final Colony colony = new Colony(world);
-//
-//        colony.addBeing(new Pawn(new Position(), RoleFactory.idle()));
-//
-//        // Act
-//        final byte[] serialized1 = serialize(colony);
-//        final Colony deserialized1 = (Colony) deserialize(serialized1);
-//
-//        // Assert
-//        assertThat(colony.getBeings()).isEqualTo(deserialized1.getBeings());
-//    }
+    @Test
+    public void colonyContainsSamePawnsAfterDeserialization() throws ClassNotFoundException, IOException {
+        // Arrange
+        final World world = new TestWorld(3, ThreadLocalRandom.current());
+        final Colony colony = new Colony(world, EventBus::new);
+        colony.addBeing(new Pawn(new Position(), RoleFactory.idle()));
+
+        // Act
+        final byte[] serialized1 = serialize(colony);
+        final Colony deserialized1 = (Colony) deserialize(serialized1);
+
+        // Assert
+        assertThat(colony.getBeings()).isEqualTo(deserialized1.getBeings());
+    }
 
     private byte[] serialize(final Object object) throws IOException {
         final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -122,6 +129,33 @@ public class ColonyTests {
         final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         final ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
         return objectInputStream.readObject();
+    }
+
+    @Test
+    public void onSpawnPawnsEventColonySpawnsPawns() {
+        // Arrange
+        final EventBus eventBus = new EventBus();
+        final World world = new TestWorld(50, ThreadLocalRandom.current());
+        final IPositionFinder positionFinder = mock(IPositionFinder.class);
+
+//        when(positionFinder.tryGetEmptyPositionsNextTo(any(), anyInt(), anyFloat())).thenReturn();
+
+        final Colony colony = new Colony(world, ()->eventBus);
+//        colony.addBeing(new Pawn(new Position(), RoleFactory.idle()));
+
+        final int numberOfBeings = 4;
+
+        final SpawnPawnsEvent spawnPawnsEvent = new SpawnPawnsEvent(
+            numberOfBeings,
+            new Position(5, 5),
+            2f);
+
+        // Act
+        colony.onSpawnPawnsEvent(spawnPawnsEvent);
+        final Collection<IBeing> returnedBeings = colony.getBeings();
+
+        // Assert
+        assertThat(returnedBeings.size()).isEqualTo(numberOfBeings);
     }
 
 }

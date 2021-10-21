@@ -1,10 +1,5 @@
 package com.thebois.models.beings;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Random;
-
-import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 

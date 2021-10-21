@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.google.common.eventbus.EventBus;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IStructureFinder;
+import com.thebois.listeners.IEventBusSource;
 import com.thebois.models.Position;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
@@ -301,8 +304,9 @@ public class BeingTests {
     @Test
     public void addBeingIncreasesBeingCount() {
         // Arrange
+        final EventBus mockEventBusSource = mock(EventBus.class);
         final IPositionFinder positionFinder = mock(IPositionFinder.class);
-        final AbstractBeingGroup colony = new Colony(positionFinder);
+        final AbstractBeingGroup colony = new Colony(positionFinder, ()->mockEventBusSource);
 
         final IBeing being = createBeing();
 

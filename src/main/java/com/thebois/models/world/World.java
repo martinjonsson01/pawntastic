@@ -27,7 +27,8 @@ import com.thebois.utils.MatrixUtils;
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
-public class World implements IWorld, IStructureFinder, IResourceFinder, IPositionFinder, Serializable {
+public class World
+    implements IWorld, IStructureFinder, IResourceFinder, IPositionFinder, Serializable {
 
     private static final StructureType DEFAULT_STRUCTURE_TYPE = StructureType.HOUSE;
 

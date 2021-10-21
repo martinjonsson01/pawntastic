@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 import com.google.common.eventbus.Subscribe;
 
-import com.thebois.Pawntastic;
+import com.thebois.listeners.IEventBusSource;
 import com.thebois.listeners.events.SpawnPawnsEvent;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.models.Position;
@@ -24,16 +24,19 @@ import com.thebois.models.beings.roles.AbstractRole;
 public class Colony extends AbstractBeingGroup implements IRoleAllocator {
 
     private final IPositionFinder positionFinder;
+    private final IEventBusSource eventBusSource;
 
     /**
      * Creates a colony and fills it with pawns in the provided open positions.
      *
      * @param positionFinder Used to find positions in the world.
+     * @param eventBusSource Used to find positions in the world.
      *
      */
-    public Colony(final IPositionFinder positionFinder) {
+    public Colony(final IPositionFinder positionFinder, final IEventBusSource eventBusSource) {
         this.positionFinder = positionFinder;
-        Pawntastic.getEventBus().register(this);
+        this.eventBusSource = eventBusSource;
+        eventBusSource.getEventBus().register(this);
     }
 
     @Override
@@ -126,7 +129,6 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      */
     @Subscribe
     public void onSpawnPawnsEvent(final SpawnPawnsEvent event) {
-        // final Iterable<Position> vacantPositions = positionFinder.findEmptyPositions(10);
         final Iterable<Position> vacantPositions =
             positionFinder.tryGetEmptyPositionsNextTo(event.getSpawnPosition(),
                                                       event.getNumberOfPawns(),
@@ -142,7 +144,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         // Registers every time on deserialization because it might be registered to an old instance
         // of the event bus.
         // (caused by saving/loading).
-        Pawntastic.getEventBus().register(this);
         in.defaultReadObject();
+        eventBusSource.getEventBus().register(this);
     }
 }

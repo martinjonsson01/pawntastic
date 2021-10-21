@@ -20,6 +20,7 @@ import org.mockito.Mockito;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
+import com.thebois.listeners.IEventBusSource;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.roles.RoleFactory;
@@ -452,7 +453,7 @@ public class WorldTests {
     private Colony mockColonyWithMockBeings() {
         final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
 
-        return new Colony(positionFinder);
+        return new Colony(positionFinder, mock(IEventBusSource.class));
     }
 
     @Test
