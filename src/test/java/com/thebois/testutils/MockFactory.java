@@ -2,6 +2,8 @@ package com.thebois.testutils;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.actions.IAction;
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.structures.IStructure;
 
@@ -15,6 +17,13 @@ public final class MockFactory {
 
     private MockFactory() {
 
+    }
+
+    public static IItem createItem(final float weight, final ItemType type) {
+        final IItem item = mock(IItem.class);
+        when(item.getWeight()).thenReturn(weight);
+        when(item.getType()).thenReturn(type);
+        return item;
     }
 
     public static IStructure createStructure(final Position position, final boolean completed) {
