@@ -4,7 +4,7 @@ import com.thebois.models.Position;
 import com.thebois.models.world.structures.StructureType;
 
 /**
- *  Contains information about spawning pawns.
+ *  Contains information about a completed structure.
  */
 public class StructureCompletedEvent {
 

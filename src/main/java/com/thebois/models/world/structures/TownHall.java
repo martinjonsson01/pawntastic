@@ -2,8 +2,6 @@ package com.thebois.models.world.structures;
 
 import java.util.Collections;
 
-import com.thebois.Pawntastic;
-import com.thebois.listeners.events.SpawnPawnsEvent;
 import com.thebois.models.Position;
 
 /**
@@ -11,12 +9,10 @@ import com.thebois.models.Position;
  */
 public class TownHall extends AbstractStructure {
 
-    private static final int NUMBER_OF_STARTING_PAWNS = 6;
-
     protected TownHall(
         final Position position) {
         super(position, StructureType.TOWN_HALL, Collections.emptyMap());
-        postSpawnPawnsEvent(position);
+        postStructureCompletedEvent();
     }
 
     // The town hall is always completely built.
@@ -39,14 +35,6 @@ public class TownHall extends AbstractStructure {
     @Override
     public float getCost() {
         return Float.MAX_VALUE;
-    }
-
-    private void postSpawnPawnsEvent(final Position spawnPosition) {
-        final SpawnPawnsEvent spawnPawnsEvent = new SpawnPawnsEvent(
-            NUMBER_OF_STARTING_PAWNS,
-            spawnPosition,
-            2f);
-        Pawntastic.getEventBus().post(spawnPawnsEvent);
     }
 
 }

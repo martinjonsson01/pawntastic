@@ -27,6 +27,7 @@ import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
 import com.thebois.listeners.IEventBusSource;
 import com.thebois.listeners.events.SpawnPawnsEvent;
+import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.pathfinding.AstarPathFinder;
@@ -35,6 +36,7 @@ import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
+import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.Grass;
 
 import static org.assertj.core.api.Assertions.*;
@@ -143,15 +145,13 @@ public class ColonyTests {
         final Colony colony = new Colony(world, ()->eventBus);
 //        colony.addBeing(new Pawn(new Position(), RoleFactory.idle()));
 
-        final int numberOfBeings = 4;
+        final int numberOfBeings = 2;
 
-        final SpawnPawnsEvent spawnPawnsEvent = new SpawnPawnsEvent(
-            numberOfBeings,
-            new Position(5, 5),
-            2f);
+        final StructureCompletedEvent structureCompletedEvent = new StructureCompletedEvent(
+            StructureType.HOUSE, new Position(5, 5));
 
         // Act
-        colony.onSpawnPawnsEvent(spawnPawnsEvent);
+        colony.onStructureCompletedEvent(structureCompletedEvent);
         final Collection<IBeing> returnedBeings = colony.getBeings();
 
         // Assert
