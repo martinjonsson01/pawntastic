@@ -3,6 +3,7 @@ package com.thebois.models.inventory.items;
 /**
  * All the different types of items in the game.
  *
+ * @author Jonathan
  * @author Martin
  */
 public enum ItemType {

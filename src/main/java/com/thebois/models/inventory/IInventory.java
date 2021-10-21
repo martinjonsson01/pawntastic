@@ -9,6 +9,8 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Common method for all the uses an inventory or is an inventory.
+ *
+ * @author Jonathan
  */
 public interface IInventory extends Serializable {
 
@@ -77,4 +79,5 @@ public interface IInventory extends Serializable {
      * @return The counter.
      */
     int numberOf(ItemType itemType);
+
 }
