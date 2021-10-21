@@ -720,12 +720,24 @@ public class WorldTests {
         assertThat(returnedPositions.size()).isEqualTo(count);
     }
 
-    @Test
-    public void tryGetEmptyPositionsNextDoesNotReturnPositionsOutsideOfTheWorld() {
+
+    /**
+     * Assumes a world size of 20x20.
+     */
+    public static Stream<Arguments> getPositionsToStartSearchFrom() {
+        //                                 origin, radius, minX, maxX, minY, maxY
+        return Stream.of(Arguments.of(new Position(0, 0)),
+                         Arguments.of(new Position(0, 49)),
+                         Arguments.of(new Position(49, 49)),
+                         Arguments.of(new Position(49, 0)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsToStartSearchFrom")
+    public void tryGetEmptyPositionsNextDoesNotReturnPositionsOutsideOfTheWorld(final Position origin) {
         // Arrange
         final World world = createWorld(50);
         world.tryCreateStructure(StructureType.TOWN_HALL, new Position(10, 10));
-        final Position origin = new Position(0, 0);
         final int count = 50;
         final float radius = 10;
 
@@ -742,5 +754,4 @@ public class WorldTests {
                                       (position.getX() > 50 || position.getX() < 0)
                                       || (position.getY() > 50 || position.getY() < 0))).isTrue();
     }
-
 }
