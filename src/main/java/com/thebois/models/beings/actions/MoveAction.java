@@ -142,8 +142,8 @@ class MoveAction implements IAction, Serializable {
         // Registers every time on deserialization because it might be registered to an old instance
         // of the event bus.
         // (caused by saving/loading).
-        eventBusSource.getEventBus().register(this);
         in.defaultReadObject();
+        eventBusSource.getEventBus().register(this);
     }
 
 }
