@@ -49,6 +49,8 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
      */
     private static final float HEALTH_RATES = 1f;
     private final IInventory inventory = new Inventory(MAX_CARRYING_CAPACITY);
+    private final AbstractRole hungerRole;
+    private final AbstractRole assignedRole;
     private Position position;
     private AbstractRole role;
     private Position destination;
@@ -60,12 +62,15 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
      *
      * @param startPosition The initial position.
      * @param role          The starting role.
+     * @param hungerRole    The role to perform when hungry.
      */
     public AbstractBeing(
-        final Position startPosition, final AbstractRole role) {
+        final Position startPosition, final AbstractRole role, final AbstractRole hungerRole) {
         this.position = startPosition;
         this.destination = startPosition;
         this.role = role;
+        this.assignedRole = role;
+        this.hungerRole = hungerRole;
     }
 
     @Override
@@ -103,7 +108,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     @Override
     public void update(final float deltaTime) {
         updateHunger(deltaTime);
-        eatIfHungry();
+        satiateHunger();
         updateHealth(deltaTime);
         if (health > 0f) {
             role.obtainNextAction(this).perform(this);
@@ -116,11 +121,25 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         hunger = Math.max(hunger - changeHungerValue, 0f);
     }
 
-    private void eatIfHungry() {
+    /**
+     * Tries to satiate the hunger, if there is any.
+     * <p>
+     * If there is nothing in the inventory to satiate the hunger, then it will make the being go
+     * look for food.
+     * </p>
+     */
+    private void satiateHunger() {
         if (!isHungry()) return;
 
         final IConsumableItem food = findFoodInInventory();
         if (food != null) eat(food);
+
+        if (isHungry()) {
+            setRole(hungerRole);
+        }
+        else {
+            setRole(assignedRole);
+        }
     }
 
     private void updateHealth(final float deltaTime) {
