@@ -16,35 +16,35 @@ import static org.mockito.Mockito.*;
 public class TownHallTests {
 
     @Test
-    public void TownHallIsAlwaysCompleted() {
+    public void townHallIsAlwaysCompleted() {
         // Arrange
-        final IStructure house = StructureFactory.createStructure(
+        final IStructure townHall = StructureFactory.createStructure(
             StructureType.TOWN_HALL,
             new Position());
 
         // Act
-        final boolean isComplete = house.isCompleted();
+        final boolean isComplete = townHall.isCompleted();
 
         // Assert
         assertThat(isComplete).isTrue();
     }
 
     @Test
-    public void TownHallHasAlways1AsBuiltRatio() {
+    public void townHallHasAlways1AsBuiltRatio() {
         // Arrange
-        final IStructure house = StructureFactory.createStructure(
+        final IStructure townHall = StructureFactory.createStructure(
             StructureType.TOWN_HALL,
             new Position());
 
         // Act
-        final float builtRatio = house.getBuiltRatio();
+        final float builtRatio = townHall.getBuiltRatio();
 
         // Assert
         assertThat(Float.compare(builtRatio, 1) >= 0).isTrue();
     }
 
     @Test
-    public void DeepCopyReturnsObjectOfTypeTownHall() {
+    public void deepCopyReturnsObjectSimilarToTownHall() {
         // Arrange
         final IStructure townHall = StructureFactory.createStructure(
             StructureType.TOWN_HALL,
@@ -54,7 +54,15 @@ public class TownHallTests {
         final IStructure townHallDeepCopy = townHall.deepClone();
 
         // Assert
+        // Is of same Class instance
         assertThat(townHallDeepCopy).isInstanceOf(TownHall.class);
+        // Has same Position
+        assertThat(townHallDeepCopy.getPosition()).isEqualTo(townHall.getPosition());
+        // Has same builtRatio
+        assertThat(townHallDeepCopy.getBuiltRatio()).isEqualTo(townHall.getBuiltRatio());
+        // Has same completeness
+        assertThat(townHallDeepCopy.isCompleted()).isEqualTo(townHall.isCompleted());
+        // Are not equal
+        assertThat(townHallDeepCopy).isNotEqualTo(townHall);
     }
-
 }
