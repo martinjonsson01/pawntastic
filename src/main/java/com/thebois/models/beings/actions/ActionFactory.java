@@ -3,9 +3,9 @@ package com.thebois.models.beings.actions;
 import java.util.Objects;
 
 import com.thebois.models.Position;
-import com.thebois.models.beings.IGiver;
-import com.thebois.models.beings.IReceiver;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.IStructure;
@@ -71,25 +71,35 @@ public final class ActionFactory {
     /**
      * Creates a give item task.
      *
-     * @param receiver To where the items should be given.
-     * @param itemType What type of item to receive.
+     * @param storeable To where the items should be given.
+     * @param itemType  What type of item to receive.
+     * @param position  The position of the storable.
      *
      * @return The give item task.
      */
-    public static IAction createGiveItem(final IReceiver receiver, final ItemType itemType) {
-        return new GiveItemAction(receiver, itemType);
+    public static IAction createGiveItem(
+        final IStoreable storeable,
+        final ItemType itemType,
+        final Position position) {
+        return new GiveItemAction(storeable, itemType, position);
     }
 
     /**
      * Creates a take item task.
      *
-     * @param giver    From where to items should be taken.
+     * @param takeable From where to items should be taken.
      * @param itemType The type of item to take.
+     * @param amount   The amount of items to take.
+     * @param position The position of the takeable.
      *
      * @return The take item task.
      */
-    public static IAction createTakeItem(final IGiver giver, final ItemType itemType) {
-        return new TakeItemAction(giver, itemType);
+    public static IAction createTakeItem(
+        final ITakeable takeable,
+        final ItemType itemType,
+        final int amount,
+        final Position position) {
+        return new TakeItemAction(takeable, itemType, amount, position);
     }
 
 }

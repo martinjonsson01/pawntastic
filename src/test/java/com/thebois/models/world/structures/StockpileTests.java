@@ -6,11 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
-import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class StockpileTests {
 
@@ -90,71 +88,5 @@ public class StockpileTests {
         // Assert
         assertThat(stockpileNeededItems).isEqualTo(neededItems);
     }
-
-    @Test
-    public void stockpileDelegatesToInventoryForCanItemFitMethod() {
-        // Arrange
-        final IItem item = mock(IItem.class);
-        when(item.getType()).thenReturn(ItemType.ROCK);
-        final IInventory inventory = mock(Inventory.class);
-        StructureFactory.setInventory(inventory);
-        final IStructure stockpile = StructureFactory.createStructure(StructureType.STOCKPILE,
-                                                                      0,
-                                                                      0);
-
-        // Act
-        stockpile.canFitItem(item.getType());
-
-        // Assert
-        verify(inventory, times(1)).canFitItem(item.getType());
-    }
-
-    @Test
-    public void stockpileDelegatesToInventoryForGiveItemMethod() {
-        // Arrange
-        final IInventory inventory = mock(Inventory.class);
-        StructureFactory.setInventory(inventory);
-        final IStructure stockpile = StructureFactory.createStructure(StructureType.STOCKPILE,
-                                                                      0,
-                                                                      0);
-
-        // Act
-        stockpile.addItem(any());
-
-        // Assert
-        verify(inventory, times(1)).tryAdd(any());
-    }
-
-    @Test
-    public void stockpileDelegatesToInventoryForHasItemMethod() {
-        // Arrange
-        final IInventory inventory = mock(Inventory.class);
-        StructureFactory.setInventory(inventory);
-        final IStructure stockpile = StructureFactory.createStructure(StructureType.STOCKPILE,
-                                                                      0,
-                                                                      0);
-
-        // Act
-        stockpile.hasItem(any());
-
-        // Assert
-        verify(inventory, times(1)).hasItem(any());
-    }
-
-    @Test
-    public void stockpileDelegatesToInventoryForTakeItemMethod() {
-        // Arrange
-        final IInventory inventory = mock(Inventory.class);
-        StructureFactory.setInventory(inventory);
-        final IStructure stockpile = StructureFactory.createStructure(StructureType.STOCKPILE,
-                                                                      0,
-                                                                      0);
-
-        // Act
-        stockpile.takeItem(any());
-
-        // Assert
-        verify(inventory, times(1)).take(any());
-    }
-
+    
 }

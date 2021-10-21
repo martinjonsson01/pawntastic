@@ -1,17 +1,21 @@
 package com.thebois.models.world.structures;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import com.thebois.models.Position;
 import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 
 /**
  * A structure used for storing items.
  */
-class Stockpile extends AbstractStructure {
+class Stockpile extends AbstractStructure implements ITakeable, IStoreable {
 
     private final IInventory inventory;
 
@@ -46,8 +50,18 @@ class Stockpile extends AbstractStructure {
     }
 
     @Override
-    public void addItem(final IItem item) {
-        inventory.tryAdd(item);
+    public boolean isFull() {
+        return inventory.isFull();
+    }
+
+    @Override
+    public boolean tryAdd(final IItem item) {
+        return inventory.tryAdd(item);
+    }
+
+    @Override
+    public void addMultiple(final List<IItem> stack) {
+        inventory.addMultiple(stack);
     }
 
     @Override
@@ -56,13 +70,28 @@ class Stockpile extends AbstractStructure {
     }
 
     @Override
-    public IItem takeItem(final ItemType itemType) {
+    public IItem take(final ItemType itemType) {
         return inventory.take(itemType);
+    }
+
+    @Override
+    public ArrayList<IItem> takeAmount(final ItemType itemType, final int amount) {
+        return inventory.takeAmount(itemType, amount);
     }
 
     @Override
     public boolean hasItem(final ItemType itemType) {
         return inventory.hasItem(itemType);
+    }
+
+    @Override
+    public boolean hasItem(final ItemType itemType, final int amount) {
+        return inventory.hasItem(itemType, amount);
+    }
+
+    @Override
+    public int numberOf(final ItemType itemType) {
+        return inventory.numberOf(itemType);
     }
 
 }

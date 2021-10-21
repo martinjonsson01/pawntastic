@@ -2,8 +2,9 @@ package com.thebois.models.beings.actions;
 
 import java.io.Serializable;
 
+import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
-import com.thebois.models.beings.IReceiver;
+import com.thebois.models.inventory.IStoreable;
 import com.thebois.models.inventory.items.ItemType;
 
 /**
@@ -12,25 +13,29 @@ import com.thebois.models.inventory.items.ItemType;
 public class GiveItemAction implements IAction, Serializable {
 
     private static final float MINIMUM_GIVE_DISTANCE = 2f;
-    private final IReceiver receiver;
+    private final IStoreable storeable;
     private final ItemType itemType;
+    private final Position storablePosition;
 
     /**
      * Instantiate with a receiver to give item to.
      *
-     * @param receiver The receiver.
-     * @param itemType The type of item to give.
+     * @param storeable        Where the items should be stored.
+     * @param itemType         The type of item to give.
+     * @param storablePosition Where the storable is in the world.
      */
     public GiveItemAction(
-        final IReceiver receiver, final ItemType itemType) {
-        this.receiver = receiver;
+        final IStoreable storeable, final ItemType itemType, final Position storablePosition) {
+        this.storeable = storeable;
         this.itemType = itemType;
+
+        this.storablePosition = storablePosition;
     }
 
     @Override
     public void perform(final IActionPerformer performer) {
         if (performer.hasItem(itemType)) {
-            receiver.addItem(performer.takeItem(itemType));
+            storeable.tryAdd(performer.take(itemType));
         }
     }
 
@@ -41,7 +46,7 @@ public class GiveItemAction implements IAction, Serializable {
 
     @Override
     public boolean canPerform(final IActionPerformer performer) {
-        return performer.getPosition().distanceTo(receiver.getPosition()) < MINIMUM_GIVE_DISTANCE;
+        return performer.getPosition().distanceTo(storablePosition) < MINIMUM_GIVE_DISTANCE;
     }
 
 }

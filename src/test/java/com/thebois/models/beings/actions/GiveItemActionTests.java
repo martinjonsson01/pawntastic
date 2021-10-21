@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
-import com.thebois.models.beings.IReceiver;
+import com.thebois.models.inventory.IStoreable;
 import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -15,15 +15,15 @@ public class GiveItemActionTests {
 
     private IActionPerformer performer;
     private IAction action;
-    private IReceiver receiver;
-    private ItemType itemType;
+    private IStoreable storeable;
+    private Position position = new Position(0, 0);
 
     @BeforeEach
     public void setup() {
-        itemType = ItemType.ROCK;
-        receiver = mock(IReceiver.class);
+        final ItemType itemType = ItemType.ROCK;
+        storeable = mock(IStoreable.class);
         performer = mock(IActionPerformer.class);
-        action = ActionFactory.createGiveItem(receiver, itemType);
+        action = ActionFactory.createGiveItem(storeable, itemType, position);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class GiveItemActionTests {
         action.perform(performer);
 
         // Assert
-        verify(receiver, times(1)).addItem(any());
+        verify(storeable, times(1)).tryAdd(any());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class GiveItemActionTests {
         action.perform(performer);
 
         // Assert
-        verify(receiver, times(0)).addItem(any());
+        verify(storeable, times(0)).tryAdd(any());
     }
 
     @Test
@@ -79,7 +79,6 @@ public class GiveItemActionTests {
         // Arrange
         final Position position = new Position(0, 0);
         when(performer.getPosition()).thenReturn(position);
-        when(receiver.getPosition()).thenReturn(position);
 
         // Act
         final boolean isCloseEnough = action.canPerform(performer);
@@ -91,10 +90,8 @@ public class GiveItemActionTests {
     @Test
     public void canNotPerformIfPerformerIsTooFarAwayFromReceiver() {
         // Arrange
-        final Position positionPerformer = new Position(0, 0);
-        final Position positionReceiver = new Position(5, 5);
-        when(performer.getPosition()).thenReturn(positionPerformer);
-        when(receiver.getPosition()).thenReturn(positionReceiver);
+        final Position position = this.position.add(4, 0);
+        when(performer.getPosition()).thenReturn(position);
 
         // Act
         final boolean isCloseEnough = action.canPerform(performer);

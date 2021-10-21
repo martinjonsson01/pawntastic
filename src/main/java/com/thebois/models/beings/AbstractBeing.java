@@ -1,10 +1,14 @@
 package com.thebois.models.beings;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
@@ -93,8 +97,33 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     }
 
     @Override
-    public void addItem(final IItem item) {
-        inventory.tryAdd(item);
+    public boolean isFull() {
+        return inventory.isFull();
+    }
+
+    @Override
+    public boolean tryAdd(final IItem item) {
+        return inventory.tryAdd(item);
+    }
+
+    @Override
+    public void addMultiple(final List<IItem> stack) {
+        inventory.addMultiple(stack);
+    }
+
+    @Override
+    public boolean canFitItem(final ItemType itemType) {
+        return inventory.canFitItem(itemType);
+    }
+
+    @Override
+    public IItem take(final ItemType itemType) {
+        return inventory.take(itemType);
+    }
+
+    @Override
+    public ArrayList<IItem> takeAmount(final ItemType itemType, final int amount) {
+        return inventory.takeAmount(itemType, amount);
     }
 
     @Override
@@ -103,13 +132,13 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     }
 
     @Override
-    public IItem takeItem(final ItemType itemType) {
-        return inventory.take(itemType);
+    public boolean hasItem(final ItemType itemType, final int amount) {
+        return inventory.hasItem(itemType, amount);
     }
 
     @Override
-    public boolean canFitItem(final ItemType itemType) {
-        return inventory.canFitItem(itemType);
+    public int numberOf(final ItemType itemType) {
+        return inventory.numberOf(itemType);
     }
 
     /**

@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
 
@@ -22,6 +23,7 @@ public class HarvestActionTests {
     private IActionPerformer performer;
     private IResource resource;
     private IAction action;
+    private final ItemType itemType = ItemType.ROCK;
 
     public static Stream<Arguments> getEqualHarvests() {
         final IResource sameResource = mock(IResource.class);
@@ -85,14 +87,14 @@ public class HarvestActionTests {
         action.perform(performer);
 
         // Assert
-        verify(performer, times(1)).addItem(eq(resourceItem));
+        verify(performer, times(1)).tryAdd(eq(resourceItem));
     }
 
     @Test
     public void isCompletedIsFalseIfInventoryOfPerformerIsNotFull() {
         // Arrange
-        when(performer.canFitItem(any())).thenReturn(true);
-        when(resource.getType()).thenReturn(ResourceType.TREE);
+        when(resource.getType()).thenReturn(ResourceType.STONE);
+        when(performer.canFitItem(itemType)).thenReturn(true);
 
         // Act
         final boolean completed = action.isCompleted(performer);
@@ -104,8 +106,8 @@ public class HarvestActionTests {
     @Test
     public void isCompletedIsTrueIfInventoryOfPerformerIsFull() {
         // Arrange
-        when(performer.canFitItem(any())).thenReturn(false);
-        when(resource.getType()).thenReturn(ResourceType.TREE);
+        when(resource.getType()).thenReturn(ResourceType.STONE);
+        when(performer.canFitItem(itemType)).thenReturn(false);
 
         // Act
         final boolean completed = action.isCompleted(performer);

@@ -2,13 +2,14 @@ package com.thebois.models.beings;
 
 import java.io.Serializable;
 
+import com.thebois.models.IPositionable;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 
 /**
  * An entity.
  */
-public interface IBeing extends Serializable, IGiver, IReceiver {
+public interface IBeing extends Serializable, IPositionable {
 
     /**
      * Gets the role.

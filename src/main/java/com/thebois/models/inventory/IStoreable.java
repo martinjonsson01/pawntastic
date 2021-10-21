@@ -42,13 +42,4 @@ public interface IStoreable {
      */
     boolean canFitItem(ItemType itemType);
 
-    /**
-     * Checks if item can fit inside inventory.
-     *
-     * @param item The item.
-     *
-     * @return Whether the item could be fitted or not.
-     */
-    boolean canFitItem(IItem item);
-
 }

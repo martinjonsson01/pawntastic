@@ -8,10 +8,10 @@ import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
-import com.thebois.models.beings.IReceiver;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionSource;
+import com.thebois.models.inventory.IStoreable;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
@@ -101,15 +101,17 @@ abstract class AbstractHarvesterRole extends AbstractRole {
                                                                                              StructureType.STOCKPILE);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
-        final IReceiver receiver;
-        if (structure instanceof IReceiver) {
-            receiver = (IReceiver) structure;
+        final IStoreable storeable;
+        if (structure instanceof IStoreable) {
+            storeable = (IStoreable) structure;
         }
         else {
             return ActionFactory.createDoNothing();
         }
 
-        return ActionFactory.createGiveItem(receiver, resourceType.getItemType());
+        return ActionFactory.createGiveItem(storeable,
+                                            resourceType.getItemType(),
+                                            structure.getPosition());
     }
 
     private Optional<IResource> findNearbyResource(final IActionPerformer performer) {

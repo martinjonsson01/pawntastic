@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.thebois.models.beings.IActionPerformer;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
 
 /**
@@ -24,12 +25,13 @@ public class HarvestAction implements IAction, Serializable {
 
     @Override
     public void perform(final IActionPerformer performer) {
-        performer.addItem(resource.harvest());
+        performer.tryAdd(resource.harvest());
     }
 
     @Override
     public boolean isCompleted(final IActionPerformer performer) {
-        return !performer.canFitItem(resource.getType().getItemType());
+        final ItemType itemTypeOfResource = resource.getType().getItemType();
+        return !performer.canFitItem(itemTypeOfResource);
     }
 
     @Override
