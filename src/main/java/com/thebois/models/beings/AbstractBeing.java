@@ -1,6 +1,8 @@
 package com.thebois.models.beings;
 
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.OnDeathEvent;
@@ -8,7 +10,9 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
+import com.thebois.models.inventory.items.IConsumableItem;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
 
 /**
  * An independent agent that can act in the world according to its assigned role.
@@ -33,7 +37,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     /**
      * How much hunger the pawn should lose per second.
      */
-    private static final float HUNGER_RATE = 1f;
+    private static final float HUNGER_RATE = 50f;
     /**
      * How much health the pawn should gain or lose per second.
      */
@@ -92,19 +96,25 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     @Override
     public void update(final float deltaTime) {
-
         updateHunger(deltaTime);
+        eatIfHungry();
         updateHealth(deltaTime);
         if (health > 0f) {
-            role.obtainNextAction(this)
-                .perform(this);
+            role.obtainNextAction(this).perform(this);
             move(deltaTime);
         }
     }
 
-    @Override
-    public float getHealthRatio() {
-        return health / MAX_HEALTH;
+    private void updateHunger(final float deltaTime) {
+        final float changeHungerValue = HUNGER_RATE * deltaTime;
+        hunger = Math.max(hunger - changeHungerValue, 0f);
+    }
+
+    private void eatIfHungry() {
+        if (!isHungry()) return;
+
+        final IConsumableItem food = findFoodInInventory();
+        if (food != null) eat(food);
     }
 
     private void updateHealth(final float deltaTime) {
@@ -118,25 +128,6 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         else {
             health = Math.min(health + changeHealthValue, MAX_HEALTH);
         }
-    }
-
-    private void updateHunger(final float deltaTime) {
-        final float changeHungerValue = HUNGER_RATE * deltaTime;
-        hunger = Math.max(hunger - changeHungerValue, 0f);
-    }
-
-    public Position getDestination() {
-        return destination;
-    }
-
-    @Override
-    public void setDestination(final Position destination) {
-        this.destination = destination;
-    }
-
-    @Override
-    public void addItem(final IItem item) {
-        inventory.tryAdd(item);
     }
 
     /**
@@ -154,6 +145,26 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         }
 
         movePositionTowardsDestination(deltaTime, distanceToDestination);
+    }
+
+    private boolean isHungry() {
+        return hunger <= MAX_HUNGER / 2f;
+    }
+
+    private IConsumableItem findFoodInInventory() {
+        final Iterable<ItemType> edibleItemTypes =
+            Arrays.stream(ItemType.values()).filter(ItemType::isEdible).collect(Collectors.toSet());
+
+        for (final ItemType edibleItemType : edibleItemTypes) {
+            if (inventory.hasItem(edibleItemType)) {
+                return (IConsumableItem) inventory.take(edibleItemType);
+            }
+        }
+        return null;
+    }
+
+    private void eat(final IConsumableItem item) {
+        hunger = Math.min(MAX_HUNGER, hunger + item.getNutrientValue());
     }
 
     private void onArrivedAtDestination(final Position segmentDestination) {
@@ -187,6 +198,25 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     private boolean hasChangedSign(final float posX, final float posX2) {
         return Math.signum(posX) != Math.signum(posX2);
+    }
+
+    public Position getDestination() {
+        return destination;
+    }
+
+    @Override
+    public float getHealthRatio() {
+        return health / MAX_HEALTH;
+    }
+
+    @Override
+    public void setDestination(final Position destination) {
+        this.destination = destination;
+    }
+
+    @Override
+    public void addItem(final IItem item) {
+        inventory.tryAdd(item);
     }
 
 }

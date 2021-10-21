@@ -22,7 +22,9 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.inventory.items.IConsumableItem;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.testutils.InMemorySerialize;
 import com.thebois.testutils.MockFactory;
@@ -31,6 +33,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class BeingTests {
+
+    private static final float HUNGER_RATE = 1f;
 
     public static Stream<Arguments> getPositionsAndDestinations() {
         return Stream.of(Arguments.of(new Position(0, 0), new Position(0, 0)),
@@ -326,6 +330,74 @@ public class BeingTests {
         assertThat(being).isEqualTo(deserializedBeing);
     }
 
+    @Test
+    public void doesNotLoseHealthWhenHasFoodInInventoryAndTimePasses() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+        final float timeToPass = 50f;
+        final float startHealthRatio = being.getHealthRatio();
+
+        final IConsumableItem food = MockFactory.createEdibleItem(0.1f, 100f, ItemType.FISH);
+        being.addItem(food);
+
+        // Act
+        being.update(timeToPass);
+        // Calling method in order for pawn to not die instantly.
+        being.update(timeToPass);
+        final float endHealthRatio = being.getHealthRatio();
+
+        //Assert
+        assertThat(endHealthRatio).isEqualTo(startHealthRatio);
+    }
+
+    @Test
+    public void doesNotEatFoodWhenNotHungry() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+        final float timeToPass = 0.1f;
+
+        final IConsumableItem food = MockFactory.createEdibleItem(0.1f, 100f, ItemType.FISH);
+        being.addItem(food);
+
+        // Act
+        being.update(timeToPass);
+
+        //Assert
+        verify(food, times(0)).getNutrientValue();
+    }
+
+    @Test
+    public void beingsLosesHealthWhenHasNoFoodInInventoryAndTimePasses() {
+        // Arrange
+        final IBeing being = createBeing();
+        final float timeToPass = 50f;
+        final float startHealthRatio = being.getHealthRatio();
+
+        // Act
+        being.update(timeToPass);
+        // Calling method in order for pawn to not die instantly.
+        being.update(timeToPass);
+        final float endHealthRatio = being.getHealthRatio();
+
+        //Assert
+        assertThat(endHealthRatio).isLessThan(startHealthRatio).isGreaterThan(0);
+    }
+
+    @Test
+    public void beingHealthRatioIsZeroAfterLongTimePasses() {
+        // Arrange
+        final IBeing being = createBeing();
+        final float timeToPass = 1000f;
+        final float expectedHealthRatio = 0;
+
+        // Act
+        being.update(timeToPass);
+        final float endHealthRatio = being.getHealthRatio();
+
+        //Assert
+        assertThat(endHealthRatio).isEqualTo(expectedHealthRatio);
+    }
+
     /**
      * A test role that does nothing.
      */
@@ -352,38 +424,6 @@ public class BeingTests {
             return List.of(performer -> nothingTask);
         }
 
-    }
-
-    @Test
-    public void beingsLosesHealthWhenTimePasses() {
-        // Arrange
-        final IBeing being = createBeing();
-        final float timeToPass = 50f;
-        final float startHealthRatio = being.getHealthRatio();
-
-        // Act
-        being.update(timeToPass);
-        // Calling method in order for pawn to not insta die.
-        being.update(timeToPass);
-        final float endHealthRatio = being.getHealthRatio();
-
-        //Assert
-        assertThat(endHealthRatio).isLessThan(startHealthRatio).isGreaterThan(0);
-    }
-
-    @Test
-    public void beingHealthRatioIsZeroAfterLongTimePasses() {
-        // Arrange
-        final IBeing being = createBeing();
-        final float timeToPass = 1000f;
-        final float expectedHealthRatio = 0;
-
-        // Act
-        being.update(timeToPass);
-        final float endHealthRatio = being.getHealthRatio();
-
-        //Assert
-        assertThat(endHealthRatio).isEqualTo(expectedHealthRatio);
     }
 
 }
