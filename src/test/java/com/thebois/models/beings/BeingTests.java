@@ -22,6 +22,7 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.inventory.IInventory;
 import com.thebois.models.world.IWorld;
 import com.thebois.testutils.InMemorySerialize;
 import com.thebois.testutils.MockFactory;
@@ -30,6 +31,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class BeingTests {
+
+    private static final IInventory inventory = mock(IInventory.class);
 
     public static Stream<Arguments> getPositionsAndDestinations() {
         return Stream.of(Arguments.of(new Position(0, 0), new Position(0, 0)),
@@ -80,7 +83,7 @@ public class BeingTests {
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
-        return new Pawn(currentPosition.deepClone(), role);
+        return new Pawn(currentPosition.deepClone(), role, inventory);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
@@ -341,6 +344,114 @@ public class BeingTests {
             return List.of(performer -> nothingTask);
         }
 
+    }
+
+    @Test
+    public void beingDelegatesTryAddToInventory() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+
+        // Act
+        being.tryAdd(any());
+
+        // Assert
+        verify(inventory, times(1)).tryAdd(any());
+    }
+
+    @Test
+    public void beingDelegatesAddMultipleToInventory() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+
+        // Act
+        being.addMultiple(any());
+
+        // Assert
+        verify(inventory, times(1)).addMultiple(any());
+    }
+
+    @Test
+    public void beingDelegatesCanFitItemToInventory() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+
+        // Act
+        being.canFitItem(any());
+
+        // Assert
+        verify(inventory, times(1)).canFitItem(any());
+    }
+
+    @Test
+    public void beingDelegatesIsFullToInventory() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+
+        // Act
+        being.isFull();
+
+        // Assert
+        verify(inventory, times(1)).isFull();
+    }
+
+    @Test
+    public void beingDelegatesHasItemToInventory() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+
+        // Act
+        being.hasItem(any());
+
+        // Assert
+        verify(inventory, times(1)).hasItem(any());
+    }
+
+    @Test
+    public void beingDelegatesHasItemAmountToInventory() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+
+        // Act
+        being.hasItem(any(), anyInt());
+
+        // Assert
+        verify(inventory, times(1)).hasItem(any(), anyInt());
+    }
+
+    @Test
+    public void beingDelegatesNumberOfToInventory() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+
+        // Act
+        being.numberOf(any());
+
+        // Assert
+        verify(inventory, times(1)).numberOf(any());
+    }
+
+    @Test
+    public void beingDelegatesTakeToInventory() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+
+        // Act
+        being.take(any());
+
+        // Assert
+        verify(inventory, times(1)).take(any());
+    }
+
+    @Test
+    public void beingDelegatesTakeAmountToInventory() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+
+        // Act
+        being.takeAmount(any(), anyInt());
+
+        // Assert
+        verify(inventory, times(1)).takeAmount(any(), anyInt());
     }
 
 }

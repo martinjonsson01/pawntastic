@@ -11,11 +11,14 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.inventory.Inventory;
 
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
  */
 public class Colony extends AbstractBeingGroup implements IRoleAllocator {
+
+    private static final float PAWN_INVENTORY_MAX_CAPACITY = 100f;
 
     /**
      * Creates a colony and fills it with pawns in the provided open positions.
@@ -26,7 +29,8 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         final Collection<IBeing> pawns = new ArrayList<>();
         for (final Position vacantPosition : vacantPositions) {
             final AbstractRole role = RoleFactory.idle();
-            pawns.add(new Pawn(vacantPosition, role));
+            pawns.add(new Pawn(vacantPosition, role, new Inventory(PAWN_INVENTORY_MAX_CAPACITY) {
+            }));
         }
         setBeings(pawns);
     }
@@ -113,4 +117,5 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
                           .filter(being -> role.equals(being.getRole()))
                           .collect(Collectors.toList());
     }
+
 }
