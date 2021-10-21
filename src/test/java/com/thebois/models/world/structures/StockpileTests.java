@@ -214,4 +214,30 @@ public class StockpileTests {
         verify(inventory, times(1)).takeAmount(any(), anyInt());
     }
 
+    @Test
+    public void stockpileDelegatesTakeNextItemToInventory() {
+        // Arrange
+        final IStructure structure = createStockpile();
+        final ITakeable stockpile = (ITakeable) structure;
+
+        // Act
+        stockpile.takeNextItem();
+
+        // Assert
+        verify(inventory, times(1)).takeNextItem();
+    }
+
+    @Test
+    public void stockpileDelegatesIsEmptyToInventory() {
+        // Arrange
+        final IStructure structure = createStockpile();
+        final ITakeable stockpile = (ITakeable) structure;
+
+        // Act
+        stockpile.isEmpty();
+
+        // Assert
+        verify(inventory, times(1)).isEmpty();
+    }
+
 }

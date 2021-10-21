@@ -112,7 +112,6 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         }
 
         return ActionFactory.createGiveItem(storeable,
-                                            resourceType.getItemType(),
                                             structure.getPosition());
     }
 

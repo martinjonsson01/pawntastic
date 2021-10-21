@@ -23,6 +23,7 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.Inventory;
 import com.thebois.models.world.IWorld;
 import com.thebois.testutils.InMemorySerialize;
 import com.thebois.testutils.MockFactory;
@@ -308,7 +309,7 @@ public class BeingTests {
     @Test
     public void sameObjectAfterDeserialization() throws ClassNotFoundException, IOException {
         // Arrange
-        final IBeing being = createBeing();
+        final IBeing being = new Pawn(new Position(0, 0), RoleFactory.idle(), new Inventory());
 
         // Act
         final byte[] serializedBeing = InMemorySerialize.serialize(being);
@@ -452,6 +453,30 @@ public class BeingTests {
 
         // Assert
         verify(inventory, times(1)).takeAmount(any(), anyInt());
+    }
+
+    @Test
+    public void beingDelegatesTakeNextItemToInventory() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+
+        // Act
+        being.takeNextItem();
+
+        // Assert
+        verify(inventory, times(1)).takeNextItem();
+    }
+
+    @Test
+    public void beingDelegatesIsEmptyToInventory() {
+        // Arrange
+        final AbstractBeing being = createBeing();
+
+        // Act
+        being.isEmpty();
+
+        // Assert
+        verify(inventory, times(1)).isEmpty();
     }
 
 }

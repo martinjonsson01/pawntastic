@@ -125,6 +125,16 @@ public class Inventory implements IInventory {
     }
 
     @Override
+    public boolean isEmpty() {
+        return calculateTotalWeight() == 0f;
+    }
+
+    @Override
+    public IItem takeNextItem() {
+        return items.remove(items.size() - 1);
+    }
+
+    @Override
     public boolean canFitItem(final ItemType itemType) {
         final IItem item = ItemFactory.fromType(itemType);
         final float weight = calculateTotalWeight();

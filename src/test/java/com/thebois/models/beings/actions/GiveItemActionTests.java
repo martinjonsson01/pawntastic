@@ -23,7 +23,7 @@ public class GiveItemActionTests {
         final ItemType itemType = ItemType.ROCK;
         storeable = mock(IStoreable.class);
         performer = mock(IActionPerformer.class);
-        action = ActionFactory.createGiveItem(storeable, itemType, position);
+        action = ActionFactory.createGiveItem(storeable, position);
     }
 
     @Test
@@ -41,7 +41,7 @@ public class GiveItemActionTests {
     @Test
     public void StorableDoNoTGetItemIfPerformerDoNotHaveItem() {
         // Arrange
-        when(performer.hasItem(any())).thenReturn(false);
+        when(performer.isEmpty()).thenReturn(true);
 
         // Act
         action.perform(performer);
@@ -51,9 +51,9 @@ public class GiveItemActionTests {
     }
 
     @Test
-    public void isCompletedIfPerformerHasNoMoreItemsOfItemType() {
+    public void isCompletedIfPerformerHasNoMoreItems() {
         // Arrange
-        when(performer.hasItem(any())).thenReturn(false);
+        when(performer.isEmpty()).thenReturn(true);
 
         // Act
         final boolean isCompleted = action.isCompleted(performer);
@@ -63,9 +63,9 @@ public class GiveItemActionTests {
     }
 
     @Test
-    public void isNotCompletedIfPerformerHasMoreItemsOfItemType() {
+    public void isNotCompletedIfPerformerHasMoreItems() {
         // Arrange
-        when(performer.hasItem(any())).thenReturn(true);
+        when(performer.isEmpty()).thenReturn(false);
 
         // Act
         final boolean isCompleted = action.isCompleted(performer);

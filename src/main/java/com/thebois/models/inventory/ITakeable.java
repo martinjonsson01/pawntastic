@@ -62,4 +62,18 @@ public interface ITakeable {
      */
     int numberOf(ItemType itemType);
 
+    /**
+     * Checks if the inventory is empty.
+     *
+     * @return Whether the inventory is empty or not.
+     */
+    boolean isEmpty();
+
+    /**
+     * Gets the top most item.
+     *
+     * @return The item to take.
+     */
+    IItem takeNextItem();
+
 }

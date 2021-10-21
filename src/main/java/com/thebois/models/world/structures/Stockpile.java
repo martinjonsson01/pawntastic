@@ -94,4 +94,14 @@ class Stockpile extends AbstractStructure implements ITakeable, IStoreable {
         return inventory.numberOf(itemType);
     }
 
+    @Override
+    public boolean isEmpty() {
+        return inventory.isEmpty();
+    }
+
+    @Override
+    public IItem takeNextItem() {
+        return inventory.takeNextItem();
+    }
+
 }

@@ -72,16 +72,14 @@ public final class ActionFactory {
      * Creates a give item task.
      *
      * @param storeable To where the items should be given.
-     * @param itemType  What type of item to receive.
      * @param position  The position of the storable.
      *
      * @return The give item task.
      */
     public static IAction createGiveItem(
         final IStoreable storeable,
-        final ItemType itemType,
         final Position position) {
-        return new GiveItemAction(storeable, itemType, position);
+        return new GiveItemAction(storeable, position);
     }
 
     /**
