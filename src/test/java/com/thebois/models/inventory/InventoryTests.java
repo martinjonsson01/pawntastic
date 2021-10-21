@@ -343,4 +343,44 @@ public class InventoryTests {
         assertThat(doesItemFit).isTrue();
     }
 
+    @Test
+    public void IsEmptyIfNoItemsHaveBeenAdded() {
+        // Arrange
+        final Inventory inventory = new Inventory();
+
+        // Act
+        final boolean isEmpty = inventory.isEmpty();
+
+        // Assert
+        assertThat(isEmpty).isTrue();
+    }
+
+    @Test
+    public void isNotEmptyIfItemsHaveBeenAdded() {
+        // Arrange
+        final Inventory inventory = new Inventory(20f);
+        inventory.tryAdd(ItemFactory.fromType(ItemType.ROCK));
+        // Act
+        final boolean isEmpty = inventory.isEmpty();
+
+        // Assert
+        assertThat(isEmpty).isFalse();
+    }
+
+    @Test
+    public void takeNextItemGetsTheLastAddedItem() {
+        // Arrange
+        final Inventory inventory = new Inventory(50f);
+        final IItem item1 = ItemFactory.fromType(ItemType.ROCK);
+        final IItem item2 = ItemFactory.fromType(ItemType.FISH);
+
+        inventory.tryAdd(item1);
+        inventory.tryAdd(item2);
+        // Act
+        final IItem lastAddedItem = inventory.takeNextItem();
+
+        // Assert
+        assertThat(lastAddedItem).isEqualTo(item2);
+    }
+
 }
