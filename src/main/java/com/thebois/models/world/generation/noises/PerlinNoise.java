@@ -50,34 +50,34 @@ public class PerlinNoise implements INoise {
     /**
      * Generates a float value with Perlin Noise algorithm given a position.
      *
-     * @param coordinateX X coordinate for the position.
-     * @param coordinateY Y coordinate for the position.
+     * @param x X coordinate for the position.
+     * @param y Y coordinate for the position.
      *
      * @return The Perlin Noise value.
      */
     @Override
-    public float sample(final float coordinateX, final float coordinateY) {
+    public float sample(final float x, final float y) {
         double total = 0;
         for (int i = 0; i < octaves; i++) {
             currentOctave = i;
             final double octaveAmplification = Math.pow(persistence, i);
             final double frequencyOffSet = frequency * Math.pow(2, i);
 
-            total = total + interpolateNoise(coordinateX * frequencyOffSet + seed,
-                                             coordinateY * frequencyOffSet + seed)
+            total = total + interpolateNoise(x * frequencyOffSet + seed,
+                                             y * frequencyOffSet + seed)
                             * octaveAmplification;
         }
         return (float) (total * amplitude);
     }
 
-    private double interpolateNoise(final double coordinateX, final double coordinateY) {
+    private double interpolateNoise(final double x, final double y) {
         // Convert to integers
-        final int integerX = (int) coordinateX;
-        final int integerY = (int) coordinateY;
+        final int integerX = (int) x;
+        final int integerY = (int) y;
 
         // Get fractals
-        final double fractalX = coordinateX - integerX;
-        final double fractalY = coordinateY - integerY;
+        final double fractalX = x - integerX;
+        final double fractalY = y - integerY;
 
         // Get gradients
         final double vector1 = smoothNoise(integerX, integerY);
@@ -106,35 +106,35 @@ public class PerlinNoise implements INoise {
         return value1 + alphaValue * (value2 - value1);
     }
 
-    private double smoothNoise(final int coordinateX, final int coordinateY) {
+    private double smoothNoise(final int x, final int y) {
         // Corners
-        final double corners = smoothenValueForCorners(coordinateX, coordinateY);
+        final double corners = smoothenValueForCorners(x, y);
 
         // Sides
-        final float sides = smoothenValueForSides(coordinateX, coordinateY);
+        final float sides = smoothenValueForSides(x, y);
 
         // Center
-        final float center = noise(coordinateX, coordinateY) / 4;
+        final float center = noise(x, y) / 4;
 
         return center + sides + corners;
     }
 
-    private float smoothenValueForSides(final int coordinateX, final int coordinateY) {
+    private float smoothenValueForSides(final int x, final int y) {
         final int smoothenFactor = 8;
-        final float side1 = noise(coordinateX - 1, coordinateY);
-        final float side2 = noise(coordinateX + 1, coordinateY);
-        final float side3 = noise(coordinateX, coordinateY - 1);
-        final float side4 = noise(coordinateX, coordinateY + 1);
+        final float side1 = noise(x - 1, y);
+        final float side2 = noise(x + 1, y);
+        final float side3 = noise(x, y - 1);
+        final float side4 = noise(x, y + 1);
 
         return (side1 + side2 + side3 + side4) / smoothenFactor;
     }
 
-    private double smoothenValueForCorners(final int coordinateX, final int coordinateY) {
+    private double smoothenValueForCorners(final int x, final int y) {
         final int smoothenFactor = 16;
-        final float corner1 = noise(coordinateX - 1, coordinateY - 1);
-        final float corner2 = noise(coordinateX - 1, coordinateY + 1);
-        final float corner3 = noise(coordinateX + 1, coordinateY - 1);
-        final float corner4 = noise(coordinateX + 1, coordinateY + 1);
+        final float corner1 = noise(x - 1, y - 1);
+        final float corner2 = noise(x - 1, y + 1);
+        final float corner3 = noise(x + 1, y - 1);
+        final float corner4 = noise(x + 1, y + 1);
 
         return (corner1 + corner2 + corner3 + corner4) / smoothenFactor;
     }
@@ -142,12 +142,12 @@ public class PerlinNoise implements INoise {
     /**
      * Generates a pseudo random value with given position and current octave.
      *
-     * @param coordinateX X coordinate for the position.
-     * @param coordinateY Y coordinate for the position.
+     * @param x X coordinate for the position.
+     * @param y Y coordinate for the position.
      *
      * @return The generated noise.
      */
-    private float noise(final int coordinateX, final int coordinateY) {
+    private float noise(final int x, final int y) {
         int temporaryValue1;
         int temporaryValue2;
 
@@ -161,7 +161,7 @@ public class PerlinNoise implements INoise {
         final int primeNumber2 = primeNumbers[1 + currentOctave % resetValue];
         final int primeNumber3 = primeNumbers[2 + currentOctave % resetValue];
 
-        temporaryValue1 = coordinateX + coordinateY * variable1;
+        temporaryValue1 = x + y * variable1;
         temporaryValue1 = (temporaryValue1 << variable2) ^ temporaryValue1;
         temporaryValue2 = temporaryValue1 * temporaryValue1 * primeNumber1 + primeNumber2;
         temporaryValue2 = temporaryValue1 * temporaryValue2 + primeNumber3;

@@ -16,13 +16,14 @@ import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.Inventory;
 import com.thebois.models.IStructureFinder;
 
 /**
  * An abstract implementation of IBeing.
  */
 public abstract class AbstractBeing implements IBeing {
-
     /**
      * The max speed of the being, in tiles/second.
      */
@@ -32,9 +33,14 @@ public abstract class AbstractBeing implements IBeing {
      * arrived.
      */
     private static final float DESTINATION_REACHED_DISTANCE = 0.01f;
+    /**
+     * How many kilograms a being can carry.
+     */
+    private static final float MAX_CARRYING_CAPACITY = 100f;
     private final IPathFinder pathFinder;
-    private Position position;
+    private final IInventory inventory = new Inventory(MAX_CARRYING_CAPACITY);
     private Stack<Position> path;
+    private Position position;
     private AbstractRole role;
     private final IStructureFinder finder;
 
@@ -157,8 +163,8 @@ public abstract class AbstractBeing implements IBeing {
         final Position destination, final Position delta, final Position newPosition) {
         // Destination has been overshot if the delta has changed sign before and after moving.
         final Position newDelta = destination.subtract(newPosition);
-        return hasChangedSign(newDelta.getPosX(), delta.getPosX())
-               || hasChangedSign(newDelta.getPosY(), delta.getPosY());
+        return hasChangedSign(newDelta.getX(), delta.getX()) || hasChangedSign(newDelta.getY(),
+                                                                               delta.getY());
     }
 
     private boolean hasChangedSign(final float posX, final float posX2) {
@@ -218,9 +224,9 @@ public abstract class AbstractBeing implements IBeing {
         Position nearestNeighbor = new Position(Float.MAX_VALUE, Float.MAX_VALUE);
         Position lastPosition;
 
-        for (int i = 0; i < positionOffsets.length; i++) {
-            final float x = destination.getPosX() + positionOffsets[i][0];
-            final float y = destination.getPosY() + positionOffsets[i][1];
+        for (final int[] positionOffset : positionOffsets) {
+            final float x = destination.getX() + positionOffset[0];
+            final float y = destination.getY() + positionOffset[1];
             lastPosition = new Position(x, y);
 
             if (getPosition().distanceTo(nearestNeighbor)

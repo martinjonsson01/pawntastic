@@ -18,6 +18,7 @@ import com.thebois.views.info.IActorView;
  */
 public class GameScreen implements Screen {
 
+    private static final float INFO_PANEL_WIDTH = 250f;
     private final OrthographicCamera camera;
     private final FitViewport viewport;
     private final Color backgroundColor = new Color(0, 0, 0.2f, 1);
@@ -59,7 +60,7 @@ public class GameScreen implements Screen {
 
         final Table infoAndGameTable = new Table();
         infoAndGameTable.setFillParent(true);
-        infoAndGameTable.add(infoView.getWidgetContainer()).fillY().expandY();
+        infoAndGameTable.add(infoView.getWidgetContainer()).fill().expand();
         infoAndGameTable.add(gameAndToolbarContainer).top().left().expandY().fillY();
         // Add to stage
         stage.addActor(infoAndGameTable);

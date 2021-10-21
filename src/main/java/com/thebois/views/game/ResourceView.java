@@ -39,8 +39,8 @@ public class ResourceView implements IView {
             batch.setColor(Color.WHITE);
             batch.draw(
                 viewableResource.getTexture(),
-                offsetX + resource.getPosition().getPosX() * TILE_SIZE,
-                offsetY + resource.getPosition().getPosY() * TILE_SIZE,
+                offsetX + resource.getPosition().getX() * TILE_SIZE,
+                offsetY + resource.getPosition().getY() * TILE_SIZE,
                 TILE_SIZE,
                 TILE_SIZE);
         }
