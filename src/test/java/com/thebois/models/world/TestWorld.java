@@ -23,11 +23,7 @@ public class TestWorld extends World {
     @Override
     protected ITerrain[][] setUpTerrain(final int worldSize, final int seed) {
         final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
-                terrainMatrix[y][x] = TerrainFactory.createTerrain(TerrainType.GRASS, x, y);
-            }
-        }
+        MatrixUtils.populateElements(terrainMatrix, (x, y) -> TerrainFactory.createTerrain(TerrainType.GRASS, x, y));
         return terrainMatrix;
     }
 
