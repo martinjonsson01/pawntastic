@@ -669,15 +669,10 @@ public class WorldTests {
         final Position createTownHallPosition = new Position(12, 12);
 
         // Act
-        world.tryCreateStructure(StructureType.TOWN_HALL, createTownHallPosition);
+        final boolean creationResult = world.tryCreateStructure(StructureType.TOWN_HALL, createTownHallPosition);
 
         // Assert
-        assertThat(world
-                       .getStructures()
-                       .stream()
-                       .anyMatch(structure -> structure
-                           .getType()
-                           .equals(StructureType.HOUSE))).isTrue();
+        assertThat(creationResult).isFalse();
     }
 
     @Test
