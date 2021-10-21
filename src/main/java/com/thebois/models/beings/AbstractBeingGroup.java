@@ -3,7 +3,6 @@ package com.thebois.models.beings;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serial;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -15,7 +14,7 @@ import com.thebois.listeners.events.OnDeathEvent;
 /**
  * An abstract implementation of IBeingGroup.
  */
-public abstract class AbstractBeingGroup implements IBeingGroup, Serializable {
+public abstract class AbstractBeingGroup implements IBeingGroup {
 
     private Collection<IBeing> beings = new ArrayList<>();
     private Collection<IBeing> deadBeings = new ArrayList<>();
