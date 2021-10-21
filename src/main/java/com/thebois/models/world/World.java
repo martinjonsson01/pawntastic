@@ -30,8 +30,6 @@ import com.thebois.utils.MatrixUtils;
 public class World
     implements IWorld, IStructureFinder, IResourceFinder, IPositionFinder, Serializable {
 
-    private static final StructureType DEFAULT_STRUCTURE_TYPE = StructureType.HOUSE;
-
     private final ITerrain[][] terrainMatrix;
     private final IStructure[][] structureMatrix;
     private final IResource[][] resourceMatrix;
@@ -39,7 +37,7 @@ public class World
     private final int worldSize;
     private final ThreadLocalRandom random;
     private Collection<IStructure> structuresCache = new ArrayList<>();
-    private boolean townHallPlaced = calculateIsTownHallPlaced();
+    private boolean townHallPlaced = false;
 
     /**
      * Initiates the world with the given size.
@@ -135,19 +133,11 @@ public class World
         return MatrixUtils.toCollection(canonicalMatrix)
                           .stream()
                           .filter(iTile -> !iTile.getPosition().equals(position)
-                                           && !isTileOutOfBounds(iTile)
                                            && !isTileOccupied(iTile)
                                            && isTileWithinRadiusOf(iTile, position, radius))
                           .limit(maxCount)
                           .map(ITile::getPosition)
                           .collect(Collectors.toList());
-    }
-
-    private boolean isTileOutOfBounds(final ITile tile) {
-        return tile.getPosition().getX() > worldSize
-               || tile.getPosition().getX() < 0
-               || tile.getPosition().getY() > worldSize
-               || tile.getPosition().getY() < 0;
     }
 
     private boolean isTileOccupied(final ITile tile) {
@@ -244,12 +234,6 @@ public class World
      */
     public boolean isTownHallPlaced() {
         return townHallPlaced;
-    }
-
-    private boolean calculateIsTownHallPlaced() {
-        return getStructures().stream().anyMatch(iStructure -> iStructure
-            .getType()
-            .equals(StructureType.TOWN_HALL));
     }
 
     private void postObstacleEvent(final int x, final int y) {

@@ -717,11 +717,11 @@ public class WorldTests {
 
     public static Stream<Arguments> getPositionsToStartSearchFrom() {
         return Stream.of(Arguments.of(new Position(0, 0), 10),
-                         Arguments.of(new Position(0, 49), 50),
+                         Arguments.of(new Position(0, 49), 30),
                          Arguments.of(new Position(49, 49), 20),
                          Arguments.of(new Position(49, 0), 30),
                          Arguments.of(new Position(20, 20), 10),
-                         Arguments.of(new Position(40, 0), 2));
+                         Arguments.of(new Position(40, 0), 200));
     }
 
     @ParameterizedTest
