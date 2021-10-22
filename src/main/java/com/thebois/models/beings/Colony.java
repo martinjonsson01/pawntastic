@@ -139,7 +139,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         final Iterable<Position> vacantPositions =
             positionFinder.tryGetEmptyPositionsNextTo(event.getPosition(),
                                                       numberOfPawnsToSpawn,
-                                                      2);
+                                                      (float) (numberOfPawnsToSpawn / Math.sqrt(numberOfPawnsToSpawn)));
         for (final Position vacantPosition : vacantPositions) {
             addBeing(new Pawn(vacantPosition, RoleFactory.idle(), RoleFactory.fisher(), eventBusSource));
         }

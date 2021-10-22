@@ -1,22 +1,14 @@
 package com.thebois.models.beings;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
-
-import javax.management.relation.Role;
-
 import com.google.common.eventbus.EventBus;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,29 +16,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
-
-import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
 import com.thebois.listeners.events.OnDeathEvent;
-import com.thebois.listeners.events.OnSpawnPawnEvent;
 import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
-import com.thebois.models.beings.pathfinding.AstarPathFinder;
-import com.thebois.models.beings.pathfinding.IPathFinder;
-import com.thebois.models.beings.roles.IdleRoleTests;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.world.IWorld;
-import com.thebois.models.world.terrains.TerrainFactory;
-import com.thebois.models.world.terrains.TerrainType;
-import com.thebois.testutils.InMemorySerialize;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
-import com.thebois.models.world.resources.ResourceType;
-import com.thebois.models.world.resources.Stone;
-import com.thebois.models.world.resources.Tree;
-import com.thebois.models.world.resources.Water;
 import com.thebois.models.world.structures.StructureType;
 
 import static org.assertj.core.api.Assertions.*;
@@ -145,7 +124,7 @@ public class ColonyTests {
         RoleFactory.setStructureFinder(world);
         RoleFactory.setWorld(world);
 
-        colony.addBeing(new Pawn(new Position(), RoleFactory.idle(), EventBus::new));
+        colony.addBeing(new Pawn(new Position(), RoleFactory.idle(), RoleFactory.fisher(), EventBus::new));
 
         // Act
         final byte[] serialized1 = serialize(colony);

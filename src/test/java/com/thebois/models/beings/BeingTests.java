@@ -93,16 +93,15 @@ public class BeingTests {
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role, final AbstractRole hungerRole) {
-        return new Pawn(currentPosition, role, hungerRole);
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        return new Pawn(currentPosition, role, hungerRole, ()->mockEventBusSource);
     }
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
         final AbstractRole hungerRole = new NothingRole();
-        return new Pawn(currentPosition, role, hungerRole);
-
         final EventBus mockEventBusSource = mock(EventBus.class);
-        return new Pawn(currentPosition.deepClone(), role, ()->mockEventBusSource);
+        return new Pawn(currentPosition, role, hungerRole, ()->mockEventBusSource);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
