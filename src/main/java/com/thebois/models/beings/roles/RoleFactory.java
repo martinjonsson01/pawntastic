@@ -57,8 +57,6 @@ public final class RoleFactory {
     public static Collection<AbstractRole> all() {
         final ArrayList<AbstractRole> roles = new ArrayList<>();
         roles.add(lumberjack());
-        roles.add(farmer());
-        roles.add(guard());
         roles.add(miner());
         roles.add(fisher());
         roles.add(builder());
@@ -74,24 +72,6 @@ public final class RoleFactory {
     public static AbstractRole lumberjack() {
         assertDependenciesNotNull();
         return new LumberjackRole(resourceFinder, world);
-    }
-
-    /**
-     * Creates a new farmer role.
-     *
-     * @return A new farmer role.
-     */
-    public static AbstractRole farmer() {
-        return new FarmerRole();
-    }
-
-    /**
-     * Creates a new guard role.
-     *
-     * @return A new guard role.
-     */
-    public static AbstractRole guard() {
-        return new GuardRole();
     }
 
     /**

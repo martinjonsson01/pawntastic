@@ -1,5 +1,8 @@
 package com.thebois.models.beings;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,14 +22,16 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
 import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
-import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
+import com.thebois.models.world.terrains.Grass;
+import com.thebois.testutils.InMemorySerialize;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
 import com.thebois.models.world.resources.ResourceType;
@@ -39,10 +44,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ColonyTests {
-
-    public static Stream<Arguments> getItemTypes() {
-        return Stream.of(Arguments.of(ItemType.LOG), Arguments.of(ItemType.ROCK));
-    }
 
     @BeforeEach
     public void setup() {
@@ -78,18 +79,12 @@ public class ColonyTests {
 //        assertThat(colony.getBeings().size()).isEqualTo(beingCount);
 //    }
 
-    private Colony mockColony() {
-        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-
-        final EventBus mockEventBusSource = mock(EventBus.class);
-        return new Colony(positionFinder, ()->mockEventBusSource);
-    }
-
     @Test
-    public void ensureBeingsUpdatesWhenColonyUpdates() {
+    public void ensureAliveBeingsUpdatesWhenColonyUpdates() {
         // Arrange
         final IBeing being = Mockito.mock(IBeing.class);
-        final Colony colony = mockColony();
+        when(being.getHealthRatio()).then(returnValue -> 1f);
+        final Colony colony = createColony();
 
         colony.addBeing(being);
         final float deltaTime = 0.1f;
@@ -99,6 +94,50 @@ public class ColonyTests {
 
         // Assert
         verify(being, times(1)).update(deltaTime);
+    }
+
+    private Colony createColony() {
+        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
+
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        return new Colony(positionFinder, ()->mockEventBusSource);
+    }
+
+    @Test
+    public void beingGroupRemovesDeadBeings() {
+        // Arrange
+        final IBeing being = Mockito.mock(IBeing.class);
+        final Colony colony = createColony();
+        colony.addBeing(being);
+        final int expectedAmountOfBeings = 0;
+        final float deltaTime = 0.1f;
+
+        // Act
+        Pawntastic.getEventBus().post(new OnDeathEvent(being));
+        colony.update(deltaTime);
+        final int actualAmountOfBeings = colony.getBeings().size();
+
+        // Assert
+        assertThat(actualAmountOfBeings).isEqualTo(expectedAmountOfBeings);
+    }
+
+    @Test
+    public void keepsListeningToDeathEventsAfterDeserialization() throws
+                                                                  ClassNotFoundException,
+                                                                  IOException {
+        // Arrange
+        final AbstractBeingGroup colony = createColony();
+        final IBeing being = mock(IBeing.class);
+        colony.addBeing(being);
+        final OnDeathEvent deathEvent = new OnDeathEvent(being);
+        //Act
+        final byte[] serializedColony = InMemorySerialize.serialize(colony);
+        final AbstractBeingGroup deserializedColony =
+            (AbstractBeingGroup) InMemorySerialize.deserialize(serializedColony);
+        Pawntastic.getEventBus().post(deathEvent);
+
+        // Assert
+        assertThat(deserializedColony.getBeings()).doesNotContain(being);
     }
 
     public static Stream<Arguments> getStructureCompletedEventsToTest() {

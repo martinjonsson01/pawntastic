@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
+import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
@@ -219,10 +220,7 @@ public class WorldTests {
     public void getNearbyOfTypeResourceReturnsItWhenSingleNearby() {
         // Arrange
         final World world = new ResourceTestWorld(mock(ThreadLocalRandom.class));
-        final IResource expectedResource = world.getResources()
-                                                .stream()
-                                                .findFirst()
-                                                .orElseThrow();
+        final IResource expectedResource = world.getResources().stream().findFirst().orElseThrow();
         final Position origin = new Position();
 
         // Act
@@ -351,8 +349,7 @@ public class WorldTests {
 
         // Act
         for (final Position position : expectedTilePositions) {
-            actualTilePositions.add(world.getTileAt(position)
-                                         .getPosition());
+            actualTilePositions.add(world.getTileAt(position).getPosition());
         }
         // Assert
         assertThat(actualTilePositions).containsExactlyInAnyOrderElementsOf(expectedTilePositions);
@@ -495,8 +492,7 @@ public class WorldTests {
         final Iterable<Position> emptyPositions = world.findEmptyPositions(numberOfWantedPositions);
 
         // Assert
-        final int numberOfEmptyPositions = Lists.newArrayList(emptyPositions)
-                                                .size();
+        final int numberOfEmptyPositions = Lists.newArrayList(emptyPositions).size();
         assertThat(numberOfEmptyPositions).isEqualTo(numberOfWantedPositions);
     }
 
@@ -509,8 +505,7 @@ public class WorldTests {
         final int expectedNumberOfTerrainTiles = worldSize * worldSize;
 
         // Act
-        final int actualNumberOfTerrainTiles = world.getTerrainTiles()
-                                                    .size();
+        final int actualNumberOfTerrainTiles = world.getTerrainTiles().size();
 
         // Assert
         assertThat(actualNumberOfTerrainTiles).isEqualTo(expectedNumberOfTerrainTiles);
@@ -542,8 +537,7 @@ public class WorldTests {
                                                                                    StructureType.HOUSE);
 
         // Assert
-        assertThat(foundStructure.orElseThrow()
-                                 .getPosition()).isEqualTo(expectedPosition);
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
     }
 
     @Test
@@ -573,8 +567,7 @@ public class WorldTests {
         }
 
         // Assert
-        assertThat(world.getStructures()
-                        .size()).isEqualTo(size);
+        assertThat(world.getStructures().size()).isEqualTo(size);
     }
 
     @Test
@@ -601,8 +594,7 @@ public class WorldTests {
                                                                                                     0));
 
         // Assert
-        assertThat(foundStructure.orElseThrow()
-                                 .getPosition()).isEqualTo(new Position(1, 3));
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(1, 3));
     }
 
     @Test

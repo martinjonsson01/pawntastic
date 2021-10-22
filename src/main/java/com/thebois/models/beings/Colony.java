@@ -1,15 +1,13 @@
 package com.thebois.models.beings;
 
-import java.io.IOException;
-import java.io.Serial;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.thebois.listeners.IEventBusSource;
 import com.google.common.eventbus.Subscribe;
 
-import com.thebois.listeners.IEventBusSource;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
@@ -32,13 +30,13 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     /**
      * Creates a colony and fills it with pawns in the provided open positions.
      *
+     * @param eventBusSource  A way of getting an event bus to listen for events on.
      * @param positionFinder Used to find positions in the world.
-     * @param eventBusSource Used to find positions in the world.
      *
      */
     public Colony(final IPositionFinder positionFinder, final IEventBusSource eventBusSource) {
+        super(eventBusSource);
         this.positionFinder = positionFinder;
-        eventBusSource.getEventBus().register(this);
     }
 
     @Override
@@ -155,4 +153,5 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
             }
         }
     }
+
 }
