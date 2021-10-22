@@ -11,6 +11,11 @@ import com.thebois.models.inventory.items.ItemType;
 class Water extends AbstractResource {
 
     /**
+     * The time it takes to harvest, in seconds.
+     */
+    private static final float HARVEST_TIME = 3f;
+
+    /**
      * Instantiate a new water resource at given position.
      *
      * @param position The position where the water resource should be created.
@@ -27,6 +32,11 @@ class Water extends AbstractResource {
     @Override
     public IItem harvest() {
         return ItemFactory.fromType(ItemType.FISH);
+    }
+
+    @Override
+    public float getHarvestTime() {
+        return HARVEST_TIME;
     }
 
     @Override

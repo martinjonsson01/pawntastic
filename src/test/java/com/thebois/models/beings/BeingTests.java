@@ -235,7 +235,7 @@ public class BeingTests {
         being.update(0.1f);
 
         // Assert
-        verify(task, times(1)).perform(being);
+        verify(task, times(1)).perform(being, 0.1f);
     }
 
     @Test

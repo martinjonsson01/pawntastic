@@ -1,5 +1,6 @@
 package com.thebois.models.world.resources;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.inventory.items.IItem;
@@ -9,11 +10,24 @@ import static org.assertj.core.api.Assertions.*;
 
 public class TreeTests {
 
+    private static IResource tree;
+
+    @BeforeEach
+    public void setup() {
+        tree = ResourceFactory.createResource(ResourceType.TREE, 0,0);
+    }
+
+    @Test
+    public void getHarvestTimeReturnsNonZeroValue() {
+        // Act
+        final float harvestTime = tree.getHarvestTime();
+
+        // Assert
+        assertThat(harvestTime).isNotZero();
+    }
+
     @Test
     public void harvestReturnsLog() {
-        // Arrange
-        final IResource tree = ResourceFactory.createResource(ResourceType.TREE, 0,0);
-
         // Act
         final IItem item = tree.harvest();
 
@@ -23,9 +37,6 @@ public class TreeTests {
 
     @Test
     public void getTypeFromTreeResource() {
-        // Arrange
-        final IResource tree = ResourceFactory.createResource(ResourceType.TREE, 1,1);
-
         // Act
         final ResourceType resourceType = tree.getType();
 
@@ -35,9 +46,6 @@ public class TreeTests {
 
     @Test
     public void getDeepCloneShouldBeEqualToOriginal() {
-        // Arrange
-        final IResource tree = ResourceFactory.createResource(ResourceType.TREE, 1,1);
-
         // Act
         final IResource deepClone = tree.deepClone();
 
@@ -48,7 +56,6 @@ public class TreeTests {
     @Test
     public void getCostIsFloatMax() {
         // Arrange
-        final IResource tree = ResourceFactory.createResource(ResourceType.TREE, 1,1);
         final float expectedValue = Float.MAX_VALUE;
 
         // Act

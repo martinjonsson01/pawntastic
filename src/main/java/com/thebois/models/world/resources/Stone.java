@@ -11,6 +11,11 @@ import com.thebois.models.inventory.items.ItemType;
 class Stone extends AbstractResource {
 
     /**
+     * The time it takes to harvest, in seconds.
+     */
+    private static final float HARVEST_TIME = 2f;
+
+    /**
      * Instantiate at a given position.
      *
      * @param position The location to place it.
@@ -37,6 +42,11 @@ class Stone extends AbstractResource {
     @Override
     public IItem harvest() {
         return ItemFactory.fromType(ItemType.ROCK);
+    }
+
+    @Override
+    public float getHarvestTime() {
+        return HARVEST_TIME;
     }
 
 }

@@ -17,7 +17,7 @@ public class DoNothingActionTests {
     @Test
     public void isCompletedReturnsTrueAfterPerformedOnce() {
         // Arrange
-        doNothing.perform(performer);
+        doNothing.perform(performer, 0.1f);
 
         // Act
         final boolean isCompleted = doNothing.isCompleted(performer);
@@ -37,7 +37,7 @@ public class DoNothingActionTests {
     @Test
     public void performDoesNotSetDestination() {
         // Act
-        doNothing.perform(performer);
+        doNothing.perform(performer, 0.1f);
 
         // Assert
         verify(performer, times(0)).setDestination(any());
@@ -46,7 +46,7 @@ public class DoNothingActionTests {
     @Test
     public void canPerformReturnsFalse() {
         // Act
-        doNothing.perform(performer);
+        doNothing.perform(performer, 0.1f);
         final boolean canPerform = doNothing.canPerform(performer);
 
         // Assert

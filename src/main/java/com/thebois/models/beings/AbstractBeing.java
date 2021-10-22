@@ -92,12 +92,11 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     @Override
     public void update(final float deltaTime) {
-
         updateHunger(deltaTime);
         updateHealth(deltaTime);
         if (health > 0f) {
             role.obtainNextAction(this)
-                .perform(this);
+                .perform(this, deltaTime);
             move(deltaTime);
         }
     }

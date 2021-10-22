@@ -16,7 +16,7 @@ public class DoNothingAction implements IAction, Serializable {
     private boolean isDone = false;
 
     @Override
-    public void perform(final IActionPerformer performer) {
+    public void perform(final IActionPerformer performer, final float deltaTime) {
         isDone = true;
     }
 
