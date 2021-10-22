@@ -22,6 +22,7 @@ import com.thebois.models.world.IWorld;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
 import com.thebois.models.world.structures.StructureType;
+import com.thebois.testutils.MockFactory;
 import com.thebois.models.world.terrains.TerrainFactory;
 import com.thebois.models.world.terrains.TerrainType;
 
@@ -82,7 +83,7 @@ public class AstarPathFinderTests {
     @Test
     public void pathAvoidsTilesWithHighCost() {
         // Arrange
-        final IWorld world = testWorld3x3WithObstacles();
+        final IWorld world = createTestWorld3x3WithObstacles();
         final IPathFinder cut = new AstarPathFinder(world);
         final Position start = new Position(0, 0);
         final Position destination = new Position(2, 2);
@@ -114,11 +115,12 @@ public class AstarPathFinderTests {
      *
      * @return The mocked world.
      */
-    private IWorld testWorld3x3WithObstacles() {
+    private IWorld createTestWorld3x3WithObstacles() {
         final World world = createTestWorld(3);
 
         world.tryCreateStructure(StructureType.HOUSE, 1, 0);
         world.tryCreateStructure(StructureType.HOUSE, 1, 1);
+        MockFactory.completeAllStructures(world);
 
         return world;
     }

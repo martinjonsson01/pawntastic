@@ -24,7 +24,7 @@ public class BuildAction extends AbstractTimeAction implements Serializable {
     /**
      * How many seconds it takes to transfer a single item to the structure.
      */
-    private static final float ITEM_TRANSFER_TIME = 5f;
+    private static final float ITEM_TRANSFER_TIME = 1f;
     private final IStructure toBuild;
 
     /**

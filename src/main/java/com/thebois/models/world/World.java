@@ -161,7 +161,9 @@ public class World
     private boolean isVacant(final Position position) {
         final int x = (int) position.getX();
         final int y = (int) position.getY();
-        return canonicalMatrix[y][x].getCost() < Float.MAX_VALUE;
+        final ITile tile = this.canonicalMatrix[y][x];
+        if (tile instanceof IStructure) return false;
+        return tile.getCost() < Float.MAX_VALUE;
     }
 
     /**
@@ -238,8 +240,7 @@ public class World
 
     private void postObstacleEvent(final int x, final int y) {
         final ObstaclePlacedEvent obstacleEvent = new ObstaclePlacedEvent(x, y);
-        Pawntastic.getEventBus()
-                  .post(obstacleEvent);
+        Pawntastic.getEventBus().post(obstacleEvent);
     }
 
     private void generateStructuresCache() {
@@ -250,8 +251,7 @@ public class World
     public Optional<IStructure> getNearbyStructureOfType(
         final Position origin, final StructureType type) {
         return getStructures().stream()
-                              .filter(structure -> structure.getType()
-                                                            .equals(type))
+                              .filter(structure -> structure.getType().equals(type))
                               .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
                                                              origin.distanceTo(o2.getPosition())));
     }
@@ -277,8 +277,7 @@ public class World
     @Override
     public Optional<IResource> getNearbyOfType(final Position origin, final ResourceType type) {
         return getResources().stream()
-                             .filter(resource -> resource.getType()
-                                                         .equals(type))
+                             .filter(resource -> resource.getType().equals(type))
                              .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
                                                             origin.distanceTo(o2.getPosition())));
     }
@@ -355,8 +354,7 @@ public class World
                                                                .findFirst();
         if (firstVacantNeighbour.isEmpty()) return Optional.empty();
 
-        Position closest = firstVacantNeighbour.get()
-                                               .getPosition();
+        Position closest = firstVacantNeighbour.get().getPosition();
 
         for (final ITile neighbour : neighbours) {
             final Position current = neighbour.getPosition();
@@ -370,14 +368,10 @@ public class World
     }
 
     private boolean isDiagonalTo(final ITile tile, final ITile neighbour) {
-        final int tileX = (int) tile.getPosition()
-                                    .getX();
-        final int tileY = (int) tile.getPosition()
-                                    .getY();
-        final int neighbourX = (int) neighbour.getPosition()
-                                              .getX();
-        final int neighbourY = (int) neighbour.getPosition()
-                                              .getY();
+        final int tileX = (int) tile.getPosition().getX();
+        final int tileY = (int) tile.getPosition().getY();
+        final int neighbourX = (int) neighbour.getPosition().getX();
+        final int neighbourY = (int) neighbour.getPosition().getY();
         final int deltaX = Math.abs(tileX - neighbourX);
         final int deltaY = Math.abs(tileY - neighbourY);
         return deltaX == 1 && deltaY == 1;

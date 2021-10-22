@@ -33,6 +33,7 @@ import com.thebois.models.world.resources.ResourceType;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.ITerrain;
+import com.thebois.testutils.MockFactory;
 import com.thebois.models.world.terrains.TerrainFactory;
 import com.thebois.models.world.terrains.TerrainType;
 
@@ -171,6 +172,7 @@ public class WorldTests {
         world.tryCreateStructure(StructureType.HOUSE, 2, 2);
         world.tryCreateStructure(StructureType.HOUSE, 3, 2);
         world.tryCreateStructure(StructureType.HOUSE, 4, 2);
+        MockFactory.completeAllStructures(world);
         final ITile tile = mockTile(3, 3);
 
         // Act
@@ -196,6 +198,7 @@ public class WorldTests {
         world.tryCreateStructure(StructureType.HOUSE, 0, 1);
         world.tryCreateStructure(StructureType.HOUSE, 2, 1);
         world.tryCreateStructure(StructureType.HOUSE, 1, 2);
+        MockFactory.completeAllStructures(world);
         final ITile tile = mockTile(1, 1);
         final Position from = new Position(0, 0);
 
@@ -286,8 +289,8 @@ public class WorldTests {
         final Position expectedSpot = new Position(randomCoordinate, randomCoordinate);
 
         // Act
-        final Position vacantSpot = world.getRandomVacantSpotInRadiusOf(new Position(), 10)
-                                         .getPosition();
+        final Position vacantSpot =
+            world.getRandomVacantSpotInRadiusOf(new Position(), 10).getPosition();
 
         // Assert
         assertThat(vacantSpot).isEqualTo(expectedSpot);
@@ -309,10 +312,11 @@ public class WorldTests {
         final World world = createTestWorld(3, mockRandom);
         world.tryCreateStructure(StructureType.HOUSE, firstBlockedRandomSpot);
         world.tryCreateStructure(StructureType.HOUSE, secondBlockedRandomSpot);
+        MockFactory.completeAllStructures(world);
 
         // Act
-        final Position vacantSpot = world.getRandomVacantSpotInRadiusOf(new Position(), 10)
-                                         .getPosition();
+        final Position vacantSpot =
+            world.getRandomVacantSpotInRadiusOf(new Position(), 10).getPosition();
 
         // Assert
         assertThat(vacantSpot).isEqualTo(thirdEmptyRandomSpot);
@@ -536,8 +540,8 @@ public class WorldTests {
         world.tryCreateStructure(StructureType.HOUSE, incorrectPosition);
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyStructureOfType(startingPosition,
-                                                                                   StructureType.HOUSE);
+        final Optional<IStructure> foundStructure =
+            world.getNearbyStructureOfType(startingPosition, StructureType.HOUSE);
 
         // Assert
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
@@ -549,9 +553,8 @@ public class WorldTests {
         final World world = createWorld(50);
 
         // Act
-        final Optional<IStructure> structure = world.getNearbyStructureOfType(new Position(20f,
-                                                                                           20f),
-                                                                              StructureType.HOUSE);
+        final Optional<IStructure> structure =
+            world.getNearbyStructureOfType(new Position(20f, 20f), StructureType.HOUSE);
 
         // Assert
         assertThat(structure.isPresent()).isFalse();
@@ -593,8 +596,8 @@ public class WorldTests {
         world.tryCreateStructure(StructureType.HOUSE, new Position(7, 9));
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(0,
-                                                                                                    0));
+        final Optional<IStructure> foundStructure =
+            world.getNearbyIncompleteStructure(new Position(0, 0));
 
         // Assert
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(1, 3));
@@ -617,8 +620,8 @@ public class WorldTests {
         }
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(0,
-                                                                                                    0));
+        final Optional<IStructure> foundStructure =
+            world.getNearbyIncompleteStructure(new Position(0, 0));
 
         // Assert
         assertThat(foundStructure.isEmpty()).isTrue();
