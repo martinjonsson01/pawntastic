@@ -22,7 +22,8 @@ import com.thebois.models.world.IWorld;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
 import com.thebois.models.world.structures.StructureType;
-import com.thebois.models.world.terrains.Grass;
+import com.thebois.models.world.terrains.TerrainFactory;
+import com.thebois.models.world.terrains.TerrainType;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -128,9 +129,9 @@ public class AstarPathFinderTests {
         final Position from = new Position();
         final Position destination = new Position(2, 2);
         final IWorld world = Mockito.mock(IWorld.class);
-        final ITile fromTile = new Grass(from);
+        final ITile fromTile = TerrainFactory.createTerrain(TerrainType.GRASS, from);
         when(world.getTileAt(from)).thenReturn(fromTile);
-        when(world.getTileAt(destination)).thenReturn(new Grass(destination));
+        when(world.getTileAt(destination)).thenReturn(TerrainFactory.createTerrain(TerrainType.GRASS, destination));
         when(world.getNeighboursOf(fromTile)).thenReturn(List.of());
         final IPathFinder cut = new AstarPathFinder(world);
 

@@ -41,7 +41,7 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public Position getPosition() {
-        return position.deepClone();
+        return position;
     }
 
     @Override

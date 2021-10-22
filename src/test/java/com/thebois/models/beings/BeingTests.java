@@ -27,7 +27,9 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.inventory.items.IConsumableItem;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.testutils.InMemorySerialize;
 import com.thebois.testutils.MockFactory;
@@ -36,6 +38,10 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class BeingTests {
+
+    private static final float HUNGER_RATE = 1f;
+    private AbstractRole role;
+    private AbstractBeing being;
 
     public static Stream<Arguments> getPositionsAndDestinations() {
         return Stream.of(Arguments.of(new Position(0, 0), new Position(0, 0)),
@@ -76,7 +82,8 @@ public class BeingTests {
     private static AbstractBeing createBeing(
         final float startX, final float startY, final RoleType roleType) {
         final AbstractRole role = RoleFactory.fromType(roleType);
-        return createBeing(new Position(startX, startY), role);
+        final AbstractRole hungerRole = new NothingRole();
+        return createBeing(new Position(startX, startY), role, hungerRole);
     }
 
     private static AbstractBeing createBeing() {
@@ -85,7 +92,14 @@ public class BeingTests {
     }
 
     private static AbstractBeing createBeing(
+        final Position currentPosition, final AbstractRole role, final AbstractRole hungerRole) {
+        return new Pawn(currentPosition, role, hungerRole);
+    }
+
+    private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
+        final AbstractRole hungerRole = new NothingRole();
+        return new Pawn(currentPosition, role, hungerRole);
 
         final EventBus mockEventBusSource = mock(EventBus.class);
         return new Pawn(currentPosition.deepClone(), role, ()->mockEventBusSource);
@@ -110,6 +124,9 @@ public class BeingTests {
     @BeforeEach
     public void setup() {
         mockFactoryDependencies();
+
+        role = new NothingRole();
+        being = createBeing(new Position(), role);
     }
 
     @AfterEach
@@ -124,10 +141,8 @@ public class BeingTests {
     @MethodSource("getDestinations")
     public void updateMovesTowardsDestinationWhenNotAtDestination(final Position destination) {
         // Arrange
-        final Position start = new Position();
-        final AbstractRole nothingRole = new NothingRole();
-        final AbstractBeing being = createBeing(start, nothingRole);
         being.setDestination(destination);
+        final Position start = being.getPosition();
         final float distanceToDestinationBefore = start.distanceTo(being.getDestination());
 
         // Act
@@ -154,7 +169,6 @@ public class BeingTests {
     public void updateDoesNotOvershootDestinationWhenDeltaTimeIsLarge(
         final Position startPosition, final Position destination) {
         // Arrange
-        final AbstractBeing being = createBeing();
         being.setDestination(destination);
 
         final float distanceBefore = startPosition.distanceTo(destination);
@@ -173,7 +187,6 @@ public class BeingTests {
         // Arrange
         final Position startPosition = new Position(0, 0);
         final Position destination = new Position(10, 0);
-        final AbstractBeing being = createBeing();
         being.setDestination(destination);
 
         // Act
@@ -205,49 +218,43 @@ public class BeingTests {
 
     @Test
     public void setRoleWithNullThrowsException() {
-        // Arrange
-        final IBeing being = createBeing();
-
         // Assert
         assertThatThrownBy(() -> being.setRole(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void updateGetsTaskFromRole() {
+    public void updateGetsActionFromRole() {
         // Arrange
-        final AbstractRole role = mock(AbstractRole.class);
-        final AbstractBeing being = createBeing();
-        final IAction task = mock(IAction.class);
-        being.setRole(role);
-        when(role.obtainNextAction(being)).thenReturn(task);
+        final AbstractRole mockRole = mock(AbstractRole.class);
+        final IAction action = mock(IAction.class);
+        being.setRole(mockRole);
+        when(mockRole.obtainNextAction(being)).thenReturn(action);
 
         // Act
         being.update(0.1f);
 
         // Assert
-        verify(role, times(1)).obtainNextAction(being);
+        verify(mockRole, times(1)).obtainNextAction(being);
     }
 
     @Test
-    public void updatePerformsTask() {
+    public void updatePerformsAction() {
         // Arrange
-        final AbstractRole role = mock(AbstractRole.class);
-        final AbstractBeing being = createBeing();
-        final IAction task = mock(IAction.class);
-        being.setRole(role);
-        when(role.obtainNextAction(being)).thenReturn(task);
+        final AbstractRole mockRole = mock(AbstractRole.class);
+        final IAction action = mock(IAction.class);
+        being.setRole(mockRole);
+        when(mockRole.obtainNextAction(being)).thenReturn(action);
 
         // Act
         being.update(0.1f);
 
         // Assert
-        verify(task, times(1)).perform(being);
+        verify(action, times(1)).perform(being, 0.1f);
     }
 
     @Test
     public void hashCodeReturnsSameIfEqual() {
         // Arrange
-        final AbstractRole role = RoleFactory.miner();
         final IBeing first = createBeing();
         first.setRole(role);
         final IBeing second = createBeing();
@@ -277,10 +284,6 @@ public class BeingTests {
 
     @Test
     public void equalsReturnsFalseForOtherType() {
-        // Arrange
-        final IBeing being = createBeing();
-        being.setRole(RoleFactory.miner());
-
         // Assert
         // noinspection AssertBetweenInconvertibleTypes
         assertThat(being).isNotEqualTo(new Position());
@@ -309,8 +312,6 @@ public class BeingTests {
         final IPositionFinder positionFinder = mock(IPositionFinder.class);
         final AbstractBeingGroup colony = new Colony(positionFinder, ()->mockEventBusSource);
 
-        final IBeing being = createBeing();
-
         // Act
         final int before = colony.getBeings().size();
         colony.addBeing(being);
@@ -322,9 +323,6 @@ public class BeingTests {
 
     @Test
     public void sameObjectAfterDeserialization() throws ClassNotFoundException, IOException {
-        // Arrange
-        final IBeing being = createBeing();
-
         // Act
         final byte[] serializedBeing = InMemorySerialize.serialize(being);
         final IBeing deserializedBeing = (IBeing) InMemorySerialize.deserialize(serializedBeing);
@@ -334,15 +332,113 @@ public class BeingTests {
     }
 
     @Test
-    public void beingsLosesHealthWhenTimePasses() {
+    public void doesNotLoseHealthWhenHasFoodInInventoryAndTimePasses() {
         // Arrange
-        final IBeing being = createBeing();
+        final float timeToPass = 50f;
+        final float startHealthRatio = being.getHealthRatio();
+
+        final IConsumableItem food = MockFactory.createEdibleItem(0.1f, 100f, ItemType.FISH);
+        being.addItem(food);
+
+        // Act
+        being.update(timeToPass);
+        // Calling method in order for pawn to not die instantly.
+        being.update(timeToPass);
+        final float endHealthRatio = being.getHealthRatio();
+
+        //Assert
+        assertThat(endHealthRatio).isEqualTo(startHealthRatio);
+    }
+
+    @Test
+    public void doesNotPerformRoleActionWhenNoFoodInInventoryAndHungry() {
+        // Arrange
+        final float timeUntilHungry = 50 * HUNGER_RATE;
+
+        final AbstractRole mockRole = mock(AbstractRole.class);
+        final IAction action = mock(IAction.class);
+        being.setRole(mockRole);
+        when(mockRole.obtainNextAction(being)).thenReturn(action);
+
+        // Act
+        being.update(timeUntilHungry);
+
+        // Assert
+        verify(action, times(0)).perform(being, 0.1f);
+    }
+
+    @Test
+    public void performsHungerRoleActionWhenNoFoodInInventoryAndHungry() {
+        // Arrange
+        final float timeUntilHungry = 50 * HUNGER_RATE;
+
+        final AbstractRole role = mock(AbstractRole.class);
+        final AbstractRole hungerRole = mock(AbstractRole.class);
+        final IAction action = mock(IAction.class);
+        final IAction hungerAction = mock(IAction.class);
+        being = createBeing(new Position(), role, hungerRole);
+        when(role.obtainNextAction(being)).thenReturn(action);
+        when(hungerRole.obtainNextAction(being)).thenReturn(hungerAction);
+
+        // Act
+        being.update(timeUntilHungry);
+
+        // Assert
+        verify(action, times(0)).perform(eq(being), anyFloat());
+        verify(hungerAction, times(1)).perform(being, timeUntilHungry);
+    }
+
+    @Test
+    public void performsAssignedRoleActionAgainAfterHavingFoundFood() {
+        // Arrange
+        final float timeUntilHungry = 50 * HUNGER_RATE;
+
+        final AbstractRole role = mock(AbstractRole.class);
+        final AbstractRole hungerRole = mock(AbstractRole.class);
+        final IAction action = mock(IAction.class);
+        final IAction hungerAction = mock(IAction.class);
+        being = createBeing(new Position(), role, hungerRole);
+        when(role.obtainNextAction(being)).thenReturn(action);
+        when(hungerRole.obtainNextAction(being)).thenReturn(hungerAction);
+
+        being.update(timeUntilHungry);
+        // Simulate finding food.
+        being.addItem(MockFactory.createEdibleItem(1f, 10f, ItemType.FISH));
+
+        final float deltaTime = 0.1f;
+
+        // Act
+        being.update(deltaTime);
+
+        // Assert
+        verify(action, times(1)).perform(being, deltaTime);
+        verify(hungerAction, times(1)).perform(being, timeUntilHungry);
+    }
+
+    @Test
+    public void doesNotEatFoodWhenNotHungry() {
+        // Arrange
+        final float timeToPass = 0.1f;
+
+        final IConsumableItem food = MockFactory.createEdibleItem(0.1f, 100f, ItemType.FISH);
+        being.addItem(food);
+
+        // Act
+        being.update(timeToPass);
+
+        //Assert
+        verify(food, times(0)).getNutrientValue();
+    }
+
+    @Test
+    public void beingsLosesHealthWhenHasNoFoodInInventoryAndTimePasses() {
+        // Arrange
         final float timeToPass = 50f;
         final float startHealthRatio = being.getHealthRatio();
 
         // Act
         being.update(timeToPass);
-        // Calling method in order for pawn to not insta die.
+        // Calling method in order for pawn to not die instantly.
         being.update(timeToPass);
         final float endHealthRatio = being.getHealthRatio();
 
@@ -353,7 +449,6 @@ public class BeingTests {
     @Test
     public void beingHealthRatioIsZeroAfterLongTimePasses() {
         // Arrange
-        final IBeing being = createBeing();
         final float timeToPass = 1000f;
         final float expectedHealthRatio = 0;
 

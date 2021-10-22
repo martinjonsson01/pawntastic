@@ -141,7 +141,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
                                                       numberOfPawnsToSpawn,
                                                       2);
         for (final Position vacantPosition : vacantPositions) {
-            addBeing(new Pawn(vacantPosition, RoleFactory.idle(), eventBusSource));
+            addBeing(new Pawn(vacantPosition, RoleFactory.idle(), RoleFactory.fisher(), eventBusSource));
         }
     }
 

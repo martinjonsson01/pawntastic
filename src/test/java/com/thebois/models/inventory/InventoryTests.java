@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
+import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,14 +57,7 @@ public class InventoryTests {
     }
 
     private static IItem mockItem(final float weight) {
-        return mockItem(weight, ItemType.LOG);
-    }
-
-    private static IItem mockItem(final float weight, final ItemType type) {
-        final IItem item = mock(IItem.class);
-        when(item.getWeight()).thenReturn(weight);
-        when(item.getType()).thenReturn(type);
-        return item;
+        return MockFactory.createItem(weight, ItemType.LOG);
     }
 
     @ParameterizedTest
@@ -308,9 +302,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        inventory.addMultiple(List.of(
-            ItemFactory.fromType(ItemType.LOG),
-            ItemFactory.fromType(ItemType.LOG)));
+        inventory.addMultiple(List.of(ItemFactory.fromType(ItemType.LOG),
+                                      ItemFactory.fromType(ItemType.LOG)));
 
         // Assert
         assertThat(inventory.hasItem(ItemType.LOG, 2)).isTrue();

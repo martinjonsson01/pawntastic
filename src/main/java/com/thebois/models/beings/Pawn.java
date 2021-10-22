@@ -15,13 +15,15 @@ public class Pawn extends AbstractBeing {
      *
      * @param startPosition     The initial position.
      * @param role              The starting role.
+     * @param hungerRole    The role to perform when hungry.
      * @param eventBusSource    A way of getting an event bus to listen for events on.
      */
     public Pawn(
         final Position startPosition,
         final AbstractRole role,
+        final AbstractRole hungerRole,
         final IEventBusSource eventBusSource) {
-        super(startPosition, role);
+        super(startPosition, role, hungerRole);
         eventBusSource.getEventBus().post(new OnSpawnPawnEvent());
     }
 
