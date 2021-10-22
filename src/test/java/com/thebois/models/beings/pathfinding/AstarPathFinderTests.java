@@ -18,6 +18,7 @@ import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
 import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.Grass;
+import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -62,7 +63,7 @@ public class AstarPathFinderTests {
     @Test
     public void pathAvoidsTilesWithHighCost() {
         // Arrange
-        final IWorld world = testWorld3x3WithObstacles();
+        final IWorld world = createTestWorld3x3WithObstacles();
         final IPathFinder cut = new AstarPathFinder(world);
         final Position start = new Position(0, 0);
         final Position destination = new Position(2, 2);
@@ -94,11 +95,12 @@ public class AstarPathFinderTests {
      *
      * @return The mocked world.
      */
-    private IWorld testWorld3x3WithObstacles() {
+    private IWorld createTestWorld3x3WithObstacles() {
         final World world = createTestWorld(3);
 
         world.createStructure(StructureType.HOUSE, 1, 0);
         world.createStructure(StructureType.HOUSE, 1, 1);
+        MockFactory.completeAllStructures(world);
 
         return world;
     }

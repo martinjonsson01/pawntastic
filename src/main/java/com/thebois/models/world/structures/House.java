@@ -37,7 +37,7 @@ class House extends AbstractStructure {
     }
 
     @Override
-    public float getCost() {
+    protected float getCostWhenBuilt() {
         return Float.MAX_VALUE;
     }
 

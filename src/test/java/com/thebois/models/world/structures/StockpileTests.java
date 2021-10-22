@@ -13,27 +13,14 @@ import static org.assertj.core.api.Assertions.*;
 public class StockpileTests {
 
     @BeforeEach
-    public void setFactoryInventory(){
+    public void setFactoryInventory() {
         final Inventory sharedInventory = new Inventory();
         StructureFactory.setInventory(sharedInventory);
     }
 
     @AfterEach
-    public void setFactoryInventoryToNull(){
+    public void setFactoryInventoryToNull() {
         StructureFactory.setInventory(null);
-    }
-
-    @Test
-    public void getCostIsHigh() {
-        // Arrange
-        final Stockpile stockpile =
-            (Stockpile) StructureFactory.createStructure(StructureType.STOCKPILE, 0, 0);
-
-        // Act
-        final float cost = stockpile.getCost();
-
-        // Assert
-        assertThat(cost).isEqualTo(Float.MAX_VALUE);
     }
 
     @Test
@@ -52,7 +39,7 @@ public class StockpileTests {
     @Test
     public void getInventoryReturnsSharedInventory() {
         // Arrange
-       final Inventory sharedInventory = new Inventory();
+        final Inventory sharedInventory = new Inventory();
 
         // Act
         StructureFactory.setInventory(sharedInventory);
@@ -70,15 +57,15 @@ public class StockpileTests {
     }
 
     @Test
-    public void stockpileNeededItemsAreTheSameAsGetBuildMaterials(){
+    public void stockpileNeededItemsAreTheSameAsGetBuildMaterials() {
         // Arrange
         final Stockpile stockpile =
             (Stockpile) StructureFactory.createStructure(StructureType.STOCKPILE, 0, 0);
         final ItemType[] neededItems = new ItemType[8];
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 4; i++) {
             neededItems[i] = ItemType.LOG;
         }
-        for (int i = 4; i < 8; i++){
+        for (int i = 4; i < 8; i++) {
             neededItems[i] = ItemType.ROCK;
         }
 

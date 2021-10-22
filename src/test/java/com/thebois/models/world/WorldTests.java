@@ -30,6 +30,7 @@ import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
+import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -46,10 +47,12 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
-                                                              mockPosition(0, 1),
-                                                              mockPosition(2, 1),
-                                                              mockPosition(1, 2))));
+                         Arguments.of(
+                             mockTile(1, 1),
+                             List.of(mockPosition(1, 0),
+                                     mockPosition(0, 1),
+                                     mockPosition(2, 1),
+                                     mockPosition(1, 2))));
     }
 
     private static ITile mockTile(final int x, final int y) {
@@ -164,6 +167,7 @@ public class WorldTests {
         world.createStructure(StructureType.HOUSE, 2, 2);
         world.createStructure(StructureType.HOUSE, 3, 2);
         world.createStructure(StructureType.HOUSE, 4, 2);
+        MockFactory.completeAllStructures(world);
         final ITile tile = mockTile(3, 3);
 
         // Act
@@ -189,6 +193,7 @@ public class WorldTests {
         world.createStructure(StructureType.HOUSE, 0, 1);
         world.createStructure(StructureType.HOUSE, 2, 1);
         world.createStructure(StructureType.HOUSE, 1, 2);
+        MockFactory.completeAllStructures(world);
         final ITile tile = mockTile(1, 1);
         final Position from = new Position(0, 0);
 
@@ -216,10 +221,7 @@ public class WorldTests {
     public void getNearbyOfTypeResourceReturnsItWhenSingleNearby() {
         // Arrange
         final World world = new ResourceTestWorld(mock(ThreadLocalRandom.class));
-        final IResource expectedResource = world.getResources()
-                                                .stream()
-                                                .findFirst()
-                                                .orElseThrow();
+        final IResource expectedResource = world.getResources().stream().findFirst().orElseThrow();
         final Position origin = new Position();
 
         // Act
@@ -282,8 +284,8 @@ public class WorldTests {
         final Position expectedSpot = new Position(randomCoordinate, randomCoordinate);
 
         // Act
-        final Position vacantSpot = world.getRandomVacantSpotInRadiusOf(new Position(), 10)
-                                         .getPosition();
+        final Position vacantSpot =
+            world.getRandomVacantSpotInRadiusOf(new Position(), 10).getPosition();
 
         // Assert
         assertThat(vacantSpot).isEqualTo(expectedSpot);
@@ -305,10 +307,11 @@ public class WorldTests {
         final World world = createTestWorld(3, mockRandom);
         world.createStructure(StructureType.HOUSE, firstBlockedRandomSpot);
         world.createStructure(StructureType.HOUSE, secondBlockedRandomSpot);
+        MockFactory.completeAllStructures(world);
 
         // Act
-        final Position vacantSpot = world.getRandomVacantSpotInRadiusOf(new Position(), 10)
-                                         .getPosition();
+        final Position vacantSpot =
+            world.getRandomVacantSpotInRadiusOf(new Position(), 10).getPosition();
 
         // Assert
         assertThat(vacantSpot).isEqualTo(thirdEmptyRandomSpot);
@@ -348,8 +351,7 @@ public class WorldTests {
 
         // Act
         for (final Position position : expectedTilePositions) {
-            actualTilePositions.add(world.getTileAt(position)
-                                         .getPosition());
+            actualTilePositions.add(world.getTileAt(position).getPosition());
         }
         // Assert
         assertThat(actualTilePositions).containsExactlyInAnyOrderElementsOf(expectedTilePositions);
@@ -443,8 +445,7 @@ public class WorldTests {
         final Colony colony = mockColonyWithMockBeings();
 
         // Assert
-        assertThat(colony.getBeings()).size()
-                                      .isEqualTo(5);
+        assertThat(colony.getBeings()).size().isEqualTo(5);
     }
 
     private Colony mockColonyWithMockBeings() {
@@ -494,8 +495,7 @@ public class WorldTests {
         final Iterable<Position> emptyPositions = world.findEmptyPositions(numberOfWantedPositions);
 
         // Assert
-        final int numberOfEmptyPositions = Lists.newArrayList(emptyPositions)
-                                                .size();
+        final int numberOfEmptyPositions = Lists.newArrayList(emptyPositions).size();
         assertThat(numberOfEmptyPositions).isEqualTo(numberOfWantedPositions);
     }
 
@@ -508,8 +508,7 @@ public class WorldTests {
         final int expectedNumberOfTerrainTiles = worldSize * worldSize;
 
         // Act
-        final int actualNumberOfTerrainTiles = world.getTerrainTiles()
-                                                    .size();
+        final int actualNumberOfTerrainTiles = world.getTerrainTiles().size();
 
         // Assert
         assertThat(actualNumberOfTerrainTiles).isEqualTo(expectedNumberOfTerrainTiles);
@@ -536,12 +535,11 @@ public class WorldTests {
         world.createStructure(StructureType.HOUSE, incorrectPosition);
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyStructureOfType(startingPosition,
-                                                                                   StructureType.HOUSE);
+        final Optional<IStructure> foundStructure =
+            world.getNearbyStructureOfType(startingPosition, StructureType.HOUSE);
 
         // Assert
-        assertThat(foundStructure.orElseThrow()
-                                 .getPosition()).isEqualTo(expectedPosition);
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
     }
 
     @Test
@@ -550,9 +548,8 @@ public class WorldTests {
         final World world = createWorld(50);
 
         // Act
-        final Optional<IStructure> structure = world.getNearbyStructureOfType(new Position(20f,
-                                                                                           20f),
-                                                                              StructureType.HOUSE);
+        final Optional<IStructure> structure =
+            world.getNearbyStructureOfType(new Position(20f, 20f), StructureType.HOUSE);
 
         // Assert
         assertThat(structure.isPresent()).isFalse();
@@ -571,8 +568,7 @@ public class WorldTests {
         }
 
         // Assert
-        assertThat(world.getStructures()
-                        .size()).isEqualTo(size);
+        assertThat(world.getStructures().size()).isEqualTo(size);
     }
 
     @Test
@@ -595,12 +591,11 @@ public class WorldTests {
         world.createStructure(StructureType.HOUSE, new Position(7, 9));
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(0,
-                                                                                                    0));
+        final Optional<IStructure> foundStructure =
+            world.getNearbyIncompleteStructure(new Position(0, 0));
 
         // Assert
-        assertThat(foundStructure.orElseThrow()
-                                 .getPosition()).isEqualTo(new Position(1, 3));
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(1, 3));
     }
 
     @Test
@@ -620,8 +615,8 @@ public class WorldTests {
         }
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(0,
-                                                                                                    0));
+        final Optional<IStructure> foundStructure =
+            world.getNearbyIncompleteStructure(new Position(0, 0));
 
         // Assert
         assertThat(foundStructure.isEmpty()).isTrue();
