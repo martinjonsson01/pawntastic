@@ -5,7 +5,6 @@ import java.util.Objects;
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.models.Position;
-import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
