@@ -114,4 +114,19 @@ public class StructureTests {
         assertThat(isEqual).isFalse();
     }
 
+    @Test
+    public void structureReturnsBlueprintCostWhenNotCompleted() {
+        // Arrange
+        final Position position = new Position(1, 1);
+        final IStructure structure =
+            StructureFactory.createStructure(StructureType.HOUSE, position);
+
+        // Act
+        final float tileCost = structure.getCost();
+
+        // Assert
+        assertThat(tileCost).isZero();
+        assertThat(structure.isCompleted()).isFalse();
+    }
+
 }

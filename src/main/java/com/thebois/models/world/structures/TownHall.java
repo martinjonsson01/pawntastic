@@ -28,11 +28,6 @@ public class TownHall extends AbstractStructure {
     }
 
     @Override
-    public float getCost() {
-        return Float.MAX_VALUE;
-    }
-
-    @Override
     protected float getCostWhenBuilt() {
         return Float.MAX_VALUE;
     }

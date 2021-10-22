@@ -107,6 +107,7 @@ abstract class AbstractStructure implements IStructure {
         }
         return Optional.empty();
     }
+
     protected void postStructureCompletedEvent() {
         final StructureCompletedEvent structureCompletedEvent = new StructureCompletedEvent(
             structureType,
