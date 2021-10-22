@@ -10,8 +10,15 @@ public interface IItem {
     /**
      * Returns the specific type of item.
      *
-     * @return The item type
+     * @return The item type.
      */
     ItemType getType();
+
+    /**
+     * Gets the mass, described in kilograms.
+     *
+     * @return The mass in kilograms.
+     */
+    float getWeight();
 
 }

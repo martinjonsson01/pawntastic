@@ -72,8 +72,7 @@ abstract class AbstractStructure implements IStructure {
     public boolean tryDeliverItem(final IItem deliveredItem) {
         final Collection<ItemType> neededItems = getNeededItems();
         if (neededItems.contains(deliveredItem.getType())) {
-            deliveredItems.add(deliveredItem);
-            return true;
+            return deliveredItems.tryAdd(deliveredItem);
         }
         return false;
     }

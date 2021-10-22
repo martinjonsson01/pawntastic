@@ -1,6 +1,7 @@
 package com.thebois.models.world.resources;
 
 import com.thebois.abstractions.IDeepClonable;
+import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.ITile;
 
 /**
@@ -16,5 +17,12 @@ public interface IResource extends ITile, IDeepClonable<IResource> {
      * @return The type of resource.
      */
     ResourceType getType();
+
+    /**
+     * Harvests the resource.
+     *
+     * @return The harvested item.
+     */
+    IItem harvest();
 
 }

@@ -15,11 +15,20 @@ import com.thebois.models.inventory.items.ItemType;
 public interface IInventory extends Serializable {
 
     /**
-     * Allows an IItem to be added to the implemented inventory.
+     * Checks whether the inventory is filled to its capacity.
      *
-     * @param item The item to be added to the inventory.
+     * @return Whether more items can be added or not.
      */
-    void add(IItem item);
+    boolean isFull();
+
+    /**
+     * Tries to add an item to the inventory.
+     *
+     * @param item What to add to the inventory.
+     *
+     * @return Whether the item could fit or not.
+     */
+    boolean tryAdd(IItem item);
 
     /**
      * Allows multiple IItems to be added at the same time to the implemented inventory.

@@ -31,12 +31,10 @@ public class ColonyView implements IView {
 
     static {
         ROLE_COLORS = new HashMap<>();
-        ROLE_COLORS.put(RoleType.BUILDER, Color.LIGHT_GRAY);
-        ROLE_COLORS.put(RoleType.FARMER, Color.GREEN);
+        ROLE_COLORS.put(RoleType.BUILDER, Color.ORANGE);
         ROLE_COLORS.put(RoleType.FISHER, Color.BLUE);
-        ROLE_COLORS.put(RoleType.GUARD, Color.BLACK);
         ROLE_COLORS.put(RoleType.LUMBERJACK, Color.BROWN);
-        ROLE_COLORS.put(RoleType.MINER, Color.GRAY);
+        ROLE_COLORS.put(RoleType.MINER, Color.BLACK);
         ROLE_COLORS.put(RoleType.IDLE, Color.WHITE);
     }
 
@@ -64,19 +62,23 @@ public class ColonyView implements IView {
 
     @Override
     public void draw(final Batch batch, final float offsetX, final float offsetY) {
-        float x;
-        float y;
-
         if (colony != null) {
             for (final IBeing pawn : colony.getBeings()) {
-                x = pawn.getPosition().getX() * Pawntastic.getTileSize();
-                y = pawn.getPosition().getY() * Pawntastic.getTileSize();
+                final float x = pawn.getPosition().getX() * Pawntastic.getTileSize();
+                final float y = pawn.getPosition().getY() * Pawntastic.getTileSize();
 
-                batch.setColor(ROLE_COLORS.get(pawn.getRole().getType()));
+                batch.setColor(getPawnColor(pawn));
 
                 batch.draw(beingTexture, offsetX + x, offsetY + y, radius * 2, radius * 2);
             }
         }
+    }
+
+    private Color getPawnColor(final IBeing pawn) {
+        final Color deathColor = Color.valueOf("#FF0000");
+        final Color pawnColor = ROLE_COLORS.get(pawn.getRole().getType());
+
+        return deathColor.lerp(pawnColor, pawn.getHealthRatio());
     }
 
     @Override

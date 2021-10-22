@@ -45,22 +45,23 @@ public class WorldController implements IController<IActorView> {
                               structureController,
                               colonyController);
 
-        gameView = createGameView(colony, font);
+        gameView = createGameView(world, colony, font);
     }
 
     private GameView createGameView(
+        final World world,
         final Colony colony, final BitmapFont font) {
         final List<IView> views =
             controllers.stream().map(IController::getView).collect(Collectors.toList());
         if (Pawntastic.isDebugEnabled()) {
-            views.addAll(createDebugViews(colony, font));
+            views.addAll(createDebugViews(world, colony, font));
         }
         return new GameView(views);
     }
 
     private List<IView> createDebugViews(
-        final Colony colony, final BitmapFont font) {
-        final BeingPathDebugView beingPathDebugView = new BeingPathDebugView(colony);
+        final World world, final Colony colony, final BitmapFont font) {
+        final BeingPathDebugView beingPathDebugView = new BeingPathDebugView(colony, world);
         final FrameCounterView frameCounterView = new FrameCounterView(font);
 
         return List.of(frameCounterView, beingPathDebugView);

@@ -7,6 +7,7 @@ package com.thebois.utils;
  *
  * @author Mathias
  */
+@FunctionalInterface
 public interface IMatrixSupplier<TElement> {
 
     /**

@@ -10,17 +10,31 @@ public enum ItemType {
     /**
      * Logs are collected from trees.
      */
-    LOG,
+    LOG(3.0f),
     /**
      * Rocks are collected from stones.
      */
-    ROCK,
+    ROCK(15.f),
     /**
      * Fish can be caught from water.
      */
-    FISH,
+    FISH(0.5f),
     /**
      * Wheat is harvested from wheat fields.
      */
-    WHEAT
+    WHEAT(0.1f);
+    private final float weight;
+
+    ItemType(final float weight) {
+        this.weight = weight;
+    }
+
+    /**
+     * Gets the mass, described in kilograms.
+     *
+     * @return The mass in kilograms.
+     */
+    public float getWeight() {
+        return weight;
+    }
 }

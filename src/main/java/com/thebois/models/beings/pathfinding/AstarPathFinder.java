@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import com.google.common.collect.Lists;
+
 import com.thebois.models.Position;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
@@ -107,14 +109,14 @@ public class AstarPathFinder implements IPathFinder {
      * @return The entire path leading to the provided ITile.
      */
     private Collection<Position> reconstructPath(final ITile endOfPath) {
-        final ArrayList<Position> path = new ArrayList<>();
-        path.add(endOfPath.getPosition());
+        final ArrayList<Position> backwardsPath = new ArrayList<>();
+        backwardsPath.add(endOfPath.getPosition());
         ITile current = endOfPath;
         while (cameFrom.containsKey(current)) {
             current = cameFrom.get(current);
-            path.add(current.getPosition());
+            backwardsPath.add(current.getPosition());
         }
-        return path;
+        return Lists.reverse(backwardsPath);
     }
 
 }

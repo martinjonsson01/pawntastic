@@ -14,16 +14,56 @@ import com.thebois.models.inventory.items.ItemType;
 public class Inventory implements IInventory {
 
     private final ArrayList<IItem> items = new ArrayList<>();
+    private final float maxCapacity;
+
+    /**
+     * Instantiates with infinite capacity.
+     */
+    public Inventory() {
+        this.maxCapacity = Float.MIN_VALUE;
+    }
+
+    /**
+     * Instantiates with a given maximum carrying capacity.
+     *
+     * @param maxCapacity The maximum weight, in kilograms, that can be contained.
+     */
+    public Inventory(final float maxCapacity) {
+        this.maxCapacity = maxCapacity;
+    }
 
     @Override
-    public void add(final IItem item) {
+    public boolean isFull() {
+        final float weight = calculateTotalWeight();
+        return atMaxCapacity(weight);
+    }
+
+    private float calculateTotalWeight() {
+        return items.stream().map(IItem::getWeight).reduce(0f, Float::sum);
+    }
+
+    private boolean atMaxCapacity(final float weight) {
+        if (hasInfiniteCapacity()) return false;
+        return weight >= maxCapacity;
+    }
+
+    private boolean hasInfiniteCapacity() {
+        return maxCapacity == Float.MIN_VALUE;
+    }
+
+    @Override
+    public boolean tryAdd(final IItem item) {
+        final float newWeight = calculateTotalWeight() + item.getWeight();
+        if (isAboveCapacity(newWeight)) return false;
+
         items.add(item);
+        return true;
     }
 
     @Override
     public void addMultiple(final List<IItem> stack) {
         for (final IItem item : stack) {
-            add(item);
+            tryAdd(item);
         }
     }
 
@@ -83,6 +123,11 @@ public class Inventory implements IInventory {
             }
         }
         return count;
+    }
+
+    private boolean isAboveCapacity(final float weight) {
+        if (hasInfiniteCapacity()) return false;
+        return weight > maxCapacity;
     }
 
 }

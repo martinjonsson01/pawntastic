@@ -24,7 +24,7 @@ public final class ResourceFactory {
      */
     public static IResource createResource(final ResourceType type, final int x, final int y) {
         return switch (type) {
-            case ROCK -> new Rock(x, y);
+            case STONE -> new Stone(x, y);
             case WATER -> new Water(x, y);
             case TREE -> new Tree(x, y);
         };

@@ -27,8 +27,8 @@ public class Item implements IItem, Serializable {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(type);
+    public float getWeight() {
+        return getType().getWeight();
     }
 
     @Override
@@ -37,6 +37,11 @@ public class Item implements IItem, Serializable {
         if (other == null) return false;
         final Item item = (Item) other;
         return type == item.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type);
     }
 
 }

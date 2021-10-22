@@ -10,7 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.google.common.eventbus.Subscribe;
 
+import com.thebois.Pawntastic;
+import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.utils.StringUtils;
 
@@ -35,6 +38,7 @@ public class RoleView implements IActorView {
      */
     public RoleView(final Skin skin) {
         this.skin = skin;
+        Pawntastic.getEventBus().register(this);
 
         root = new VerticalGroup().space(BUTTON_PADDING * 2f);
         root.expand().fill();
@@ -82,6 +86,19 @@ public class RoleView implements IActorView {
     @Override
     public Actor getWidgetContainer() {
         return root;
+    }
+
+    /**
+     * Listens to the OnDeathEvent in order to update corresponding role button.
+     *
+     * @param event The published event.
+     */
+    @Subscribe
+    public void onDeathEvent(final OnDeathEvent event) {
+        final RoleType roleType = event.getDeadBeing().getRole().getType();
+        if (roleButtons.containsKey(roleType)) {
+            roleButtons.get(roleType).tryDecrease();
+        }
     }
 
 }
