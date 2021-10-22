@@ -2,6 +2,9 @@ package com.thebois.testutils;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.actions.IAction;
+import com.thebois.models.inventory.items.IConsumableItem;
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.resources.IResource;
@@ -28,6 +31,25 @@ public final class MockFactory {
         when(resource.harvest()).thenReturn(harvestItem);
         when(resource.getHarvestTime()).thenReturn(harvestTime);
         return resource;
+    }
+
+    public static IItem createItem(final float weight, final ItemType type) {
+        final IItem item = mock(IItem.class);
+        setUpMockedItem(weight, type, item);
+        return item;
+    }
+
+    private static void setUpMockedItem(final float weight, final ItemType type, final IItem item) {
+        when(item.getWeight()).thenReturn(weight);
+        when(item.getType()).thenReturn(type);
+    }
+
+    public static IConsumableItem createEdibleItem(
+        final float weight, final float nutrientValue, final ItemType type) {
+        final IConsumableItem item = mock(IConsumableItem.class);
+        setUpMockedItem(weight, type, item);
+        when(item.getNutrientValue()).thenReturn(nutrientValue);
+        return item;
     }
 
     public static IStructure createStructure(final Position position, final boolean completed) {

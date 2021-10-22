@@ -29,7 +29,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         final Collection<IBeing> pawns = new ArrayList<>();
         for (final Position vacantPosition : vacantPositions) {
             final AbstractRole role = RoleFactory.idle();
-            pawns.add(new Pawn(vacantPosition, role));
+            pawns.add(new Pawn(vacantPosition, role, RoleFactory.fisher()));
         }
         setBeings(pawns);
     }
