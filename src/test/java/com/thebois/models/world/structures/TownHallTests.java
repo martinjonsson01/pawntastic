@@ -43,26 +43,4 @@ public class TownHallTests {
         assertThat(builtRatio).isGreaterThanOrEqualTo(1f);
     }
 
-    @Test
-    public void deepCopyReturnsObjectSimilarToTownHall() {
-        // Arrange
-        final IStructure townHall = StructureFactory.createStructure(
-            StructureType.TOWN_HALL,
-            new Position(20f, 50f));
-
-        // Act
-        final IStructure townHallDeepCopy = townHall.deepClone();
-
-        // Assert
-        // Is of same Class instance
-        assertThat(townHallDeepCopy).isInstanceOf(TownHall.class);
-        // Has same Position
-        assertThat(townHallDeepCopy.getPosition()).isEqualTo(townHall.getPosition());
-        // Has same builtRatio
-        assertThat(townHallDeepCopy.getBuiltRatio()).isEqualTo(townHall.getBuiltRatio());
-        // Has same completeness
-        assertThat(townHallDeepCopy.isCompleted()).isEqualTo(townHall.isCompleted());
-        // Are not equal
-        assertThat(townHallDeepCopy).isNotEqualTo(townHall);
-    }
 }

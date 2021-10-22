@@ -5,16 +5,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.thebois.listeners.IEventBusSource;
 import com.google.common.eventbus.Subscribe;
 
 import com.thebois.abstractions.IPositionFinder;
+import com.thebois.listeners.IEventBusSource;
 import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
+import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.world.structures.StructureType;
 
 /**

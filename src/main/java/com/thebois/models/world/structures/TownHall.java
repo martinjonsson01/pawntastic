@@ -28,11 +28,6 @@ public class TownHall extends AbstractStructure {
     }
 
     @Override
-    public IStructure deepClone() {
-        return new TownHall(getPosition());
-    }
-
-    @Override
     public float getCost() {
         return Float.MAX_VALUE;
     }

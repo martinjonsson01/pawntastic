@@ -26,6 +26,7 @@ import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
+import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
@@ -59,26 +60,6 @@ public class ColonyTests {
         RoleFactory.setStructureFinder(null);
     }
 
-//    @Test
-//    public void constructWithTilesCreatesOneBeingPerPosition() {
-//        // Arrange
-//        final int beingCount = 25;
-//        final EventBus mockEventBusSource = mock(EventBus.class);
-//        final IPositionFinder positionFinder = mock(IPositionFinder.class);
-//        final List<Position> positions = new ArrayList<>(beingCount);
-//        for (int i = 0; i < beingCount; i++) {
-//            positions.add(new Position(0, 0));
-//        }
-//        final IWorld mockWorld = mock(IWorld.class);
-//        when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
-//
-//        // Act
-//        final Colony colony = new Colony(positionFinder, ()->mockEventBusSource);
-//
-//        // Assert
-//        assertThat(colony.getBeings().size()).isEqualTo(beingCount);
-//    }
-
     @Test
     public void ensureAliveBeingsUpdatesWhenColonyUpdates() {
         // Arrange
@@ -101,43 +82,6 @@ public class ColonyTests {
 
         final EventBus mockEventBusSource = mock(EventBus.class);
         return new Colony(positionFinder, ()->mockEventBusSource);
-    }
-
-    @Test
-    public void beingGroupRemovesDeadBeings() {
-        // Arrange
-        final IBeing being = Mockito.mock(IBeing.class);
-        final Colony colony = createColony();
-        colony.addBeing(being);
-        final int expectedAmountOfBeings = 0;
-        final float deltaTime = 0.1f;
-
-        // Act
-        Pawntastic.getEventBus().post(new OnDeathEvent(being));
-        colony.update(deltaTime);
-        final int actualAmountOfBeings = colony.getBeings().size();
-
-        // Assert
-        assertThat(actualAmountOfBeings).isEqualTo(expectedAmountOfBeings);
-    }
-
-    @Test
-    public void keepsListeningToDeathEventsAfterDeserialization() throws
-                                                                  ClassNotFoundException,
-                                                                  IOException {
-        // Arrange
-        final AbstractBeingGroup colony = createColony();
-        final IBeing being = mock(IBeing.class);
-        colony.addBeing(being);
-        final OnDeathEvent deathEvent = new OnDeathEvent(being);
-        //Act
-        final byte[] serializedColony = InMemorySerialize.serialize(colony);
-        final AbstractBeingGroup deserializedColony =
-            (AbstractBeingGroup) InMemorySerialize.deserialize(serializedColony);
-        Pawntastic.getEventBus().post(deathEvent);
-
-        // Assert
-        assertThat(deserializedColony.getBeings()).doesNotContain(being);
     }
 
     public static Stream<Arguments> getStructureCompletedEventsToTest() {
@@ -165,4 +109,21 @@ public class ColonyTests {
         assertThat(returnedBeings.size()).isEqualTo(numberOfBeings);
     }
 
+    @Test
+    public void beingGroupRemovesDeadBeings() {
+        // Arrange
+        final IBeing being = Mockito.mock(IBeing.class);
+        final Colony colony = createColony();
+        colony.addBeing(being);
+        final int expectedAmountOfBeings = 0;
+        final float deltaTime = 0.1f;
+
+        // Act
+        colony.onDeathEvent(new OnDeathEvent(being));
+        colony.update(deltaTime);
+        final int actualAmountOfBeings = colony.getBeings().size();
+
+        // Assert
+        assertThat(actualAmountOfBeings).isEqualTo(expectedAmountOfBeings);
+    }
 }
