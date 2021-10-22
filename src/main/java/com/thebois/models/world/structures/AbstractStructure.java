@@ -107,7 +107,6 @@ abstract class AbstractStructure implements IStructure {
         }
         return Optional.empty();
     }
-
     protected void postStructureCompletedEvent() {
         final StructureCompletedEvent structureCompletedEvent = new StructureCompletedEvent(
             structureType,
@@ -118,13 +117,6 @@ abstract class AbstractStructure implements IStructure {
     @Override
     public StructureType getType() {
         return structureType;
-    }
-
-    protected void postStructureCompletedEvent() {
-        final StructureCompletedEvent structureCompletedEvent = new StructureCompletedEvent(
-            structureType,
-            getPosition());
-        Pawntastic.getEventBus().post(structureCompletedEvent);
     }
 
 }
