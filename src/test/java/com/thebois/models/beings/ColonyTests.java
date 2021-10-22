@@ -9,8 +9,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
+
+import javax.management.relation.Role;
 
 import com.google.common.eventbus.EventBus;
 
@@ -27,8 +30,12 @@ import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
 import com.thebois.listeners.events.OnDeathEvent;
+import com.thebois.listeners.events.OnSpawnPawnEvent;
 import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
+import com.thebois.models.beings.pathfinding.AstarPathFinder;
+import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.beings.roles.IdleRoleTests;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.terrains.Grass;
@@ -125,5 +132,39 @@ public class ColonyTests {
 
         // Assert
         assertThat(actualAmountOfBeings).isEqualTo(expectedAmountOfBeings);
+    }
+
+    @Test
+    public void colonyContainsSamePawnsAfterDeserialization() throws ClassNotFoundException, IOException {
+        // Arrange
+        final World world = new TestWorld(50, ThreadLocalRandom.current());
+        final Colony colony = new Colony(world, EventBus::new);
+
+        RoleFactory.setResourceFinder(world);
+        RoleFactory.setStructureFinder(world);
+        RoleFactory.setWorld(world);
+
+        colony.addBeing(new Pawn(new Position(), RoleFactory.idle(), EventBus::new));
+
+        // Act
+        final byte[] serialized1 = serialize(colony);
+        final Colony deserialized1 = (Colony) deserialize(serialized1);
+
+        // Assert
+        assertThat(colony.getBeings()).isEqualTo(deserialized1.getBeings());
+
+    }
+
+    private byte[] serialize(final Object object) throws IOException {
+        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        final ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
+        outputStream.writeObject(object);
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    private Object deserialize(final byte[] bytes) throws IOException, ClassNotFoundException {
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        final ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        return objectInputStream.readObject();
     }
 }

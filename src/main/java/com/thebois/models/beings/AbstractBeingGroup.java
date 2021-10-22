@@ -14,12 +14,10 @@ import com.thebois.listeners.events.OnDeathEvent;
  */
 public abstract class AbstractBeingGroup implements IBeingGroup {
 
-    private final IEventBusSource eventBusSource;
     private final Collection<IBeing> beings = new ConcurrentLinkedQueue<>();
     private final Collection<IBeing> deadBeings = new ConcurrentLinkedQueue<>();
 
     protected AbstractBeingGroup(final IEventBusSource eventBusSource) {
-        this.eventBusSource = eventBusSource;
         eventBusSource.getEventBus().register(this);
     }
 
