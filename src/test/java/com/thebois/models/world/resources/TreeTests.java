@@ -12,7 +12,7 @@ public class TreeTests {
     @Test
     public void harvestReturnsLog() {
         // Arrange
-        final Tree tree = new Tree(0, 0);
+        final IResource tree = ResourceFactory.createResource(ResourceType.TREE, 0,0);
 
         // Act
         final IItem item = tree.harvest();
@@ -24,7 +24,7 @@ public class TreeTests {
     @Test
     public void getTypeFromTreeResource() {
         // Arrange
-        final Tree tree = new Tree(1, 1);
+        final IResource tree = ResourceFactory.createResource(ResourceType.TREE, 1,1);
 
         // Act
         final ResourceType resourceType = tree.getType();
@@ -36,7 +36,7 @@ public class TreeTests {
     @Test
     public void getDeepCloneShouldBeEqualToOriginal() {
         // Arrange
-        final Tree tree = new Tree(1, 1);
+        final IResource tree = ResourceFactory.createResource(ResourceType.TREE, 1,1);
 
         // Act
         final IResource deepClone = tree.deepClone();
@@ -48,7 +48,7 @@ public class TreeTests {
     @Test
     public void getCostIsFloatMax() {
         // Arrange
-        final Tree tree = new Tree(1, 1);
+        final IResource tree = ResourceFactory.createResource(ResourceType.TREE, 1,1);
         final float expectedValue = Float.MAX_VALUE;
 
         // Act

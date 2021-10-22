@@ -12,7 +12,7 @@ public class StoneTests {
     @Test
     public void harvestReturnsRockItem() {
         // Arrange
-        final Stone stone = new Stone(1, 1);
+        final IResource stone = ResourceFactory.createResource(ResourceType.STONE, 1,1);
 
         // Act
         final IItem item = stone.harvest();
@@ -24,7 +24,7 @@ public class StoneTests {
     @Test
     public void getTypeFromStoneResource() {
         // Arrange
-        final Stone stone = new Stone(1, 1);
+        final IResource stone = ResourceFactory.createResource(ResourceType.STONE, 1,1);
 
         // Act
         final ResourceType resourceType = stone.getType();
@@ -36,7 +36,7 @@ public class StoneTests {
     @Test
     public void getDeepCloneShouldBeEqualToOriginal() {
         // Arrange
-        final Stone stone = new Stone(1, 1);
+        final IResource stone = ResourceFactory.createResource(ResourceType.STONE, 1,1);
 
         // Act
         final IResource deepClone = stone.deepClone();
@@ -48,7 +48,7 @@ public class StoneTests {
     @Test
     public void getCostIsFloatMax() {
         // Arrange
-        final Stone stone = new Stone(1, 1);
+        final IResource stone = ResourceFactory.createResource(ResourceType.STONE, 1,1);
         final float expectedValue = Float.MAX_VALUE;
 
         // Act

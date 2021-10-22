@@ -13,10 +13,15 @@ import static org.assertj.core.api.Assertions.*;
 public class ResourceFactoryTests {
 
     public static Stream<Arguments> getResourceTypeAndExpectedResource() {
-        return Stream.of(
-            Arguments.of(ResourceType.STONE, new Stone(0, 0)),
-            Arguments.of(ResourceType.WATER, new Water(0, 0)),
-            Arguments.of(ResourceType.TREE, new Tree(0, 0)));
+        return Stream.of(Arguments.of(
+                             ResourceType.STONE,
+                             ResourceFactory.createResource(ResourceType.STONE, 0, 0)),
+                         Arguments.of(
+                             ResourceType.WATER,
+                             ResourceFactory.createResource(ResourceType.WATER, 0, 0)),
+                         Arguments.of(
+                             ResourceType.TREE,
+                             ResourceFactory.createResource(ResourceType.TREE, 0, 0)));
     }
 
     @ParameterizedTest

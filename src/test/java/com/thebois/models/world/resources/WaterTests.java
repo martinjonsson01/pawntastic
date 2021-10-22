@@ -12,7 +12,7 @@ public class WaterTests {
     @Test
     public void harvestReturnsFishItem() {
         // Arrange
-        final Water water = new Water(1, 1);
+        final IResource water = ResourceFactory.createResource(ResourceType.WATER,1,1);
 
         // Act
         final IItem item = water.harvest();
@@ -24,7 +24,7 @@ public class WaterTests {
     @Test
     public void getTypeFromWaterResource() {
         // Arrange
-        final Water water = new Water(1, 1);
+        final IResource water = ResourceFactory.createResource(ResourceType.WATER,1,1);
 
         // Act
         final ResourceType resourceType = water.getType();
@@ -36,7 +36,7 @@ public class WaterTests {
     @Test
     public void getDeepCloneShouldBeEqualToOriginal() {
         // Arrange
-        final Water water = new Water(1, 1);
+        final IResource water = ResourceFactory.createResource(ResourceType.WATER,1,1);
 
         // Act
         final IResource deepClone = water.deepClone();
@@ -48,7 +48,7 @@ public class WaterTests {
     @Test
     public void getCostIsFloatMax() {
         // Arrange
-        final Water water = new Water(1, 1);
+        final IResource water = ResourceFactory.createResource(ResourceType.WATER,1,1);
         final float expectedValue = Float.MAX_VALUE;
 
         // Act
