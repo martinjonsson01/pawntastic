@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 public class BuildActionTests {
 
-    private static final float ITEM_TRANSFER_TIME = 5f;
+    private static final float ITEM_TRANSFER_TIME = 1f;
     private IActionPerformer performer;
     private IStructure structure;
     private IAction action;
