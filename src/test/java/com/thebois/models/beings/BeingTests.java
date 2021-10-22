@@ -82,7 +82,7 @@ public class BeingTests {
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
-        return new Pawn(currentPosition.deepClone(), role);
+        return new Pawn(currentPosition, role);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {

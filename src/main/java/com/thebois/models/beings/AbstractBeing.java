@@ -74,7 +74,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     @Override
     public Position getPosition() {
-        return position.deepClone();
+        return position;
     }
 
     @Override
