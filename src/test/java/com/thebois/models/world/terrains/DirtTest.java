@@ -11,7 +11,7 @@ public class DirtTest {
     @Test
     public void getTypeReturnsDirtType() {
         // Arrange
-        final Dirt dirt = new Dirt(0f, 0f);
+        final ITerrain dirt = TerrainFactory.createTerrain(TerrainType.DIRT,0,0);
 
         // Act
         final TerrainType type = dirt.getType();
@@ -23,7 +23,7 @@ public class DirtTest {
     @Test
     public void getCostReturnsZero() {
         // Arrange
-        final Dirt dirt = new Dirt(0, 0);
+        final ITerrain dirt = TerrainFactory.createTerrain(TerrainType.DIRT,0,0);
         final float expectedCost = 0;
         final float actualCost;
 

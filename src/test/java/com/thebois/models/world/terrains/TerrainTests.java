@@ -12,7 +12,7 @@ public class TerrainTests {
     public void getPositionIsEqualToConstructorPosition() {
         // Arrange
         final Position position = new Position(1, 1);
-        final AbstractTerrain terrain1 = new Grass(1, 1);
+        final ITerrain terrain1 = TerrainFactory.createTerrain(TerrainType.GRASS,1,1);
 
         // Act
         final Position getPosition = terrain1.getPosition();
@@ -71,7 +71,7 @@ public class TerrainTests {
     @Test
     public void terrainIsEqualToItSelf() {
         // Arrange
-        final AbstractTerrain terrain = new Grass(1, 1);
+        final ITerrain terrain = TerrainFactory.createTerrain(TerrainType.GRASS,1,1);
 
         // Act
         final boolean isEqual = terrain.equals(terrain);
@@ -83,7 +83,7 @@ public class TerrainTests {
     @Test
     public void terrainIsNotEqualToNull() {
         // Arrange
-        final AbstractTerrain terrain = new Grass(1, 1);
+        final ITerrain terrain = TerrainFactory.createTerrain(TerrainType.GRASS,1,1);
 
         // Act
         final boolean isEqual = terrain.equals(null);
@@ -95,7 +95,7 @@ public class TerrainTests {
     @Test
     public void terrainIsNotEqualToOtherObject() {
         // Arrange
-        final AbstractTerrain terrain = new Grass(1, 1);
+        final ITerrain terrain = TerrainFactory.createTerrain(TerrainType.GRASS,1,1);
         final Object otherObject = new Position(1, 1);
 
         // Act
@@ -107,8 +107,8 @@ public class TerrainTests {
     @Test
     public void terrainIsNotEqualToTerrainWithOtherPosition() {
         // Arrange
-        final AbstractTerrain terrain1 = new Grass(1, 1);
-        final AbstractTerrain terrain2 = new Grass(2, 2);
+        final ITerrain terrain1 = TerrainFactory.createTerrain(TerrainType.GRASS,1,1);
+        final ITerrain terrain2 = TerrainFactory.createTerrain(TerrainType.GRASS,2,2);
 
         // Act
         final boolean isEqual = terrain1.equals(terrain2);

@@ -8,24 +8,19 @@ import com.thebois.models.inventory.items.ItemType;
 /**
  * A large stone on the ground.
  */
-public class Stone extends AbstractResource {
+class Stone extends AbstractResource {
 
     /**
-     * Instantiate at a given position.
-     *
-     * @param x The X-coordinate to place it.
-     * @param y The Y-coordinate to place it.
+     * The time it takes to harvest, in seconds.
      */
-    public Stone(final float x, final float y) {
-        this(new Position(x, y));
-    }
+    private static final float HARVEST_TIME = 2f;
 
     /**
      * Instantiate at a given position.
      *
      * @param position The location to place it.
      */
-    public Stone(final Position position) {
+    Stone(final Position position) {
         super(position);
     }
 
@@ -47,6 +42,11 @@ public class Stone extends AbstractResource {
     @Override
     public IItem harvest() {
         return ItemFactory.fromType(ItemType.ROCK);
+    }
+
+    @Override
+    public float getHarvestTime() {
+        return HARVEST_TIME;
     }
 
 }
