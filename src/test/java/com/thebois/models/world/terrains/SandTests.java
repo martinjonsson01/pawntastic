@@ -9,7 +9,7 @@ public class SandTests {
     @Test
     public void getTypeReturnsSandType() {
         // Arrange
-        final Sand sand = new Sand(0f, 0f);
+        final ITerrain sand = TerrainFactory.createTerrain(TerrainType.SAND,0,0);
 
         // Act
         final TerrainType type = sand.getType();
@@ -21,7 +21,7 @@ public class SandTests {
     @Test
     public void getCostReturns0() {
         // Arrange
-        final Sand sand = new Sand(0f, 0f);
+        final ITerrain sand = TerrainFactory.createTerrain(TerrainType.GRASS,0,0);
         final float expectedCost = 0;
 
         // Act

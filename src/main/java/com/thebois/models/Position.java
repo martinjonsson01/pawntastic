@@ -3,15 +3,13 @@ package com.thebois.models;
 import java.io.Serializable;
 import java.util.Objects;
 
-import com.thebois.abstractions.IDeepClonable;
-
 /**
  * A two-dimensional location.
  */
-public final class Position implements IDeepClonable<Position>, Serializable {
+public final class Position implements Serializable {
 
-    private float x;
-    private float y;
+    private final float x;
+    private final float y;
 
     /**
      * Creates position at 0,0.
@@ -60,16 +58,8 @@ public final class Position implements IDeepClonable<Position>, Serializable {
         return x;
     }
 
-    public void setX(final float x) {
-        this.x = x;
-    }
-
     public float getY() {
         return y;
-    }
-
-    public void setY(final float y) {
-        this.y = y;
     }
 
     @Override
@@ -92,16 +82,6 @@ public final class Position implements IDeepClonable<Position>, Serializable {
     @Override
     public String toString() {
         return "{" + "x=" + x + ", y=" + y + '}';
-    }
-
-    /**
-     * Makes a deep copy of the position and returns it.
-     *
-     * @return a new Position object with the same coordinates.
-     */
-    @Override
-    public Position deepClone() {
-        return new Position(this.x, this.y);
     }
 
     /**

@@ -26,7 +26,7 @@ public final class StructureFactory {
      * @param type     The type of structure to be created.
      * @param position The position of the structure.
      *
-     * @return The created structure
+     * @return The created structure.
      */
     public static IStructure createStructure(
         final StructureType type, final Position position) {
@@ -44,7 +44,7 @@ public final class StructureFactory {
      * @param x    The X position of the structure.
      * @param y    The Y position of the structure.
      *
-     * @return The created structure
+     * @return The created structure.
      */
     public static IStructure createStructure(final StructureType type, final int x, final int y) {
         return createStructure(type, new Position(x, y));

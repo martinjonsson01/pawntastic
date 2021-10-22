@@ -11,7 +11,7 @@ public class GrassTests {
     @Test
     public void getTypeReturnsGrassType() {
         // Arrange
-        final Grass grass = new Grass(0f, 0f);
+        final ITerrain grass = TerrainFactory.createTerrain(TerrainType.GRASS, 0, 0);
 
         // Act
         final TerrainType type = grass.getType();
@@ -25,7 +25,7 @@ public class GrassTests {
         // Arrange
         final int x = 123;
         final int y = 456;
-        final Grass grass = new Grass(x, y);
+        final ITerrain grass = TerrainFactory.createTerrain(TerrainType.GRASS, x, y);
 
         // Act
         final Position actualPosition = grass.getPosition();
@@ -38,7 +38,7 @@ public class GrassTests {
     @Test
     public void getCostReturnsGreaterThanOrEqualToZero() {
         // Arrange
-        final Grass grass = new Grass(0f, 0f);
+        final ITerrain grass = TerrainFactory.createTerrain(TerrainType.GRASS, 0, 0);
 
         // Act
         final float cost = grass.getCost();

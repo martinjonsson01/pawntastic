@@ -89,13 +89,13 @@ public class BeingTests {
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role, final AbstractRole hungerRole) {
-        return new Pawn(currentPosition.deepClone(), role, hungerRole);
+        return new Pawn(currentPosition, role, hungerRole);
     }
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
         final AbstractRole hungerRole = new NothingRole();
-        return new Pawn(currentPosition.deepClone(), role, hungerRole);
+        return new Pawn(currentPosition, role, hungerRole);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
@@ -242,7 +242,7 @@ public class BeingTests {
         being.update(0.1f);
 
         // Assert
-        verify(action, times(1)).perform(being);
+        verify(action, times(1)).perform(being, 0.1f);
     }
 
     @Test
@@ -357,7 +357,7 @@ public class BeingTests {
         being.update(timeUntilHungry);
 
         // Assert
-        verify(action, times(0)).perform(being);
+        verify(action, times(0)).perform(being, 0.1f);
     }
 
     @Test
@@ -377,8 +377,8 @@ public class BeingTests {
         being.update(timeUntilHungry);
 
         // Assert
-        verify(action, times(0)).perform(being);
-        verify(hungerAction, times(1)).perform(being);
+        verify(action, times(0)).perform(eq(being), anyFloat());
+        verify(hungerAction, times(1)).perform(being, timeUntilHungry);
     }
 
     @Test
@@ -398,12 +398,14 @@ public class BeingTests {
         // Simulate finding food.
         being.addItem(MockFactory.createEdibleItem(1f, 10f, ItemType.FISH));
 
+        final float deltaTime = 0.1f;
+
         // Act
-        being.update(0.1f);
+        being.update(deltaTime);
 
         // Assert
-        verify(action, times(1)).perform(being);
-        verify(hungerAction, times(1)).perform(being);
+        verify(action, times(1)).perform(being, deltaTime);
+        verify(hungerAction, times(1)).perform(being, timeUntilHungry);
     }
 
     @Test

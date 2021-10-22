@@ -89,7 +89,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     @Override
     public Position getPosition() {
-        return position.deepClone();
+        return position;
     }
 
     @Override
@@ -112,7 +112,8 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         satiateHunger();
         updateHealth(deltaTime);
         if (health > 0f) {
-            role.obtainNextAction(this).perform(this);
+            role.obtainNextAction(this)
+                .perform(this, deltaTime);
             move(deltaTime);
         }
     }

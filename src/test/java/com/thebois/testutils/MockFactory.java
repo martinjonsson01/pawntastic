@@ -5,7 +5,9 @@ import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.inventory.items.IConsumableItem;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
+import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.ITile;
+import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.IStructure;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -18,6 +20,17 @@ public final class MockFactory {
 
     private MockFactory() {
 
+    }
+
+    public static IResource createResource(
+        final Position position,
+        final IItem harvestItem,
+        final float harvestTime) {
+        final IResource resource = mock(IResource.class);
+        when(resource.getPosition()).thenReturn(position);
+        when(resource.harvest()).thenReturn(harvestItem);
+        when(resource.getHarvestTime()).thenReturn(harvestTime);
+        return resource;
     }
 
     public static IItem createItem(final float weight, final ItemType type) {

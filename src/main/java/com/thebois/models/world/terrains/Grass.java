@@ -5,24 +5,14 @@ import com.thebois.models.Position;
 /**
  * The default world tile.
  */
-public class Grass extends AbstractTerrain {
-
-    /**
-     * Instantiates a new grass terrain tile.
-     *
-     * @param x The x-coordinate of the tile
-     * @param y The y-coordinate of the tile
-     */
-    public Grass(final float x, final float y) {
-        this(new Position(x, y));
-    }
+class Grass extends AbstractTerrain {
 
     /**
      * Instantiates a new grass terrain tile.
      *
      * @param position The position of the tile.
      */
-    public Grass(final Position position) {
+    Grass(final Position position) {
         super(position);
     }
 

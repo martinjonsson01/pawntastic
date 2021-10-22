@@ -22,9 +22,4 @@ public class Pawn extends AbstractBeing {
         super(startPosition, role, hungerRole);
     }
 
-    @Override
-    public void update(final float deltaTime) {
-        super.update(deltaTime);
-    }
-
 }
