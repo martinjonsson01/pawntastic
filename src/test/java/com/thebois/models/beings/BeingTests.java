@@ -86,7 +86,9 @@ public class BeingTests {
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
-        return new Pawn(currentPosition.deepClone(), role);
+
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        return new Pawn(currentPosition.deepClone(), role, ()->mockEventBusSource);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {

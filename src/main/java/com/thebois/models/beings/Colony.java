@@ -1,5 +1,8 @@
 package com.thebois.models.beings;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +29,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     private static final int NUMBER_OF_PAWNS_SPAWNED_BY_TOWN_HALL = 5;
 
     private final IPositionFinder positionFinder;
+    private final IEventBusSource eventBusSource;
 
     /**
      * Creates a colony and fills it with pawns in the provided open positions.
@@ -36,7 +40,9 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      */
     public Colony(final IPositionFinder positionFinder, final IEventBusSource eventBusSource) {
         super(eventBusSource);
+        this.eventBusSource = eventBusSource;
         this.positionFinder = positionFinder;
+        eventBusSource.getEventBus().register(this);
     }
 
     @Override
@@ -130,13 +136,12 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     @Subscribe
     public void onStructureCompletedEvent(final StructureCompletedEvent event) {
         final int numberOfPawnsToSpawn = getNumberOfPawnsToSpawn(event.getStructureType());
-
         final Iterable<Position> vacantPositions =
             positionFinder.tryGetEmptyPositionsNextTo(event.getPosition(),
                                                       numberOfPawnsToSpawn,
                                                       2);
         for (final Position vacantPosition : vacantPositions) {
-            addBeing(new Pawn(vacantPosition, RoleFactory.idle()));
+            addBeing(new Pawn(vacantPosition, RoleFactory.idle(), eventBusSource));
         }
     }
 
@@ -154,4 +159,13 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         }
     }
 
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        // Registers every time on deserialization because it might be registered to an old instance
+        // of the event bus.
+        // (caused by saving/loading).
+        in.defaultReadObject();
+        // IMPORTANT: Has to subscribe after being read.
+        eventBusSource.getEventBus().register(this);
+    }
 }

@@ -16,7 +16,7 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
 
     private final IEventBusSource eventBusSource;
     private final Collection<IBeing> beings = new ConcurrentLinkedQueue<>();
-    private Collection<IBeing> deadBeings = new ArrayList<>();
+    private final Collection<IBeing> deadBeings = new ConcurrentLinkedQueue<>();
 
     protected AbstractBeingGroup(final IEventBusSource eventBusSource) {
         this.eventBusSource = eventBusSource;
@@ -35,7 +35,7 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
     @Override
     public void update(final float deltaTime) {
         beings.removeAll(deadBeings);
-        deadBeings = new ArrayList<>();
+        deadBeings.clear();
         beings.forEach(being -> being.update(deltaTime));
     }
 

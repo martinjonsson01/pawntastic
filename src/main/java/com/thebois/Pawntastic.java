@@ -151,7 +151,7 @@ public class Pawntastic extends Game {
             final IPathFinder pathFinder = new AstarPathFinder(world);
             ActionFactory.setPathFinder(pathFinder);
 
-            colony = new Colony(world, Pawntastic::getEventBus);
+            colony = new Colony(world, () -> BUS);
 
             playerInventory = new Inventory();
             StructureFactory.setInventory(playerInventory);

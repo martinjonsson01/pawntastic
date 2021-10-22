@@ -81,7 +81,7 @@ public class RoleAllocatorTests {
 
         final Colony colony = new Colony(createTestWorld(50), ()->mockEventBusSource);
         for (int i = 0; i < beingCount; i++) {
-            colony.addBeing(new Pawn(new Position(), RoleFactory.idle()));
+            colony.addBeing(new Pawn(new Position(), RoleFactory.idle(), ()->mockEventBusSource));
         }
         return colony;
     }

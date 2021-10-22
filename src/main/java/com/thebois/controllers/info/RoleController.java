@@ -6,8 +6,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.google.common.eventbus.Subscribe;
 
+import com.thebois.Pawntastic;
 import com.thebois.controllers.IController;
+import com.thebois.listeners.events.OnDeathEvent;
+import com.thebois.listeners.events.OnSpawnPawnEvent;
 import com.thebois.listeners.events.ValueChangedEvent;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
@@ -45,6 +49,8 @@ public class RoleController implements IController<IActorView> {
             button.setCanDecrease(roleCount -> roleAllocator.canDecreaseAllocation(roleType));
             button.setCanIncrease(roleCount -> roleAllocator.canIncreaseAllocation());
         }
+
+        Pawntastic.getEventBus().register(this);
     }
 
     private Map<RoleType, Integer> createRoleCountMap() {
@@ -84,7 +90,6 @@ public class RoleController implements IController<IActorView> {
 
     @Override
     public void update() {
-
     }
 
 }
