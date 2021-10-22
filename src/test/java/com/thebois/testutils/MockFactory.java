@@ -1,12 +1,17 @@
 package com.thebois.testutils;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.thebois.models.Position;
 import com.thebois.models.beings.actions.IAction;
-import com.thebois.models.inventory.items.IConsumableItem;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
-import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.IConsumableItem;
 import com.thebois.models.world.ITile;
+import com.thebois.models.world.World;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.IStructure;
 
@@ -70,6 +75,15 @@ public final class MockFactory {
         when(action.isCompleted(any())).thenReturn(isCompleted);
         when(action.canPerform(any())).thenReturn(canPerform);
         return action;
+    }
+
+    public static void completeAllStructures(final World world) {
+        for (final IStructure structure : world.getStructures()) {
+            final Collection<ItemType> neededItemTypes = structure.getNeededItems();
+            final List<IItem> neededItems =
+                neededItemTypes.stream().map(ItemFactory::fromType).collect(Collectors.toList());
+            neededItems.forEach(structure::tryDeliverItem);
+        }
     }
 
 }
