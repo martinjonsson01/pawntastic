@@ -27,6 +27,7 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
 
     private static final int NUMBER_OF_PAWNS_SPAWNED_BY_HOUSE = 2;
     private static final int NUMBER_OF_PAWNS_SPAWNED_BY_TOWN_HALL = 5;
+    private static final int PAWN_SPAWN_RADIUS = 2;
 
     private final IPositionFinder positionFinder;
     private final IEventBusSource eventBusSource;
@@ -139,9 +140,13 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         final Iterable<Position> vacantPositions =
             positionFinder.tryGetEmptyPositionsNextTo(event.getPosition(),
                                                       numberOfPawnsToSpawn,
-                                                      (float) (numberOfPawnsToSpawn / Math.sqrt(numberOfPawnsToSpawn)));
+                                                      PAWN_SPAWN_RADIUS);
         for (final Position vacantPosition : vacantPositions) {
-            addBeing(new Pawn(vacantPosition, RoleFactory.idle(), RoleFactory.fisher(), eventBusSource));
+            addBeing(new Pawn(
+                vacantPosition,
+                RoleFactory.idle(),
+                RoleFactory.fisher(),
+                eventBusSource));
         }
     }
 
