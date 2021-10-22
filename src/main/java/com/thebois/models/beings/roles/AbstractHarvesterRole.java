@@ -62,8 +62,8 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         final IResource resource = maybeResource.get();
 
         final Position position = performer.getPosition();
-        final Optional<Position> closestSpotNextToResource = world.getClosestNeighbourOf(resource,
-                                                                                         position);
+        final Optional<Position> closestSpotNextToResource =
+            world.getClosestNeighbourOf(resource, position);
 
         if (closestSpotNextToResource.isEmpty()) return ActionFactory.createDoNothing();
 
@@ -81,14 +81,14 @@ abstract class AbstractHarvesterRole extends AbstractRole {
 
     private IAction createMoveToStockpile(final IActionPerformer performer) {
         final Position position = performer.getPosition();
-        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(position,
-                                                                                             StructureType.STOCKPILE);
+        final Optional<IStructure> maybeStructure =
+            structureFinder.getNearbyStructureOfType(position, StructureType.STOCKPILE);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
 
         final IStructure structure = maybeStructure.get();
 
-        final Optional<Position> closestSpotNextToStructure = world.getClosestNeighbourOf(structure,
-                                                                                          position);
+        final Optional<Position> closestSpotNextToStructure =
+            world.getClosestNeighbourOf(structure, position);
 
         if (closestSpotNextToStructure.isEmpty()) return ActionFactory.createDoNothing();
 
@@ -97,8 +97,8 @@ abstract class AbstractHarvesterRole extends AbstractRole {
 
     private IAction createEmptyInventoryOfResource(final IActionPerformer performer) {
         final Position position = performer.getPosition();
-        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(position,
-                                                                                             StructureType.STOCKPILE);
+        final Optional<IStructure> maybeStructure =
+            structureFinder.getNearbyStructureOfType(position, StructureType.STOCKPILE);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
         final IStoreable storeable;
