@@ -58,8 +58,7 @@ public final class StructureFactory {
     }
 
     private static void assertDependenciesNotNull() {
-        Objects.requireNonNull(inventory,
-                               "Inventory is null. Call StructureFactory.setInventory.");
+        Objects.requireNonNull(inventory, "Inventory is null. Call StructureFactory.setInventory.");
     }
 
 }

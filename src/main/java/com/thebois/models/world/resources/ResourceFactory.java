@@ -3,6 +3,7 @@ package com.thebois.models.world.resources;
 /**
  * Factory used to create resources.
  *
+ * @author Jonathan
  * @author Mathias
  */
 public final class ResourceFactory {
