@@ -78,22 +78,6 @@ public class PositionTests {
     }
 
     @Test
-    public void getSetPositionChangesCoordinates() {
-        // Arrange
-        final Position position = new Position(0, 0);
-        final int x = 123;
-        final int y = 456;
-
-        // Act
-        position.setX(x);
-        position.setY(y);
-
-        // Assert
-        assertThat(position.getX()).isEqualTo(x);
-        assertThat(position.getY()).isEqualTo(y);
-    }
-
-    @Test
     public void positionEqualsToItSelfIsTrue() {
         // Arrange
         final Position position = new Position(123, 123);

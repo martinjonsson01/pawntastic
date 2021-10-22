@@ -16,6 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
@@ -24,12 +25,13 @@ import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
+import com.thebois.models.world.resources.ResourceFactory;
 import com.thebois.models.world.resources.ResourceType;
-import com.thebois.models.world.resources.Tree;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.structures.StructureType;
-import com.thebois.models.world.terrains.Grass;
 import com.thebois.models.world.terrains.ITerrain;
+import com.thebois.models.world.terrains.TerrainFactory;
+import com.thebois.models.world.terrains.TerrainType;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -46,14 +48,16 @@ public class WorldTests {
                                       List.of(mockPosition(0, 1), mockPosition(1, 2))),
                          Arguments.of(mockTile(2, 2),
                                       List.of(mockPosition(2, 1), mockPosition(1, 2))),
-                         Arguments.of(mockTile(1, 1), List.of(mockPosition(1, 0),
-                                                              mockPosition(0, 1),
-                                                              mockPosition(2, 1),
-                                                              mockPosition(1, 2))));
+                         Arguments.of(
+                             mockTile(1, 1),
+                             List.of(mockPosition(1, 0),
+                                     mockPosition(0, 1),
+                                     mockPosition(2, 1),
+                                     mockPosition(1, 2))));
     }
 
     private static ITile mockTile(final int x, final int y) {
-        return new Grass(x, y);
+        return TerrainFactory.createTerrain(TerrainType.GRASS, x, y);
     }
 
     private static Position mockPosition(final int x, final int y) {
@@ -216,10 +220,7 @@ public class WorldTests {
     public void getNearbyOfTypeResourceReturnsItWhenSingleNearby() {
         // Arrange
         final World world = new ResourceTestWorld(mock(ThreadLocalRandom.class));
-        final IResource expectedResource = world.getResources()
-                                                .stream()
-                                                .findFirst()
-                                                .orElseThrow();
+        final IResource expectedResource = world.getResources().stream().findFirst().orElseThrow();
         final Position origin = new Position();
 
         // Act
@@ -348,8 +349,7 @@ public class WorldTests {
 
         // Act
         for (final Position position : expectedTilePositions) {
-            actualTilePositions.add(world.getTileAt(position)
-                                         .getPosition());
+            actualTilePositions.add(world.getTileAt(position).getPosition());
         }
         // Assert
         assertThat(actualTilePositions).containsExactlyInAnyOrderElementsOf(expectedTilePositions);
@@ -443,8 +443,7 @@ public class WorldTests {
         final Colony colony = mockColonyWithMockBeings();
 
         // Assert
-        assertThat(colony.getBeings()).size()
-                                      .isEqualTo(5);
+        assertThat(colony.getBeings()).size().isEqualTo(5);
     }
 
     private Colony mockColonyWithMockBeings() {
@@ -452,7 +451,7 @@ public class WorldTests {
         for (int i = 0; i < 5; i++) {
             vacantPositions.add(new Position(0, 0));
         }
-        return new Colony(vacantPositions);
+        return new Colony(vacantPositions, Pawntastic::getEventBus);
     }
 
     @Test
@@ -494,8 +493,7 @@ public class WorldTests {
         final Iterable<Position> emptyPositions = world.findEmptyPositions(numberOfWantedPositions);
 
         // Assert
-        final int numberOfEmptyPositions = Lists.newArrayList(emptyPositions)
-                                                .size();
+        final int numberOfEmptyPositions = Lists.newArrayList(emptyPositions).size();
         assertThat(numberOfEmptyPositions).isEqualTo(numberOfWantedPositions);
     }
 
@@ -508,8 +506,7 @@ public class WorldTests {
         final int expectedNumberOfTerrainTiles = worldSize * worldSize;
 
         // Act
-        final int actualNumberOfTerrainTiles = world.getTerrainTiles()
-                                                    .size();
+        final int actualNumberOfTerrainTiles = world.getTerrainTiles().size();
 
         // Assert
         assertThat(actualNumberOfTerrainTiles).isEqualTo(expectedNumberOfTerrainTiles);
@@ -540,8 +537,7 @@ public class WorldTests {
                                                                                    StructureType.HOUSE);
 
         // Assert
-        assertThat(foundStructure.orElseThrow()
-                                 .getPosition()).isEqualTo(expectedPosition);
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
     }
 
     @Test
@@ -571,8 +567,7 @@ public class WorldTests {
         }
 
         // Assert
-        assertThat(world.getStructures()
-                        .size()).isEqualTo(size);
+        assertThat(world.getStructures().size()).isEqualTo(size);
     }
 
     @Test
@@ -599,8 +594,7 @@ public class WorldTests {
                                                                                                     0));
 
         // Assert
-        assertThat(foundStructure.orElseThrow()
-                                 .getPosition()).isEqualTo(new Position(1, 3));
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(1, 3));
     }
 
     @Test
@@ -638,7 +632,7 @@ public class WorldTests {
             final ITerrain[][] terrainMatrix = new ITerrain[worldSize][worldSize];
             for (int y = 0; y < worldSize; y++) {
                 for (int x = 0; x < worldSize; x++) {
-                    terrainMatrix[y][x] = new Grass(x, y);
+                    terrainMatrix[y][x] = TerrainFactory.createTerrain(TerrainType.GRASS, x, y);
                 }
             }
             return terrainMatrix;
@@ -652,8 +646,12 @@ public class WorldTests {
                     resourceMatrix[y][x] = null;
                 }
             }
-            resourceMatrix[0][0] = new Tree(0, 0);
-            resourceMatrix[worldSize - 1][worldSize - 1] = new Tree(worldSize - 1, worldSize - 1);
+            resourceMatrix[0][0] = ResourceFactory.createResource(ResourceType.TREE, 0, 0);
+            resourceMatrix[worldSize - 1][worldSize - 1] = ResourceFactory.createResource(ResourceType.TREE,
+                                                                                          worldSize
+                                                                                          - 1,
+                                                                                          worldSize
+                                                                                          - 1);
             return resourceMatrix;
         }
 

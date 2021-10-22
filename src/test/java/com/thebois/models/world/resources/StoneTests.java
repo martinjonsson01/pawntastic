@@ -10,11 +10,11 @@ import static org.assertj.core.api.Assertions.*;
 
 public class StoneTests {
 
-    private static Stone stone;
+    private static IResource stone;
 
     @BeforeEach
     public void setup() {
-        stone = new Stone(1, 1);
+        stone = ResourceFactory.createResource(ResourceType.STONE, 1,1);
     }
 
     @Test

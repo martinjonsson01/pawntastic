@@ -8,7 +8,7 @@ import com.thebois.models.inventory.items.ItemType;
 /**
  * Resource of type water.
  */
-public class Water extends AbstractResource {
+class Water extends AbstractResource {
 
     /**
      * The time it takes to harvest, in seconds.
@@ -18,19 +18,9 @@ public class Water extends AbstractResource {
     /**
      * Instantiate a new water resource at given position.
      *
-     * @param x X coordinate for the water resource.
-     * @param y Y coordinate for the water resource.
-     */
-    public Water(final float x, final float y) {
-        this(new Position(x, y));
-    }
-
-    /**
-     * Instantiate a new water resource at given position.
-     *
      * @param position The position where the water resource should be created.
      */
-    public Water(final Position position) {
+    Water(final Position position) {
         super(position);
     }
 

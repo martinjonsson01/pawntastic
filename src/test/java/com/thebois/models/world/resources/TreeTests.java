@@ -10,11 +10,11 @@ import static org.assertj.core.api.Assertions.*;
 
 public class TreeTests {
 
-    private static Tree tree;
+    private static IResource tree;
 
     @BeforeEach
     public void setup() {
-        tree = new Tree(1, 1);
+        tree = ResourceFactory.createResource(ResourceType.TREE, 0,0);
     }
 
     @Test

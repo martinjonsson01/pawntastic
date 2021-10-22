@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.models.IStructureFinder;
 import com.thebois.models.Position;
@@ -50,8 +51,8 @@ public class BeingTests {
         final AbstractBeing beingB = createBeing(0, 0, RoleType.BUILDER);
         final AbstractBeing beingC = createBeing(0, 0, RoleType.BUILDER);
         return Stream.of(Arguments.of(createBeing(), createBeing()),
-                         Arguments.of(createBeing(0, 0, RoleType.FARMER),
-                                      createBeing(0, 0, RoleType.FARMER)),
+                         Arguments.of(createBeing(0, 0, RoleType.MINER),
+                                      createBeing(0, 0, RoleType.MINER)),
                          Arguments.of(createBeing(123, 456, RoleType.FISHER),
                                       createBeing(123, 456, RoleType.FISHER)),
                          Arguments.of(beingA, beingA),
@@ -81,12 +82,12 @@ public class BeingTests {
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
-        return new Pawn(currentPosition.deepClone(), role);
+        return new Pawn(currentPosition, role);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
         mockFactoryDependencies();
-        return Stream.of(Arguments.of(createBeing(0, 0, RoleType.FARMER),
+        return Stream.of(Arguments.of(createBeing(0, 0, RoleType.MINER),
                                       createBeing(0, 0, RoleType.FISHER)),
                          Arguments.of(createBeing(0, 0, RoleType.LUMBERJACK),
                                       createBeing(1, 0, RoleType.LUMBERJACK)));
@@ -191,10 +192,8 @@ public class BeingTests {
         fasterBeing.update(0.1f);
 
         // Assert
-        final float slowerDistanceAfterUpdate = slowerBeing.getPosition()
-                                                           .distanceTo(destination);
-        final float fasterDistanceAfterUpdate = fasterBeing.getPosition()
-                                                           .distanceTo(destination);
+        final float slowerDistanceAfterUpdate = slowerBeing.getPosition().distanceTo(destination);
+        final float fasterDistanceAfterUpdate = fasterBeing.getPosition().distanceTo(destination);
         assertThat(slowerDistanceAfterUpdate).isGreaterThan(fasterDistanceAfterUpdate);
     }
 
@@ -242,7 +241,7 @@ public class BeingTests {
     @Test
     public void hashCodeReturnsSameIfEqual() {
         // Arrange
-        final AbstractRole role = RoleFactory.farmer();
+        final AbstractRole role = RoleFactory.miner();
         final IBeing first = createBeing();
         first.setRole(role);
         final IBeing second = createBeing();
@@ -259,7 +258,7 @@ public class BeingTests {
     @Test
     public void hashCodeReturnDifferentIfNotEqual() {
         // Arrange
-        final IBeing first = createBeing(new Position(0, 0), RoleFactory.farmer());
+        final IBeing first = createBeing(new Position(0, 0), RoleFactory.miner());
         final IBeing second = createBeing(new Position(123, 123), RoleFactory.idle());
 
         // Act
@@ -274,7 +273,7 @@ public class BeingTests {
     public void equalsReturnsFalseForOtherType() {
         // Arrange
         final IBeing being = createBeing();
-        being.setRole(RoleFactory.farmer());
+        being.setRole(RoleFactory.miner());
 
         // Assert
         // noinspection AssertBetweenInconvertibleTypes
@@ -301,16 +300,14 @@ public class BeingTests {
     public void addBeingIncreasesBeingCount() {
         // Arrange
         final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
-        final AbstractBeingGroup colony = new Colony(vacantPositions);
+        final AbstractBeingGroup colony = new Colony(vacantPositions, Pawntastic::getEventBus);
 
         final IBeing being = createBeing();
 
         // Act
-        final int before = colony.getBeings()
-                                 .size();
+        final int before = colony.getBeings().size();
         colony.addBeing(being);
-        final int after = colony.getBeings()
-                                .size();
+        final int after = colony.getBeings().size();
 
         // Assert
         assertThat(before).isEqualTo(1);
@@ -328,6 +325,38 @@ public class BeingTests {
 
         // Assert
         assertThat(being).isEqualTo(deserializedBeing);
+    }
+
+    @Test
+    public void beingsLosesHealthWhenTimePasses() {
+        // Arrange
+        final IBeing being = createBeing();
+        final float timeToPass = 50f;
+        final float startHealthRatio = being.getHealthRatio();
+
+        // Act
+        being.update(timeToPass);
+        // Calling method in order for pawn to not insta die.
+        being.update(timeToPass);
+        final float endHealthRatio = being.getHealthRatio();
+
+        //Assert
+        assertThat(endHealthRatio).isLessThan(startHealthRatio).isGreaterThan(0);
+    }
+
+    @Test
+    public void beingHealthRatioIsZeroAfterLongTimePasses() {
+        // Arrange
+        final IBeing being = createBeing();
+        final float timeToPass = 1000f;
+        final float expectedHealthRatio = 0;
+
+        // Act
+        being.update(timeToPass);
+        final float endHealthRatio = being.getHealthRatio();
+
+        //Assert
+        assertThat(endHealthRatio).isEqualTo(expectedHealthRatio);
     }
 
     /**

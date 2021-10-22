@@ -5,24 +5,14 @@ import com.thebois.models.Position;
 /**
  * Terrain of type sand.
  */
-public class Sand extends AbstractTerrain {
-
-    /**
-     * Instantiates a new sand terrain tile.
-     *
-     * @param x The X position of the tile.
-     * @param y The Y position of the tile.
-     */
-    public Sand(final float x, final float y) {
-        this(new Position(x, y));
-    }
+class Sand extends AbstractTerrain {
 
     /**
      * Instantiates a new sand terrain tile.
      *
      * @param position The position of the terrain tile.
      */
-    public Sand(final Position position) {
+    Sand(final Position position) {
         super(position);
     }
 

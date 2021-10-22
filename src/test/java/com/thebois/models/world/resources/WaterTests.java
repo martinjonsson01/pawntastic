@@ -10,11 +10,11 @@ import static org.assertj.core.api.Assertions.*;
 
 public class WaterTests {
 
-    private static Water water;
+    private static IResource water;
 
     @BeforeEach
     public void setup() {
-        water = new Water(1, 1);
+        water = ResourceFactory.createResource(ResourceType.WATER,1,1);
     }
 
     @Test

@@ -14,9 +14,9 @@ public class TerrainFactoryTests {
 
     public static Stream<Arguments> getTerrainTypeAndExpectedTerrain() {
         return Stream.of(
-            Arguments.of(TerrainType.GRASS, new Grass(0, 0)),
-            Arguments.of(TerrainType.SAND, new Sand(0, 0)),
-            Arguments.of(TerrainType.DIRT, new Dirt(0, 0)));
+            Arguments.of(TerrainType.GRASS, TerrainFactory.createTerrain(TerrainType.GRASS, 0, 0)),
+            Arguments.of(TerrainType.SAND, TerrainFactory.createTerrain(TerrainType.SAND, 0, 0)),
+            Arguments.of(TerrainType.DIRT, TerrainFactory.createTerrain(TerrainType.DIRT, 0, 0)));
     }
 
     @ParameterizedTest
