@@ -33,16 +33,13 @@ public class RoleTests {
 
     public static Stream<Arguments> getEqualRoles() {
         final IResourceFinder resourceFinder = mock(IResourceFinder.class);
-        final IWorld world = mock(IWorld.class);
         final IStructureFinder structureFinder = mock(IStructureFinder.class);
-        final LumberjackRole sameLumberjack = new LumberjackRole(resourceFinder,
-                                                                 structureFinder,
-                                                                 world);
+        final IWorld world = mock(IWorld.class);
+        final LumberjackRole sameLumberjack =
+            new LumberjackRole(resourceFinder, structureFinder, world);
         return Stream.of(Arguments.of(sameLumberjack, sameLumberjack),
                          Arguments.of(new LumberjackRole(resourceFinder, structureFinder, world),
                                       new LumberjackRole(resourceFinder, structureFinder, world)),
-                         Arguments.of(new FarmerRole(), new FarmerRole()),
-                         Arguments.of(new GuardRole(), new GuardRole()),
                          Arguments.of(new FisherRole(mock(IResourceFinder.class),
                                                      structureFinder,
                                                      mock(IWorld.class)),
@@ -59,32 +56,32 @@ public class RoleTests {
 
     public static Stream<Arguments> getUnequalRoles() {
         final IResourceFinder resourceFinder = mock(IResourceFinder.class);
-        final IWorld world = mock(IWorld.class);
         final IStructureFinder structureFinder = mock(IStructureFinder.class);
-        return Stream.of(
-            Arguments.of(new LumberjackRole(resourceFinder, structureFinder, world),
-                         new FarmerRole()),
-            Arguments.of(new FarmerRole(),
-                         new LumberjackRole(resourceFinder, structureFinder, world)),
-            Arguments.of(new FisherRole(mock(IResourceFinder.class),
-                                        structureFinder,
-                                        mock(IWorld.class)),
-                         new BuilderRole(mock(IStructureFinder.class), mock(IWorld.class))),
-            Arguments.of(new BuilderRole(mock(IStructureFinder.class), mock(IWorld.class)),
-                         new FisherRole(mock(IResourceFinder.class),
-                                        structureFinder,
-                                        mock(IWorld.class))),
-            Arguments.of(new BuilderRole(mock(IStructureFinder.class), mock(IWorld.class)), null));
+        final IWorld world = mock(IWorld.class);
+        return Stream.of(Arguments.of(new LumberjackRole(resourceFinder, structureFinder, world),
+                                      new FisherRole(resourceFinder, structureFinder, world)),
+                         Arguments.of(new FisherRole(mock(IResourceFinder.class),
+                                                     structureFinder,
+                                                     mock(IWorld.class)),
+                                      new BuilderRole(mock(IStructureFinder.class),
+                                                      mock(IWorld.class))),
+                         Arguments.of(new BuilderRole(mock(IStructureFinder.class),
+                                                      mock(IWorld.class)),
+                                      new FisherRole(mock(IResourceFinder.class),
+                                                     structureFinder,
+                                                     mock(IWorld.class))),
+                         Arguments.of(new BuilderRole(mock(IStructureFinder.class),
+                                                      mock(IWorld.class)), null));
     }
 
     public static Stream<Arguments> getRoleAndNames() {
         final IResourceFinder resourceFinder = mock(IResourceFinder.class);
-        final IStructureFinder structureFinder = mock(IStructureFinder.class);
         final IWorld world = mock(IWorld.class);
+        final IStructureFinder structureFinder = mock(IStructureFinder.class);
         return Stream.of(
             Arguments.of(new LumberjackRole(resourceFinder, structureFinder, world), "Lumberjack"),
-            Arguments.of(new FarmerRole(), "Farmer"),
-            Arguments.of(new GuardRole(), "Guard"));
+            Arguments.of(new MinerRole(resourceFinder, structureFinder, world), "Miner"),
+            Arguments.of(new FisherRole(resourceFinder, structureFinder, world), "Fisher"));
     }
 
     @BeforeEach

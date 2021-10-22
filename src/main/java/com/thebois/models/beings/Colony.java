@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.thebois.listeners.IEventBusSource;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
@@ -24,8 +25,10 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
      * Creates a colony and fills it with pawns in the provided open positions.
      *
      * @param vacantPositions Positions in the world where pawns can be created.
+     * @param eventBusSource  A way of getting an event bus to listen for events on.
      */
-    public Colony(final Iterable<Position> vacantPositions) {
+    public Colony(final Iterable<Position> vacantPositions, final IEventBusSource eventBusSource) {
+        super(eventBusSource);
         final Collection<IBeing> pawns = new ArrayList<>();
         for (final Position vacantPosition : vacantPositions) {
             final AbstractRole role = RoleFactory.idle();

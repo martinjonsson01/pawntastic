@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.thebois.Pawntastic;
+import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.inventory.IInventory;
@@ -24,10 +26,26 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
      * arrived.
      */
     private static final float DESTINATION_REACHED_DISTANCE = 0.01f;
+    /**
+     * How many kilograms a being can carry.
+     */
+    private static final float MAX_CARRYING_CAPACITY = 100f;
+    private static final float MAX_HEALTH = 100f;
+    private static final float MAX_HUNGER = 100f;
+    /**
+     * How much hunger the pawn should lose per second.
+     */
+    private static final float HUNGER_RATE = 1f;
+    /**
+     * How much health the pawn should gain or lose per second.
+     */
+    private static final float HEALTH_RATES = 1f;
     private final IInventory inventory;
     private Position position;
     private AbstractRole role;
     private Position destination;
+    private float hunger = MAX_HUNGER;
+    private float health = MAX_HEALTH;
 
     /**
      * Instantiates with an initial position and role.
@@ -60,7 +78,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     @Override
     public Position getPosition() {
-        return position.deepClone();
+        return position;
     }
 
     @Override
@@ -78,8 +96,36 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
 
     @Override
     public void update(final float deltaTime) {
-        role.obtainNextAction(this).perform(this);
-        move(deltaTime);
+        updateHunger(deltaTime);
+        updateHealth(deltaTime);
+        if (health > 0f) {
+            role.obtainNextAction(this)
+                .perform(this, deltaTime);
+            move(deltaTime);
+        }
+    }
+
+    @Override
+    public float getHealthRatio() {
+        return health / MAX_HEALTH;
+    }
+
+    private void updateHealth(final float deltaTime) {
+        final float changeHealthValue = HEALTH_RATES * deltaTime;
+        if (hunger <= 0) {
+            health = Math.max(health - changeHealthValue, 0);
+            if (health == 0f) {
+                Pawntastic.getEventBus().post(new OnDeathEvent(this));
+            }
+        }
+        else {
+            health = Math.min(health + changeHealthValue, MAX_HEALTH);
+        }
+    }
+
+    private void updateHunger(final float deltaTime) {
+        final float changeHungerValue = HUNGER_RATE * deltaTime;
+        hunger = Math.max(hunger - changeHungerValue, 0f);
     }
 
     public Position getDestination() {

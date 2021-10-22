@@ -35,7 +35,7 @@ public class TakeItemActionTests {
         when(takeable.hasItem(any())).thenReturn(true);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 5f);
 
         // Assert
         verify(takeable, times(1)).take(any());
@@ -47,36 +47,10 @@ public class TakeItemActionTests {
         when(takeable.hasItem(any())).thenReturn(false);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 2f);
 
         // Assert
         verify(takeable, times(0)).take(any());
-    }
-
-    @Test
-    public void isCompletedIfTakeableDoesNotHaveMoreOfItemType() {
-        // Arrange
-        action = ActionFactory.createTakeItem(takeable, itemType, 5, position);
-        when(takeable.hasItem(itemType)).thenReturn(false);
-
-        // Act
-        final boolean isCompleted = action.isCompleted(performer);
-
-        // Assert
-        assertThat(isCompleted).isTrue();
-    }
-
-    @Test
-    public void isCompletedIfPerformerHasTakenAllItemsNeeded() {
-        // Arrange
-        action = ActionFactory.createTakeItem(takeable, itemType, 0, position);
-        when(takeable.hasItem(itemType)).thenReturn(true);
-
-        // Act
-        final boolean isCompleted = action.isCompleted(performer);
-
-        // Assert
-        assertThat(isCompleted).isTrue();
     }
 
     @Test

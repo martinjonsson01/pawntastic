@@ -49,10 +49,11 @@ abstract class AbstractHarvesterRole extends AbstractRole {
 
     @Override
     protected Collection<IActionSource> getTaskGenerators() {
-        return List.of(this::createMoveToResource,
-                       this::createHarvestResource,
-                       this::createMoveToStockpile,
-                       this::createEmptyInventoryOfResource);
+        return List.of(
+            this::createMoveToResource,
+            this::createHarvestResource,
+            this::createMoveToStockpile,
+            this::createEmptyInventoryOfResource);
     }
 
     private IAction createMoveToResource(final IActionPerformer performer) {
@@ -102,7 +103,12 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
         final IStoreable storeable;
-        storeable = (IStoreable) structure;
+        if (structure instanceof IStoreable) {
+            storeable = (IStoreable) structure;
+        }
+        else {
+            return ActionFactory.createDoNothing();
+        }
 
         return ActionFactory.createGiveItem(storeable, structure.getPosition());
     }

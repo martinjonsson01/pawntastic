@@ -32,7 +32,7 @@ public class GiveItemActionTests {
         when(performer.hasItem(any())).thenReturn(true);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 2f);
 
         // Assert
         verify(storeable, times(1)).tryAdd(any());
@@ -44,34 +44,10 @@ public class GiveItemActionTests {
         when(performer.isEmpty()).thenReturn(true);
 
         // Act
-        action.perform(performer);
+        action.perform(performer, 2f);
 
         // Assert
         verify(storeable, times(0)).tryAdd(any());
-    }
-
-    @Test
-    public void isCompletedIfPerformerHasNoMoreItems() {
-        // Arrange
-        when(performer.isEmpty()).thenReturn(true);
-
-        // Act
-        final boolean isCompleted = action.isCompleted(performer);
-
-        // Assert
-        assertThat(isCompleted).isTrue();
-    }
-
-    @Test
-    public void isNotCompletedIfPerformerHasMoreItems() {
-        // Arrange
-        when(performer.isEmpty()).thenReturn(false);
-
-        // Act
-        final boolean isCompleted = action.isCompleted(performer);
-
-        // Assert
-        assertThat(isCompleted).isFalse();
     }
 
     @Test

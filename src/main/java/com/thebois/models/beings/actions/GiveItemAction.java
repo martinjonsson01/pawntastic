@@ -10,8 +10,9 @@ import com.thebois.models.inventory.IStoreable;
 /**
  * Action give item from performer to receiver.
  */
-public class GiveItemAction implements IAction, Serializable {
+public class GiveItemAction extends AbstractTimeAction implements Serializable {
 
+    private static final float TIME_REQUIRED_TO_GIVE_ITEM = 1f;
     private static final float MINIMUM_GIVE_DISTANCE = 2f;
     private final IStoreable storeable;
     private final Position storablePosition;
@@ -24,21 +25,24 @@ public class GiveItemAction implements IAction, Serializable {
      */
     public GiveItemAction(
         final IStoreable storeable, final Position storablePosition) {
+        super(TIME_REQUIRED_TO_GIVE_ITEM);
         this.storeable = storeable;
 
         this.storablePosition = storablePosition;
     }
 
+    /*
+        @Override
+        public boolean isCompleted(final IActionPerformer performer) {
+            return performer.isEmpty();
+        }
+    */
+
     @Override
-    public void perform(final IActionPerformer performer) {
+    protected void onPerformCompleted(final IActionPerformer performer) {
         if (!performer.isEmpty()) {
             storeable.tryAdd(performer.takeNextItem());
         }
-    }
-
-    @Override
-    public boolean isCompleted(final IActionPerformer performer) {
-        return performer.isEmpty();
     }
 
     @Override

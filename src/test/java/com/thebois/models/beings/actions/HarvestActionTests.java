@@ -14,6 +14,7 @@ import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
+import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,6 +24,7 @@ public class HarvestActionTests {
     private IActionPerformer performer;
     private IResource resource;
     private IAction action;
+    private IItem resourceItem;
     private final ItemType itemType = ItemType.ROCK;
 
     public static Stream<Arguments> getEqualHarvests() {
@@ -36,7 +38,7 @@ public class HarvestActionTests {
     public static Stream<Arguments> getNotEqualHarvests() {
         final IResource sameResource = mock(IResource.class);
         final IAction sameResourceHarvested = ActionFactory.createHarvest(sameResource);
-        sameResourceHarvested.perform(mock(IActionPerformer.class));
+        sameResourceHarvested.perform(mock(IActionPerformer.class), 0.1f);
         return Stream.of(Arguments.of(ActionFactory.createHarvest(mock(IResource.class)),
                                       ActionFactory.createHarvest(sameResource)),
                          Arguments.of(ActionFactory.createHarvest(sameResource), null),
@@ -47,7 +49,8 @@ public class HarvestActionTests {
     @BeforeEach
     public void setup() {
         performer = mock(IActionPerformer.class);
-        resource = mock(IResource.class);
+        resourceItem = mock(IItem.class);
+        resource = MockFactory.createResource(new Position(1, 0), resourceItem, 10f);
         action = ActionFactory.createHarvest(resource);
     }
 
@@ -55,7 +58,6 @@ public class HarvestActionTests {
     public void canPerformReturnsFalseWhenFarAwayFromResource() {
         // Arrange
         when(performer.getPosition()).thenReturn(new Position(10, 10));
-        when(resource.getPosition()).thenReturn(new Position(1, 0));
 
         // Act
         final boolean canPerform = action.canPerform(performer);
@@ -67,8 +69,8 @@ public class HarvestActionTests {
     @Test
     public void canPerformReturnsTrueWhenNextToResource() {
         // Arrange
-        when(performer.getPosition()).thenReturn(new Position(0, 0));
-        when(resource.getPosition()).thenReturn(new Position(1, 0));
+        final Position besidesResource = resource.getPosition().subtract(1, 0);
+        when(performer.getPosition()).thenReturn(besidesResource);
 
         // Act
         final boolean canPerform = action.canPerform(performer);
@@ -78,13 +80,20 @@ public class HarvestActionTests {
     }
 
     @Test
-    public void performAddsHarvestedResourceToPerformer() {
-        // Arrange
-        final IItem resourceItem = mock(IItem.class);
-        when(resource.harvest()).thenReturn(resourceItem);
-
+    public void performDoesNotAddHarvestedResourceToPerformerBeforeHarvestTimeHasPassed() {
         // Act
-        action.perform(performer);
+        for (int i = 0; i < 3; i++) {
+            action.perform(performer, 0.1f);
+        }
+
+        // Assert
+        verify(performer, times(0)).tryAdd(any());
+    }
+
+    @Test
+    public void performAddsHarvestedResourceToPerformerAfterHarvestTimeHasPassed() {
+        // Act
+        action.perform(performer, resource.getHarvestTime());
 
         // Assert
         verify(performer, times(1)).tryAdd(eq(resourceItem));
@@ -102,20 +111,7 @@ public class HarvestActionTests {
         // Assert
         assertThat(completed).isFalse();
     }
-
-    @Test
-    public void isCompletedIsTrueIfInventoryOfPerformerIsFull() {
-        // Arrange
-        when(resource.getType()).thenReturn(ResourceType.STONE);
-        when(performer.canFitItem(itemType)).thenReturn(false);
-
-        // Act
-        final boolean completed = action.isCompleted(performer);
-
-        // Assert
-        assertThat(completed).isTrue();
-    }
-
+    
     @ParameterizedTest
     @MethodSource("getEqualHarvests")
     public void equalsIsTrueForEqualHarvests(final IAction first, final IAction second) {

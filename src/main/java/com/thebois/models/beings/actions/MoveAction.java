@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import com.google.common.eventbus.Subscribe;
 
-import com.thebois.Pawntastic;
+import com.thebois.listeners.IEventBusSource;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
@@ -24,6 +24,7 @@ class MoveAction implements IAction, Serializable {
 
     private final Position destination;
     private final IPathFinder pathFinder;
+    private final IEventBusSource eventBusSource;
     private boolean canReachDestination = true;
     private LinkedList<Position> path = new LinkedList<>();
 
@@ -32,10 +33,15 @@ class MoveAction implements IAction, Serializable {
      *
      * @param destination The goal to move to.
      * @param pathFinder  A way of generating paths to positions.
+     * @param eventBusSource    The eventbus to listen to.
      */
-    MoveAction(final Position destination, final IPathFinder pathFinder) {
+    MoveAction(
+        final Position destination,
+        final IPathFinder pathFinder,
+        final IEventBusSource eventBusSource) {
         this.destination = destination;
         this.pathFinder = pathFinder;
+        this.eventBusSource = eventBusSource;
     }
 
     @Override
@@ -57,7 +63,7 @@ class MoveAction implements IAction, Serializable {
     }
 
     @Override
-    public void perform(final IActionPerformer performer) {
+    public void perform(final IActionPerformer performer, final float deltaTime) {
         if (isCompleted(performer)) return;
 
         final Position position = performer.getPosition();
@@ -73,7 +79,7 @@ class MoveAction implements IAction, Serializable {
             path.remove();
         }
 
-        Pawntastic.getEventBus().register(this);
+        eventBusSource.getEventBus().register(this);
         performer.setDestination(path.element());
     }
 
@@ -136,8 +142,9 @@ class MoveAction implements IAction, Serializable {
         // Registers every time on deserialization because it might be registered to an old instance
         // of the event bus.
         // (caused by saving/loading).
-        Pawntastic.getEventBus().register(this);
         in.defaultReadObject();
+        // IMPORTANT: Has to subscribe after being read.
+        eventBusSource.getEventBus().register(this);
     }
 
 }

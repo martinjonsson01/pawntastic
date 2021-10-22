@@ -1,5 +1,6 @@
 package com.thebois.models.world.resources;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.inventory.items.IItem;
@@ -9,11 +10,24 @@ import static org.assertj.core.api.Assertions.*;
 
 public class WaterTests {
 
+    private static IResource water;
+
+    @BeforeEach
+    public void setup() {
+        water = ResourceFactory.createResource(ResourceType.WATER,1,1);
+    }
+
+    @Test
+    public void getHarvestTimeReturnsNonZeroValue() {
+        // Act
+        final float harvestTime = water.getHarvestTime();
+
+        // Assert
+        assertThat(harvestTime).isNotZero();
+    }
+
     @Test
     public void harvestReturnsFishItem() {
-        // Arrange
-        final Water water = new Water(1, 1);
-
         // Act
         final IItem item = water.harvest();
 
@@ -23,9 +37,6 @@ public class WaterTests {
 
     @Test
     public void getTypeFromWaterResource() {
-        // Arrange
-        final Water water = new Water(1, 1);
-
         // Act
         final ResourceType resourceType = water.getType();
 
@@ -35,9 +46,6 @@ public class WaterTests {
 
     @Test
     public void getDeepCloneShouldBeEqualToOriginal() {
-        // Arrange
-        final Water water = new Water(1, 1);
-
         // Act
         final IResource deepClone = water.deepClone();
 
@@ -48,7 +56,6 @@ public class WaterTests {
     @Test
     public void getCostIsFloatMax() {
         // Arrange
-        final Water water = new Water(1, 1);
         final float expectedValue = Float.MAX_VALUE;
 
         // Act

@@ -18,7 +18,6 @@ import com.thebois.views.info.IActorView;
  */
 public class GameScreen implements Screen {
 
-    private static final float INFO_PANEL_WIDTH = 250f;
     private final OrthographicCamera camera;
     private final FitViewport viewport;
     private final Color backgroundColor = new Color(0, 0, 0.2f, 1);

@@ -4,13 +4,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.thebois.models.beings.IActionPerformer;
-import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
 
 /**
  * Used to perform the harvesting of a given resource.
  */
-public class HarvestAction implements IAction, Serializable {
+public class HarvestAction extends AbstractTimeAction implements Serializable {
 
     private final IResource resource;
 
@@ -20,19 +19,22 @@ public class HarvestAction implements IAction, Serializable {
      * @param resource What to harvest.
      */
     public HarvestAction(final IResource resource) {
+        super(resource.getHarvestTime());
         this.resource = resource;
     }
 
     @Override
-    public void perform(final IActionPerformer performer) {
+    protected void onPerformCompleted(final IActionPerformer performer) {
         performer.tryAdd(resource.harvest());
     }
 
+    /*
     @Override
     public boolean isCompleted(final IActionPerformer performer) {
         final ItemType itemTypeOfResource = resource.getType().getItemType();
         return !performer.canFitItem(itemTypeOfResource);
     }
+    */
 
     @Override
     public boolean canPerform(final IActionPerformer performer) {
@@ -41,15 +43,16 @@ public class HarvestAction implements IAction, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(resource);
+        return Objects.hash(resource, getTimeSpentPerforming());
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HarvestAction)) return false;
-        final HarvestAction that = (HarvestAction) o;
-        return resource.equals(that.resource);
+    public boolean equals(final Object other) {
+        if (this == other) return true;
+        if (!(other instanceof HarvestAction)) return false;
+        final HarvestAction that = (HarvestAction) other;
+        return resource.equals(that.resource)
+               && getTimeSpentPerforming() == that.getTimeSpentPerforming();
     }
 
 }
