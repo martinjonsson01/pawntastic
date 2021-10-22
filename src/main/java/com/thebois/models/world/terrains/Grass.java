@@ -5,6 +5,7 @@ import com.thebois.models.Position;
 /**
  * The default world tile.
  *
+ * @author Jonathan
  * @author Mathias
  */
 public class Grass extends AbstractTerrain {

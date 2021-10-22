@@ -5,6 +5,7 @@ package com.thebois.abstractions;
  *
  * @param <TType> The type of the cloned object.
  *
+ * @author Jonathan
  * @author Martin
  */
 public interface IDeepClonable<TType> {
