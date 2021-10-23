@@ -7,6 +7,8 @@ import com.thebois.models.inventory.items.IItem;
 
 /**
  * An internal interface that represents a performer of actions.
+ *
+ * @author Martin
  */
 public interface IActionPerformer extends Serializable {
 

@@ -4,6 +4,8 @@ import com.thebois.models.beings.IActionPerformer;
 
 /**
  * Represents a task to be performed in a certain way.
+ *
+ * @author Martin
  */
 public interface IAction {
 

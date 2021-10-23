@@ -4,6 +4,7 @@ package com.thebois.models.inventory.items;
  * Items are objects that can be stored in inventories.
  *
  * @author Jonathan
+ * @author Martin
  */
 public interface IItem {
 

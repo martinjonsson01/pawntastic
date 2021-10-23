@@ -16,6 +16,8 @@ import com.thebois.models.world.resources.ResourceType;
 
 /**
  * Represents a role that mainly harvests items from resources.
+ *
+ * @author Martin
  */
 abstract class AbstractHarvesterRole extends AbstractRole {
 
