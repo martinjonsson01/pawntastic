@@ -4,7 +4,9 @@ import com.thebois.models.Position;
 import com.thebois.models.world.structures.StructureType;
 
 /**
- *  Contains information about a completed structure.
+ * Contains information about a completed structure.
+ *
+ * @author Jacob
  */
 public class StructureCompletedEvent {
 

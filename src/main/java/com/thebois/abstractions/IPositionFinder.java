@@ -4,6 +4,8 @@ import com.thebois.models.Position;
 
 /**
  * Allows for locating certain types of positions in the world.
+ *
+ * @author Jacob
  */
 public interface IPositionFinder {
 

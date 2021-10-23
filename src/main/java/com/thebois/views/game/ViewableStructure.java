@@ -11,6 +11,9 @@ import com.thebois.models.world.structures.StructureType;
 
 /**
  * Viewable Structure that correspond to StructureType but has view related information.
+ *
+ * @author Jacob
+ * @author Mathias
  */
 public enum ViewableStructure {
     /**
