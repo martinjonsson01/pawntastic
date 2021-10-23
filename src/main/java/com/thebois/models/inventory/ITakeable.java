@@ -7,6 +7,8 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Methods for taking items and checking if they exists.
+ *
+ * @author Mathias
  */
 public interface ITakeable {
 

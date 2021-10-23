@@ -10,6 +10,8 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Action take takes an item from a takeable.
+ *
+ * @author Mathias
  */
 public class TakeItemAction extends AbstractTimeAction implements Serializable {
 

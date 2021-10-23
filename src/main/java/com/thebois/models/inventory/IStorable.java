@@ -7,6 +7,8 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Methods for storing items.
+ *
+ * @author Mathias
  */
 public interface IStorable {
 

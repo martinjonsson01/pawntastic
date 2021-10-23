@@ -20,6 +20,9 @@ import com.thebois.models.world.structures.StructureType;
 
 /**
  * Represents a role that mainly harvests items from resources.
+ *
+ * @author Martin
+ * @author Mathias
  */
 abstract class AbstractHarvesterRole extends AbstractRole {
 
@@ -30,19 +33,19 @@ abstract class AbstractHarvesterRole extends AbstractRole {
     private boolean isEmptying = false;
 
     /**
-     * Instantiates with a way of finding resources.
+     * Instantiates with a way of finding resources and structures.
      *
-     * @param finder          The locator of resources.
+     * @param resourceFinder  The locator of resources.
      * @param structureFinder The locator of structures.
      * @param world           The world in which the resources are located.
      * @param resourceType    The type of resource to gather.
      */
     AbstractHarvesterRole(
-        final IResourceFinder finder,
+        final IResourceFinder resourceFinder,
         final IStructureFinder structureFinder,
         final IWorld world,
         final ResourceType resourceType) {
-        this.finder = finder;
+        this.finder = resourceFinder;
         this.structureFinder = structureFinder;
         this.world = world;
         this.resourceType = resourceType;
@@ -64,9 +67,8 @@ abstract class AbstractHarvesterRole extends AbstractRole {
 
         final IResource resource = maybeResource.get();
 
-        final Position position = performer.getPosition();
         final Optional<Position> closestSpotNextToResource =
-            world.getClosestNeighbourOf(resource, position);
+            world.getClosestNeighbourOf(resource, performer.getPosition());
 
         if (closestSpotNextToResource.isEmpty()) return ActionFactory.createDoNothing();
 
@@ -107,9 +109,9 @@ abstract class AbstractHarvesterRole extends AbstractRole {
             isEmptying = false;
             return ActionFactory.createDoNext();
         }
-        final Position position = performer.getPosition();
-        final Optional<IStructure> maybeStructure =
-            structureFinder.getNearbyStructureOfType(position, StructureType.STOCKPILE);
+        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(
+            performer.getPosition(),
+            StructureType.STOCKPILE);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
         final IStorable storable;

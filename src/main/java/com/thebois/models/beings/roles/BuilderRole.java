@@ -23,10 +23,17 @@ import com.thebois.models.world.structures.StructureType;
 class BuilderRole extends AbstractRole {
 
     private static final int NUMBER_OF_BUILDING_STATES = 2;
+    /**
+     * Depending on what state the role is in, the performer gets different actions. Either go to
+     * stockpile and fill/empty inventory or go to incomplete building and give it items.
+     */
+    private int buildingState = 0;
+    /**
+     * Whether the performer's inventory should be filled or emptied.
+     */
+    private boolean isFilling = false;
     private final IStructureFinder finder;
     private final IWorld world;
-    private int buildingState = 0;
-    private boolean isFilling = false;
 
     /**
      * Instantiates with a way of finding structures to build.
@@ -81,9 +88,8 @@ class BuilderRole extends AbstractRole {
             isFilling = true;
             return ActionFactory.createDoNext();
         }
-        final Position position = performer.getPosition();
         final Optional<IStructure> maybeStructure =
-            finder.getNearbyStructureOfType(position, StructureType.STOCKPILE);
+            finder.getNearbyStructureOfType(performer.getPosition(), StructureType.STOCKPILE);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
         final IStorable storable;
@@ -117,9 +123,8 @@ class BuilderRole extends AbstractRole {
         }
 
         // Check if stockpile still exists and has item
-        final Position position = performer.getPosition();
         final Optional<IStructure> maybeStockpile =
-            finder.getNearbyStructureOfType(position, StructureType.STOCKPILE);
+            finder.getNearbyStructureOfType(performer.getPosition(), StructureType.STOCKPILE);
         if (maybeStockpile.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure stockpile = maybeStockpile.get();
 
@@ -145,9 +150,8 @@ class BuilderRole extends AbstractRole {
 
         final IStructure structure = maybeStructure.get();
 
-        final Position position = performer.getPosition();
         final Optional<Position> closestSpotNextToStructure =
-            world.getClosestNeighbourOf(structure, position);
+            world.getClosestNeighbourOf(structure, performer.getPosition());
 
         if (closestSpotNextToStructure.isEmpty()) return ActionFactory.createDoNothing();
 

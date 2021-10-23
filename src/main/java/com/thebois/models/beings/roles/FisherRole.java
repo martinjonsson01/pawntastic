@@ -13,13 +13,15 @@ class FisherRole extends AbstractHarvesterRole {
     /**
      * Instantiates with a way of finding resources.
      *
-     * @param finder          The locator of resources.
+     * @param resourceFinder  The locator of resources.
      * @param structureFinder The locator of structures.
      * @param world           The world in which the resources are located.
      */
     FisherRole(
-        final IResourceFinder finder, final IStructureFinder structureFinder, final IWorld world) {
-        super(finder, structureFinder, world, ResourceType.WATER);
+        final IResourceFinder resourceFinder,
+        final IStructureFinder structureFinder,
+        final IWorld world) {
+        super(resourceFinder, structureFinder, world, ResourceType.WATER);
     }
 
     @Override

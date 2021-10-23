@@ -2,6 +2,8 @@ package com.thebois.models;
 
 /**
  * Something that has a position.
+ *
+ * @author Mathias
  */
 public interface IPositionable {
 

@@ -9,9 +9,14 @@ import com.thebois.models.inventory.IStorable;
 
 /**
  * Action give item from performer to a storable.
+ *
+ * @author Mathias
  */
 public class GiveItemAction extends AbstractTimeAction implements Serializable {
 
+    /**
+     * The number of seconds required to give the item.
+     */
     private static final float TIME_REQUIRED_TO_GIVE_ITEM = 1f;
     private static final float MINIMUM_GIVE_DISTANCE = 2f;
     private final IStorable storable;

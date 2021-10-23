@@ -74,6 +74,7 @@ abstract class AbstractStructure implements IStructure {
         return neededItems;
     }
 
+    @Override
     public int getNumberOfNeedItemType(final ItemType itemType) {
         if (!allNeededItems.containsKey(itemType)) return 0;
         return allNeededItems.get(itemType) - deliveredItems.numberOf(itemType);

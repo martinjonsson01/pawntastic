@@ -61,8 +61,6 @@ public class GiveItemActionTests {
 
     @Test
     public void onPerformRemovesItemFromPerformerAndAddsItemToStorable() {
-        // Arrange
-
         // Act
         action.perform(performer, 2f);
 

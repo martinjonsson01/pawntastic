@@ -36,9 +36,9 @@ public class DoNothingAction implements IAction, Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        return o instanceof DoNothingAction;
+    public boolean equals(final Object other) {
+        if (this == other) return true;
+        return other instanceof DoNothingAction;
     }
 
 }

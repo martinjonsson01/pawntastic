@@ -19,7 +19,7 @@ public interface IBuildable {
     Collection<ItemType> getNeededItems();
 
     /**
-     * Counts the amount of times still needed to build the structure.
+     * Counts the amount of items still needed to build the structure.
      *
      * @param itemType The type of item.
      *
