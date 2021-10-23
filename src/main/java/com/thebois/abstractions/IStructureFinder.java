@@ -8,6 +8,8 @@ import com.thebois.models.world.structures.StructureType;
 
 /**
  * Allows for locating of specific types of objects.
+ *
+ * @author Jacob
  */
 public interface IStructureFinder {
 

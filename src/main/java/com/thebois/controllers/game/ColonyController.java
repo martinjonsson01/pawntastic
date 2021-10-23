@@ -7,6 +7,8 @@ import com.thebois.views.game.IView;
 
 /**
  * Collects data from the colony and sends it to Colony View.
+ *
+ * @author Jacob
  */
 public class ColonyController implements IController<IView> {
 

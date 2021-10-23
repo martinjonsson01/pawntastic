@@ -10,6 +10,8 @@ import com.thebois.listeners.events.OnDeathEvent;
 
 /**
  * An abstract implementation of IBeingGroup.
+ *
+ * @author Jacob
  */
 public abstract class AbstractBeingGroup implements IBeingGroup {
 

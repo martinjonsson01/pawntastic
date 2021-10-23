@@ -8,6 +8,8 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Allows interaction with game entities that can be built.
+ *
+ * @author Jacob
  */
 public interface IBuildable {
 

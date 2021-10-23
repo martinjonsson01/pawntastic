@@ -21,6 +21,7 @@ import com.thebois.views.info.SpinnerButton;
 /**
  * Controls the interactions from the player regarding role allocations.
  *
+ * @author Jacob
  * @author Martin
  */
 public class RoleController implements IController<IActorView> {
