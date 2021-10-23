@@ -628,10 +628,10 @@ public class BeingTests {
         final AbstractBeing being = createBeing(inventory);
 
         // Act
-        being.takeNextItem();
+        being.takeFirstItem();
 
         // Assert
-        verify(inventory, times(1)).takeNextItem();
+        verify(inventory, times(1)).takeFirstItem();
     }
 
     @Test

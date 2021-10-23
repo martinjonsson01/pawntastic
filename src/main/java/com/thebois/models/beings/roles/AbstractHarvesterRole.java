@@ -104,7 +104,9 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         final IStorable storable;
         if (structure instanceof IStorable) {
             storable = (IStorable) structure;
-            return ActionFactory.createGiveItem(storable, structure.getPosition());
+            return ActionFactory.createGiveItem(storable,
+                                                resourceType.getItemType(),
+                                                structure.getPosition());
         }
         else {
             return ActionFactory.createDoNothing();

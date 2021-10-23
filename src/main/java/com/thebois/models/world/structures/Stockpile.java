@@ -111,8 +111,8 @@ class Stockpile extends AbstractStructure implements IInventory {
     }
 
     @Override
-    public IItem takeNextItem() {
-        return inventory.takeNextItem();
+    public IItem takeFirstItem() {
+        return inventory.takeFirstItem();
     }
 
 }

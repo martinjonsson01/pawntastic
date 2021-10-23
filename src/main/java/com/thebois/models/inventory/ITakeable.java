@@ -76,6 +76,6 @@ public interface ITakeable {
      *
      * @return The item to take.
      */
-    IItem takeNextItem();
+    IItem takeFirstItem();
 
 }

@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.inventory.IStorable;
+import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
@@ -22,30 +23,44 @@ public class GiveItemActionTests {
     private IAction action;
     private IStorable storable;
     private final Position position = new Position(0, 0);
+    private final ItemType itemType = ItemType.LOG;
 
     public static Stream<Arguments> getEqualGiveItems() {
         final IStorable sameStorable = mock(IStorable.class);
         final Position samePosition = new Position(0, 0);
-        final IAction sameInstance = ActionFactory.createGiveItem(sameStorable, samePosition);
+        final ItemType sameItem = ItemType.FISH;
+        final IAction sameInstance =
+            ActionFactory.createGiveItem(sameStorable, sameItem, samePosition);
         return Stream.of(Arguments.of(sameInstance, sameInstance),
-                         Arguments.of(ActionFactory.createGiveItem(sameStorable, samePosition),
-                                      ActionFactory.createGiveItem(sameStorable, samePosition)));
+                         Arguments.of(ActionFactory.createGiveItem(sameStorable,
+                                                                   sameItem,
+                                                                   samePosition),
+                                      ActionFactory.createGiveItem(sameStorable,
+                                                                   sameItem,
+                                                                   samePosition)));
     }
 
     public static Stream<Arguments> getNotEqualGiveItems() {
         final IStorable sameStorable = mock(IStorable.class);
         final Position samePosition = new Position(0, 0);
+        final ItemType sameItem = ItemType.FISH;
+        final ItemType otherItem = ItemType.ROCK;
 
         final IAction sameGiveItemNotStarted =
-            ActionFactory.createGiveItem(sameStorable, samePosition);
+            ActionFactory.createGiveItem(sameStorable, sameItem, samePosition);
         final IAction sameGiveItemStarted =
-            ActionFactory.createGiveItem(sameStorable, samePosition);
+            ActionFactory.createGiveItem(sameStorable, sameItem, samePosition);
         sameGiveItemStarted.perform(mock(IActionPerformer.class), 0.1f);
         return Stream.of(Arguments.of(
-                             ActionFactory.createGiveItem(mock(IStorable.class), samePosition),
+                             ActionFactory.createGiveItem(mock(IStorable.class), sameItem, samePosition),
                              sameGiveItemNotStarted),
                          Arguments.of(ActionFactory.createGiveItem(sameStorable,
+                                                                   sameItem,
                                                                    samePosition.subtract(1, 1)),
+                                      sameGiveItemNotStarted),
+                         Arguments.of(ActionFactory.createGiveItem(sameStorable,
+                                                                   otherItem,
+                                                                   samePosition),
                                       sameGiveItemNotStarted),
                          Arguments.of(sameGiveItemNotStarted, null),
                          Arguments.of(sameGiveItemNotStarted, mock(IAction.class)),
@@ -56,7 +71,7 @@ public class GiveItemActionTests {
     public void setup() {
         storable = mock(IStorable.class);
         performer = mock(IActionPerformer.class);
-        action = ActionFactory.createGiveItem(storable, position);
+        action = ActionFactory.createGiveItem(storable, itemType, position);
     }
 
     @Test
@@ -66,7 +81,7 @@ public class GiveItemActionTests {
 
         // Assert
         verify(storable, times(1)).tryAdd(any());
-        verify(performer, times(1)).takeNextItem();
+        verify(performer, times(1)).take(any());
     }
 
     @Test
@@ -125,8 +140,8 @@ public class GiveItemActionTests {
     @Test
     public void hashCodeIsSameForEqualActions() {
         // Arrange
-        final IAction first = ActionFactory.createGiveItem(storable, position);
-        final IAction second = ActionFactory.createGiveItem(storable, position);
+        final IAction first = ActionFactory.createGiveItem(storable, itemType, position);
+        final IAction second = ActionFactory.createGiveItem(storable, itemType, position);
 
         // Assert
         Assertions.assertThat(first.hashCode()).isEqualTo(second.hashCode());

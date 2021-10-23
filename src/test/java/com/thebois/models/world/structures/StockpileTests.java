@@ -219,10 +219,10 @@ public class StockpileTests {
         final ITakeable stockpile = (ITakeable) structure;
 
         // Act
-        stockpile.takeNextItem();
+        stockpile.takeFirstItem();
 
         // Assert
-        verify(inventory, times(1)).takeNextItem();
+        verify(inventory, times(1)).takeFirstItem();
     }
 
     @Test

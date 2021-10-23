@@ -371,7 +371,7 @@ public class InventoryTests {
         inventory.tryAdd(item1);
         inventory.tryAdd(item2);
         // Act
-        final IItem lastAddedItem = inventory.takeNextItem();
+        final IItem lastAddedItem = inventory.takeFirstItem();
 
         // Assert
         assertThat(lastAddedItem).isEqualTo(item2);

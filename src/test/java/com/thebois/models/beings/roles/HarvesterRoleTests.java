@@ -16,6 +16,8 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.inventory.IStorable;
 import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemFactory;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.resources.IResource;
@@ -325,6 +327,8 @@ public class HarvesterRoleTests {
         final Position performerPosition = new Position(5, 5);
         when(performer.getPosition()).thenReturn(performerPosition);
         when(performer.canFitItem(any())).thenReturn(false);
+        when(performer.hasItem(any())).thenReturn(true);
+        when(performer.take(any())).thenReturn(ItemFactory.fromType(ItemType.LOG));
         // Set up other positions
         final Position besidesPosition = performerPosition.subtract(1, 0);
 
@@ -339,12 +343,9 @@ public class HarvesterRoleTests {
         // Set up for expected action
 
         final IAction expected =
-            ActionFactory.createGiveItem((IStorable) structure, besidesPosition);
+            ActionFactory.createGiveItem((IStorable) structure, ItemType.LOG, besidesPosition);
 
         // Act
-        // To set action to be go to stockpile/empty inven rather than go to resource/harvest
-        role.obtainNextAction(performer);
-        when(performer.canFitItem(any())).thenReturn(false);
         final IAction actual = role.obtainNextAction(performer);
 
         // Assert

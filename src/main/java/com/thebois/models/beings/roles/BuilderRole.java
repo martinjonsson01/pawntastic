@@ -90,7 +90,10 @@ class BuilderRole extends AbstractRole {
 
         if (structure instanceof IStorable) {
             final IStorable storable = (IStorable) structure;
-            return ActionFactory.createGiveItem(storable, structure.getPosition());
+            return ActionFactory.createGiveItem(
+                storable,
+                performer.takeFirstItem().getType(),
+                structure.getPosition());
         }
         else {
             return ActionFactory.createDoNothing();
