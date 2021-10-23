@@ -1,7 +1,6 @@
 package com.thebois.models.beings;
 
 import com.thebois.listeners.IEventBusSource;
-import com.thebois.listeners.events.SpawnPawnEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 
@@ -23,8 +22,7 @@ public class Pawn extends AbstractBeing {
         final AbstractRole role,
         final AbstractRole hungerRole,
         final IEventBusSource eventBusSource) {
-        super(startPosition, role, hungerRole);
-        eventBusSource.getEventBus().post(new SpawnPawnEvent());
+        super(startPosition, role, hungerRole, eventBusSource);
     }
 
 }
