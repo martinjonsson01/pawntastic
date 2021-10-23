@@ -18,6 +18,8 @@ import com.thebois.models.world.structures.StructureType;
 
 /**
  * The builder constructs buildings.
+ *
+ * @author Mathias
  */
 class BuilderRole extends AbstractRole {
 

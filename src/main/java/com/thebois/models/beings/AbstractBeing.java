@@ -17,6 +17,8 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * An independent agent that can act in the world according to its assigned role.
+ *
+ * @author Mathias
  */
 public abstract class AbstractBeing implements IBeing, IActionPerformer {
 

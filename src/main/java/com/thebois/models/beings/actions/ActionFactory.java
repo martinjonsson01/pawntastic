@@ -18,6 +18,8 @@ import com.thebois.models.world.structures.StructureType;
 
 /**
  * Creates actions.
+ *
+ * @author Mathias
  */
 public final class ActionFactory {
 
