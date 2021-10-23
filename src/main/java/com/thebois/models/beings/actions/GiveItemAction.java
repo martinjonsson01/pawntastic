@@ -19,7 +19,10 @@ public class GiveItemAction extends AbstractTimeAction implements Serializable {
      * The number of seconds required to give the item.
      */
     private static final float TIME_REQUIRED_TO_GIVE_ITEM = 1f;
-    private static final float MINIMUM_GIVE_DISTANCE = 2f;
+    /**
+     * The distance between the performer and the storable, in tiles.
+     */
+    private static final float MINIMUM_GIVE_DISTANCE = 1f;
     private final IStorable storable;
     private final Position storablePosition;
     private final ItemType itemType;
@@ -59,7 +62,9 @@ public class GiveItemAction extends AbstractTimeAction implements Serializable {
         if (other == null || getClass() != other.getClass()) return false;
         final GiveItemAction that = (GiveItemAction) other;
         return Objects.equals(storable, that.storable)
-               && Objects.equals(storablePosition, that.storablePosition)
+               && Objects.equals(
+            storablePosition,
+            that.storablePosition)
                && Objects.equals(itemType, that.itemType)
                && getTimeSpentPerforming() == that.getTimeSpentPerforming();
     }
