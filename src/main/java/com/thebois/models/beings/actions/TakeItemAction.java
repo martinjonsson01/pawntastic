@@ -17,25 +17,21 @@ public class TakeItemAction extends AbstractTimeAction implements Serializable {
     private final ITakeable takeable;
     private final ItemType itemType;
     private final Position takeablePosition;
-    private int amountToTake;
 
     /**
      * Instantiate with takeable and type of item to take.
      *
      * @param takeable         From where the item should be taken from.
      * @param itemType         The type of item to take.
-     * @param amount           The amount of items to take.
      * @param takeablePosition The position of the takeable.
      */
     public TakeItemAction(
         final ITakeable takeable,
         final ItemType itemType,
-        final int amount,
         final Position takeablePosition) {
         super(TIME_REQUIRED_TO_TAKE_ITEM);
         this.itemType = itemType;
         this.takeable = takeable;
-        amountToTake = amount;
         this.takeablePosition = takeablePosition;
     }
 
@@ -49,9 +45,8 @@ public class TakeItemAction extends AbstractTimeAction implements Serializable {
 
     @Override
     protected void onPerformCompleted(final IActionPerformer performer) {
-        if (takeable.hasItem(itemType)) {
+        if (takeable.hasItem(itemType) && performer.canFitItem(itemType)) {
             performer.tryAdd(takeable.take(itemType));
-            amountToTake--;
         }
     }
 

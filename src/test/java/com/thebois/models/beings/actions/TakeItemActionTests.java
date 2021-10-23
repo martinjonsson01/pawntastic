@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.inventory.ITakeable;
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -18,27 +20,41 @@ public class TakeItemActionTests {
     private IAction action;
     private ITakeable takeable;
     private Position position = new Position(0, 0);
-    private int amount;
     final ItemType itemType = ItemType.ROCK;
 
     @BeforeEach
     public void setup() {
         takeable = mock(ITakeable.class);
         performer = mock(IActionPerformer.class);
-        amount = 5;
-        action = ActionFactory.createTakeItem(takeable, itemType, amount, position);
+        action = ActionFactory.createTakeItem(takeable, itemType, position);
     }
 
     @Test
     public void performerTakesItemIfTakeableHasItem() {
         // Arrange
         when(takeable.hasItem(any())).thenReturn(true);
+        when(takeable.take(any())).thenReturn(ItemFactory.fromType(itemType));
+        when(performer.canFitItem(any())).thenReturn(true);
 
         // Act
         action.perform(performer, 5f);
 
         // Assert
         verify(takeable, times(1)).take(any());
+    }
+
+    @Test
+    public void performerDoNotTakesItemIfPerformerCanNotFitItem() {
+        // Arrange
+        when(takeable.hasItem(any())).thenReturn(true);
+        when(takeable.take(any())).thenReturn(ItemFactory.fromType(itemType));
+        when(performer.canFitItem(any())).thenReturn(false);
+
+        // Act
+        action.perform(performer, 5f);
+
+        // Assert
+        verify(takeable, times(0)).take(any());
     }
 
     @Test
@@ -56,7 +72,7 @@ public class TakeItemActionTests {
     @Test
     public void isNotCompletedIfPerformerStillNeedMoreOfItemType() {
         // Arrange
-        action = ActionFactory.createTakeItem(takeable, itemType, 5, position);
+        action = ActionFactory.createTakeItem(takeable, itemType, position);
         when(takeable.hasItem(itemType)).thenReturn(true);
 
         // Act

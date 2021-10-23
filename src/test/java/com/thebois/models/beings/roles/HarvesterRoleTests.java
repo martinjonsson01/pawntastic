@@ -137,7 +137,7 @@ public class HarvesterRoleTests {
     }
 
     @Test
-    public void obtainNextActionIsHarvestWhenPerformerNextToTree() {
+    public void obtainNextActionIsHarvestWhenPerformerNextToTreeAndHasInventorySpace() {
         // Arrange
         final AbstractRole role = createRole();
 
@@ -229,13 +229,14 @@ public class HarvesterRoleTests {
     }
 
     @Test
-    public void obtainNextActionIsMoveToWhenPerformerHasHarvested() {
+    public void obtainNextActionIsMoveToWhenPerformerHasFullInventory() {
         // Arrange
         final AbstractRole role = createRole();
         final IActionPerformer performer = mock(IActionPerformer.class);
         // Set up performer
         final Position performerPosition = new Position(5, 5);
         when(performer.getPosition()).thenReturn(performerPosition);
+        when(performer.canFitItem(any())).thenReturn(false);
         // Set up other positions
         final Position besidesPosition = performerPosition.subtract(1, 0);
         final Position farAwayPosition = performerPosition.subtract(5, 5);
@@ -304,10 +305,9 @@ public class HarvesterRoleTests {
         setIWorldFinderResult(Optional.of(performerPosition), Optional.of(performerPosition));
         setResourceFinderResult(Optional.of(mockResource(besidesPosition)));
         StructureFactory.setInventory(new Inventory());
-        setStructureFinderResult(
-            Optional.of(StructureFactory.createStructure(StructureType.HOUSE,
-                                                         farAwayPosition)),
-            Optional.empty());
+        setStructureFinderResult(Optional.of(StructureFactory.createStructure(StructureType.HOUSE,
+                                                                              farAwayPosition)),
+                                 Optional.empty());
 
         // Set up for expected action
 
@@ -328,6 +328,7 @@ public class HarvesterRoleTests {
         // Set up performer
         final Position performerPosition = new Position(5, 5);
         when(performer.getPosition()).thenReturn(performerPosition);
+        when(performer.canFitItem(any())).thenReturn(false);
         // Set up other positions
         final Position besidesPosition = performerPosition.subtract(1, 0);
 
@@ -345,6 +346,9 @@ public class HarvesterRoleTests {
             ActionFactory.createGiveItem((IStoreable) structure, besidesPosition);
 
         // Act
+        // To set action to be go to stockpile/empty inven rather than go to resource/harvest
+        role.obtainNextAction(performer);
+        when(performer.canFitItem(any())).thenReturn(false);
         final IAction actual = role.obtainNextAction(performer);
 
         // Assert

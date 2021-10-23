@@ -89,7 +89,6 @@ public final class ActionFactory {
      *
      * @param takeable From where to items should be taken.
      * @param itemType The type of item to take.
-     * @param amount   The amount of items to take.
      * @param position The position of the takeable.
      *
      * @return The take item task.
@@ -97,9 +96,8 @@ public final class ActionFactory {
     public static IAction createTakeItem(
         final ITakeable takeable,
         final ItemType itemType,
-        final int amount,
         final Position position) {
-        return new TakeItemAction(takeable, itemType, amount, position);
+        return new TakeItemAction(takeable, itemType, position);
     }
 
 }

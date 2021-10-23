@@ -27,7 +27,6 @@ public class GiveItemAction extends AbstractTimeAction implements Serializable {
         final IStoreable storeable, final Position storablePosition) {
         super(TIME_REQUIRED_TO_GIVE_ITEM);
         this.storeable = storeable;
-
         this.storablePosition = storablePosition;
     }
 
