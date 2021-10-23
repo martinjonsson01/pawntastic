@@ -92,14 +92,14 @@ public class BeingTests {
     private static Being createBeing(
         final Position currentPosition, final AbstractRole role, final AbstractRole hungerRole) {
         final EventBus mockEventBusSource = mock(EventBus.class);
-        return new Pawn(currentPosition, role, hungerRole, ()->mockEventBusSource);
+        return new Being(currentPosition, role, hungerRole, () -> mockEventBusSource);
     }
 
     private static Being createBeing(
         final Position currentPosition, final AbstractRole role) {
         final AbstractRole hungerRole = new NothingRole();
         final EventBus mockEventBusSource = mock(EventBus.class);
-        return new Pawn(currentPosition, role, hungerRole, ()->mockEventBusSource);
+        return new Being(currentPosition, role, hungerRole, () -> mockEventBusSource);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
@@ -307,7 +307,7 @@ public class BeingTests {
         // Arrange
         final EventBus mockEventBusSource = mock(EventBus.class);
         final IPositionFinder positionFinder = mock(IPositionFinder.class);
-        final AbstractBeingGroup colony = new Colony(positionFinder, ()->mockEventBusSource);
+        final AbstractBeingGroup colony = new Colony(positionFinder, () -> mockEventBusSource);
 
         // Act
         final int before = colony.getBeings().size();
@@ -315,7 +315,7 @@ public class BeingTests {
         final int after = colony.getBeings().size();
 
         // Assert
-        assertThat(after).isEqualTo(before+1);
+        assertThat(after).isEqualTo(before + 1);
     }
 
     @Test
