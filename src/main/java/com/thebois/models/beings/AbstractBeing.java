@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import com.thebois.Pawntastic;
 import com.thebois.listeners.IEventBusSource;
 import com.thebois.listeners.events.OnDeathEvent;
-import com.thebois.listeners.events.SpawnPawnEvent;
+import com.thebois.listeners.events.BeingSpawnedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.inventory.IInventory;
@@ -77,7 +77,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         this.role = role;
         this.assignedRole = role;
         this.hungerRole = hungerRole;
-        eventBusSource.getEventBus().post(new SpawnPawnEvent());
+        eventBusSource.getEventBus().post(new BeingSpawnedEvent());
     }
 
     @Override
