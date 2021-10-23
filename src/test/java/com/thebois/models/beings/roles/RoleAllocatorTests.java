@@ -1,8 +1,5 @@
 package com.thebois.models.beings.roles;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 
@@ -11,23 +8,17 @@ import com.google.common.eventbus.EventBus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.lwjgl.system.CallbackI;
-import org.mockito.Mockito;
 
-import com.thebois.Pawntastic;
-import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IStructureFinder;
-import com.thebois.abstractions.IStructureFinder;
-import com.thebois.listeners.IEventBusSource;
+import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.IBeing;
-import com.thebois.models.beings.Pawn;
-import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
+import com.thebois.models.world.structures.StructureType;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -56,32 +47,13 @@ public class RoleAllocatorTests {
         return new TestWorld(size, random);
     }
 
-    //    private Colony mockColonyWithBeings(final int beingCount) {
-//        final IPathFinder pathFinder = Mockito.mock(IPathFinder.class);
-//        final IStructureFinder structureFinder = Mockito.mock(IStructureFinder.class);
-//        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-//
-//        final Colony colony = new Colony(pathFinder, structureFinder, positionFinder);
-//
-//        for (int i = 0; i < beingCount; i++) {
-//            colony.addBeing(new Pawn(
-//                new Position(),
-//                new Position(),
-//                new Random(),
-//                pathFinder,
-//                structureFinder));
-//        }
-//        return colony;
-//    }
-
     private Colony mockColonyWithBeings(final int beingCount) {
-        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-
         final EventBus mockEventBusSource = mock(EventBus.class);
 
         final Colony colony = new Colony(createTestWorld(50), ()->mockEventBusSource);
+
         for (int i = 0; i < beingCount; i++) {
-            colony.addBeing(new Pawn(new Position(), RoleFactory.idle(),  RoleFactory.idle(), ()->mockEventBusSource));
+            colony.onStructureCompletedEvent(new StructureCompletedEvent(StructureType.HOUSE, new Position(10, 10)));
         }
         return colony;
     }

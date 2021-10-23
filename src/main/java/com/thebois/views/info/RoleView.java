@@ -14,7 +14,7 @@ import com.google.common.eventbus.Subscribe;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.OnDeathEvent;
-import com.thebois.listeners.events.OnSpawnPawnEvent;
+import com.thebois.listeners.events.SpawnPawnEvent;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.utils.StringUtils;
 
@@ -84,7 +84,7 @@ public class RoleView implements IActorView {
      * @param event The published event.
      */
     @Subscribe
-    public void onSpawnPawnEvent(final OnSpawnPawnEvent event) {
+    public void onSpawnPawnEvent(final SpawnPawnEvent event) {
         for (final SpinnerButton roleButton : roleButtons.values()) {
             roleButton.updateButtonDisabledState();
         }

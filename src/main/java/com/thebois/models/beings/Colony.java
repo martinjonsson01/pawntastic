@@ -25,7 +25,7 @@ import com.thebois.models.world.structures.StructureType;
  */
 public class Colony extends AbstractBeingGroup implements IRoleAllocator {
 
-    private static final int NUMBER_OF_PAWNS_SPAWNED_BY_HOUSE = 2;
+    private static final int NUMBER_OF_PAWNS_SPAWNED_BY_HOUSE = 1;
     private static final int NUMBER_OF_PAWNS_SPAWNED_BY_TOWN_HALL = 5;
     private static final int PAWN_SPAWN_RADIUS = 2;
 

@@ -13,7 +13,7 @@ public enum StructureType {
      */
     STOCKPILE,
     /**
-     * The Colonies starting structure.
+     * The starting structure of the Colony.
      */
     TOWN_HALL
 }

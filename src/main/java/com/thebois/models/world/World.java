@@ -133,15 +133,11 @@ public class World
         return MatrixUtils.toCollection(canonicalMatrix)
                           .stream()
                           .filter(iTile -> !iTile.getPosition().equals(position)
-                                           && !isTileOccupied(iTile)
+                                           && isVacant(iTile.getPosition())
                                            && isTileWithinRadiusOf(iTile, position, radius))
                           .limit(maxCount)
                           .map(ITile::getPosition)
                           .collect(Collectors.toList());
-    }
-
-    private boolean isTileOccupied(final ITile tile) {
-        return !(tile.getCost() < Float.MAX_VALUE);
     }
 
     private boolean isTileWithinRadiusOf(
