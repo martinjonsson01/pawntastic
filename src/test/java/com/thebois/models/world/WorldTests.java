@@ -444,22 +444,6 @@ public class WorldTests {
         assertThat(structures.size()).isEqualTo(0);
     }
 
-//    @Test
-//    public void instantiateWithPawnCountCreatesCorrectNumberOfBeings() {
-//        // Arrange
-//        final Colony colony = mockColonyWithMockBeings();
-//
-//        // Assert
-//        assertThat(colony.getBeings()).size()
-//                                      .isEqualTo(5);
-//    }
-
-    private Colony mockColonyWithMockBeings() {
-        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
-
-        return new Colony(positionFinder, mock(IEventBusSource.class));
-    }
-
     @Test
     public void findEmptyPositionsWithCountThatWontFitThrowsException() {
         // Arrange
