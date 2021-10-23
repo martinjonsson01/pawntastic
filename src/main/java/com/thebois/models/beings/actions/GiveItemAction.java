@@ -22,7 +22,7 @@ public class GiveItemAction extends AbstractTimeAction implements Serializable {
     /**
      * The distance between the performer and the storable, in tiles.
      */
-    private static final float MINIMUM_GIVE_DISTANCE = 1f;
+    private static final float MINIMUM_GIVE_DISTANCE = 2f;
     private final IStorable storable;
     private final Position storablePosition;
     private final ItemType itemType;
