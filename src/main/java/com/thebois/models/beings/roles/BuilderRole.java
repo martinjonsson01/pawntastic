@@ -21,7 +21,6 @@ import com.thebois.models.world.structures.StructureType;
  */
 class BuilderRole extends AbstractRole {
 
-    private static final int NUMBER_OF_BUILDING_STATES = 2;
     /**
      * Depending on what state the role is in, the performer gets different actions. Either go to
      * stockpile and fill/empty inventory or go to incomplete building and give it items.
@@ -152,7 +151,7 @@ class BuilderRole extends AbstractRole {
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
 
         final IStructure structure = maybeStructure.get();
-        final Iterable<ItemType> neededItems = structure.getNeededItems();
+        final Collection<ItemType> neededItems = structure.getNeededItems();
 
         boolean performerHasNeededItem = false;
         for (final ItemType neededItem : neededItems) {

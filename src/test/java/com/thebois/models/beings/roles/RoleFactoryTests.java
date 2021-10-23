@@ -35,7 +35,8 @@ public class RoleFactoryTests {
                                       new MinerRole(mock(IResourceFinder.class),
                                                     mock(IStructureFinder.class),
                                                     mock(IWorld.class))),
-                         Arguments.of(RoleType.IDLE, new IdleRole(mock(IWorld.class))));
+                         Arguments.of(RoleType.IDLE,
+                                      new IdleRole(mock(IWorld.class))));
     }
 
     @BeforeEach
