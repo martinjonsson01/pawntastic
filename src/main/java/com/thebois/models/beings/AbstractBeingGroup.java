@@ -26,7 +26,7 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
      *
      * @param being IBeing to be added.
      */
-    public void addBeing(final IBeing being) {
+    protected void addBeing(final IBeing being) {
         beings.add(being);
     }
 
