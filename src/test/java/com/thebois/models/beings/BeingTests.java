@@ -42,7 +42,7 @@ public class BeingTests {
     private static final float HUNGER_RATE = 1f;
     private AbstractRole role;
     private AbstractBeing being;
-    private static final IInventory inventory = mock(IInventory.class);
+    private IInventory inventory;
 
     public static Stream<Arguments> getPositionsAndDestinations() {
         return Stream.of(Arguments.of(new Position(0, 0), new Position(0, 0)),
@@ -92,9 +92,15 @@ public class BeingTests {
         return createBeing(new Position(), role);
     }
 
+    private static AbstractBeing createBeing(final IInventory inventory) {
+        final AbstractRole role = new NothingRole();
+        return createBeing(new Position(), role, inventory);
+    }
+
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role, final AbstractRole hungerRole) {
         final EventBus mockEventBusSource = mock(EventBus.class);
+        final IInventory inventory = mock(IInventory.class);
         return new Pawn(currentPosition, role, hungerRole, () -> mockEventBusSource, inventory);
     }
 
@@ -111,6 +117,7 @@ public class BeingTests {
         final Position currentPosition, final AbstractRole role) {
         final AbstractRole hungerRole = new NothingRole();
         final EventBus mockEventBusSource = mock(EventBus.class);
+        final IInventory inventory = mock(IInventory.class);
         return new Pawn(currentPosition, role, hungerRole, () -> mockEventBusSource, inventory);
     }
 
@@ -143,6 +150,7 @@ public class BeingTests {
 
         role = new NothingRole();
         being = createBeing(new Position(), role);
+        inventory = mock(IInventory.class);
     }
 
     @AfterEach
@@ -151,6 +159,7 @@ public class BeingTests {
         RoleFactory.setWorld(null);
         RoleFactory.setResourceFinder(null);
         RoleFactory.setStructureFinder(null);
+        inventory = null;
     }
 
     @ParameterizedTest
@@ -508,7 +517,7 @@ public class BeingTests {
     @Test
     public void beingDelegatesTryAddToInventory() {
         // Arrange
-        final AbstractBeing being = createBeing();
+        final AbstractBeing being = createBeing(inventory);
 
         // Act
         being.tryAdd(any());
@@ -520,7 +529,7 @@ public class BeingTests {
     @Test
     public void beingDelegatesAddMultipleToInventory() {
         // Arrange
-        final AbstractBeing being = createBeing();
+        final AbstractBeing being = createBeing(inventory);
 
         // Act
         being.addMultiple(any());
@@ -532,7 +541,7 @@ public class BeingTests {
     @Test
     public void beingDelegatesCanFitItemToInventory() {
         // Arrange
-        final AbstractBeing being = createBeing();
+        final AbstractBeing being = createBeing(inventory);
 
         // Act
         being.canFitItem(any());
@@ -544,7 +553,7 @@ public class BeingTests {
     @Test
     public void beingDelegatesIsFullToInventory() {
         // Arrange
-        final AbstractBeing being = createBeing();
+        final AbstractBeing being = createBeing(inventory);
 
         // Act
         being.isFull();
@@ -556,8 +565,7 @@ public class BeingTests {
     @Test
     public void beingDelegatesHasItemToInventory() {
         // Arrange
-        final IInventory inventory = mock(IInventory.class);
-        final AbstractBeing being = createBeing(new Position(), new NothingRole(), inventory);
+        final AbstractBeing being = createBeing(inventory);
 
         // Act
         being.hasItem(any());
@@ -569,7 +577,7 @@ public class BeingTests {
     @Test
     public void beingDelegatesHasItemAmountToInventory() {
         // Arrange
-        final AbstractBeing being = createBeing();
+        final AbstractBeing being = createBeing(inventory);
 
         // Act
         being.hasItem(any(), anyInt());
@@ -581,7 +589,7 @@ public class BeingTests {
     @Test
     public void beingDelegatesNumberOfToInventory() {
         // Arrange
-        final AbstractBeing being = createBeing();
+        final AbstractBeing being = createBeing(inventory);
 
         // Act
         being.numberOf(any());
@@ -593,7 +601,7 @@ public class BeingTests {
     @Test
     public void beingDelegatesTakeToInventory() {
         // Arrange
-        final AbstractBeing being = createBeing();
+        final AbstractBeing being = createBeing(inventory);
 
         // Act
         being.take(any());
@@ -605,7 +613,7 @@ public class BeingTests {
     @Test
     public void beingDelegatesTakeAmountToInventory() {
         // Arrange
-        final AbstractBeing being = createBeing();
+        final AbstractBeing being = createBeing(inventory);
 
         // Act
         being.takeAmount(any(), anyInt());
@@ -617,7 +625,7 @@ public class BeingTests {
     @Test
     public void beingDelegatesTakeNextItemToInventory() {
         // Arrange
-        final AbstractBeing being = createBeing();
+        final AbstractBeing being = createBeing(inventory);
 
         // Act
         being.takeNextItem();
@@ -629,7 +637,7 @@ public class BeingTests {
     @Test
     public void beingDelegatesIsEmptyToInventory() {
         // Arrange
-        final AbstractBeing being = createBeing();
+        final AbstractBeing being = createBeing(inventory);
 
         // Act
         being.isEmpty();
