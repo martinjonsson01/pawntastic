@@ -24,7 +24,7 @@ public abstract class AbstractResource implements IResource {
 
     @Override
     public Position getPosition() {
-        return position.deepClone();
+        return position;
     }
 
     @Override

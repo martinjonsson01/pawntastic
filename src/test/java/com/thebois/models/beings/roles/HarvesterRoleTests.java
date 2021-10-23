@@ -7,16 +7,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.abstractions.IResourceFinder;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.pathfinding.IPathFinder;
+import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.ITile;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
+import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -57,8 +59,7 @@ public class HarvesterRoleTests {
         when(performer.getPosition()).thenReturn(new Position());
         when(finder.getNearbyOfType(any(), eq(ResourceType.TREE))).thenReturn(Optional.empty());
 
-        final IAction expectedAction = RoleFactory.idle()
-                                                  .obtainNextAction(performer);
+        final IAction expectedAction = RoleFactory.idle().obtainNextAction(performer);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);
@@ -92,15 +93,9 @@ public class HarvesterRoleTests {
     }
 
     private IResource mockTree(final Position treePosition) {
-        final IResource tree = mockResource(treePosition);
+        final IResource tree = MockFactory.createResource(treePosition, mock(IItem.class), 10f);
         when(finder.getNearbyOfType(any(), eq(ResourceType.TREE))).thenReturn(Optional.of(tree));
         return tree;
-    }
-
-    private IResource mockResource(final Position position) {
-        final IResource resource = mock(IResource.class);
-        when(resource.getPosition()).thenReturn(position);
-        return resource;
     }
 
     @Test
@@ -114,8 +109,7 @@ public class HarvesterRoleTests {
         when(mockWorld.getClosestNeighbourOf(tree,
                                              performer.getPosition())).thenReturn(Optional.empty());
 
-        final IAction expectedAction = RoleFactory.idle()
-                                                  .obtainNextAction(performer);
+        final IAction expectedAction = RoleFactory.idle().obtainNextAction(performer);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);
@@ -165,8 +159,7 @@ public class HarvesterRoleTests {
         when(finder.getNearbyOfType(any(), eq(ResourceType.TREE))).thenReturn(Optional.of(tree))
                                                                   .thenReturn(Optional.empty());
 
-        final IAction expectedAction = RoleFactory.idle()
-                                                  .obtainNextAction(performer);
+        final IAction expectedAction = RoleFactory.idle().obtainNextAction(performer);
 
         // Act
         final IAction actual = role.obtainNextAction(performer);

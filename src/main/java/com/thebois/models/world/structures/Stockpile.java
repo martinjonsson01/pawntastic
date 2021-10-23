@@ -33,12 +33,7 @@ class Stockpile extends AbstractStructure {
     }
 
     @Override
-    public IStructure deepClone() {
-        return new Stockpile(getPosition(), inventory);
-    }
-
-    @Override
-    public float getCost() {
+    protected float getCostWhenBuilt() {
         return Float.MAX_VALUE;
     }
 

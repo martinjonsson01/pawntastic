@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
+import com.thebois.Pawntastic;
+import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
@@ -19,6 +21,10 @@ import com.thebois.models.inventory.items.ItemType;
  */
 abstract class AbstractStructure implements IStructure {
 
+    /**
+     * The cost of walking on the structure when it is not yet built.
+     */
+    private static final float BLUEPRINT_WALK_COST = 0f;
     private final Position position;
     private final StructureType structureType;
     private final Map<ItemType, Integer> allNeededItems;
@@ -42,12 +48,19 @@ abstract class AbstractStructure implements IStructure {
 
     @Override
     public Position getPosition() {
-        return position.deepClone();
+        return position;
     }
 
     @Override
-    public StructureType getType() {
-        return structureType;
+    public float getCost() {
+        if (getBuiltRatio() != 1f) return BLUEPRINT_WALK_COST;
+        return getCostWhenBuilt();
+    }
+
+    protected abstract float getCostWhenBuilt();
+
+    private int countAllNeededItems() {
+        return allNeededItems.values().stream().reduce(0, Integer::sum);
     }
 
     @Override
@@ -64,25 +77,25 @@ abstract class AbstractStructure implements IStructure {
         return neededItems;
     }
 
-    private int countAllNeededItems() {
-        return allNeededItems.values().stream().reduce(0, Integer::sum);
-    }
-
     @Override
     public boolean tryDeliverItem(final IItem deliveredItem) {
         final Collection<ItemType> neededItems = getNeededItems();
+        boolean successfulDelivery = false;
         if (neededItems.contains(deliveredItem.getType())) {
-            return deliveredItems.tryAdd(deliveredItem);
+            successfulDelivery = deliveredItems.tryAdd(deliveredItem);
         }
-        return false;
+        if (isCompleted()) {
+            postStructureCompletedEvent();
+        }
+        return successfulDelivery;
     }
 
     @Override
     public float getBuiltRatio() {
-        final float totalNeeded = countAllNeededItems();
-        final float totalDelivered = totalNeeded - getNeededItems().size();
+        final int totalNeeded = countAllNeededItems();
+        final int totalDelivered = totalNeeded - getNeededItems().size();
 
-        return totalDelivered / totalNeeded;
+        return (float) totalDelivered / totalNeeded;
     }
 
     @Override
@@ -96,6 +109,18 @@ abstract class AbstractStructure implements IStructure {
             return Optional.of(deliveredItems.take(retrieving));
         }
         return Optional.empty();
+    }
+
+    protected void postStructureCompletedEvent() {
+        final StructureCompletedEvent structureCompletedEvent = new StructureCompletedEvent(
+            structureType,
+            getPosition());
+        Pawntastic.getEventBus().post(structureCompletedEvent);
+    }
+
+    @Override
+    public StructureType getType() {
+        return structureType;
     }
 
 }

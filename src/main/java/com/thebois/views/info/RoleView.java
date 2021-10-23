@@ -14,6 +14,7 @@ import com.google.common.eventbus.Subscribe;
 
 import com.thebois.Pawntastic;
 import com.thebois.listeners.events.OnDeathEvent;
+import com.thebois.listeners.events.SpawnPawnEvent;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.utils.StringUtils;
 
@@ -79,13 +80,16 @@ public class RoleView implements IActorView {
         return buttonGroup;
     }
 
-    public AbstractMap<RoleType, SpinnerButton> getRoleButtons() {
-        return roleButtons;
-    }
-
-    @Override
-    public Actor getWidgetContainer() {
-        return root;
+    /**
+     * Listens to the OnSpawnPawnEvent to update role button.
+     *
+     * @param event The published event.
+     */
+    @Subscribe
+    public void onSpawnPawnEvent(final SpawnPawnEvent event) {
+        for (final SpinnerButton roleButton : roleButtons.values()) {
+            roleButton.updateButtonDisabledState();
+        }
     }
 
     /**
@@ -99,6 +103,15 @@ public class RoleView implements IActorView {
         if (roleButtons.containsKey(roleType)) {
             roleButtons.get(roleType).tryDecrease();
         }
+    }
+
+    public AbstractMap<RoleType, SpinnerButton> getRoleButtons() {
+        return roleButtons;
+    }
+
+    @Override
+    public Actor getWidgetContainer() {
+        return root;
     }
 
 }

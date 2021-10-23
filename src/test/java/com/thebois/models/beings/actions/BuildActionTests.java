@@ -22,9 +22,12 @@ import static org.mockito.Mockito.*;
 
 public class BuildActionTests {
 
+    private static final float ITEM_TRANSFER_TIME = 1f;
     private IActionPerformer performer;
     private IStructure structure;
     private IAction action;
+    private Position besidesStructure;
+    private List<ItemType> neededItemTypes;
 
     public static Stream<Arguments> getEqualBuilds() {
         final IStructure sameStructure = MockFactory.createStructure(new Position(), false);
@@ -45,59 +48,98 @@ public class BuildActionTests {
 
     @BeforeEach
     public void setup() {
-        performer = mock(IActionPerformer.class);
         structure = MockFactory.createStructure(new Position(10, 10), false);
+        when(structure.tryDeliverItem(any())).thenReturn(true);
+        neededItemTypes = List.of(ItemType.LOG, ItemType.LOG, ItemType.ROCK);
+        when(structure.getNeededItems()).thenReturn(neededItemTypes);
+
+        performer = mock(IActionPerformer.class);
         action = ActionFactory.createBuild(structure);
+
+        besidesStructure = structure.getPosition().subtract(1, 0);
     }
 
     @Test
-    public void performDeliversAllNeededItemsToStructure() {
+    public void performDeliversASingleNeededItemToStructureWhenTimeIsAtItemTransferTime() {
         // Arrange
-        final Position besidesStructure = structure
-            .getPosition()
-            .subtract(1, 0);
         when(performer.getPosition()).thenReturn(besidesStructure);
 
-        when(structure.tryDeliverItem(any())).thenReturn(true);
-        final List<ItemType> neededItemTypes = List.of(ItemType.LOG, ItemType.LOG, ItemType.ROCK);
-        when(structure.getNeededItems()).thenReturn(neededItemTypes);
-
         // Act
-        action.perform(performer);
+        action.perform(performer, ITEM_TRANSFER_TIME);
 
         // Assert
         final ArgumentCaptor<IItem> itemCaptor = ArgumentCaptor.forClass(IItem.class);
         verify(structure, atLeastOnce()).tryDeliverItem(itemCaptor.capture());
 
-        final List<IItem> deliveredItems = itemCaptor.getAllValues();
-        assertThat(deliveredItems)
-            .map(IItem::getType)
-            .containsExactlyElementsOf(neededItemTypes);
+        final IItem deliveredItem = itemCaptor.getValue();
+        assertThat(neededItemTypes).contains(deliveredItem.getType());
     }
 
     @Test
-    public void isCompletedReturnsSameAsStructureIsCompleted() {
+    public void performDeliversASingleNeededItemToStructureWhenMultiplePerformsAddUpToTransferTime() {
         // Arrange
-        final boolean completedFirstTime = true;
-        final boolean completedSecondTime = false;
-        when(structure.isCompleted()).thenReturn(completedFirstTime, completedSecondTime);
+        final Position besidesStructure = structure.getPosition().subtract(1, 0);
+        when(performer.getPosition()).thenReturn(besidesStructure);
 
         // Act
-        final boolean isCompletedFirstTime = action.isCompleted(performer);
-        final boolean isCompletedSecondTime = action.isCompleted(performer);
+        final int fractions = 10;
+        final float timeSpentDelivering = ITEM_TRANSFER_TIME / fractions;
+        for (int i = 0; i < fractions; i++) {
+            action.perform(performer, timeSpentDelivering);
+        }
 
         // Assert
-        assertThat(isCompletedFirstTime).isEqualTo(completedFirstTime);
-        assertThat(isCompletedSecondTime).isEqualTo(completedSecondTime);
+        final ArgumentCaptor<IItem> itemCaptor = ArgumentCaptor.forClass(IItem.class);
+        verify(structure, atLeastOnce()).tryDeliverItem(itemCaptor.capture());
+
+        final IItem deliveredItem = itemCaptor.getValue();
+        assertThat(neededItemTypes).contains(deliveredItem.getType());
+    }
+
+    @Test
+    public void performDeliversNothingWhenTimeBelowItemTransferTime() {
+        // Arrange
+        when(performer.getPosition()).thenReturn(besidesStructure);
+
+        // Act
+        action.perform(performer, 0.1f);
+
+        // Assert
+        verify(structure, times(0)).tryDeliverItem(any());
+    }
+
+    @Test
+    public void performDeliversNothingWhenNoNeededItemsAndTimeIsItemTransferTime() {
+        // Arrange
+        when(performer.getPosition()).thenReturn(besidesStructure);
+
+        when(structure.getNeededItems()).thenReturn(List.of());
+
+        // Act
+        action.perform(performer, ITEM_TRANSFER_TIME);
+
+        // Assert
+        verify(structure, times(0)).tryDeliverItem(any());
+    }
+
+    @Test
+    public void isCompletedReturnsFalseWhenPerformedForLessThanItemTransferTime() {
+        // Arrange
+        when(performer.getPosition()).thenReturn(besidesStructure);
+
+        action.perform(performer, 0.1f);
+
+        // Act
+        final boolean isCompleted = action.isCompleted(performer);
+
+        // Assert
+        assertThat(isCompleted).isFalse();
     }
 
     @Test
     public void canPerformReturnsTrueWhenNearby() {
         // Arrange
-        final Position besideStructure = structure
-            .getPosition()
-            .subtract(1, 0);
-        when(performer.getPosition()).thenReturn(besideStructure);
+        when(performer.getPosition()).thenReturn(besidesStructure);
 
         // Act
         final boolean canPerform = action.canPerform(performer);
@@ -109,9 +151,7 @@ public class BuildActionTests {
     @Test
     public void canPerformReturnsFalseWhenFarAway() {
         // Arrange
-        final Position awayFromStructure = structure
-            .getPosition()
-            .add(10, 10);
+        final Position awayFromStructure = structure.getPosition().add(10, 10);
         when(performer.getPosition()).thenReturn(awayFromStructure);
 
         // Act

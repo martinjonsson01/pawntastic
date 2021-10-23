@@ -2,7 +2,6 @@ package com.thebois.models.world.structures;
 
 import java.io.Serializable;
 
-import com.thebois.abstractions.IDeepClonable;
 import com.thebois.models.world.ITile;
 
 /**
@@ -10,7 +9,7 @@ import com.thebois.models.world.ITile;
  *
  * @author Mathias
  */
-public interface IStructure extends ITile, IBuildable, IDeepClonable<IStructure>, Serializable {
+public interface IStructure extends ITile, IBuildable, Serializable {
 
     /**
      * Returns the specific type of terrain.

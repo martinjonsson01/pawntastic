@@ -27,7 +27,7 @@ public class PlaceStructureController extends AbstractInputProcessor
     private final World world;
     private final IProjector projector;
     private Actor toolbarWidget;
-    private StructureType selectedStructure = StructureType.HOUSE;
+    private StructureType selectedStructure = StructureType.TOWN_HALL;
     private final BuildMenuToolbarView structureToolbarView;
 
     /**
@@ -43,20 +43,35 @@ public class PlaceStructureController extends AbstractInputProcessor
         this.projector = projector;
 
         structureToolbarView = new BuildMenuToolbarView(skin, this);
+        updateStructureToolbarView();
     }
 
     @Override
     public boolean touchDown(final int x, final int y, final int pointer, final int button) {
+        boolean successful = false;
         if (button == LEFT_CLICK) {
-            final Vector2 worldSpaceCoordinates = projector.unproject(x, y);
-            final Actor gameContainer = toolbarWidget.getParent();
-            final float offsetX = gameContainer.getX();
-            final float offsetY = gameContainer.getY() + toolbarWidget.getHeight();
-            final int worldPosX = (int) ((worldSpaceCoordinates.x - offsetX) / TILE_SIZE);
-            final int worldPosY = (int) ((worldSpaceCoordinates.y - offsetY) / TILE_SIZE);
-            return world.createStructure(selectedStructure, worldPosX, worldPosY);
+            if (!world.isTownHallPlaced()) {
+                selectedStructure = StructureType.TOWN_HALL;
+            }
+            successful = tryPlaceStructure(x, y);
+
+            if (world.isTownHallPlaced() && selectedStructure.equals(StructureType.TOWN_HALL)) {
+                selectedStructure = StructureType.HOUSE;
+            }
         }
-        return false;
+
+        updateStructureToolbarView();
+        return successful;
+    }
+
+    private boolean tryPlaceStructure(final int x, final int y) {
+        final Vector2 worldSpaceCoordinates = projector.unproject(x, y);
+        final Actor gameContainer = toolbarWidget.getParent();
+        final float offsetX = gameContainer.getX();
+        final float offsetY = gameContainer.getY() + toolbarWidget.getHeight();
+        final int worldPosX = (int) ((worldSpaceCoordinates.x - offsetX) / TILE_SIZE);
+        final int worldPosY = (int) ((worldSpaceCoordinates.y - offsetY) / TILE_SIZE);
+        return world.tryCreateStructure(selectedStructure, worldPosX, worldPosY);
     }
 
     /**
@@ -80,7 +95,11 @@ public class PlaceStructureController extends AbstractInputProcessor
 
     @Override
     public void update() {
+        updateStructureToolbarView();
+    }
 
+    private void updateStructureToolbarView() {
+        structureToolbarView.setButtonsActive(!world.isTownHallPlaced());
     }
 
 }

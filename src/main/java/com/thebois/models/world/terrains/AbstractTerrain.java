@@ -37,7 +37,7 @@ public abstract class AbstractTerrain implements ITerrain {
 
     @Override
     public Position getPosition() {
-        return position.deepClone();
+        return position;
     }
 
 }

@@ -1,23 +1,32 @@
 package com.thebois.models.beings;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Collection;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Stream;
+import com.google.common.eventbus.EventBus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
-
-import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
+import com.thebois.abstractions.IPositionFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.listeners.events.OnDeathEvent;
-import com.thebois.models.IStructureFinder;
+import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.world.IWorld;
-import com.thebois.models.world.terrains.Grass;
-import com.thebois.testutils.InMemorySerialize;
+import com.thebois.models.world.TestWorld;
+import com.thebois.models.world.World;
+import com.thebois.models.world.structures.StructureType;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,24 +48,6 @@ public class ColonyTests {
     }
 
     @Test
-    public void constructWithTilesCreatesOneBeingPerPosition() {
-        // Arrange
-        final int beingCount = 25;
-        final List<Position> positions = new ArrayList<>(beingCount);
-        for (int i = 0; i < beingCount; i++) {
-            positions.add(new Position(0, 0));
-        }
-        final IWorld mockWorld = mock(IWorld.class);
-        when(mockWorld.getTileAt(any())).thenReturn(new Grass(new Position()));
-
-        // Act
-        final Colony colony = new Colony(positions, Pawntastic::getEventBus);
-
-        // Assert
-        assertThat(colony.getBeings().size()).isEqualTo(beingCount);
-    }
-
-    @Test
     public void ensureAliveBeingsUpdatesWhenColonyUpdates() {
         // Arrange
         final IBeing being = Mockito.mock(IBeing.class);
@@ -74,21 +65,49 @@ public class ColonyTests {
     }
 
     private Colony createColony() {
-        final List<Position> positions = new ArrayList<>();
-        return new Colony(positions, Pawntastic::getEventBus);
+        final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
+
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        return new Colony(positionFinder, ()->mockEventBusSource);
+    }
+
+    public static Stream<Arguments> getStructureCompletedEventsToTest() {
+        final Position position = new Position(10, 10);
+
+        return Stream.of(
+            Arguments.of(new StructureCompletedEvent(StructureType.HOUSE, position), 1),
+            Arguments.of(new StructureCompletedEvent(StructureType.TOWN_HALL, position), 5),
+            Arguments.of(new StructureCompletedEvent(StructureType.STOCKPILE, position), 0));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getStructureCompletedEventsToTest")
+    public void onSpawnPawnsEventColonySpawnsPawns(final StructureCompletedEvent event, final int numberOfBeings) {
+        // Arrange
+        final EventBus eventBus = new EventBus();
+        final World world = new TestWorld(50, ThreadLocalRandom.current());
+        final Colony colony = new Colony(world, ()->eventBus);
+
+        // Act
+        colony.onStructureCompletedEvent(event);
+        final Collection<IBeing> returnedBeings = colony.getBeings();
+
+        // Assert
+        assertThat(returnedBeings.size()).isEqualTo(numberOfBeings);
     }
 
     @Test
     public void beingGroupRemovesDeadBeings() {
         // Arrange
+        final float deltaTime = 0.1f;
         final IBeing being = Mockito.mock(IBeing.class);
         final Colony colony = createColony();
         colony.addBeing(being);
+        colony.update(deltaTime);
         final int expectedAmountOfBeings = 0;
-        final float deltaTime = 0.1f;
 
         // Act
-        Pawntastic.getEventBus().post(new OnDeathEvent(being));
+        colony.onDeathEvent(new OnDeathEvent(being));
         colony.update(deltaTime);
         final int actualAmountOfBeings = colony.getBeings().size();
 
@@ -97,22 +116,36 @@ public class ColonyTests {
     }
 
     @Test
-    public void keepsListeningToDeathEventsAfterDeserialization() throws
-                                                                  ClassNotFoundException,
-                                                                  IOException {
+    public void colonyContainsSamePawnsAfterDeserialization() throws ClassNotFoundException, IOException {
         // Arrange
-        final AbstractBeingGroup colony = createColony();
-        final IBeing being = mock(IBeing.class);
-        colony.addBeing(being);
-        final OnDeathEvent deathEvent = new OnDeathEvent(being);
-        //Act
-        final byte[] serializedColony = InMemorySerialize.serialize(colony);
-        final AbstractBeingGroup deserializedColony =
-            (AbstractBeingGroup) InMemorySerialize.deserialize(serializedColony);
-        Pawntastic.getEventBus().post(deathEvent);
+        final World world = new TestWorld(50, ThreadLocalRandom.current());
+        final Colony colony = new Colony(world, EventBus::new);
+
+        RoleFactory.setResourceFinder(world);
+        RoleFactory.setStructureFinder(world);
+        RoleFactory.setWorld(world);
+
+        colony.addBeing(new Pawn(new Position(), RoleFactory.idle(), RoleFactory.fisher(), EventBus::new));
+
+        // Act
+        final byte[] serialized1 = serialize(colony);
+        final Colony deserialized1 = (Colony) deserialize(serialized1);
 
         // Assert
-        assertThat(deserializedColony.getBeings()).doesNotContain(being);
+        assertThat(colony.getBeings()).isEqualTo(deserialized1.getBeings());
+
     }
 
+    private byte[] serialize(final Object object) throws IOException {
+        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        final ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
+        outputStream.writeObject(object);
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    private Object deserialize(final byte[] bytes) throws IOException, ClassNotFoundException {
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        final ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        return objectInputStream.readObject();
+    }
 }

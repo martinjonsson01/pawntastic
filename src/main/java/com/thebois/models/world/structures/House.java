@@ -35,12 +35,7 @@ class House extends AbstractStructure {
     }
 
     @Override
-    public House deepClone() {
-        return new House(getPosition());
-    }
-
-    @Override
-    public float getCost() {
+    protected float getCostWhenBuilt() {
         return Float.MAX_VALUE;
     }
 

@@ -31,7 +31,7 @@ public class InventoryController implements IController<IActorView> {
     public InventoryController(final IInventory inventory, final Skin uiSkin) {
         this.inventoryView = new InventoryView(uiSkin);
         this.inventory = inventory;
-        itemCounts = new HashMap<ItemType, Integer>();
+        itemCounts = new HashMap<>();
     }
 
     @Override
@@ -49,7 +49,7 @@ public class InventoryController implements IController<IActorView> {
     }
 
     private Map<ItemType, Integer> createItemCounts() {
-        final Map<ItemType, Integer> newItemCounts = new HashMap<ItemType, Integer>();
+        final Map<ItemType, Integer> newItemCounts = new HashMap<>();
         for (final ItemType itemType : ItemType.values()) {
             newItemCounts.put(itemType, inventory.numberOf(itemType));
         }
