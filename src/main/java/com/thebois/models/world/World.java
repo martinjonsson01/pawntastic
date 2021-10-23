@@ -253,7 +253,7 @@ public class World
     }
 
     private boolean isStorable(final IStructure structure, final StructureType type) {
-        return type.equals(StructureType.STOCKPILE) || structure.getType()
+        return type.equals(StructureType.STOCKPILE) && structure.getType()
                                                                 .equals(StructureType.TOWN_HALL);
     }
 

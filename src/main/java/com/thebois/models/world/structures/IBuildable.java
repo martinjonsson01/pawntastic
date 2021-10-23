@@ -25,7 +25,7 @@ public interface IBuildable {
      *
      * @return How many items of type is still needed.
      */
-    int getNumberOfNeedItemType(ItemType itemType);
+    int getNumberOfNeededItem(ItemType itemType);
 
     /**
      * Delivers an item to contribute to construction.

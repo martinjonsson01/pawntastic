@@ -53,11 +53,11 @@ abstract class AbstractHarvesterRole extends AbstractRole {
 
     @Override
     protected Collection<IActionSource> getTaskGenerators() {
-        if (!isEmptying) {
-            return List.of(this::createMoveToResource, this::createHarvestResource);
+        if (isEmptying) {
+            return List.of(this::createMoveToStockpile, this::createEmptyInventoryOfResource);
         }
         else {
-            return List.of(this::createMoveToStockpile, this::createEmptyInventoryOfResource);
+            return List.of(this::createMoveToResource, this::createHarvestResource);
         }
     }
 

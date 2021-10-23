@@ -128,7 +128,7 @@ class BuilderRole extends AbstractRole {
         final IActionPerformer performer, final IStructure structure) {
         ItemType nextNeededItem = null;
         for (final ItemType type : ItemType.values()) {
-            if (!performer.hasItem(type, structure.getNumberOfNeedItemType(type))) {
+            if (!performer.hasItem(type, structure.getNumberOfNeededItem(type))) {
                 nextNeededItem = type;
             }
         }

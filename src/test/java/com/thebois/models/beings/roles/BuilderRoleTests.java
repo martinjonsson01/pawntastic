@@ -321,7 +321,7 @@ public class BuilderRoleTests {
         // Arrange
         final Position besidesPerformer = performer.getPosition().subtract(1, 0);
         final IStructure structure = mockStructure(besidesPerformer);
-        when(structure.getNumberOfNeedItemType(any())).thenReturn(8);
+        when(structure.getNumberOfNeededItem(any())).thenReturn(8);
         when(performer.hasItem(any(), anyInt())).thenReturn(true);
         when(performer.isEmpty()).thenReturn(true);
         when(performer.canFitItem(any())).thenReturn(false);
