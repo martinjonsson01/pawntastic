@@ -1,14 +1,16 @@
 package com.thebois.models.beings;
 
-import java.io.IOException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
+
 import com.google.common.eventbus.EventBus;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,13 +18,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
-import com.thebois.abstractions.IResourceFinder;
+
 import com.thebois.abstractions.IPositionFinder;
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IStructureFinder;
 import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.inventory.Inventory;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
@@ -68,25 +72,32 @@ public class ColonyTests {
         final IPositionFinder positionFinder = Mockito.mock(IPositionFinder.class);
 
         final EventBus mockEventBusSource = mock(EventBus.class);
-        return new Colony(positionFinder, ()->mockEventBusSource);
+        return new Colony(positionFinder, () -> mockEventBusSource);
     }
 
     public static Stream<Arguments> getStructureCompletedEventsToTest() {
         final Position position = new Position(10, 10);
 
-        return Stream.of(
-            Arguments.of(new StructureCompletedEvent(StructureType.HOUSE, position), 1),
-            Arguments.of(new StructureCompletedEvent(StructureType.TOWN_HALL, position), 5),
-            Arguments.of(new StructureCompletedEvent(StructureType.STOCKPILE, position), 0));
+        return Stream.of(Arguments.of(
+                             new StructureCompletedEvent(StructureType.HOUSE, position),
+                             1),
+                         Arguments.of(new StructureCompletedEvent(
+                             StructureType.TOWN_HALL,
+                             position), 5),
+                         Arguments.of(new StructureCompletedEvent(
+                             StructureType.STOCKPILE,
+                             position), 0));
     }
 
     @ParameterizedTest
     @MethodSource("getStructureCompletedEventsToTest")
-    public void onSpawnPawnsEventColonySpawnsPawns(final StructureCompletedEvent event, final int numberOfBeings) {
+    public void onSpawnPawnsEventColonySpawnsPawns(
+        final StructureCompletedEvent event,
+        final int numberOfBeings) {
         // Arrange
         final EventBus eventBus = new EventBus();
         final World world = new TestWorld(50, ThreadLocalRandom.current());
-        final Colony colony = new Colony(world, ()->eventBus);
+        final Colony colony = new Colony(world, () -> eventBus);
 
         // Act
         colony.onStructureCompletedEvent(event);
@@ -116,7 +127,9 @@ public class ColonyTests {
     }
 
     @Test
-    public void colonyContainsSamePawnsAfterDeserialization() throws ClassNotFoundException, IOException {
+    public void colonyContainsSamePawnsAfterDeserialization() throws
+                                                              ClassNotFoundException,
+                                                              IOException {
         // Arrange
         final World world = new TestWorld(50, ThreadLocalRandom.current());
         final Colony colony = new Colony(world, EventBus::new);
@@ -125,7 +138,12 @@ public class ColonyTests {
         RoleFactory.setStructureFinder(world);
         RoleFactory.setWorld(world);
 
-        colony.addBeing(new Pawn(new Position(), RoleFactory.idle(), RoleFactory.fisher(), EventBus::new));
+        colony.addBeing(new Pawn(
+            new Position(),
+            RoleFactory.idle(),
+            RoleFactory.fisher(),
+            EventBus::new,
+            new Inventory()));
 
         // Act
         final byte[] serialized1 = serialize(colony);
@@ -133,7 +151,6 @@ public class ColonyTests {
 
         // Assert
         assertThat(colony.getBeings()).isEqualTo(deserialized1.getBeings());
-
     }
 
     private byte[] serialize(final Object object) throws IOException {
@@ -148,4 +165,5 @@ public class ColonyTests {
         final ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
         return objectInputStream.readObject();
     }
+
 }

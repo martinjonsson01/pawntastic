@@ -4,6 +4,7 @@ import com.thebois.listeners.IEventBusSource;
 import com.thebois.listeners.events.SpawnPawnEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
+import com.thebois.models.inventory.IInventory;
 
 /**
  * A being that belongs to and is controlled by a colony.

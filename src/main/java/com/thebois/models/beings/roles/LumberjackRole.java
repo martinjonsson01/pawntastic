@@ -1,7 +1,7 @@
 package com.thebois.models.beings.roles;
 
 import com.thebois.abstractions.IResourceFinder;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.resources.ResourceType;
 
@@ -18,9 +18,7 @@ class LumberjackRole extends AbstractHarvesterRole {
      * @param world           The world in which the resources are located.
      */
     LumberjackRole(
-        final IResourceFinder finder,
-        final IStructureFinder structureFinder,
-        final IWorld world) {
+        final IResourceFinder finder, final IStructureFinder structureFinder, final IWorld world) {
         super(finder, structureFinder, world, ResourceType.TREE);
     }
 

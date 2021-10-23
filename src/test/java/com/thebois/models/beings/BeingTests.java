@@ -13,13 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mockito;
 
-import com.thebois.abstractions.IPositionFinder;
 import com.thebois.Pawntastic;
+import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IStructureFinder;
-import com.thebois.listeners.IEventBusSource;
 import com.thebois.models.Position;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
@@ -31,7 +29,6 @@ import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IConsumableItem;
-import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.testutils.InMemorySerialize;
@@ -45,7 +42,6 @@ public class BeingTests {
     private static final float HUNGER_RATE = 1f;
     private AbstractRole role;
     private AbstractBeing being;
-
     private static final IInventory inventory = mock(IInventory.class);
 
     public static Stream<Arguments> getPositionsAndDestinations() {
@@ -99,14 +95,30 @@ public class BeingTests {
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role, final AbstractRole hungerRole) {
         final EventBus mockEventBusSource = mock(EventBus.class);
-        return new Pawn(currentPosition, role, hungerRole, ()->mockEventBusSource, inventory);
+        return new Pawn(currentPosition, role, hungerRole, () -> mockEventBusSource, inventory);
+    }
+
+    private static AbstractBeing createBeing(
+        final Position currentPosition,
+        final AbstractRole role,
+        final AbstractRole hungerRole,
+        final IInventory inventory) {
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        return new Pawn(currentPosition, role, hungerRole, () -> mockEventBusSource, inventory);
     }
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
         final AbstractRole hungerRole = new NothingRole();
         final EventBus mockEventBusSource = mock(EventBus.class);
-        return new Pawn(currentPosition, role, hungerRole, ()->mockEventBusSource, inventory);
+        return new Pawn(currentPosition, role, hungerRole, () -> mockEventBusSource, inventory);
+    }
+
+    private static AbstractBeing createBeing(
+        final Position currentPosition, final AbstractRole role, final IInventory inventory) {
+        final AbstractRole hungerRole = new NothingRole();
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        return new Pawn(currentPosition, role, hungerRole, () -> mockEventBusSource, inventory);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
@@ -304,7 +316,7 @@ public class BeingTests {
         // Arrange
         final EventBus mockEventBusSource = mock(EventBus.class);
         final IPositionFinder positionFinder = mock(IPositionFinder.class);
-        final AbstractBeingGroup colony = new Colony(positionFinder, ()->mockEventBusSource);
+        final AbstractBeingGroup colony = new Colony(positionFinder, () -> mockEventBusSource);
 
         // Act
         final int before = colony.getBeings().size();
@@ -312,11 +324,19 @@ public class BeingTests {
         final int after = colony.getBeings().size();
 
         // Assert
-        assertThat(after).isEqualTo(before+1);
+        assertThat(after).isEqualTo(before + 1);
     }
 
     @Test
     public void sameObjectAfterDeserialization() throws ClassNotFoundException, IOException {
+        // Arrange
+        final EventBus eventBusSource = Pawntastic.getEventBus();
+        final IBeing being = new Pawn(new Position(0, 0),
+                                      new NothingRole(),
+                                      new NothingRole(),
+                                      () -> eventBusSource,
+                                      new Inventory());
+
         // Act
         final byte[] serializedBeing = InMemorySerialize.serialize(being);
         final IBeing deserializedBeing = (IBeing) InMemorySerialize.deserialize(serializedBeing);
@@ -328,6 +348,8 @@ public class BeingTests {
     @Test
     public void doesNotLoseHealthWhenHasFoodInInventoryAndTimePasses() {
         // Arrange
+        final AbstractBeing being =
+            createBeing(new Position(), new NothingRole(), new Inventory(10f));
         final float timeToPass = 50f;
         final float startHealthRatio = being.getHealthRatio();
 
@@ -391,7 +413,8 @@ public class BeingTests {
         final AbstractRole hungerRole = mock(AbstractRole.class);
         final IAction action = mock(IAction.class);
         final IAction hungerAction = mock(IAction.class);
-        being = createBeing(new Position(), role, hungerRole);
+        final IInventory inventory = new Inventory(10f);
+        being = createBeing(new Position(), role, hungerRole, inventory);
         when(role.obtainNextAction(being)).thenReturn(action);
         when(hungerRole.obtainNextAction(being)).thenReturn(hungerAction);
 
@@ -533,7 +556,8 @@ public class BeingTests {
     @Test
     public void beingDelegatesHasItemToInventory() {
         // Arrange
-        final AbstractBeing being = createBeing();
+        final IInventory inventory = mock(IInventory.class);
+        final AbstractBeing being = createBeing(new Position(), new NothingRole(), inventory);
 
         // Act
         being.hasItem(any());
