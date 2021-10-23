@@ -64,14 +64,19 @@ abstract class AbstractStructure implements IStructure {
     public Collection<ItemType> getNeededItems() {
         final Collection<ItemType> neededItems = new ArrayList<>();
         for (final ItemType itemType : allNeededItems.keySet()) {
-            final int numberOfNeededItems = allNeededItems.get(itemType) - deliveredItems.numberOf(
-                itemType);
+            final int numberOfNeededItems =
+                allNeededItems.get(itemType) - deliveredItems.numberOf(itemType);
 
             for (int i = 0; i < numberOfNeededItems; i++) {
                 neededItems.add(itemType);
             }
         }
         return neededItems;
+    }
+
+    public int getNumberOfNeedItemType(final ItemType itemType) {
+        if (!allNeededItems.containsKey(itemType)) return 0;
+        return allNeededItems.get(itemType) - deliveredItems.numberOf(itemType);
     }
 
     @Override
@@ -109,9 +114,8 @@ abstract class AbstractStructure implements IStructure {
     }
 
     protected void postStructureCompletedEvent() {
-        final StructureCompletedEvent structureCompletedEvent = new StructureCompletedEvent(
-            structureType,
-            getPosition());
+        final StructureCompletedEvent structureCompletedEvent =
+            new StructureCompletedEvent(structureType, getPosition());
         Pawntastic.getEventBus().post(structureCompletedEvent);
     }
 

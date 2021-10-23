@@ -1,5 +1,6 @@
 package com.thebois.models.beings.roles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -248,6 +249,28 @@ public class BuilderRoleTests {
     }
 
     @Test
+    public void obtainNextActionReturnsIdleActionWhenIncompleteStructureDoesNotNeedMoreItems() {
+        // Arrange
+        final Position besidesPerformer = performer.getPosition().subtract(1, 0);
+        final IStructure structure = mockStructure(besidesPerformer);
+        when(structure.getNeededItems()).thenReturn(new ArrayList<>());
+        when(performer.isEmpty()).thenReturn(true);
+        when(performer.canFitItem(any())).thenReturn(true);
+
+        setStructureFinderNearByStructureResult(Optional.of(structure), Optional.of(structure));
+        setStructureFinderIncompleteResult(Optional.of(structure), Optional.empty());
+        setIWorldFinderResult(Optional.of(performer.getPosition()));
+
+        final IAction expected = RoleFactory.idle().obtainNextAction(performer);
+
+        // Act
+        final IAction actual = role.obtainNextAction(performer);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
     public void obtainNextActionReturnsIdleActionWhenStructureIsNotTakeableWhenFillingInventory() {
         // Arrange
         final Position besidesPerformer = performer.getPosition().subtract(1, 0);
@@ -281,7 +304,30 @@ public class BuilderRoleTests {
         when(performer.canFitItem(any())).thenReturn(true);
 
         setStructureFinderNearByStructureResult(Optional.of(structure), Optional.of(structure));
-        setStructureFinderIncompleteResult(Optional.of(structure));
+        setStructureFinderIncompleteResult(Optional.of(structure), Optional.empty());
+        setIWorldFinderResult(Optional.of(performer.getPosition()));
+
+        final IAction expected = RoleFactory.idle().obtainNextAction(performer);
+
+        // Act
+        final IAction actual = role.obtainNextAction(performer);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void obtainNextActionReturnsTakeItemActionWhenFirstItemIsNotNeededForBuilding() {
+        // Arrange
+        final Position besidesPerformer = performer.getPosition().subtract(1, 0);
+        final IStructure structure = mockStructure(besidesPerformer);
+        when(structure.getNumberOfNeedItemType(any())).thenReturn(8);
+        when(performer.hasItem(any(), anyInt())).thenReturn(true);
+        when(performer.isEmpty()).thenReturn(true);
+        when(performer.canFitItem(any())).thenReturn(false);
+
+        setStructureFinderNearByStructureResult(Optional.of(structure), Optional.of(structure));
+        setStructureFinderIncompleteResult(Optional.of(structure), Optional.empty());
         setIWorldFinderResult(Optional.of(performer.getPosition()));
 
         final IAction expected = RoleFactory.idle().obtainNextAction(performer);
@@ -308,7 +354,7 @@ public class BuilderRoleTests {
         setStructureFinderIncompleteResult(Optional.of(structure));
         setIWorldFinderResult(Optional.of(performer.getPosition()));
 
-        final ItemType neededItem = structure.getNeededItems().iterator().next();
+        final ItemType neededItem = ItemType.values()[ItemType.values().length - 1];
         final IAction expected =
             ActionFactory.createTakeItem(takeable, neededItem, structure.getPosition());
 
@@ -464,6 +510,35 @@ public class BuilderRoleTests {
         final IAction expected = RoleFactory.idle().obtainNextAction(performer);
 
         // Act
+        final IAction actual = role.obtainNextAction(performer);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void obtainNextActionReturnsIdleActionWhenOneRotationHaveGoneAndNoStockpileCouldBeFoundToFill() {
+        // Arrange
+        final Position besidesPerformer = performer.getPosition().subtract(1, 0);
+        final IStructure structure =
+            StructureFactory.createStructure(StructureType.STOCKPILE, besidesPerformer);
+        ITakeable takeable = (ITakeable) structure;
+        when(takeable.hasItem(any())).thenReturn(true);
+        when(performer.isEmpty()).thenReturn(true);
+        when(performer.hasItem(any(), anyInt())).thenReturn(false);
+        when(performer.canFitItem(any())).thenReturn(true);
+
+        setStructureFinderNearByStructureResult(Optional.of(structure),
+                                                Optional.of(structure),
+                                                Optional.of(structure));
+        setStructureFinderIncompleteResult(Optional.of(structure), Optional.empty());
+        setIWorldFinderResult(Optional.of(performer.getPosition()),
+                              Optional.of(performer.getPosition()));
+
+        final IAction expected = RoleFactory.idle().obtainNextAction(performer);
+
+        // Act
+        role.obtainNextAction(performer).perform(performer, 10f);
         final IAction actual = role.obtainNextAction(performer);
 
         // Assert

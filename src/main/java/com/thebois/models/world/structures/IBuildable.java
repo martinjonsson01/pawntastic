@@ -19,6 +19,15 @@ public interface IBuildable {
     Collection<ItemType> getNeededItems();
 
     /**
+     * Counts the amount of times still needed to build the structure.
+     *
+     * @param itemType The type of item.
+     *
+     * @return How many items of type is still needed.
+     */
+    int getNumberOfNeedItemType(ItemType itemType);
+
+    /**
      * Delivers an item to contribute to construction.
      *
      * @param deliveredItem The item to be delivered.
@@ -49,4 +58,5 @@ public interface IBuildable {
      * @return Returns the retrieved item.
      */
     Optional<IItem> tryDismantle(ItemType retrieving);
+
 }

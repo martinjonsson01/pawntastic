@@ -1,7 +1,7 @@
 package com.thebois.models.beings;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -29,10 +29,6 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
      * arrived.
      */
     private static final float DESTINATION_REACHED_DISTANCE = 0.01f;
-    /**
-     * How many kilograms a being can carry.
-     */
-    private static final float MAX_CARRYING_CAPACITY = 100f;
     /**
      * How much health to start off with.
      */
@@ -118,8 +114,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         satiateHunger();
         updateHealth(deltaTime);
         if (health > 0f) {
-            role.obtainNextAction(this)
-                .perform(this, deltaTime);
+            role.obtainNextAction(this).perform(this, deltaTime);
             move(deltaTime);
         }
     }

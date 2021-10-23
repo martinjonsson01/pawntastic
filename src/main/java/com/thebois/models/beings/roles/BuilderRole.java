@@ -22,10 +22,11 @@ import com.thebois.models.world.structures.StructureType;
  */
 class BuilderRole extends AbstractRole {
 
-    private static final int NUMBER_OF_BUILDING_STATES = 3;
+    private static final int NUMBER_OF_BUILDING_STATES = 2;
     private final IStructureFinder finder;
     private final IWorld world;
     private int buildingState = 0;
+    private boolean isFilling = false;
 
     /**
      * Instantiates with a way of finding structures to build.
@@ -47,17 +48,12 @@ class BuilderRole extends AbstractRole {
     @Override
     protected Collection<IActionSource> getTaskGenerators() {
         buildingState %= NUMBER_OF_BUILDING_STATES;
-        switch (buildingState) {
-            case 0 -> {
-                return List.of(this::createMoveToStockpile, this::createEmptyInventory);
-            }
-            case 1 -> {
-                return List.of(this::createFillInventory);
-            }
-            default -> {
-                return List.of(this::createMoveToIncompleteStructure, this::createBuildStructure);
-            }
+        if (buildingState == 0) {
+            return List.of(this::createMoveToStockpile,
+                           this::createEmptyInventory,
+                           this::createFillInventory);
         }
+        return List.of(this::createMoveToIncompleteStructure, this::createBuildStructure);
     }
 
     private IAction createMoveToStockpile(final IActionPerformer performer) {
@@ -71,14 +67,18 @@ class BuilderRole extends AbstractRole {
         final Optional<Position> closestSpotNextToStructure =
             world.getClosestNeighbourOf(structure, position);
 
-        if (closestSpotNextToStructure.isEmpty()) return ActionFactory.createDoNothing();
-
+        if (closestSpotNextToStructure.isEmpty()) {
+            return ActionFactory.createDoNothing();
+        }
         return ActionFactory.createMoveTo(closestSpotNextToStructure.get());
     }
 
     private IAction createEmptyInventory(final IActionPerformer performer) {
+        if (isFilling) {
+            return ActionFactory.createDoNext();
+        }
         if (performer.isEmpty()) {
-            buildingState++;
+            isFilling = true;
             return ActionFactory.createDoNext();
         }
         final Position position = performer.getPosition();
@@ -102,12 +102,17 @@ class BuilderRole extends AbstractRole {
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
 
-        final Collection<ItemType> neededItems = structure.getNeededItems();
-        final ItemType nextNeedItem = neededItems.iterator().next();
+        ItemType nextNeededItem = null;
+        for (final ItemType type : ItemType.values()) {
+            if (!performer.hasItem(type, structure.getNumberOfNeedItemType(type))) {
+                nextNeededItem = type;
+            }
+        }
 
         // Can performer fit item
-        if (!performer.canFitItem(nextNeedItem)) {
+        if (nextNeededItem == null || !performer.canFitItem(nextNeededItem)) {
             buildingState++;
+            isFilling = false;
             return ActionFactory.createDoNext();
         }
 
@@ -125,11 +130,13 @@ class BuilderRole extends AbstractRole {
         else {
             return ActionFactory.createDoNothing();
         }
-        if (!takeable.hasItem(nextNeedItem)) {
-            return ActionFactory.createDoNothing();
+        if (!takeable.hasItem(nextNeededItem)) {
+            buildingState++;
+            isFilling = false;
+            return ActionFactory.createDoNext();
         }
 
-        return ActionFactory.createTakeItem(takeable, nextNeedItem, stockpile.getPosition());
+        return ActionFactory.createTakeItem(takeable, nextNeededItem, stockpile.getPosition());
     }
 
     private IAction createMoveToIncompleteStructure(final IActionPerformer performer) {
