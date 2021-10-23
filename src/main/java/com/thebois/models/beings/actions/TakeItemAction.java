@@ -15,7 +15,13 @@ import com.thebois.models.inventory.items.ItemType;
  */
 public class TakeItemAction extends AbstractTimeAction implements Serializable {
 
+    /**
+     * The number of seconds required to give the item.
+     */
     private static final float TIME_REQUIRED_TO_TAKE_ITEM = 1f;
+    /**
+     * The distance between the performer and the storable, in tiles.
+     */
     private static final float MINIMUM_TAKE_DISTANCE = 2f;
     private final ITakeable takeable;
     private final ItemType itemType;

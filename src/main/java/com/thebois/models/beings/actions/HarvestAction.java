@@ -11,6 +11,9 @@ import com.thebois.models.world.resources.IResource;
  */
 public class HarvestAction extends AbstractTimeAction implements Serializable {
 
+    /**
+     * The distance between the performer and the storable, in tiles.
+     */
     private static final float MINIMUM_HARVEST_DISTANCE = 1f;
     private final IResource resource;
 
