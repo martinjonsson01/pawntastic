@@ -9,7 +9,7 @@ import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.items.ItemType;
 
 /**
- * Action take takes an item from a giver.
+ * Action take takes an item from a takeable.
  */
 public class TakeItemAction extends AbstractTimeAction implements Serializable {
 

@@ -14,7 +14,7 @@ import com.thebois.models.beings.IActionPerformer;
  *
  * <p>
  * It is an action given to a being when it asks for an action but has to skip the action and move
- * on to next.
+ * on to next action.
  * </p>
  */
 public class DoNextAction implements IAction, Serializable {

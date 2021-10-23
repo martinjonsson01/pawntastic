@@ -8,7 +8,7 @@ import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.inventory.IStorable;
 
 /**
- * Action give item from performer to receiver.
+ * Action give item from performer to a storable.
  */
 public class GiveItemAction extends AbstractTimeAction implements Serializable {
 
@@ -18,7 +18,7 @@ public class GiveItemAction extends AbstractTimeAction implements Serializable {
     private final Position storablePosition;
 
     /**
-     * Instantiate with a receiver to give item to.
+     * Instantiate with a storable to give item to.
      *
      * @param storable         Where the items should be stored.
      * @param storablePosition Where the storable is in the world.

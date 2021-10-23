@@ -49,7 +49,6 @@ public class BuildAction extends AbstractTimeAction implements Serializable {
 
     @Override
     protected void onPerformCompleted(final IActionPerformer performer) {
-        // Will never be null as the action can not be performed if canPerform doesn't pass
         final ItemType neededItem = getNeededItemFromPerformer(performer);
         toBuild.tryDeliverItem(performer.take(neededItem));
     }
@@ -57,6 +56,7 @@ public class BuildAction extends AbstractTimeAction implements Serializable {
     @Override
     public boolean canPerform(final IActionPerformer performer) {
         // If you change the line below to not handle null, it can break onPerformCompleted method
+        // as this method should always be called before onPerformCompleted
         final boolean performerHasNeededItem = getNeededItemFromPerformer(performer) != null;
         final boolean isCloseEnough =
             performer.getPosition().distanceTo(toBuild.getPosition()) < MINIMUM_BUILD_DISTANCE;
