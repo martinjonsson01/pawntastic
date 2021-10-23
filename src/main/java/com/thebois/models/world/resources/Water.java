@@ -13,7 +13,7 @@ class Water extends AbstractResource {
     /**
      * The time it takes to harvest, in seconds.
      */
-    private static final float HARVEST_TIME = 3f;
+    private static final float HARVEST_TIME = 0.3f;
 
     /**
      * Instantiate a new water resource at given position.

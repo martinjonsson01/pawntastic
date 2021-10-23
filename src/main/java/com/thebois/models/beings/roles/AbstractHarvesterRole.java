@@ -27,6 +27,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
     private final IStructureFinder structureFinder;
     private final IWorld world;
     private final ResourceType resourceType;
+    private boolean isEmptying = false;
 
     /**
      * Instantiates with a way of finding resources.
@@ -49,11 +50,12 @@ abstract class AbstractHarvesterRole extends AbstractRole {
 
     @Override
     protected Collection<IActionSource> getTaskGenerators() {
-        return List.of(
-            this::createMoveToResource,
-            this::createHarvestResource,
-            this::createMoveToStockpile,
-            this::createEmptyInventoryOfResource);
+        if (!isEmptying) {
+            return List.of(this::createMoveToResource, this::createHarvestResource);
+        }
+        else {
+            return List.of(this::createMoveToStockpile, this::createEmptyInventoryOfResource);
+        }
     }
 
     private IAction createMoveToResource(final IActionPerformer performer) {
@@ -76,11 +78,15 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         if (maybeResource.isEmpty()) return ActionFactory.createDoNothing();
 
         final IResource resource = maybeResource.get();
-
+        if (!performer.canFitItem(resourceType.getItemType())) {
+            isEmptying = true;
+            return ActionFactory.createDoNext();
+        }
         return ActionFactory.createHarvest(resource);
     }
 
     private IAction createMoveToStockpile(final IActionPerformer performer) {
+
         final Position position = performer.getPosition();
         final Optional<IStructure> maybeStructure =
             structureFinder.getNearbyStructureOfType(position, StructureType.STOCKPILE);
@@ -97,6 +103,10 @@ abstract class AbstractHarvesterRole extends AbstractRole {
     }
 
     private IAction createEmptyInventoryOfResource(final IActionPerformer performer) {
+        if (performer.isEmpty()) {
+            isEmptying = false;
+            return ActionFactory.createDoNext();
+        }
         final Position position = performer.getPosition();
         final Optional<IStructure> maybeStructure =
             structureFinder.getNearbyStructureOfType(position, StructureType.STOCKPILE);

@@ -79,8 +79,7 @@ public final class ActionFactory {
      * @return The give item task.
      */
     public static IAction createGiveItem(
-        final IStoreable storeable,
-        final Position position) {
+        final IStoreable storeable, final Position position) {
         return new GiveItemAction(storeable, position);
     }
 
@@ -94,10 +93,17 @@ public final class ActionFactory {
      * @return The take item task.
      */
     public static IAction createTakeItem(
-        final ITakeable takeable,
-        final ItemType itemType,
-        final Position position) {
+        final ITakeable takeable, final ItemType itemType, final Position position) {
         return new TakeItemAction(takeable, itemType, position);
+    }
+
+    /**
+     * Creates an action of doing skipping an action do next in list.
+     *
+     * @return A do-next action.
+     */
+    public static IAction createDoNext() {
+        return new DoNextAction();
     }
 
 }

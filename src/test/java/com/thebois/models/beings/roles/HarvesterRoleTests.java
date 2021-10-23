@@ -1,8 +1,5 @@
 package com.thebois.models.beings.roles;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
@@ -16,7 +13,6 @@ import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.pathfinding.IPathFinder;
-import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.IStoreable;
 import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
@@ -336,7 +332,7 @@ public class HarvesterRoleTests {
         setIWorldFinderResult(Optional.of(performerPosition), Optional.of(performerPosition));
         setResourceFinderResult(Optional.of(mockResource(besidesPosition)));
         StructureFactory.setInventory(new Inventory());
-        IStructure structure =
+        final IStructure structure =
             StructureFactory.createStructure(StructureType.STOCKPILE, besidesPosition);
         setStructureFinderResult(Optional.of(structure));
 
@@ -349,6 +345,44 @@ public class HarvesterRoleTests {
         // To set action to be go to stockpile/empty inven rather than go to resource/harvest
         role.obtainNextAction(performer);
         when(performer.canFitItem(any())).thenReturn(false);
+        final IAction actual = role.obtainNextAction(performer);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void obtainNextActionMoveToResourceWhenPerformerIsNextToStockpileAndHasEmptyInventory() {
+        // Arrange
+        final AbstractRole role = createRole();
+        final IActionPerformer performer = mock(IActionPerformer.class);
+        // Set up performer
+        final Position performerPosition = new Position(5, 5);
+        when(performer.getPosition()).thenReturn(performerPosition);
+        // Performer can't harvest first time
+        when(performer.canFitItem(any())).thenReturn(false, true);
+        // When performer is at stockpile it realizes it has empty inventory
+        when(performer.isEmpty()).thenReturn(true);
+        // Set up other positions
+        final Position besidesPosition = performerPosition.subtract(1, 0);
+
+        //Set up finder results
+        IResource tree = mockResource(besidesPosition);
+        when(tree.getHarvestTime()).thenReturn(0f, 10f);
+
+        setIWorldFinderResult(Optional.of(performerPosition), Optional.of(performerPosition));
+        setResourceFinderResult(Optional.of(tree));
+        StructureFactory.setInventory(new Inventory());
+        final IStructure structure =
+            StructureFactory.createStructure(StructureType.STOCKPILE, besidesPosition);
+        setStructureFinderResult(Optional.of(structure));
+
+        // Set up for expected action
+
+        final IAction expected = ActionFactory.createHarvest(tree);
+
+        // Act
+        // To set action to be go to stockpile/empty inven rather than go to resource/harvest
         final IAction actual = role.obtainNextAction(performer);
 
         // Assert
@@ -377,17 +411,6 @@ public class HarvesterRoleTests {
         when(finder.getNearbyOfType(any(), any())).thenReturn(firstFinderResult, otherFinderResult);
     }
 
-    private IStructure setUpRoleIsFarAwayFromStockpile(final IActionPerformer performer) {
-        final Position stockpilePosition = new Position(0, 0);
-        final IStructure stockpile = mock(IStructure.class);
-        when(stockpile.getPosition()).thenReturn(stockpilePosition);
-        when(stockpile.getType()).thenReturn(StructureType.STOCKPILE);
-        when(structureFinder.getNearbyStructureOfType(performer.getPosition(),
-                                                      stockpile.getType())).thenReturn(Optional.of(
-            stockpile));
-        return stockpile;
-    }
-
     private IResource setUpRoleIsNextToTree(final IActionPerformer performer) {
         final Position treePosition = new Position(5, 3);
         final Position besidesPosition = treePosition.subtract(1, 0);
@@ -398,10 +421,6 @@ public class HarvesterRoleTests {
         when(mockWorld.getClosestNeighbourOf(tree, performer.getPosition())).thenReturn(Optional.of(
             besidesPosition));
         return tree;
-    }
-
-    private void setUpRoleHasFullInventory(final IActionPerformer performer) {
-        when(performer.canFitItem(any())).thenReturn(false);
     }
 
     /**
