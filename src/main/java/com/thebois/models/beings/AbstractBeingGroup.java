@@ -2,7 +2,6 @@ package com.thebois.models.beings;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -14,8 +13,8 @@ import com.thebois.listeners.events.OnDeathEvent;
  */
 public abstract class AbstractBeingGroup implements IBeingGroup {
 
-    private final Collection<IBeing> beings = new ConcurrentLinkedQueue<>();
-    private final Collection<IBeing> deadBeings = new ConcurrentLinkedQueue<>();
+    private final Collection<IBeing> beings = new ArrayList<>();
+    private final Collection<IBeing> deadBeings = new ArrayList<>();
 
     protected AbstractBeingGroup(final IEventBusSource eventBusSource) {
         eventBusSource.getEventBus().register(this);
