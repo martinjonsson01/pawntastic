@@ -37,13 +37,15 @@ public class HarvestActionTests {
 
     public static Stream<Arguments> getNotEqualHarvests() {
         final IResource sameResource = mock(IResource.class);
+        final IAction sameResourceNotHarvested = ActionFactory.createHarvest(sameResource);
         final IAction sameResourceHarvested = ActionFactory.createHarvest(sameResource);
         sameResourceHarvested.perform(mock(IActionPerformer.class), 0.1f);
         return Stream.of(Arguments.of(ActionFactory.createHarvest(mock(IResource.class)),
                                       ActionFactory.createHarvest(sameResource)),
                          Arguments.of(ActionFactory.createHarvest(sameResource), null),
                          Arguments.of(ActionFactory.createHarvest(sameResource),
-                                      mock(IAction.class)));
+                                      mock(IAction.class)),
+                         Arguments.of(sameResourceNotHarvested, sameResourceHarvested));
     }
 
     @BeforeEach
@@ -111,7 +113,7 @@ public class HarvestActionTests {
         // Assert
         assertThat(completed).isFalse();
     }
-    
+
     @ParameterizedTest
     @MethodSource("getEqualHarvests")
     public void equalsIsTrueForEqualHarvests(final IAction first, final IAction second) {

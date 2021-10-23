@@ -54,8 +54,9 @@ public class GiveItemAction extends AbstractTimeAction implements Serializable {
         if (this == other) return true;
         if (other == null || getClass() != other.getClass()) return false;
         final GiveItemAction that = (GiveItemAction) other;
-        return Objects.equals(storeable, that.storeable) && Objects.equals(storablePosition,
-                                                                           that.storablePosition);
+        return Objects.equals(storeable, that.storeable)
+               && Objects.equals(storablePosition, that.storablePosition)
+               && getTimeSpentPerforming() == that.getTimeSpentPerforming();
     }
 
     @Override
