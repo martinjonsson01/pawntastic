@@ -26,7 +26,7 @@ import com.thebois.models.world.structures.StructureType;
  */
 abstract class AbstractHarvesterRole extends AbstractRole {
 
-    private final IResourceFinder finder;
+    private final IResourceFinder resourceFinder;
     private final IStructureFinder structureFinder;
     private final IWorld world;
     private final ResourceType resourceType;
@@ -45,7 +45,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         final IStructureFinder structureFinder,
         final IWorld world,
         final ResourceType resourceType) {
-        this.finder = resourceFinder;
+        this.resourceFinder = resourceFinder;
         this.structureFinder = structureFinder;
         this.world = world;
         this.resourceType = resourceType;
@@ -88,20 +88,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
     }
 
     private IAction createMoveToStockpile(final IActionPerformer performer) {
-
-        final Position position = performer.getPosition();
-        final Optional<IStructure> maybeStructure =
-            structureFinder.getNearbyStructureOfType(position, StructureType.STOCKPILE);
-        if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
-
-        final IStructure structure = maybeStructure.get();
-
-        final Optional<Position> closestSpotNextToStructure =
-            world.getClosestNeighbourOf(structure, position);
-
-        if (closestSpotNextToStructure.isEmpty()) return ActionFactory.createDoNothing();
-
-        return ActionFactory.createMoveTo(closestSpotNextToStructure.get());
+        return ActionFactory.createMoveToStockpile(performer, structureFinder, world);
     }
 
     private IAction createEmptyInventoryOfResource(final IActionPerformer performer) {
@@ -117,17 +104,16 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         final IStorable storable;
         if (structure instanceof IStorable) {
             storable = (IStorable) structure;
+            return ActionFactory.createGiveItem(storable, structure.getPosition());
         }
         else {
             return ActionFactory.createDoNothing();
         }
-
-        return ActionFactory.createGiveItem(storable, structure.getPosition());
     }
 
     private Optional<IResource> findNearbyResource(final IActionPerformer performer) {
         final Position position = performer.getPosition();
-        return finder.getNearbyOfType(position, resourceType);
+        return resourceFinder.getNearbyOfType(position, resourceType);
     }
 
 }

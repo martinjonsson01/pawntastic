@@ -32,18 +32,18 @@ class BuilderRole extends AbstractRole {
      * Whether the performer's inventory should be filled or emptied.
      */
     private boolean isFilling = false;
-    private final IStructureFinder finder;
+    private final IStructureFinder structureFinder;
     private final IWorld world;
 
     /**
      * Instantiates with a way of finding structures to build.
      *
-     * @param finder The source of structures to construct.
-     * @param world  The world in which the structures are located.
+     * @param structureFinder The source of structures to construct.
+     * @param world           The world in which the structures are located.
      */
     BuilderRole(
-        final IStructureFinder finder, final IWorld world) {
-        this.finder = finder;
+        final IStructureFinder structureFinder, final IWorld world) {
+        this.structureFinder = structureFinder;
         this.world = world;
     }
 
@@ -64,20 +64,7 @@ class BuilderRole extends AbstractRole {
     }
 
     private IAction createMoveToStockpile(final IActionPerformer performer) {
-        final Position position = performer.getPosition();
-        final Optional<IStructure> maybeStructure =
-            finder.getNearbyStructureOfType(position, StructureType.STOCKPILE);
-        if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
-
-        final IStructure structure = maybeStructure.get();
-
-        final Optional<Position> closestSpotNextToStructure =
-            world.getClosestNeighbourOf(structure, position);
-
-        if (closestSpotNextToStructure.isEmpty()) {
-            return ActionFactory.createDoNothing();
-        }
-        return ActionFactory.createMoveTo(closestSpotNextToStructure.get());
+        return ActionFactory.createMoveToStockpile(performer, structureFinder, world);
     }
 
     private IAction createEmptyInventory(final IActionPerformer performer) {
@@ -88,19 +75,19 @@ class BuilderRole extends AbstractRole {
             isFilling = true;
             return ActionFactory.createDoNext();
         }
-        final Optional<IStructure> maybeStructure =
-            finder.getNearbyStructureOfType(performer.getPosition(), StructureType.STOCKPILE);
+        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(
+            performer.getPosition(),
+            StructureType.STOCKPILE);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
-        final IStorable storable;
+
         if (structure instanceof IStorable) {
-            storable = (IStorable) structure;
+            final IStorable storable = (IStorable) structure;
+            return ActionFactory.createGiveItem(storable, structure.getPosition());
         }
         else {
             return ActionFactory.createDoNothing();
         }
-
-        return ActionFactory.createGiveItem(storable, structure.getPosition());
     }
 
     private IAction createFillInventory(final IActionPerformer performer) {
@@ -108,13 +95,7 @@ class BuilderRole extends AbstractRole {
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
 
-        ItemType nextNeededItem = null;
-        for (final ItemType type : ItemType.values()) {
-            if (!performer.hasItem(type, structure.getNumberOfNeedItemType(type))) {
-                nextNeededItem = type;
-            }
-        }
-
+        final ItemType nextNeededItem = getNextNeededItem(performer, structure);
         // Can performer fit item
         if (nextNeededItem == null || !performer.canFitItem(nextNeededItem)) {
             buildingState++;
@@ -123,25 +104,35 @@ class BuilderRole extends AbstractRole {
         }
 
         // Check if stockpile still exists and has item
-        final Optional<IStructure> maybeStockpile =
-            finder.getNearbyStructureOfType(performer.getPosition(), StructureType.STOCKPILE);
+        final Optional<IStructure> maybeStockpile = structureFinder.getNearbyStructureOfType(
+            performer.getPosition(),
+            StructureType.STOCKPILE);
         if (maybeStockpile.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure stockpile = maybeStockpile.get();
 
-        final ITakeable takeable;
         if (stockpile instanceof ITakeable) {
-            takeable = (ITakeable) stockpile;
+            final ITakeable takeable = (ITakeable) stockpile;
+            if (!takeable.hasItem(nextNeededItem)) {
+                buildingState++;
+                isFilling = false;
+                return ActionFactory.createDoNext();
+            }
+            return ActionFactory.createTakeItem(takeable, nextNeededItem, stockpile.getPosition());
         }
         else {
             return ActionFactory.createDoNothing();
         }
-        if (!takeable.hasItem(nextNeededItem)) {
-            buildingState++;
-            isFilling = false;
-            return ActionFactory.createDoNext();
-        }
+    }
 
-        return ActionFactory.createTakeItem(takeable, nextNeededItem, stockpile.getPosition());
+    private ItemType getNextNeededItem(
+        final IActionPerformer performer, final IStructure structure) {
+        ItemType nextNeededItem = null;
+        for (final ItemType type : ItemType.values()) {
+            if (!performer.hasItem(type, structure.getNumberOfNeedItemType(type))) {
+                nextNeededItem = type;
+            }
+        }
+        return nextNeededItem;
     }
 
     private IAction createMoveToIncompleteStructure(final IActionPerformer performer) {
@@ -184,7 +175,7 @@ class BuilderRole extends AbstractRole {
     private Optional<IStructure> findNearbyIncompleteStructure(
         final IActionPerformer performer) {
         final Position position = performer.getPosition();
-        return finder.getNearbyIncompleteStructure(position);
+        return structureFinder.getNearbyIncompleteStructure(position);
     }
 
 }

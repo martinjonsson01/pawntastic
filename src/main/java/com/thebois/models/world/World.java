@@ -245,12 +245,16 @@ public class World
     public Optional<IStructure> getNearbyStructureOfType(
         final Position origin, final StructureType type) {
         return getStructures().stream()
-                              .filter(structure -> structure.getType().equals(type)
-                                                   || type.equals(StructureType.STOCKPILE)
-                                                      && structure.getType()
-                                                                  .equals(StructureType.TOWN_HALL))
+                              .filter(structure -> structure.getType().equals(type) || isStorable(
+                                  structure,
+                                  type))
                               .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
                                                              origin.distanceTo(o2.getPosition())));
+    }
+
+    private boolean isStorable(final IStructure structure, final StructureType type) {
+        return type.equals(StructureType.STOCKPILE) || structure.getType()
+                                                                .equals(StructureType.TOWN_HALL);
     }
 
     /**

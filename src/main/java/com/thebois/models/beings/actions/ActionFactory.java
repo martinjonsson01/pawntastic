@@ -1,15 +1,20 @@
 package com.thebois.models.beings.actions;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import com.thebois.Pawntastic;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
+import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.inventory.IStorable;
 import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.items.ItemType;
+import com.thebois.models.world.IWorld;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.StructureType;
 
 /**
  * Creates actions.
@@ -104,6 +109,36 @@ public final class ActionFactory {
      */
     public static IAction createDoNext() {
         return new DoNextAction();
+    }
+
+    /**
+     * Creates an action for moving performer to stockpile if possible.
+     *
+     * @param performer       The performer that should execute the action.
+     * @param structureFinder A finder that locates structures.
+     * @param world           A finder that locates tiles in the world.
+     *
+     * @return Either a move to stockpile action or nothing action if stockpile could not be
+     *     reached.
+     */
+    public static IAction createMoveToStockpile(
+        final IActionPerformer performer,
+        final IStructureFinder structureFinder,
+        final IWorld world) {
+        final Position position = performer.getPosition();
+        final Optional<IStructure> maybeStructure =
+            structureFinder.getNearbyStructureOfType(position, StructureType.STOCKPILE);
+        if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
+
+        final IStructure structure = maybeStructure.get();
+
+        final Optional<Position> closestSpotNextToStructure =
+            world.getClosestNeighbourOf(structure, position);
+
+        if (closestSpotNextToStructure.isEmpty()) {
+            return ActionFactory.createDoNothing();
+        }
+        return ActionFactory.createMoveTo(closestSpotNextToStructure.get());
     }
 
 }
