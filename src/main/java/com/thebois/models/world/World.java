@@ -6,11 +6,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.listeners.events.ObstaclePlacedEvent;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IPositionFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.world.generation.ResourceGenerator;
 import com.thebois.models.world.generation.TerrainGenerator;
@@ -25,7 +27,8 @@ import com.thebois.utils.MatrixUtils;
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
  */
-public class World implements IWorld, IStructureFinder, IResourceFinder, Serializable {
+public class World
+    implements IWorld, IStructureFinder, IResourceFinder, IPositionFinder, Serializable {
 
     private final ITerrain[][] terrainMatrix;
     private final IStructure[][] structureMatrix;
@@ -34,6 +37,7 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
     private final int worldSize;
     private final ThreadLocalRandom random;
     private Collection<IStructure> structuresCache = new ArrayList<>();
+    private boolean townHallPlaced = false;
 
     /**
      * Initiates the world with the given size.
@@ -97,7 +101,7 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
     }
 
     /**
-     * Creates a list of tiles that are not occupied by a structure or resource.
+     * Creates a list of positions that are not occupied.
      *
      * @param count The amount of empty positions that needs to be found.
      *
@@ -106,7 +110,8 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
      * @throws IllegalArgumentException When it is impossible to find the requested amount of
      *                                  positions.
      */
-    public Iterable<Position> findEmptyPositions(final int count) {
+    @Override
+    public Collection<Position> findEmptyPositions(final int count) {
         if (count > worldSize * worldSize) {
             throw new IllegalArgumentException(
                 "Can not find more empty positions than there are tiles in the world.");
@@ -120,6 +125,26 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
             emptyPositions.add(vacantPosition);
         }
         return emptyPositions;
+    }
+
+    @Override
+    public Collection<Position> tryGetEmptyPositionsNextTo(
+        final Position position, final int maxCount, final float radius) {
+        return MatrixUtils.toCollection(canonicalMatrix)
+                          .stream()
+                          .filter(iTile -> !iTile.getPosition().equals(position)
+                                           && isVacant(iTile.getPosition())
+                                           && isTileWithinRadiusOf(iTile, position, radius))
+                          .limit(maxCount)
+                          .map(ITile::getPosition)
+                          .collect(Collectors.toList());
+    }
+
+    private boolean isTileWithinRadiusOf(
+        final ITile tile,
+        final Position position,
+        final float radius) {
+        return radius > position.distanceTo(tile.getPosition());
     }
 
     private Position createRandomPosition(
@@ -157,8 +182,8 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
      *
      * @return Whether the structure was built.
      */
-    public boolean createStructure(final StructureType type, final Position position) {
-        return createStructure(type, (int) position.getX(), (int) position.getY());
+    public boolean tryCreateStructure(final StructureType type, final Position position) {
+        return tryCreateStructure(type, (int) position.getX(), (int) position.getY());
     }
 
     /**
@@ -170,11 +195,16 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
      *
      * @return Whether the structure was built.
      */
-    public boolean createStructure(final StructureType type, final int x, final int y) {
+    public boolean tryCreateStructure(final StructureType type, final int x, final int y) {
         final Position position = new Position(x, y);
+        if (isTownHallPlaced() && type.equals(StructureType.TOWN_HALL)) {
+            return false;
+        }
         if (isPositionPlaceable(position)) {
             structureMatrix[y][x] = StructureFactory.createStructure(type, x, y);
-
+            if (type.equals(StructureType.TOWN_HALL)) {
+                townHallPlaced = true;
+            }
             updateCanonicalMatrix();
             postObstacleEvent(x, y);
             generateStructuresCache();
@@ -193,6 +223,15 @@ public class World implements IWorld, IStructureFinder, IResourceFinder, Seriali
             return false;
         }
         return isVacant(position);
+    }
+
+    /**
+     * Calculates and returns whether the first and only town hall has been placed.
+     *
+     * @return Returns whether the first and only town hall has been placed.
+     */
+    public boolean isTownHallPlaced() {
+        return townHallPlaced;
     }
 
     private void postObstacleEvent(final int x, final int y) {

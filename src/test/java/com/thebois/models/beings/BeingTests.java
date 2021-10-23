@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.google.common.eventbus.EventBus;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,9 +14,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.abstractions.IPositionFinder;
 import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IStructureFinder;
+import com.thebois.listeners.IEventBusSource;
 import com.thebois.models.Position;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
@@ -89,13 +93,15 @@ public class BeingTests {
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role, final AbstractRole hungerRole) {
-        return new Pawn(currentPosition, role, hungerRole);
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        return new Pawn(currentPosition, role, hungerRole, ()->mockEventBusSource);
     }
 
     private static AbstractBeing createBeing(
         final Position currentPosition, final AbstractRole role) {
         final AbstractRole hungerRole = new NothingRole();
-        return new Pawn(currentPosition, role, hungerRole);
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        return new Pawn(currentPosition, role, hungerRole, ()->mockEventBusSource);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
@@ -301,8 +307,9 @@ public class BeingTests {
     @Test
     public void addBeingIncreasesBeingCount() {
         // Arrange
-        final Iterable<Position> vacantPositions = List.of(new Position(0, 0));
-        final AbstractBeingGroup colony = new Colony(vacantPositions, Pawntastic::getEventBus);
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        final IPositionFinder positionFinder = mock(IPositionFinder.class);
+        final AbstractBeingGroup colony = new Colony(positionFinder, ()->mockEventBusSource);
 
         // Act
         final int before = colony.getBeings().size();
@@ -310,8 +317,7 @@ public class BeingTests {
         final int after = colony.getBeings().size();
 
         // Assert
-        assertThat(before).isEqualTo(1);
-        assertThat(after).isEqualTo(2);
+        assertThat(after).isEqualTo(before+1);
     }
 
     @Test

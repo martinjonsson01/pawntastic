@@ -49,19 +49,6 @@ public class StockpileTests {
     }
 
     @Test
-    public void deepCloneReturnsCopyOfStockpile() {
-        // Arrange
-        final Stockpile stockpile =
-            (Stockpile) StructureFactory.createStructure(StructureType.STOCKPILE, 0, 0);
-
-        // Act
-        final Stockpile copy = (Stockpile) stockpile.deepClone();
-
-        // Assert
-        assertThat(copy).isNotEqualTo(stockpile);
-    }
-
-    @Test
     public void getInventoryReturnsSharedInventory() {
         // Arrange
         final Inventory sharedInventory = new Inventory();

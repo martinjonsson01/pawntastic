@@ -115,56 +115,18 @@ public class StructureTests {
     }
 
     @Test
-    public void deepCloneReturnsExpectedClone() {
+    public void structureReturnsBlueprintCostWhenNotCompleted() {
         // Arrange
-        final Position expectedPosition = new Position(20f, 15f);
-
-        final IStructure house =
-            StructureFactory.createStructure(StructureType.HOUSE, expectedPosition);
+        final Position position = new Position(1, 1);
+        final IStructure structure =
+            StructureFactory.createStructure(StructureType.HOUSE, position);
 
         // Act
-        final IStructure houseDeepClone = house.deepClone();
+        final float tileCost = structure.getCost();
 
         // Assert
-        assertThat(houseDeepClone.getPosition()).isEqualTo(houseDeepClone.getPosition());
-        assertThat(houseDeepClone.getType()).isEqualTo(houseDeepClone.getType());
-    }
-
-    @Test
-    public void costIsZeroWhenNoItemsHaveBeenDelivered() {
-
-        // Arrange
-        final IStructure house =
-            StructureFactory.createStructure(StructureType.HOUSE, new Position());
-
-        // Act
-        final float cost = house.getCost();
-
-        // Assert
-        assertThat(cost).isZero();
-    }
-
-    @Test
-    public void costIsNonZeroWhenAllItemsHaveBeenDelivered() {
-
-        // Arrange
-        final int totalLogs = 10;
-        final int totalRocks = 10;
-        final IStructure house =
-            StructureFactory.createStructure(StructureType.HOUSE, new Position());
-
-        for (int i = 0; i < totalLogs; i++) {
-            house.tryDeliverItem(ItemFactory.fromType(ItemType.LOG));
-        }
-        for (int i = 0; i < totalRocks; i++) {
-            house.tryDeliverItem(ItemFactory.fromType(ItemType.ROCK));
-        }
-
-        // Act
-        final float cost = house.getCost();
-
-        // Assert
-        assertThat(cost).isNotZero();
+        assertThat(tileCost).isZero();
+        assertThat(structure.isCompleted()).isFalse();
     }
 
 }

@@ -34,6 +34,7 @@ public final class StructureFactory {
         return switch (type) {
             case HOUSE -> new House(position);
             case STOCKPILE -> stockpile(position);
+            case TOWN_HALL -> new TownHall(position);
         };
     }
 
