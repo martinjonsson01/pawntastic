@@ -15,6 +15,7 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
 
     private final Collection<IBeing> beings = new ArrayList<>();
     private final Collection<IBeing> deadBeings = new ArrayList<>();
+    private final Collection<IBeing> newBeings = new ArrayList<>();
 
     protected AbstractBeingGroup(final IEventBusSource eventBusSource) {
         eventBusSource.getEventBus().register(this);
@@ -26,21 +27,27 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
      * @param being IBeing to be added.
      */
     protected void addBeing(final IBeing being) {
-        beings.add(being);
+        // Use proxy list to not interrupt current update-loop.
+        newBeings.add(being);
     }
 
     @Override
     public void update(final float deltaTime) {
         beings.removeAll(deadBeings);
+        beings.addAll(newBeings);
         deadBeings.clear();
+        newBeings.clear();
         beings.forEach(being -> being.update(deltaTime));
     }
 
     @Override
     public Collection<IBeing> getBeings() {
-        final Collection<IBeing> clonedBeings = new ArrayList<>(beings.size());
-        clonedBeings.addAll(beings);
-        return clonedBeings;
+        final Collection<IBeing> allBeings = new ArrayList<>(beings.size());
+        allBeings.addAll(beings);
+        // Include new beings since update might not have been run between them being added
+        // and this method being called.
+        allBeings.addAll(newBeings);
+        return allBeings;
     }
 
     /**
@@ -53,4 +60,5 @@ public abstract class AbstractBeingGroup implements IBeingGroup {
         final IBeing deadBeing = event.getDeadBeing();
         deadBeings.add(deadBeing);
     }
+
 }
