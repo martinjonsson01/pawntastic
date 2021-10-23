@@ -7,7 +7,7 @@ import com.thebois.models.beings.roles.AbstractRole;
 /**
  * A being that belongs to and is controlled by a colony.
  */
-public class Pawn extends AbstractBeing {
+public class Pawn extends Being {
 
     /**
      * Instantiates with an initial position and role.
