@@ -15,10 +15,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.abstractions.IPositionFinder;
-import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IStructureFinder;
-import com.thebois.listeners.IEventBusSource;
 import com.thebois.models.Position;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
@@ -41,7 +39,7 @@ public class BeingTests {
 
     private static final float HUNGER_RATE = 1f;
     private AbstractRole role;
-    private AbstractBeing being;
+    private Being being;
 
     public static Stream<Arguments> getPositionsAndDestinations() {
         return Stream.of(Arguments.of(new Position(0, 0), new Position(0, 0)),
@@ -57,9 +55,9 @@ public class BeingTests {
 
     public static Stream<Arguments> getEqualBeings() {
         mockFactoryDependencies();
-        final AbstractBeing beingA = createBeing(0, 0, RoleType.BUILDER);
-        final AbstractBeing beingB = createBeing(0, 0, RoleType.BUILDER);
-        final AbstractBeing beingC = createBeing(0, 0, RoleType.BUILDER);
+        final Being beingA = createBeing(0, 0, RoleType.BUILDER);
+        final Being beingB = createBeing(0, 0, RoleType.BUILDER);
+        final Being beingC = createBeing(0, 0, RoleType.BUILDER);
         return Stream.of(Arguments.of(createBeing(), createBeing()),
                          Arguments.of(createBeing(0, 0, RoleType.MINER),
                                       createBeing(0, 0, RoleType.MINER)),
@@ -79,29 +77,29 @@ public class BeingTests {
         RoleFactory.setStructureFinder(mock(IStructureFinder.class));
     }
 
-    private static AbstractBeing createBeing(
+    private static Being createBeing(
         final float startX, final float startY, final RoleType roleType) {
         final AbstractRole role = RoleFactory.fromType(roleType);
         final AbstractRole hungerRole = new NothingRole();
         return createBeing(new Position(startX, startY), role, hungerRole);
     }
 
-    private static AbstractBeing createBeing() {
+    private static Being createBeing() {
         final AbstractRole role = new NothingRole();
         return createBeing(new Position(), role);
     }
 
-    private static AbstractBeing createBeing(
+    private static Being createBeing(
         final Position currentPosition, final AbstractRole role, final AbstractRole hungerRole) {
         final EventBus mockEventBusSource = mock(EventBus.class);
-        return new Pawn(currentPosition, role, hungerRole, ()->mockEventBusSource);
+        return new Being(currentPosition, role, hungerRole, () -> mockEventBusSource);
     }
 
-    private static AbstractBeing createBeing(
+    private static Being createBeing(
         final Position currentPosition, final AbstractRole role) {
         final AbstractRole hungerRole = new NothingRole();
         final EventBus mockEventBusSource = mock(EventBus.class);
-        return new Pawn(currentPosition, role, hungerRole, ()->mockEventBusSource);
+        return new Being(currentPosition, role, hungerRole, () -> mockEventBusSource);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
@@ -200,8 +198,8 @@ public class BeingTests {
     public void updateMovesFurtherTowardsDestinationWhenDeltaTimeIsGreater() {
         // Arrange
         final Position destination = new Position(10, 0);
-        final AbstractBeing slowerBeing = createBeing();
-        final AbstractBeing fasterBeing = createBeing();
+        final Being slowerBeing = createBeing();
+        final Being fasterBeing = createBeing();
         slowerBeing.setDestination(destination);
         fasterBeing.setDestination(destination);
 
@@ -291,7 +289,7 @@ public class BeingTests {
     @ParameterizedTest
     @MethodSource("getEqualBeings")
     public void equalsReturnsTrueForEqualBeings(
-        final AbstractBeing first, final AbstractBeing second) {
+        final Being first, final Being second) {
         // Assert
         assertThat(first).isEqualTo(second);
     }
@@ -299,7 +297,7 @@ public class BeingTests {
     @ParameterizedTest
     @MethodSource("getNotEqualBeings")
     public void equalsReturnsFalseForNotEqualBeings(
-        final AbstractBeing first, final AbstractBeing second) {
+        final Being first, final Being second) {
         // Assert
         assertThat(first).isNotEqualTo(second);
     }
@@ -309,7 +307,7 @@ public class BeingTests {
         // Arrange
         final EventBus mockEventBusSource = mock(EventBus.class);
         final IPositionFinder positionFinder = mock(IPositionFinder.class);
-        final AbstractBeingGroup colony = new Colony(positionFinder, ()->mockEventBusSource);
+        final AbstractBeingGroup colony = new Colony(positionFinder, () -> mockEventBusSource);
 
         // Act
         final int before = colony.getBeings().size();
@@ -317,7 +315,7 @@ public class BeingTests {
         final int after = colony.getBeings().size();
 
         // Assert
-        assertThat(after).isEqualTo(before+1);
+        assertThat(after).isEqualTo(before + 1);
     }
 
     @Test
