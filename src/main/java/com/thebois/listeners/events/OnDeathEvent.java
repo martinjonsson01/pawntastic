@@ -4,6 +4,8 @@ import com.thebois.models.beings.IBeing;
 
 /**
  * Contains information about a being that has died.
+ *
+ * @author Mathias
  */
 public class OnDeathEvent {
 
