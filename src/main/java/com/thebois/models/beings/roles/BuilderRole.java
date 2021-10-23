@@ -10,7 +10,7 @@ import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionSource;
-import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.IStorable;
 import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
@@ -86,15 +86,15 @@ class BuilderRole extends AbstractRole {
             finder.getNearbyStructureOfType(position, StructureType.STOCKPILE);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
-        final IStoreable storeable;
-        if (structure instanceof IStoreable) {
-            storeable = (IStoreable) structure;
+        final IStorable storable;
+        if (structure instanceof IStorable) {
+            storable = (IStorable) structure;
         }
         else {
             return ActionFactory.createDoNothing();
         }
 
-        return ActionFactory.createGiveItem(storeable, structure.getPosition());
+        return ActionFactory.createGiveItem(storable, structure.getPosition());
     }
 
     private IAction createFillInventory(final IActionPerformer performer) {

@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.thebois.Pawntastic;
 import com.thebois.models.Position;
 import com.thebois.models.beings.pathfinding.IPathFinder;
-import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.IStorable;
 import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
@@ -73,14 +73,14 @@ public final class ActionFactory {
     /**
      * Creates a give item task.
      *
-     * @param storeable To where the items should be given.
-     * @param position  The position of the storable.
+     * @param storable To where the items should be given.
+     * @param position The position of the storable.
      *
      * @return The give item task.
      */
     public static IAction createGiveItem(
-        final IStoreable storeable, final Position position) {
-        return new GiveItemAction(storeable, position);
+        final IStorable storable, final Position position) {
+        return new GiveItemAction(storable, position);
     }
 
     /**

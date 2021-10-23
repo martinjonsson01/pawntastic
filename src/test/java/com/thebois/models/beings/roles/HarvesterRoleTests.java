@@ -13,7 +13,7 @@ import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.pathfinding.IPathFinder;
-import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.IStorable;
 import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.world.ITile;
@@ -256,7 +256,7 @@ public class HarvesterRoleTests {
     }
 
     @Test
-    public void obtainNextActionIdleWhenStructureIsNotAStoreable() {
+    public void obtainNextActionIdleWhenStructureIsNotAStorable() {
         // Arrange
         final AbstractRole role = createRole();
         final IActionPerformer performer = mock(IActionPerformer.class);
@@ -339,7 +339,7 @@ public class HarvesterRoleTests {
         // Set up for expected action
 
         final IAction expected =
-            ActionFactory.createGiveItem((IStoreable) structure, besidesPosition);
+            ActionFactory.createGiveItem((IStorable) structure, besidesPosition);
 
         // Act
         // To set action to be go to stockpile/empty inven rather than go to resource/harvest

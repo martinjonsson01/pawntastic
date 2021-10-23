@@ -9,13 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.inventory.IInventory;
-import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.IStorable;
 import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
-import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -100,7 +99,7 @@ public class StockpileTests {
     public void stockpileDelegatesTryAddToInventory() {
         // Arrange
         final IStructure structure = createStockpile();
-        final IStoreable stockpile = (IStoreable) structure;
+        final IStorable stockpile = (IStorable) structure;
 
         // Act
         stockpile.tryAdd(any());
@@ -113,7 +112,7 @@ public class StockpileTests {
     public void stockpileDelegatesAddMultipleToInventory() {
         // Arrange
         final IStructure structure = createStockpile();
-        final IStoreable stockpile = (IStoreable) structure;
+        final IStorable stockpile = (IStorable) structure;
 
         // Act
         stockpile.addMultiple(any());
@@ -126,7 +125,7 @@ public class StockpileTests {
     public void stockpileDelegatesCanFitItemToInventory() {
         // Arrange
         final IStructure structure = createStockpile();
-        final IStoreable stockpile = (IStoreable) structure;
+        final IStorable stockpile = (IStorable) structure;
 
         // Act
         stockpile.canFitItem(any());
@@ -139,7 +138,7 @@ public class StockpileTests {
     public void stockpileDelegatesIsFullToInventory() {
         // Arrange
         final IStructure structure = createStockpile();
-        final IStoreable stockpile = (IStoreable) structure;
+        final IStorable stockpile = (IStorable) structure;
 
         // Act
         stockpile.isFull();

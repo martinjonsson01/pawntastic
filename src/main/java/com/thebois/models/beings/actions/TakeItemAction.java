@@ -43,9 +43,9 @@ public class TakeItemAction extends AbstractTimeAction implements Serializable {
     public boolean canPerform(final IActionPerformer performer) {
         final boolean isCloseEnough =
             performer.getPosition().distanceTo(takeablePosition) < MINIMUM_TAKE_DISTANCE;
-        final boolean takableHasItem = takeable.hasItem(itemType);
+        final boolean takeableHasItem = takeable.hasItem(itemType);
         final boolean inventoryHasSpace = performer.canFitItem(itemType);
-        return isCloseEnough && takableHasItem && inventoryHasSpace;
+        return isCloseEnough && takeableHasItem && inventoryHasSpace;
     }
 
     @Override

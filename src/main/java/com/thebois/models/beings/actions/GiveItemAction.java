@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
-import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.IStorable;
 
 /**
  * Action give item from performer to receiver.
@@ -14,25 +14,25 @@ public class GiveItemAction extends AbstractTimeAction implements Serializable {
 
     private static final float TIME_REQUIRED_TO_GIVE_ITEM = 1f;
     private static final float MINIMUM_GIVE_DISTANCE = 2f;
-    private final IStoreable storeable;
+    private final IStorable storable;
     private final Position storablePosition;
 
     /**
      * Instantiate with a receiver to give item to.
      *
-     * @param storeable        Where the items should be stored.
+     * @param storable         Where the items should be stored.
      * @param storablePosition Where the storable is in the world.
      */
     public GiveItemAction(
-        final IStoreable storeable, final Position storablePosition) {
+        final IStorable storable, final Position storablePosition) {
         super(TIME_REQUIRED_TO_GIVE_ITEM);
-        this.storeable = storeable;
+        this.storable = storable;
         this.storablePosition = storablePosition;
     }
 
     @Override
     protected void onPerformCompleted(final IActionPerformer performer) {
-        storeable.tryAdd(performer.takeNextItem());
+        storable.tryAdd(performer.takeNextItem());
     }
 
     @Override
@@ -49,14 +49,16 @@ public class GiveItemAction extends AbstractTimeAction implements Serializable {
         if (this == other) return true;
         if (other == null || getClass() != other.getClass()) return false;
         final GiveItemAction that = (GiveItemAction) other;
-        return Objects.equals(storeable, that.storeable)
-               && Objects.equals(storablePosition, that.storablePosition)
+        return Objects.equals(storable, that.storable)
+               && Objects.equals(
+            storablePosition,
+            that.storablePosition)
                && getTimeSpentPerforming() == that.getTimeSpentPerforming();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(storeable, storablePosition);
+        return Objects.hash(storable, storablePosition);
     }
 
 }

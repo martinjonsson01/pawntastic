@@ -8,7 +8,7 @@ import com.thebois.models.inventory.items.ItemType;
 /**
  * Methods for storing items.
  */
-public interface IStoreable {
+public interface IStorable {
 
     /**
      * Checks whether the inventory is filled to its capacity.

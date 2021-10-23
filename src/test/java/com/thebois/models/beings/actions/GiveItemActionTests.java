@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
-import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.IStorable;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
@@ -20,11 +20,11 @@ public class GiveItemActionTests {
 
     private IActionPerformer performer;
     private IAction action;
-    private IStoreable storeable;
+    private IStorable storable;
     private final Position position = new Position(0, 0);
 
     public static Stream<Arguments> getEqualGiveItems() {
-        final IStoreable sameStorable = mock(IStoreable.class);
+        final IStorable sameStorable = mock(IStorable.class);
         final Position samePosition = new Position(0, 0);
         final IAction sameInstance = ActionFactory.createGiveItem(sameStorable, samePosition);
         return Stream.of(Arguments.of(sameInstance, sameInstance),
@@ -33,7 +33,7 @@ public class GiveItemActionTests {
     }
 
     public static Stream<Arguments> getNotEqualGiveItems() {
-        final IStoreable sameStorable = mock(IStoreable.class);
+        final IStorable sameStorable = mock(IStorable.class);
         final Position samePosition = new Position(0, 0);
 
         final IAction sameGiveItemNotStarted =
@@ -42,7 +42,7 @@ public class GiveItemActionTests {
             ActionFactory.createGiveItem(sameStorable, samePosition);
         sameGiveItemStarted.perform(mock(IActionPerformer.class), 0.1f);
         return Stream.of(Arguments.of(
-                             ActionFactory.createGiveItem(mock(IStoreable.class), samePosition),
+                             ActionFactory.createGiveItem(mock(IStorable.class), samePosition),
                              sameGiveItemNotStarted),
                          Arguments.of(ActionFactory.createGiveItem(sameStorable,
                                                                    samePosition.subtract(1, 1)),
@@ -54,20 +54,20 @@ public class GiveItemActionTests {
 
     @BeforeEach
     public void setup() {
-        storeable = mock(IStoreable.class);
+        storable = mock(IStorable.class);
         performer = mock(IActionPerformer.class);
-        action = ActionFactory.createGiveItem(storeable, position);
+        action = ActionFactory.createGiveItem(storable, position);
     }
 
     @Test
-    public void onPerformRemovesItemFromPerformerAndAddsItemToStoreable() {
+    public void onPerformRemovesItemFromPerformerAndAddsItemToStorable() {
         // Arrange
 
         // Act
         action.perform(performer, 2f);
 
         // Assert
-        verify(storeable, times(1)).tryAdd(any());
+        verify(storable, times(1)).tryAdd(any());
         verify(performer, times(1)).takeNextItem();
     }
 
@@ -127,8 +127,8 @@ public class GiveItemActionTests {
     @Test
     public void hashCodeIsSameForEqualActions() {
         // Arrange
-        final IAction first = ActionFactory.createGiveItem(storeable, position);
-        final IAction second = ActionFactory.createGiveItem(storeable, position);
+        final IAction first = ActionFactory.createGiveItem(storable, position);
+        final IAction second = ActionFactory.createGiveItem(storable, position);
 
         // Assert
         Assertions.assertThat(first.hashCode()).isEqualTo(second.hashCode());

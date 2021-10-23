@@ -15,7 +15,7 @@ import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.inventory.IInventory;
-import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.IStorable;
 import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.ITile;
@@ -190,13 +190,13 @@ public class BuilderRoleTests {
         final Position besidesPerformer = performer.getPosition().subtract(1, 0);
         final IStructure structure =
             StructureFactory.createStructure(StructureType.STOCKPILE, besidesPerformer);
-        final IStoreable storeable = (IStoreable) structure;
+        final IStorable storable = (IStorable) structure;
         when(performer.isEmpty()).thenReturn(false);
 
         setStructureFinderNearByStructureResult(Optional.of(structure), Optional.of(structure));
         setIWorldFinderResult(Optional.of(performer.getPosition()));
 
-        final IAction expected = ActionFactory.createGiveItem(storeable, structure.getPosition());
+        final IAction expected = ActionFactory.createGiveItem(storable, structure.getPosition());
 
         // Act
         final IAction actual = role.obtainNextAction(performer);

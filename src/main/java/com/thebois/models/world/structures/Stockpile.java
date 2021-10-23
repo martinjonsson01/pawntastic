@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.thebois.models.Position;
 import com.thebois.models.inventory.IInventory;
-import com.thebois.models.inventory.IStoreable;
+import com.thebois.models.inventory.IStorable;
 import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
@@ -15,7 +15,7 @@ import com.thebois.models.inventory.items.ItemType;
 /**
  * A structure used for storing items.
  */
-class Stockpile extends AbstractStructure implements ITakeable, IStoreable {
+class Stockpile extends AbstractStructure implements ITakeable, IStorable {
 
     private final IInventory inventory;
 
