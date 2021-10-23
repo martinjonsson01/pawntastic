@@ -27,10 +27,15 @@ class BuilderRole extends AbstractRole {
      * Depending on what state the role is in, the performer gets different actions. Either go to
      * stockpile and fill/empty inventory or go to incomplete building and give it items.
      */
-    private int buildingState = 0;
+    private BuilderState builderState = BuilderState.FETCHING_RESOURCES;
+
     /**
      * Whether the performer's inventory should be filled or emptied.
      */
+    private enum BuilderState {
+        FETCHING_RESOURCES, BUILDING_STRUCTURES
+    }
+
     private boolean isFilling = false;
     private final IStructureFinder structureFinder;
     private final IWorld world;
@@ -54,13 +59,15 @@ class BuilderRole extends AbstractRole {
 
     @Override
     protected Collection<IActionSource> getTaskGenerators() {
-        buildingState %= NUMBER_OF_BUILDING_STATES;
-        if (buildingState == 0) {
+
+        if (builderState == BuilderState.FETCHING_RESOURCES) {
             return List.of(this::createMoveToStockpile,
                            this::createEmptyInventory,
                            this::createFillInventory);
         }
-        return List.of(this::createMoveToIncompleteStructure, this::createBuildStructure);
+        else {
+            return List.of(this::createMoveToIncompleteStructure, this::createBuildStructure);
+        }
     }
 
     private IAction createMoveToStockpile(final IActionPerformer performer) {
@@ -98,8 +105,7 @@ class BuilderRole extends AbstractRole {
         final ItemType nextNeededItem = getNextNeededItem(performer, structure);
         // Can performer fit item
         if (nextNeededItem == null || !performer.canFitItem(nextNeededItem)) {
-            buildingState++;
-            isFilling = false;
+            setBuildingState();
             return ActionFactory.createDoNext();
         }
 
@@ -113,8 +119,7 @@ class BuilderRole extends AbstractRole {
         if (stockpile instanceof ITakeable) {
             final ITakeable takeable = (ITakeable) stockpile;
             if (!takeable.hasItem(nextNeededItem)) {
-                buildingState++;
-                isFilling = false;
+                setBuildingState();
                 return ActionFactory.createDoNext();
             }
             return ActionFactory.createTakeItem(takeable, nextNeededItem, stockpile.getPosition());
@@ -122,6 +127,11 @@ class BuilderRole extends AbstractRole {
         else {
             return ActionFactory.createDoNothing();
         }
+    }
+
+    private void setBuildingState() {
+        builderState = BuilderState.BUILDING_STRUCTURES;
+        isFilling = false;
     }
 
     private ItemType getNextNeededItem(
@@ -165,7 +175,7 @@ class BuilderRole extends AbstractRole {
         }
 
         if (!performerHasNeededItem) {
-            buildingState++;
+            builderState = BuilderState.FETCHING_RESOURCES;
             return ActionFactory.createDoNext();
         }
 
