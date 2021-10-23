@@ -119,8 +119,8 @@ public final class ActionFactory {
      * @param structureFinder A finder that locates structures.
      * @param world           A finder that locates tiles in the world.
      *
-     * @return Either a move to stockpile action or nothing action if stockpile could not be
-     *     reached.
+     * @return Either a move to stockpile action or nothing action if stockpile could not be reached
+     *     or found.
      */
     public static IAction createMoveToStockpile(
         final IActionPerformer performer,
@@ -140,6 +140,64 @@ public final class ActionFactory {
             return ActionFactory.createDoNothing();
         }
         return ActionFactory.createMoveTo(closestSpotNextToStructure.get());
+    }
+
+    /**
+     * Creates an action for emptying the performers inventory to a stockpile if possible.
+     *
+     * @param performer       The performer that needs to empty its inventory.
+     * @param structureFinder Finder used to locate a stockpile.
+     *
+     * @return Either give item action or a nothing action if stockpile could not be reached or
+     *     found.
+     */
+    public static IAction createEmptyInventory(
+        final IActionPerformer performer, final IStructureFinder structureFinder) {
+        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(
+            performer.getPosition(),
+            StructureType.STOCKPILE);
+        if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
+        final IStructure structure = maybeStructure.get();
+
+        if (structure instanceof IStorable) {
+            final IStorable storable = (IStorable) structure;
+            return ActionFactory.createGiveItem(storable,
+                                                performer.takeFirstItem().getType(),
+                                                structure.getPosition());
+        }
+        else {
+            return ActionFactory.createDoNothing();
+        }
+    }
+
+    /**
+     * Creates an action for emptying the performers inventory of a certain type of item to a
+     * stockpile if possible.
+     *
+     * @param performer       The performer that needs to empty its inventory.
+     * @param structureFinder Finder used to locate a stockpile.
+     * @param itemType        The type of item to remove.
+     *
+     * @return Either give item action or a nothing action if stockpile could not be reached or
+     *     found.
+     */
+    public static IAction createEmptyInventoryOfItemType(
+        final IActionPerformer performer,
+        final IStructureFinder structureFinder,
+        final ItemType itemType) {
+        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(
+            performer.getPosition(),
+            StructureType.STOCKPILE);
+        if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
+        final IStructure structure = maybeStructure.get();
+        final IStorable storable;
+        if (structure instanceof IStorable) {
+            storable = (IStorable) structure;
+            return ActionFactory.createGiveItem(storable, itemType, structure.getPosition());
+        }
+        else {
+            return ActionFactory.createDoNothing();
+        }
     }
 
 }

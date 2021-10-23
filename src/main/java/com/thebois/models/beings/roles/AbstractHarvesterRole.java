@@ -11,12 +11,9 @@ import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
 import com.thebois.models.beings.actions.IAction;
 import com.thebois.models.beings.actions.IActionSource;
-import com.thebois.models.inventory.IStorable;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceType;
-import com.thebois.models.world.structures.IStructure;
-import com.thebois.models.world.structures.StructureType;
 
 /**
  * Represents a role that mainly harvests items from resources.
@@ -96,21 +93,10 @@ abstract class AbstractHarvesterRole extends AbstractRole {
             isEmptying = false;
             return ActionFactory.createDoNext();
         }
-        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(
-            performer.getPosition(),
-            StructureType.STOCKPILE);
-        if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
-        final IStructure structure = maybeStructure.get();
-        final IStorable storable;
-        if (structure instanceof IStorable) {
-            storable = (IStorable) structure;
-            return ActionFactory.createGiveItem(storable,
-                                                resourceType.getItemType(),
-                                                structure.getPosition());
-        }
-        else {
-            return ActionFactory.createDoNothing();
-        }
+        return ActionFactory.createEmptyInventoryOfItemType(
+            performer,
+            structureFinder,
+            resourceType.getItemType());
     }
 
     private Optional<IResource> findNearbyResource(final IActionPerformer performer) {
