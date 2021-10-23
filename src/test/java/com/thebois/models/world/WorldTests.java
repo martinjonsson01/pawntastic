@@ -15,10 +15,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 
 import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IPositionFinder;
+import com.thebois.abstractions.IStructureFinder;
+import com.thebois.listeners.IEventBusSource;
 import com.thebois.models.Position;
 import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.roles.RoleFactory;
@@ -30,6 +33,7 @@ import com.thebois.models.world.resources.ResourceType;
 import com.thebois.models.world.structures.IStructure;
 import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.ITerrain;
+import com.thebois.testutils.MockFactory;
 import com.thebois.models.world.terrains.TerrainFactory;
 import com.thebois.models.world.terrains.TerrainType;
 
@@ -163,11 +167,12 @@ public class WorldTests {
           * * * * * * *
          */
         final World world = createTestWorld(7);
-        world.createStructure(StructureType.HOUSE, 2, 4);
-        world.createStructure(StructureType.HOUSE, 4, 4);
-        world.createStructure(StructureType.HOUSE, 2, 2);
-        world.createStructure(StructureType.HOUSE, 3, 2);
-        world.createStructure(StructureType.HOUSE, 4, 2);
+        world.tryCreateStructure(StructureType.HOUSE, 2, 4);
+        world.tryCreateStructure(StructureType.HOUSE, 4, 4);
+        world.tryCreateStructure(StructureType.HOUSE, 2, 2);
+        world.tryCreateStructure(StructureType.HOUSE, 3, 2);
+        world.tryCreateStructure(StructureType.HOUSE, 4, 2);
+        MockFactory.completeAllStructures(world);
         final ITile tile = mockTile(3, 3);
 
         // Act
@@ -189,10 +194,11 @@ public class WorldTests {
     public void getClosestNeighbourOfReturnsEmptyWhenAllNeighboursOccupied() {
         // Arrange
         final World world = createTestWorld(3);
-        world.createStructure(StructureType.HOUSE, 1, 0);
-        world.createStructure(StructureType.HOUSE, 0, 1);
-        world.createStructure(StructureType.HOUSE, 2, 1);
-        world.createStructure(StructureType.HOUSE, 1, 2);
+        world.tryCreateStructure(StructureType.HOUSE, 1, 0);
+        world.tryCreateStructure(StructureType.HOUSE, 0, 1);
+        world.tryCreateStructure(StructureType.HOUSE, 2, 1);
+        world.tryCreateStructure(StructureType.HOUSE, 1, 2);
+        MockFactory.completeAllStructures(world);
         final ITile tile = mockTile(1, 1);
         final Position from = new Position(0, 0);
 
@@ -283,8 +289,8 @@ public class WorldTests {
         final Position expectedSpot = new Position(randomCoordinate, randomCoordinate);
 
         // Act
-        final Position vacantSpot = world.getRandomVacantSpotInRadiusOf(new Position(), 10)
-                                         .getPosition();
+        final Position vacantSpot =
+            world.getRandomVacantSpotInRadiusOf(new Position(), 10).getPosition();
 
         // Assert
         assertThat(vacantSpot).isEqualTo(expectedSpot);
@@ -304,12 +310,13 @@ public class WorldTests {
                                                                 (int) thirdEmptyRandomSpot.getX(),
                                                                 (int) thirdEmptyRandomSpot.getY());
         final World world = createTestWorld(3, mockRandom);
-        world.createStructure(StructureType.HOUSE, firstBlockedRandomSpot);
-        world.createStructure(StructureType.HOUSE, secondBlockedRandomSpot);
+        world.tryCreateStructure(StructureType.HOUSE, firstBlockedRandomSpot);
+        world.tryCreateStructure(StructureType.HOUSE, secondBlockedRandomSpot);
+        MockFactory.completeAllStructures(world);
 
         // Act
-        final Position vacantSpot = world.getRandomVacantSpotInRadiusOf(new Position(), 10)
-                                         .getPosition();
+        final Position vacantSpot =
+            world.getRandomVacantSpotInRadiusOf(new Position(), 10).getPosition();
 
         // Assert
         assertThat(vacantSpot).isEqualTo(thirdEmptyRandomSpot);
@@ -398,7 +405,7 @@ public class WorldTests {
         final Position position = new Position(1, 1);
 
         // Act
-        final boolean isBuilt = world.createStructure(StructureType.HOUSE, position);
+        final boolean isBuilt = world.tryCreateStructure(StructureType.HOUSE, position);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
@@ -413,7 +420,7 @@ public class WorldTests {
         final World world = createWorld(2);
 
         // Act
-        final boolean isBuilt = world.createStructure(StructureType.HOUSE, placementPosition);
+        final boolean isBuilt = world.tryCreateStructure(StructureType.HOUSE, placementPosition);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
@@ -429,29 +436,12 @@ public class WorldTests {
         final Position position2 = new Position(-1, -1);
 
         // Act
-        world.createStructure(StructureType.HOUSE, position1);
-        world.createStructure(StructureType.HOUSE, position2);
+        world.tryCreateStructure(StructureType.HOUSE, position1);
+        world.tryCreateStructure(StructureType.HOUSE, position2);
         final Collection<IStructure> structures = world.getStructures();
 
         // Assert
         assertThat(structures.size()).isEqualTo(0);
-    }
-
-    @Test
-    public void instantiateWithPawnCountCreatesCorrectNumberOfBeings() {
-        // Arrange
-        final Colony colony = mockColonyWithMockBeings();
-
-        // Assert
-        assertThat(colony.getBeings()).size().isEqualTo(5);
-    }
-
-    private Colony mockColonyWithMockBeings() {
-        final List<Position> vacantPositions = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            vacantPositions.add(new Position(0, 0));
-        }
-        return new Colony(vacantPositions, Pawntastic::getEventBus);
     }
 
     @Test
@@ -515,7 +505,7 @@ public class WorldTests {
     private void fillWorldWithStructures(final int worldSize, final World world) {
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
-                world.createStructure(StructureType.HOUSE, x, y);
+                world.tryCreateStructure(StructureType.HOUSE, x, y);
             }
         }
     }
@@ -529,12 +519,13 @@ public class WorldTests {
 
         // Arrange
         final World world = createTestWorld(50);
-        world.createStructure(StructureType.HOUSE, expectedPosition);
-        world.createStructure(StructureType.HOUSE, incorrectPosition);
+        world.tryCreateStructure(StructureType.TOWN_HALL, new Position());
+        world.tryCreateStructure(StructureType.HOUSE, expectedPosition);
+        world.tryCreateStructure(StructureType.HOUSE, incorrectPosition);
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyStructureOfType(startingPosition,
-                                                                                   StructureType.HOUSE);
+        final Optional<IStructure> foundStructure =
+            world.getNearbyStructureOfType(startingPosition, StructureType.HOUSE);
 
         // Assert
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
@@ -546,9 +537,8 @@ public class WorldTests {
         final World world = createWorld(50);
 
         // Act
-        final Optional<IStructure> structure = world.getNearbyStructureOfType(new Position(20f,
-                                                                                           20f),
-                                                                              StructureType.HOUSE);
+        final Optional<IStructure> structure =
+            world.getNearbyStructureOfType(new Position(20f, 20f), StructureType.HOUSE);
 
         // Assert
         assertThat(structure.isPresent()).isFalse();
@@ -563,7 +553,7 @@ public class WorldTests {
 
         // Act
         for (final Position position : positions) {
-            world.createStructure(StructureType.HOUSE, position);
+            world.tryCreateStructure(StructureType.HOUSE, position);
         }
 
         // Assert
@@ -574,8 +564,8 @@ public class WorldTests {
     public void findNearestIncompleteStructureReturnsCorrect() {
         // Arrange
         final World world = createTestWorld(50);
-        world.createStructure(StructureType.HOUSE, new Position(4, 2));
-        world.createStructure(StructureType.HOUSE, new Position(9, 5));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(4, 2));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(9, 5));
 
         for (final IStructure structure : world.getStructures()) {
             for (int i = 0; i < 10; i++) {
@@ -586,12 +576,12 @@ public class WorldTests {
             }
         }
 
-        world.createStructure(StructureType.HOUSE, new Position(1, 3));
-        world.createStructure(StructureType.HOUSE, new Position(7, 9));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(1, 3));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(7, 9));
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(0,
-                                                                                                    0));
+        final Optional<IStructure> foundStructure =
+            world.getNearbyIncompleteStructure(new Position(0, 0));
 
         // Assert
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(new Position(1, 3));
@@ -601,8 +591,8 @@ public class WorldTests {
     public void findNearestIncompleteStructureFindsNoIncompleteStructure() {
         // Arrange
         final World world = createTestWorld(50);
-        world.createStructure(StructureType.HOUSE, new Position(4, 2));
-        world.createStructure(StructureType.HOUSE, new Position(9, 5));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(4, 2));
+        world.tryCreateStructure(StructureType.HOUSE, new Position(9, 5));
 
         for (final IStructure structure : world.getStructures()) {
             for (int i = 0; i < 10; i++) {
@@ -614,8 +604,8 @@ public class WorldTests {
         }
 
         // Act
-        final Optional<IStructure> foundStructure = world.getNearbyIncompleteStructure(new Position(0,
-                                                                                                    0));
+        final Optional<IStructure> foundStructure =
+            world.getNearbyIncompleteStructure(new Position(0, 0));
 
         // Assert
         assertThat(foundStructure.isEmpty()).isTrue();
@@ -657,4 +647,88 @@ public class WorldTests {
 
     }
 
+    @Test
+    public void tryCreateStructureOfTypeTownHallCreatesAStructureIfTownHallIsAlreadyPresent() {
+        // Arrange
+        final World world = createTestWorld(50);
+        world.tryCreateStructure(StructureType.TOWN_HALL, new Position(10, 10));
+        final Position createTownHallPosition = new Position(12, 12);
+
+        // Act
+        final boolean creationResult = world.tryCreateStructure(StructureType.TOWN_HALL, createTownHallPosition);
+
+        // Assert
+        assertThat(creationResult).isFalse();
+    }
+
+    @Test
+    public void tryGetEmptyPositionsNextToReturnsNoPositionsOutsideOfGivenRadius() {
+        // Arrange
+        final World world = createWorld(50);
+        world.tryCreateStructure(StructureType.TOWN_HALL, new Position(10, 10));
+        final Position origin = new Position(12, 12);
+        final int count = 5;
+        final float radius = 5;
+
+        // Act
+        final Collection<Position> returnedPositions = world.tryGetEmptyPositionsNextTo(
+            origin,
+            count,
+            radius);
+
+        // Assert
+        assertThat(returnedPositions
+                       .stream()
+                       .noneMatch(position -> position.distanceTo(origin) > radius)).isTrue();
+    }
+
+    @Test
+    public void tryGetEmptyPositionsNextToReturnsNoMoreThanGivenMaxCount() {
+        // Arrange
+        final World world = createWorld(50);
+        world.tryCreateStructure(StructureType.TOWN_HALL, new Position(10, 10));
+        final Position origin = new Position(15, 15);
+        final int count = 24;
+        final float radius = 4;
+
+        // Act
+        final Collection<Position> returnedPositions = world.tryGetEmptyPositionsNextTo(
+            origin,
+            count,
+            radius);
+
+        // Assert
+        assertThat(returnedPositions.size()).isEqualTo(count);
+    }
+
+    public static Stream<Arguments> getPositionsToStartSearchFrom() {
+        return Stream.of(Arguments.of(new Position(0, 0), 10),
+                         Arguments.of(new Position(0, 49), 30),
+                         Arguments.of(new Position(49, 49), 20),
+                         Arguments.of(new Position(49, 0), 30),
+                         Arguments.of(new Position(20, 20), 10),
+                         Arguments.of(new Position(40, 0), 200));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPositionsToStartSearchFrom")
+    public void tryGetEmptyPositionsNextDoesNotReturnPositionsOutsideOfTheWorld(final Position origin, final float radius) {
+        // Arrange
+        final World world = createWorld(50);
+        world.tryCreateStructure(StructureType.TOWN_HALL, new Position(10, 10));
+        final int count = 50;
+
+        // Act
+        final Collection<Position> returnedPositions = world.tryGetEmptyPositionsNextTo(
+            origin,
+            count,
+            radius);
+
+        // Assert
+        assertThat(returnedPositions
+                       .stream()
+                       .noneMatch(position ->
+                                      (position.getX() > 50 || position.getX() < 0)
+                                      || (position.getY() > 50 || position.getY() < 0))).isTrue();
+    }
 }

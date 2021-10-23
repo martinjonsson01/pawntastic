@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 import com.thebois.abstractions.IResourceFinder;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.world.IWorld;
 
 /**

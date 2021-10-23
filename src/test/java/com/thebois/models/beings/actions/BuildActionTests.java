@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 public class BuildActionTests {
 
-    private static final float ITEM_TRANSFER_TIME = 2f;
+    private static final float ITEM_TRANSFER_TIME = 1f;
     private IActionPerformer performer;
     private IStructure structure;
     private IAction action;
@@ -103,7 +103,7 @@ public class BuildActionTests {
         // Assert
         verify(structure, times(0)).tryDeliverItem(any());
     }
-    
+
     @Test
     public void isCompletedReturnsFalseWhenPerformedForLessThanItemTransferTime() {
         // Arrange

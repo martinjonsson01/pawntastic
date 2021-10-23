@@ -3,6 +3,8 @@ package com.thebois.models.world.structures;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.models.Position;
+import com.thebois.models.inventory.items.ItemFactory;
+import com.thebois.models.inventory.items.ItemType;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -14,7 +16,7 @@ public class StructureTests {
         final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE, 0, 0);
 
         // Act
-        final boolean isEqual = structure.equals(null);
+        @SuppressWarnings("ConstantConditions") final boolean isEqual = structure.equals(null);
 
         // Assert
         assertThat(isEqual).isFalse();
@@ -39,9 +41,10 @@ public class StructureTests {
         final IStructure structure = StructureFactory.createStructure(StructureType.HOUSE, 0, 0);
 
         // Act
-        final boolean isEqual = structure.equals(structure);
+        @SuppressWarnings("EqualsWithItself") final boolean isEqual = structure.equals(structure);
 
         // Assert
+        //noinspection ConstantConditions
         assertThat(isEqual).isTrue();
     }
 
@@ -49,10 +52,10 @@ public class StructureTests {
     public void structureEqualIsFalseIfSamePositionAndType() {
         // Arrange
         final Position position = new Position(1, 1);
-        final IStructure structure1 = StructureFactory.createStructure(StructureType.HOUSE,
-                                                                       position);
-        final IStructure structure2 = StructureFactory.createStructure(StructureType.HOUSE,
-                                                                       position);
+        final IStructure structure1 =
+            StructureFactory.createStructure(StructureType.HOUSE, position);
+        final IStructure structure2 =
+            StructureFactory.createStructure(StructureType.HOUSE, position);
 
         // Act
         final boolean isEqual = structure1.equals(structure2);
@@ -66,10 +69,10 @@ public class StructureTests {
         // Arrange
         final Position position1 = new Position(1, 1);
         final Position position2 = new Position(2, 2);
-        final IStructure structure1 = StructureFactory.createStructure(StructureType.HOUSE,
-                                                                       position1);
-        final IStructure structure2 = StructureFactory.createStructure(StructureType.HOUSE,
-                                                                       position2);
+        final IStructure structure1 =
+            StructureFactory.createStructure(StructureType.HOUSE, position1);
+        final IStructure structure2 =
+            StructureFactory.createStructure(StructureType.HOUSE, position2);
 
         // Act
         final boolean isEqual = structure1.equals(structure2);
@@ -82,10 +85,10 @@ public class StructureTests {
     public void structureHashCodeIsDifferentForIdenticalStructures() {
         // Arrange
         final Position position = new Position(1, 1);
-        final IStructure structure1 = StructureFactory.createStructure(StructureType.HOUSE,
-                                                                       position);
-        final IStructure structure2 = StructureFactory.createStructure(StructureType.HOUSE,
-                                                                       position);
+        final IStructure structure1 =
+            StructureFactory.createStructure(StructureType.HOUSE, position);
+        final IStructure structure2 =
+            StructureFactory.createStructure(StructureType.HOUSE, position);
 
         // Act
         final boolean isEqual = structure1.hashCode() == structure2.hashCode();
@@ -99,10 +102,10 @@ public class StructureTests {
         // Arrange
         final Position position1 = new Position(1, 1);
         final Position position2 = new Position(2, 2);
-        final IStructure structure1 = StructureFactory.createStructure(StructureType.HOUSE,
-                                                                       position1);
-        final IStructure structure2 = StructureFactory.createStructure(StructureType.HOUSE,
-                                                                       position2);
+        final IStructure structure1 =
+            StructureFactory.createStructure(StructureType.HOUSE, position1);
+        final IStructure structure2 =
+            StructureFactory.createStructure(StructureType.HOUSE, position2);
 
         // Act
         final boolean isEqual = structure1.hashCode() == structure2.hashCode();
@@ -112,19 +115,18 @@ public class StructureTests {
     }
 
     @Test
-    public void deepCloneReturnsExpectedClone() {
+    public void structureReturnsBlueprintCostWhenNotCompleted() {
         // Arrange
-        final Position expectedPosition = new Position(20f, 15f);
-
-        final IStructure house = StructureFactory.createStructure(StructureType.HOUSE,
-                                                                  expectedPosition);
+        final Position position = new Position(1, 1);
+        final IStructure structure =
+            StructureFactory.createStructure(StructureType.HOUSE, position);
 
         // Act
-        final IStructure houseDeepClone = house.deepClone();
+        final float tileCost = structure.getCost();
 
         // Assert
-        assertThat(houseDeepClone.getPosition()).isEqualTo(houseDeepClone.getPosition());
-        assertThat(houseDeepClone.getType()).isEqualTo(houseDeepClone.getType());
+        assertThat(tileCost).isZero();
+        assertThat(structure.isCompleted()).isFalse();
     }
 
 }

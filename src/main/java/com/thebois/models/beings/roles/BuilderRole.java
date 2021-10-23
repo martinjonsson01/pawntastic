@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;

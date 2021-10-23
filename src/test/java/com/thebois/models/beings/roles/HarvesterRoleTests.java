@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.thebois.abstractions.IResourceFinder;
-import com.thebois.models.IStructureFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;

@@ -1,5 +1,9 @@
 package com.thebois.models.world.structures;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,7 +12,10 @@ import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.IStoreable;
 import com.thebois.models.inventory.ITakeable;
 import com.thebois.models.inventory.Inventory;
+import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
+import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -28,29 +35,21 @@ public class StockpileTests {
     }
 
     @Test
-    public void getCostIsHigh() {
+    public void getCostReturnsNonZeroWhenBuilt() {
         // Arrange
-        final Stockpile stockpile =
-            (Stockpile) StructureFactory.createStructure(StructureType.STOCKPILE, 0, 0);
+        final IStructure stockpile =
+            StructureFactory.createStructure(StructureType.STOCKPILE, 0, 0);
+
+        final Collection<ItemType> neededItemTypes = stockpile.getNeededItems();
+        final List<IItem> neededItems =
+            neededItemTypes.stream().map(ItemFactory::fromType).collect(Collectors.toList());
+        neededItems.forEach(stockpile::tryDeliverItem);
 
         // Act
         final float cost = stockpile.getCost();
 
         // Assert
-        assertThat(cost).isEqualTo(Float.MAX_VALUE);
-    }
-
-    @Test
-    public void deepCloneReturnsCopyOfStockpile() {
-        // Arrange
-        final Stockpile stockpile =
-            (Stockpile) StructureFactory.createStructure(StructureType.STOCKPILE, 0, 0);
-
-        // Act
-        final Stockpile copy = (Stockpile) stockpile.deepClone();
-
-        // Assert
-        assertThat(copy).isNotEqualTo(stockpile);
+        assertThat(cost).isNotZero();
     }
 
     @Test
