@@ -26,6 +26,7 @@ public class HarvestActionTests {
     private IAction action;
     private IItem resourceItem;
     private final ItemType itemType = ItemType.ROCK;
+    private Position resourcePosition;
 
     public static Stream<Arguments> getEqualHarvests() {
         final IResource sameResource = mock(IResource.class);
@@ -52,7 +53,9 @@ public class HarvestActionTests {
     public void setup() {
         performer = mock(IActionPerformer.class);
         resourceItem = mock(IItem.class);
-        resource = MockFactory.createResource(new Position(1, 0), resourceItem, 10f);
+        when(resourceItem.getType()).thenReturn(itemType);
+        resourcePosition = new Position(1, 0);
+        resource = MockFactory.createResource(resourcePosition, resourceItem, 10f);
         action = ActionFactory.createHarvest(resource);
     }
 
@@ -60,6 +63,19 @@ public class HarvestActionTests {
     public void canPerformReturnsFalseWhenFarAwayFromResource() {
         // Arrange
         when(performer.getPosition()).thenReturn(new Position(10, 10));
+        when(performer.canFitItem(any())).thenReturn(true);
+        // Act
+        final boolean canPerform = action.canPerform(performer);
+
+        // Assert
+        assertThat(canPerform).isFalse();
+    }
+
+    @Test
+    public void canPerformReturnsFalseWhenPerformerHasNoInventorySpacesLeft() {
+        // Arrange
+        when(performer.getPosition()).thenReturn(resourcePosition);
+        when(performer.canFitItem(any())).thenReturn(false);
 
         // Act
         final boolean canPerform = action.canPerform(performer);
@@ -69,10 +85,11 @@ public class HarvestActionTests {
     }
 
     @Test
-    public void canPerformReturnsTrueWhenNextToResource() {
+    public void canPerformReturnsTrueWhenNextToResourceAndHasInventorySpace() {
         // Arrange
         final Position besidesResource = resource.getPosition().subtract(1, 0);
         when(performer.getPosition()).thenReturn(besidesResource);
+        when(performer.canFitItem(any())).thenReturn(true);
 
         // Act
         final boolean canPerform = action.canPerform(performer);

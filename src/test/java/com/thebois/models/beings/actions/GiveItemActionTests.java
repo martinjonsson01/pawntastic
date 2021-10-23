@@ -21,7 +21,7 @@ public class GiveItemActionTests {
     private IActionPerformer performer;
     private IAction action;
     private IStoreable storeable;
-    private Position position = new Position(0, 0);
+    private final Position position = new Position(0, 0);
 
     public static Stream<Arguments> getEqualGiveItems() {
         final IStoreable sameStorable = mock(IStoreable.class);
@@ -60,34 +60,22 @@ public class GiveItemActionTests {
     }
 
     @Test
-    public void StorableGetsItemIfPerformerHaveItem() {
+    public void onPerformRemovesItemFromPerformerAndAddsItemToStoreable() {
         // Arrange
-        when(performer.hasItem(any())).thenReturn(true);
 
         // Act
         action.perform(performer, 2f);
 
         // Assert
         verify(storeable, times(1)).tryAdd(any());
+        verify(performer, times(1)).takeNextItem();
     }
 
     @Test
-    public void StorableDoNoTGetItemIfPerformerDoNotHaveItem() {
+    public void canPerformIsTrueWhenPerformerIsCloseEnoughToStorableAndPerformerHasItem() {
         // Arrange
-        when(performer.isEmpty()).thenReturn(true);
-
-        // Act
-        action.perform(performer, 2f);
-
-        // Assert
-        verify(storeable, times(0)).tryAdd(any());
-    }
-
-    @Test
-    public void canPerformIfPerformerIsCloseEnoughToStorable() {
-        // Arrange
-        final Position position = new Position(0, 0);
         when(performer.getPosition()).thenReturn(position);
+        when(performer.hasItem(any())).thenReturn(true);
 
         // Act
         final boolean isCloseEnough = action.canPerform(performer);
@@ -97,10 +85,23 @@ public class GiveItemActionTests {
     }
 
     @Test
-    public void canNotPerformIfPerformerIsTooFarAwayFromStorable() {
+    public void canPerformIsFalseWhenPerformerIsTooFarAwayFromStorable() {
         // Arrange
-        final Position position = this.position.add(4, 0);
+        when(performer.getPosition()).thenReturn(position.add(5, 5));
+        when(performer.isEmpty()).thenReturn(false);
+
+        // Act
+        final boolean isCloseEnough = action.canPerform(performer);
+
+        // Assert
+        assertThat(isCloseEnough).isFalse();
+    }
+
+    @Test
+    public void canPerformIsFalseWhenPerformerDoesNotHaveAnyItem() {
+        // Arrange
         when(performer.getPosition()).thenReturn(position);
+        when(performer.isEmpty()).thenReturn(true);
 
         // Act
         final boolean isCloseEnough = action.canPerform(performer);

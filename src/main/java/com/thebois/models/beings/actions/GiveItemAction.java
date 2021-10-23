@@ -30,23 +30,18 @@ public class GiveItemAction extends AbstractTimeAction implements Serializable {
         this.storablePosition = storablePosition;
     }
 
-    /*
-        @Override
-        public boolean isCompleted(final IActionPerformer performer) {
-            return performer.isEmpty();
-        }
-    */
-
     @Override
     protected void onPerformCompleted(final IActionPerformer performer) {
-        if (!performer.isEmpty()) {
-            storeable.tryAdd(performer.takeNextItem());
-        }
+        storeable.tryAdd(performer.takeNextItem());
     }
 
     @Override
     public boolean canPerform(final IActionPerformer performer) {
-        return performer.getPosition().distanceTo(storablePosition) < MINIMUM_GIVE_DISTANCE;
+        final boolean isCloseEnough =
+            performer.getPosition().distanceTo(storablePosition) < MINIMUM_GIVE_DISTANCE;
+        final boolean inventoryIsNotEmpty = !performer.isEmpty();
+
+        return isCloseEnough && inventoryIsNotEmpty;
     }
 
     @Override

@@ -77,82 +77,79 @@ public class TakeItemActionTests {
     }
 
     @Test
-    public void performerTakesItemIfTakeableHasItem() {
+    public void performTakesItemFromTakeableAndGivesToPerformer() {
         // Arrange
         when(takeable.hasItem(any())).thenReturn(true);
         when(takeable.take(any())).thenReturn(ItemFactory.fromType(itemType));
         when(performer.canFitItem(any())).thenReturn(true);
+        when(performer.getPosition()).thenReturn(position);
 
         // Act
         action.perform(performer, 5f);
 
         // Assert
         verify(takeable, times(1)).take(any());
+        verify(performer, times(1)).tryAdd(any());
     }
 
     @Test
-    public void performerDoNotTakesItemIfPerformerCanNotFitItem() {
+    public void canPerformIsFalseWhenPerformerCanNotFitItem() {
         // Arrange
         when(takeable.hasItem(any())).thenReturn(true);
         when(takeable.take(any())).thenReturn(ItemFactory.fromType(itemType));
         when(performer.canFitItem(any())).thenReturn(false);
+        when(performer.getPosition()).thenReturn(position);
 
         // Act
-        action.perform(performer, 5f);
+        final boolean canPerform = action.canPerform(performer);
 
         // Assert
-        verify(takeable, times(0)).take(any());
+        assertThat(canPerform).isFalse();
     }
 
     @Test
-    public void performerDoesNotTakeItemIfTakableDoesNotHaveItem() {
+    public void canPerformIsFalseWhenTakeableDoesNotHaveItem() {
         // Arrange
         when(takeable.hasItem(any())).thenReturn(false);
-
-        // Act
-        action.perform(performer, 2f);
-
-        // Assert
-        verify(takeable, times(0)).take(any());
-    }
-
-    @Test
-    public void isNotCompletedIfPerformerStillNeedMoreOfItemType() {
-        // Arrange
-        action = ActionFactory.createTakeItem(takeable, itemType, position);
-        when(takeable.hasItem(itemType)).thenReturn(true);
-
-        // Act
-        final boolean isCompleted = action.isCompleted(performer);
-
-        // Assert
-        assertThat(isCompleted).isFalse();
-    }
-
-    @Test
-    public void canPerformIfPerformerIsCloseEnoughToTakeable() {
-        // Arrange
-        final Position position = new Position(0, 0);
+        when(takeable.take(any())).thenReturn(ItemFactory.fromType(itemType));
+        when(performer.canFitItem(any())).thenReturn(true);
         when(performer.getPosition()).thenReturn(position);
 
         // Act
-        final boolean isCloseEnough = action.canPerform(performer);
+        final boolean canPerform = action.canPerform(performer);
 
         // Assert
-        assertThat(isCloseEnough).isTrue();
+        assertThat(canPerform).isFalse();
     }
 
     @Test
-    public void canNotPerformIfPerformerIsTooFarAwayFromTakeable() {
+    public void canPerformIsFalseWhenPerformerNotCloseEnoughToTakeable() {
         // Arrange
-        final Position position = this.position.add(4, 0);
+        when(takeable.hasItem(any())).thenReturn(true);
+        when(takeable.take(any())).thenReturn(ItemFactory.fromType(itemType));
+        when(performer.canFitItem(any())).thenReturn(true);
+        when(performer.getPosition()).thenReturn(position.add(5, 5));
+
+        // Act
+        final boolean canPerform = action.canPerform(performer);
+
+        // Assert
+        assertThat(canPerform).isFalse();
+    }
+
+    @Test
+    public void canPerformIsTrueWhenPerformerIsCloseEnoughHasSpaceAndTakeableHasItem() {
+        // Arrange
+        when(takeable.hasItem(any())).thenReturn(true);
+        when(takeable.take(any())).thenReturn(ItemFactory.fromType(itemType));
+        when(performer.canFitItem(any())).thenReturn(true);
         when(performer.getPosition()).thenReturn(position);
 
         // Act
-        final boolean isCloseEnough = action.canPerform(performer);
+        final boolean canPerform = action.canPerform(performer);
 
         // Assert
-        assertThat(isCloseEnough).isFalse();
+        assertThat(canPerform).isTrue();
     }
 
     @ParameterizedTest

@@ -30,7 +30,10 @@ public class HarvestAction extends AbstractTimeAction implements Serializable {
 
     @Override
     public boolean canPerform(final IActionPerformer performer) {
-        return resource.getPosition().distanceTo(performer.getPosition()) <= 1.0f;
+        final boolean isCloseEnough =
+            resource.getPosition().distanceTo(performer.getPosition()) <= 1.0f;
+        final boolean inventoryHasSpace = performer.canFitItem(resource.getType().getItemType());
+        return isCloseEnough && inventoryHasSpace;
     }
 
     @Override
