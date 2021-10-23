@@ -3,17 +3,18 @@ package com.thebois.models.world.structures;
 import java.util.Collections;
 
 import com.thebois.models.Position;
+import com.thebois.models.inventory.IInventory;
 
 /**
  * The colony's main building.
  *
  * @author jacob
  */
-public class TownHall extends AbstractStructure {
+public class TownHall extends Stockpile {
 
     protected TownHall(
-        final Position position) {
-        super(position, StructureType.TOWN_HALL, Collections.emptyMap());
+        final Position position, final IInventory inventory) {
+        super(position, StructureType.TOWN_HALL, Collections.emptyMap(), inventory);
         postStructureCompletedEvent();
     }
 

@@ -15,27 +15,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mockito;
 
-import com.thebois.Pawntastic;
 import com.thebois.abstractions.IResourceFinder;
-import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IStructureFinder;
-import com.thebois.listeners.IEventBusSource;
 import com.thebois.models.Position;
-import com.thebois.models.beings.Colony;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.inventory.IInventory;
 import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
 import com.thebois.models.world.resources.ResourceFactory;
 import com.thebois.models.world.resources.ResourceType;
 import com.thebois.models.world.structures.IStructure;
+import com.thebois.models.world.structures.StructureFactory;
 import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.world.terrains.ITerrain;
-import com.thebois.testutils.MockFactory;
 import com.thebois.models.world.terrains.TerrainFactory;
 import com.thebois.models.world.terrains.TerrainType;
+import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -140,6 +137,7 @@ public class WorldTests {
         RoleFactory.setWorld(mock(IWorld.class));
         RoleFactory.setResourceFinder(mock(IResourceFinder.class));
         RoleFactory.setStructureFinder(mock(IStructureFinder.class));
+        StructureFactory.setInventory(mock(IInventory.class));
     }
 
     @AfterEach
@@ -147,6 +145,7 @@ public class WorldTests {
         RoleFactory.setWorld(null);
         RoleFactory.setResourceFinder(null);
         RoleFactory.setStructureFinder(null);
+        StructureFactory.setInventory(null);
     }
 
     @ParameterizedTest
@@ -532,6 +531,23 @@ public class WorldTests {
     }
 
     @Test
+    public void findNearestStructureOfTypeStockpileReturnsTownHall() {
+        final Position startingPosition = new Position(10, 10);
+        final Position townHallPosition = new Position();
+
+        // Arrange
+        final World world = createTestWorld(50);
+        world.tryCreateStructure(StructureType.TOWN_HALL, townHallPosition);
+
+        // Act
+        final Optional<IStructure> foundStructure =
+            world.getNearbyStructureOfType(startingPosition, StructureType.STOCKPILE);
+
+        // Assert
+        assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(townHallPosition);
+    }
+
+    @Test
     public void returnsNoNearestStructureWhenWorldIsEmpty() {
         // Arrange
         final World world = createWorld(50);
@@ -637,11 +653,8 @@ public class WorldTests {
                 }
             }
             resourceMatrix[0][0] = ResourceFactory.createResource(ResourceType.TREE, 0, 0);
-            resourceMatrix[worldSize - 1][worldSize - 1] = ResourceFactory.createResource(ResourceType.TREE,
-                                                                                          worldSize
-                                                                                          - 1,
-                                                                                          worldSize
-                                                                                          - 1);
+            resourceMatrix[worldSize - 1][worldSize - 1] =
+                ResourceFactory.createResource(ResourceType.TREE, worldSize - 1, worldSize - 1);
             return resourceMatrix;
         }
 
@@ -655,7 +668,8 @@ public class WorldTests {
         final Position createTownHallPosition = new Position(12, 12);
 
         // Act
-        final boolean creationResult = world.tryCreateStructure(StructureType.TOWN_HALL, createTownHallPosition);
+        final boolean creationResult =
+            world.tryCreateStructure(StructureType.TOWN_HALL, createTownHallPosition);
 
         // Assert
         assertThat(creationResult).isFalse();
@@ -671,15 +685,13 @@ public class WorldTests {
         final float radius = 5;
 
         // Act
-        final Collection<Position> returnedPositions = world.tryGetEmptyPositionsNextTo(
-            origin,
-            count,
-            radius);
+        final Collection<Position> returnedPositions =
+            world.tryGetEmptyPositionsNextTo(origin, count, radius);
 
         // Assert
-        assertThat(returnedPositions
-                       .stream()
-                       .noneMatch(position -> position.distanceTo(origin) > radius)).isTrue();
+        assertThat(returnedPositions.stream()
+                                    .noneMatch(position -> position.distanceTo(origin)
+                                                           > radius)).isTrue();
     }
 
     @Test
@@ -692,10 +704,8 @@ public class WorldTests {
         final float radius = 4;
 
         // Act
-        final Collection<Position> returnedPositions = world.tryGetEmptyPositionsNextTo(
-            origin,
-            count,
-            radius);
+        final Collection<Position> returnedPositions =
+            world.tryGetEmptyPositionsNextTo(origin, count, radius);
 
         // Assert
         assertThat(returnedPositions.size()).isEqualTo(count);
@@ -712,23 +722,23 @@ public class WorldTests {
 
     @ParameterizedTest
     @MethodSource("getPositionsToStartSearchFrom")
-    public void tryGetEmptyPositionsNextDoesNotReturnPositionsOutsideOfTheWorld(final Position origin, final float radius) {
+    public void tryGetEmptyPositionsNextDoesNotReturnPositionsOutsideOfTheWorld(
+        final Position origin, final float radius) {
         // Arrange
         final World world = createWorld(50);
         world.tryCreateStructure(StructureType.TOWN_HALL, new Position(10, 10));
         final int count = 50;
 
         // Act
-        final Collection<Position> returnedPositions = world.tryGetEmptyPositionsNextTo(
-            origin,
-            count,
-            radius);
+        final Collection<Position> returnedPositions =
+            world.tryGetEmptyPositionsNextTo(origin, count, radius);
 
         // Assert
-        assertThat(returnedPositions
-                       .stream()
-                       .noneMatch(position ->
-                                      (position.getX() > 50 || position.getX() < 0)
-                                      || (position.getY() > 50 || position.getY() < 0))).isTrue();
+        assertThat(returnedPositions.stream()
+                                    .noneMatch(position -> (position.getX() > 50
+                                                            || position.getX() < 0)
+                                                           || (position.getY() > 50
+                                                               || position.getY() < 0))).isTrue();
     }
+
 }

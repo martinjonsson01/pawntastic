@@ -9,10 +9,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import com.thebois.Pawntastic;
-import com.thebois.abstractions.IResourceFinder;
-import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.abstractions.IPositionFinder;
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IStructureFinder;
+import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.world.generation.ResourceGenerator;
 import com.thebois.models.world.generation.TerrainGenerator;
@@ -141,9 +141,7 @@ public class World
     }
 
     private boolean isTileWithinRadiusOf(
-        final ITile tile,
-        final Position position,
-        final float radius) {
+        final ITile tile, final Position position, final float radius) {
         return radius > position.distanceTo(tile.getPosition());
     }
 
@@ -247,7 +245,10 @@ public class World
     public Optional<IStructure> getNearbyStructureOfType(
         final Position origin, final StructureType type) {
         return getStructures().stream()
-                              .filter(structure -> structure.getType().equals(type))
+                              .filter(structure -> structure.getType().equals(type)
+                                                   || type.equals(StructureType.STOCKPILE)
+                                                      && structure.getType()
+                                                                  .equals(StructureType.TOWN_HALL))
                               .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
                                                              origin.distanceTo(o2.getPosition())));
     }

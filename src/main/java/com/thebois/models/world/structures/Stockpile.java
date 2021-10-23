@@ -24,6 +24,24 @@ class Stockpile extends AbstractStructure implements ITakeable, IStoreable {
         this.inventory = inventory;
     }
 
+    /**
+     * Instantiate with a given position, structure type, materials needed for building and and
+     * storage inventory.
+     *
+     * @param position       Where the structure is placed.
+     * @param structureType  What kind of structure.
+     * @param buildMaterials Needed materials for building the structure
+     * @param inventory      The storage inventory.
+     */
+    protected Stockpile(
+        final Position position,
+        final StructureType structureType,
+        final Map<ItemType, Integer> buildMaterials,
+        final IInventory inventory) {
+        super(position, structureType, buildMaterials);
+        this.inventory = inventory;
+    }
+
     private static Map<ItemType, Integer> getBuildMaterials() {
         final Map<ItemType, Integer> neededItems = new EnumMap<>(ItemType.class);
 
