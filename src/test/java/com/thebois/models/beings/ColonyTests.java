@@ -99,11 +99,12 @@ public class ColonyTests {
     @Test
     public void beingGroupRemovesDeadBeings() {
         // Arrange
+        final float deltaTime = 0.1f;
         final IBeing being = Mockito.mock(IBeing.class);
         final Colony colony = createColony();
         colony.addBeing(being);
+        colony.update(deltaTime);
         final int expectedAmountOfBeings = 0;
-        final float deltaTime = 0.1f;
 
         // Act
         colony.onDeathEvent(new OnDeathEvent(being));
