@@ -395,8 +395,8 @@ public class HarvesterRoleTests {
     private void setStructureFinderResult(
         final Optional<IStructure> firstFinderResult,
         final Optional<IStructure>... OtherFinderResult) {
-        when(structureFinder.getNearbyStructureOfType(any(), any())).thenReturn(firstFinderResult,
-                                                                                OtherFinderResult);
+        when(structureFinder.getNearbyCompletedStructureOfType(any(), any())).thenReturn(firstFinderResult,
+                                                                                         OtherFinderResult);
     }
 
     @SafeVarargs

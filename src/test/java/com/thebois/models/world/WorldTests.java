@@ -511,7 +511,7 @@ public class WorldTests {
 
     @ParameterizedTest
     @MethodSource("getCorrectCoordinatesToTest")
-    public void findNearestStructureReturnsCorrect(
+    public void findNearestCompleteStructureReturnsCorrect(
         final Position startingPosition,
         final Position incorrectPosition,
         final Position expectedPosition) {
@@ -521,17 +521,51 @@ public class WorldTests {
         world.tryCreateStructure(StructureType.TOWN_HALL, new Position());
         world.tryCreateStructure(StructureType.HOUSE, expectedPosition);
         world.tryCreateStructure(StructureType.HOUSE, incorrectPosition);
+        completeAllStructures(world);
 
         // Act
         final Optional<IStructure> foundStructure =
-            world.getNearbyStructureOfType(startingPosition, StructureType.HOUSE);
+            world.getNearbyCompletedStructureOfType(startingPosition, StructureType.HOUSE);
 
         // Assert
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(expectedPosition);
     }
 
+    private void completeAllStructures(final World world) {
+        for (final IStructure structure : world.getStructures()) {
+            completeStructure(structure);
+        }
+    }
+
+    private void completeStructure(final IStructure structure) {
+        for (final ItemType itemType : structure.getNeededItems()) {
+            structure.tryDeliverItem(ItemFactory.fromType(itemType));
+        }
+    }
+
     @Test
-    public void findNearestStructureOfTypeStockpileReturnsTownHall() {
+    public void findNearestCompleteStructureOfTypeReturnHouseThatIsFurtherAwayBecauseCloserIsIncomplete() {
+        final Position startingPosition = new Position(10, 10);
+        final Position closeStructure = startingPosition.add(1, 1);
+        final Position farAwayStructure = startingPosition.add(10, 10);
+        // Arrange
+        final World world = createTestWorld(50);
+        world.tryCreateStructure(StructureType.HOUSE, farAwayStructure);
+        world.tryCreateStructure(StructureType.HOUSE, closeStructure);
+
+        final IStructure expectedStructure = world.getStructures().stream().iterator().next();
+        completeStructure(expectedStructure);
+
+        // Act
+        final Optional<IStructure> foundStructure =
+            world.getNearbyCompletedStructureOfType(startingPosition, StructureType.HOUSE);
+
+        // Assert
+        assertThat(foundStructure.orElseThrow()).isEqualTo(expectedStructure);
+    }
+
+    @Test
+    public void findNearestCompleteStructureOfTypeStockpileReturnsTownHall() {
         final Position startingPosition = new Position(10, 10);
         final Position townHallPosition = new Position();
 
@@ -541,10 +575,24 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> foundStructure =
-            world.getNearbyStructureOfType(startingPosition, StructureType.STOCKPILE);
+            world.getNearbyCompletedStructureOfType(startingPosition, StructureType.STOCKPILE);
 
         // Assert
         assertThat(foundStructure.orElseThrow().getPosition()).isEqualTo(townHallPosition);
+    }
+
+    @Test
+    public void returnsNoNearestStructureWhenWorldOnlyHaveUncompletedStructures() {
+        // Arrange
+        final World world = createWorld(50);
+        world.tryCreateStructure(StructureType.TOWN_HALL, new Position());
+
+        // Act
+        final Optional<IStructure> structure =
+            world.getNearbyCompletedStructureOfType(new Position(20f, 20f), StructureType.HOUSE);
+
+        // Assert
+        assertThat(structure.isPresent()).isFalse();
     }
 
     @Test
@@ -554,7 +602,7 @@ public class WorldTests {
 
         // Act
         final Optional<IStructure> structure =
-            world.getNearbyStructureOfType(new Position(20f, 20f), StructureType.HOUSE);
+            world.getNearbyCompletedStructureOfType(new Position(20f, 20f), StructureType.HOUSE);
 
         // Assert
         assertThat(structure.isPresent()).isFalse();

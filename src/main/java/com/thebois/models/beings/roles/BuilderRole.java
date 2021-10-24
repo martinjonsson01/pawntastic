@@ -96,9 +96,9 @@ class BuilderRole extends AbstractRole {
         }
 
         // Check if stockpile still exists and has item
-        final Optional<IStructure> maybeStockpile = structureFinder.getNearbyStructureOfType(
-            performer.getPosition(),
-            StructureType.STOCKPILE);
+        final Optional<IStructure> maybeStockpile =
+            structureFinder.getNearbyCompletedStructureOfType(performer.getPosition(),
+                                                              StructureType.STOCKPILE);
         if (maybeStockpile.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure stockpile = maybeStockpile.get();
 

@@ -21,7 +21,7 @@ public interface IStructureFinder {
      *
      * @return The found IStructure.
      */
-    Optional<IStructure> getNearbyStructureOfType(Position origin, StructureType type);
+    Optional<IStructure> getNearbyCompletedStructureOfType(Position origin, StructureType type);
 
     /**
      * Finds and returns the closest incomplete IStructure to the passed position.

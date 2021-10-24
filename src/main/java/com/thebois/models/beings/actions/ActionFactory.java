@@ -131,7 +131,7 @@ public final class ActionFactory {
         final IWorld world) {
         final Position position = performer.getPosition();
         final Optional<IStructure> maybeStructure =
-            structureFinder.getNearbyStructureOfType(position, StructureType.STOCKPILE);
+            structureFinder.getNearbyCompletedStructureOfType(position, StructureType.STOCKPILE);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
 
         final IStructure structure = maybeStructure.get();
@@ -156,9 +156,9 @@ public final class ActionFactory {
      */
     public static IAction createEmptyInventory(
         final IActionPerformer performer, final IStructureFinder structureFinder) {
-        final Optional<IStructure> maybeStructure = structureFinder.getNearbyStructureOfType(
-            performer.getPosition(),
-            StructureType.STOCKPILE);
+        final Optional<IStructure> maybeStructure =
+            structureFinder.getNearbyCompletedStructureOfType(performer.getPosition(),
+                                                              StructureType.STOCKPILE);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
 

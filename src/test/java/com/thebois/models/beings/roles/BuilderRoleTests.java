@@ -73,8 +73,8 @@ public class BuilderRoleTests {
     private void setStructureFinderNearByStructureResult(
         final Optional<IStructure> firstFinderResult,
         final Optional<IStructure>... OtherFinderResult) {
-        when(structureFinder.getNearbyStructureOfType(any(), any())).thenReturn(firstFinderResult,
-                                                                                OtherFinderResult);
+        when(structureFinder.getNearbyCompletedStructureOfType(any(), any())).thenReturn(firstFinderResult,
+                                                                                         OtherFinderResult);
     }
 
     @SafeVarargs
