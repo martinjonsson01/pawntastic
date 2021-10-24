@@ -1,5 +1,5 @@
-# com.thebois.beings.roles
+# com.thebois.models.beings.roles
 
 ## UML Class Diagram
 
-![com.thebois.beings.roles](./../../../../../../../../documents/diagrams/com.thebois.beings.roles.jpg "com.thebois.beings.roles")
+![com.thebois.models.beings.roles](./../../../../../../../../documents/diagrams/com.thebois.models.beings.roles.jpg "com.thebois.models.beings.roles")
