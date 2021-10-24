@@ -72,7 +72,7 @@ public interface ITakeable {
     boolean isEmpty();
 
     /**
-     * Gets the ItemType of the first item.
+     * Gets the ItemType of any item.
      *
      * @return The type of item.
      */
