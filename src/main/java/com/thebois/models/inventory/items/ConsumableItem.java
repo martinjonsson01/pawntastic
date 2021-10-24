@@ -2,6 +2,8 @@ package com.thebois.models.inventory.items;
 
 /**
  * An item that can be consumed for nutritional value.
+ *
+ * @author Martin
  */
 class ConsumableItem extends Item implements IConsumableItem {
 

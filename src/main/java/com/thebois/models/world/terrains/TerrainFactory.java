@@ -4,6 +4,9 @@ import com.thebois.models.Position;
 
 /**
  * A factory that creates terrain tiles.
+ *
+ * @author Jonathan
+ * @author Mathias
  */
 public final class TerrainFactory {
 

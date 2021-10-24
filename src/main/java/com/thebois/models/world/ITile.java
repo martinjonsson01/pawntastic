@@ -6,6 +6,8 @@ import com.thebois.models.Position;
 
 /**
  * A section of the world representing a structure or resource.
+ *
+ * @author Martin
  */
 public interface ITile extends Serializable {
 

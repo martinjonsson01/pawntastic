@@ -4,6 +4,8 @@ import com.thebois.models.Position;
 
 /**
  * Terrain of type sand.
+ *
+ * @author Mathias
  */
 class Sand extends AbstractTerrain {
 

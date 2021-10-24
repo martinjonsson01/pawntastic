@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 
 /**
  * Handles loading of saved objects in the save-file.
+ *
+ * @author Jonathan
  */
 public class LoadSystem extends AbstractPersistence {
 

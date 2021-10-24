@@ -7,6 +7,9 @@ import com.thebois.models.beings.roles.AbstractRole;
 
 /**
  * An entity.
+ *
+ * @author Jacob
+ * @author Martin
  */
 public interface IBeing extends Serializable {
 

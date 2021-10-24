@@ -5,6 +5,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Wrapper class for viewport.
+ *
+ * @author Mathias
  */
 public class ViewportWrapper implements IProjector {
 

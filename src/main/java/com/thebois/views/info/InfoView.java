@@ -8,6 +8,9 @@ import com.thebois.views.DrawableUtils;
 
 /**
  * Displays info about the Colony to the player and allows them to interact with it.
+ *
+ * @author Martin
+ * @author Mathias
  */
 public class InfoView implements IActorView {
 

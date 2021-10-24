@@ -22,6 +22,8 @@ import com.thebois.models.world.structures.StructureType;
 
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
+ *
+ * @author Martin
  */
 public class Colony extends AbstractBeingGroup implements IRoleAllocator {
 
@@ -122,9 +124,10 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     }
 
     private Collection<IBeing> findBeingsWithRole(final AbstractRole role) {
-        return getBeings().stream()
-                          .filter(being -> role.equals(being.getRole()))
-                          .collect(Collectors.toList());
+        return getBeings()
+            .stream()
+            .filter(being -> role.equals(being.getRole()))
+            .collect(Collectors.toList());
     }
 
     /**

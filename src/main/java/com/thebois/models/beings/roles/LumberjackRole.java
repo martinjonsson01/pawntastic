@@ -6,6 +6,8 @@ import com.thebois.models.world.resources.ResourceType;
 
 /**
  * The lumberjack chops down trees to collect wood and store it in stockpiles.
+ *
+ * @author Martin
  */
 class LumberjackRole extends AbstractHarvesterRole {
 

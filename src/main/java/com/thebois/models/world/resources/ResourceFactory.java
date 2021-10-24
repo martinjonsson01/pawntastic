@@ -4,6 +4,9 @@ import com.thebois.models.Position;
 
 /**
  * Factory used to create resources.
+ *
+ * @author Jonathan
+ * @author Mathias
  */
 public final class ResourceFactory {
 

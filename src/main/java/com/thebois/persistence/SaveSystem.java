@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 
 /**
  * Handles the saving of objects to the save-file.
+ *
+ * @author Jonathan
  */
 public class SaveSystem extends AbstractPersistence {
 

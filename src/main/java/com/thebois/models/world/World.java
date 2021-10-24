@@ -26,6 +26,11 @@ import com.thebois.utils.MatrixUtils;
 
 /**
  * World creates a matrix and keeps track of all the structures and resources in the game world.
+ *
+ * @author Jacob
+ * @author Jonathan
+ * @author Martin
+ * @author Mathias
  */
 public class World
     implements IWorld, IStructureFinder, IResourceFinder, IPositionFinder, Serializable {

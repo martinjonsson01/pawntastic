@@ -18,6 +18,8 @@ import com.thebois.utils.StringUtils;
 
 /**
  * A button that represent a structure and is used to select which structure to build.
+ *
+ * @author Mathias
  */
 public class StructureButton extends Button implements IEventSource<OnClickEvent<StructureType>> {
 

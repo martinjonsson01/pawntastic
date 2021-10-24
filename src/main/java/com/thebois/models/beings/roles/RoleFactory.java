@@ -10,6 +10,8 @@ import com.thebois.models.world.IWorld;
 
 /**
  * Creates requested instances of specific roles.
+ *
+ * @author Martin
  */
 public final class RoleFactory {
 

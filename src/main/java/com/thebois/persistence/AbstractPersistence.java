@@ -6,6 +6,8 @@ import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Basic foundation for persistence, common functionality for all persistence classes.
+ *
+ * @author Jonathan
  */
 abstract class AbstractPersistence implements Disposable {
 

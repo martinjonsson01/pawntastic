@@ -6,6 +6,8 @@ import com.thebois.models.Position;
 
 /**
  * Adapts different position formats to each other.
+ *
+ * @author Martin
  */
 public final class PositionAdapter {
 

@@ -14,6 +14,8 @@ import com.thebois.views.info.InfoView;
 
 /**
  * Container class for controllers that manage the info.
+ *
+ * @author Mathias
  */
 public class InfoController implements IController<IActorView> {
 

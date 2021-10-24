@@ -11,6 +11,8 @@ import com.thebois.views.TextureUtils;
 
 /**
  * Viewable Resource that correspond to ResourceType but has view related information.
+ *
+ * @author Mathias
  */
 public enum ViewableResource {
     /**

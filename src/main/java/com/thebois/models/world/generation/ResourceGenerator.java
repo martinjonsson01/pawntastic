@@ -7,6 +7,8 @@ import com.thebois.utils.MatrixUtils;
 
 /**
  * Generator that uses noise to generate resources.
+ *
+ * @author Mathias
  */
 public class ResourceGenerator extends AbstractGenerator {
 

@@ -8,6 +8,9 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Base implementation for all inventories.
+ *
+ * @author Jonathan
+ * @author Martin
  */
 public class Inventory implements IInventory {
 

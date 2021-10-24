@@ -5,6 +5,8 @@ import java.util.Objects;
 
 /**
  * A generic item of a specific type.
+ *
+ * @author Martin
  */
 public class Item implements IItem, Serializable {
 

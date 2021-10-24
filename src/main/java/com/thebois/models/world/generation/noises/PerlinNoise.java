@@ -2,6 +2,8 @@ package com.thebois.models.world.generation.noises;
 
 /**
  * Generator used to generate Perlin Noise.
+ *
+ * @author Mathias
  */
 public class PerlinNoise implements INoise {
 
@@ -63,8 +65,7 @@ public class PerlinNoise implements INoise {
             final double octaveAmplification = Math.pow(persistence, i);
             final double frequencyOffSet = frequency * Math.pow(2, i);
 
-            total = total + interpolateNoise(x * frequencyOffSet + seed,
-                                             y * frequencyOffSet + seed)
+            total = total + interpolateNoise(x * frequencyOffSet + seed, y * frequencyOffSet + seed)
                             * octaveAmplification;
         }
         return (float) (total * amplitude);

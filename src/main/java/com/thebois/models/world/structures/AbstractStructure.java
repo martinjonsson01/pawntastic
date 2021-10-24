@@ -15,6 +15,9 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Base structure for the game.
+ *
+ * @author Jacob
+ * @author Mathias
  */
 abstract class AbstractStructure implements IStructure {
 

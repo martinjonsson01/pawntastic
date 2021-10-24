@@ -10,6 +10,8 @@ import com.thebois.models.world.resources.IResource;
 
 /**
  * View that renders the resources that exist in the world.
+ *
+ * @author Mathias
  */
 public class ResourceView implements IView {
 

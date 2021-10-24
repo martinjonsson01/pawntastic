@@ -8,6 +8,8 @@ import com.thebois.models.world.ITile;
 
 /**
  * Calculates the cost of moving to a tile.
+ *
+ * @author Martin
  */
 class TileCostCalculator implements Serializable {
 

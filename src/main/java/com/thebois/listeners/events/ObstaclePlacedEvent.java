@@ -4,6 +4,8 @@ import com.thebois.models.Position;
 
 /**
  * Describes an obstacle that has been placed in the world.
+ *
+ * @author Martin
  */
 public class ObstaclePlacedEvent {
 

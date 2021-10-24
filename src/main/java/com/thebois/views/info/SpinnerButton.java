@@ -18,6 +18,8 @@ import com.thebois.listeners.events.ValueChangedEvent;
 
 /**
  * A widget for changing an amount in discrete steps using two buttons.
+ *
+ * @author Martin
  */
 public class SpinnerButton extends Table implements IEventSource<ValueChangedEvent<Integer>> {
 

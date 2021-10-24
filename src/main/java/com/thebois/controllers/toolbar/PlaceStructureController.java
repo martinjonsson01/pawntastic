@@ -17,6 +17,8 @@ import com.thebois.views.toolbar.BuildMenuToolbarView;
 
 /**
  * Controller that manages the structure buttons and is responsible for placing structures.
+ *
+ * @author Mathias
  */
 public class PlaceStructureController extends AbstractInputProcessor
     implements IEventListener<OnClickEvent<StructureType>>, IController<IActorView> {

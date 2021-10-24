@@ -5,6 +5,8 @@ package com.thebois.controllers;
  *
  * @param <TView> What kind of view the controller manages, i.e IView for game and IActorView for
  *                info panels.
+ *
+ * @author Mathias
  */
 public interface IController<TView> {
 

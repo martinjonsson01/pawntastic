@@ -7,6 +7,8 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Resource of type tree.
+ *
+ * @author Mathias
  */
 class Tree extends AbstractResource {
 

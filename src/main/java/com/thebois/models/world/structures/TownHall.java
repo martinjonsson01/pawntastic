@@ -7,7 +7,7 @@ import com.thebois.models.Position;
 /**
  * The colony's main building.
  *
- * @author jacob
+ * @author Jacob
  */
 public class TownHall extends AbstractStructure {
 

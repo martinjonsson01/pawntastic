@@ -4,6 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
  * Represents a view that does not draw itself, but is rendered using actors instead.
+ *
+ * @author Martin
  */
 public interface IActorView {
 

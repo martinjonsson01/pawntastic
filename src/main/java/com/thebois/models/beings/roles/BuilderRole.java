@@ -15,6 +15,8 @@ import com.thebois.models.world.structures.IStructure;
 
 /**
  * The builder constructs buildings.
+ *
+ * @author Martin
  */
 class BuilderRole extends AbstractRole {
 

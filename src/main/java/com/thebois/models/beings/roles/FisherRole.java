@@ -6,6 +6,8 @@ import com.thebois.models.world.resources.ResourceType;
 
 /**
  * The fisher catches fish out of water.
+ *
+ * @author Martin
  */
 class FisherRole extends AbstractHarvesterRole {
 

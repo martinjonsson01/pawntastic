@@ -4,6 +4,8 @@ import com.thebois.models.world.generation.noises.INoise;
 
 /**
  * Generator that uses noise.
+ *
+ * @author Mathias
  */
 public abstract class AbstractGenerator {
 

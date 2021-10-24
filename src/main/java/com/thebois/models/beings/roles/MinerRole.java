@@ -6,6 +6,8 @@ import com.thebois.models.world.resources.ResourceType;
 
 /**
  * The miner digs stone out of rocks.
+ *
+ * @author Martin
  */
 class MinerRole extends AbstractHarvesterRole {
 

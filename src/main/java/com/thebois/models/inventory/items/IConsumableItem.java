@@ -2,6 +2,8 @@ package com.thebois.models.inventory.items;
 
 /**
  * Represents an item that can be consumed by beings.
+ *
+ * @author Martin
  */
 public interface IConsumableItem extends IItem {
 

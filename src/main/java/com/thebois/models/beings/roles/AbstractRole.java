@@ -13,6 +13,8 @@ import com.thebois.models.beings.actions.IActionSource;
 
 /**
  * Represents an assignment to a specific work task.
+ *
+ * @author Martin
  */
 public abstract class AbstractRole implements IDeepClonable<AbstractRole>, Serializable {
 

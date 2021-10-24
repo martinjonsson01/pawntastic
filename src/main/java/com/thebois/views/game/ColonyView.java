@@ -15,6 +15,9 @@ import com.thebois.views.TextureUtils;
 
 /**
  * Used to display all pawns.
+ *
+ * @author Jacob
+ * @author Martin
  */
 public class ColonyView implements IView {
 
@@ -45,8 +48,8 @@ public class ColonyView implements IView {
      */
     public ColonyView() {
         this.radius = Math.round(Pawntastic.getTileSize() / 2f);
-        this.beingTexture = TextureUtils.createCircleTexture(radius
-                                                             * TEXTURE_SUPER_SAMPLING_FACTOR);
+        this.beingTexture =
+            TextureUtils.createCircleTexture(radius * TEXTURE_SUPER_SAMPLING_FACTOR);
     }
 
     /**

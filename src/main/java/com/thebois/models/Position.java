@@ -5,6 +5,8 @@ import java.util.Objects;
 
 /**
  * A two-dimensional location.
+ *
+ * @author Martin
  */
 public final class Position implements Serializable {
 

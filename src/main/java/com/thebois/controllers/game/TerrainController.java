@@ -7,6 +7,8 @@ import com.thebois.views.game.TerrainView;
 
 /**
  * A controller used to get data about terrains and pass the data to view.
+ *
+ * @author Jonathan
  */
 public class TerrainController implements IController<IView> {
 
