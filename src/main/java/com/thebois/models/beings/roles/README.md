@@ -1,4 +1,4 @@
-# com.thebois.beings.roles
+# com.thebois.models.beings.roles
 
 ## UML Class Diagram
 
