@@ -7,6 +7,8 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * A large stone on the ground.
+ *
+ * @author Mathias
  */
 class Stone extends AbstractResource {
 

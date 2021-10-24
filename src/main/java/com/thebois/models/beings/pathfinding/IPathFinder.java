@@ -7,6 +7,8 @@ import com.thebois.models.Position;
 
 /**
  * Represents a way of finding paths from one location to another.
+ *
+ * @author Martin
  */
 public interface IPathFinder extends Serializable {
 

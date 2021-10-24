@@ -6,6 +6,8 @@ import com.thebois.models.Position;
 
 /**
  * A resource tile in the world, containing harvestable materials.
+ *
+ * @author Mathias
  */
 public abstract class AbstractResource implements IResource {
 

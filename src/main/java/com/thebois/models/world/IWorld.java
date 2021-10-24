@@ -7,6 +7,8 @@ import com.thebois.models.Position;
 
 /**
  * Represents a world containing tiles.
+ *
+ * @author Martin
  */
 public interface IWorld extends Serializable {
 

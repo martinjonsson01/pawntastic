@@ -7,6 +7,8 @@ import com.thebois.models.inventory.IInventory;
 
 /**
  * A factory that instantiates structures.
+ *
+ * @author Mathias
  */
 public final class StructureFactory {
 

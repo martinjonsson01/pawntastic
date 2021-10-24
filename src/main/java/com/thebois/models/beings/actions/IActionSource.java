@@ -10,6 +10,8 @@ import com.thebois.models.beings.IActionPerformer;
  * Using this interface instead of storing actions directly means that they can be generated on the
  * fly depending on current conditions.
  * </p>
+ *
+ * @author Martin
  */
 @FunctionalInterface
 public interface IActionSource extends Serializable {

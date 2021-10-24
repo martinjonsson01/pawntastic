@@ -6,6 +6,8 @@ import com.thebois.models.world.ITile;
 
 /**
  * Represents a specific resource. E.g. Trees, Rocks etc.
+ *
+ * @author Mathias
  */
 public interface IResource extends ITile, IDeepClonable<IResource> {
 

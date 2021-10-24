@@ -13,6 +13,8 @@ import com.thebois.views.info.InventoryView;
 
 /**
  * Makes sure the inventory view is updated with correct information.
+ *
+ * @author Jonathan
  */
 public class InventoryController implements IController<IActorView> {
 

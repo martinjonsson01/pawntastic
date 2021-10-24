@@ -8,7 +8,7 @@ import com.thebois.models.inventory.IInventory;
 /**
  * The colony's main building.
  *
- * @author jacob
+ * @author Jacob
  */
 public class TownHall extends Stockpile {
 

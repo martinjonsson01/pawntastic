@@ -5,6 +5,8 @@ import com.thebois.abstractions.IDeepClonable;
 
 /**
  * Represents a tile of terrain. E.g. grass, dirt etc.
+ *
+ * @author Jonathan
  */
 public interface ITerrain extends ITile, IDeepClonable<ITerrain> {
 

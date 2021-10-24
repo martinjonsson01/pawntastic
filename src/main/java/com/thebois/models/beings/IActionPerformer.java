@@ -9,6 +9,8 @@ import com.thebois.models.inventory.ITakeable;
 
 /**
  * An internal interface that represents a performer of actions.
+ *
+ * @author Martin
  */
 public interface IActionPerformer extends Serializable, IStorable, ITakeable, IPositionable {
 

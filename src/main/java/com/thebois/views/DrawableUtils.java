@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
  * Helpers for creating and using Drawables.
+ *
+ * @author Mathias
  */
 public final class DrawableUtils {
 

@@ -9,6 +9,8 @@ import com.thebois.views.info.IActorView;
 
 /**
  * The view that displays the different items in the toolbar.
+ *
+ * @author Mathias
  */
 public class ToolbarView implements IActorView {
 

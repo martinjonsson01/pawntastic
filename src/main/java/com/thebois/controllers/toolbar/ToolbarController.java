@@ -15,6 +15,8 @@ import com.thebois.views.toolbar.ToolbarView;
 
 /**
  * Container class for controllers that manage the toolbar.
+ *
+ * @author Mathias
  */
 public class ToolbarController implements IController<IActorView> {
 

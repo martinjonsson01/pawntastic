@@ -5,6 +5,8 @@ import java.util.Collection;
 
 /**
  * Represents a collection of entities that cooperate and metadata about the group.
+ *
+ * @author Jacob
  */
 public interface IBeingGroup extends Serializable {
 

@@ -18,6 +18,8 @@ import com.thebois.views.game.IView;
 
 /**
  * Recreates being paths by recalculating them, and then displays them.
+ *
+ * @author Martin
  */
 public class BeingPathDebugView implements IView {
 

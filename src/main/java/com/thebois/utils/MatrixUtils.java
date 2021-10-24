@@ -6,6 +6,10 @@ import java.util.function.Consumer;
 
 /**
  * Utilities for operating on matrices.
+ *
+ * @author Jacob
+ * @author Martin
+ * @author Mathias
  */
 public final class MatrixUtils {
 

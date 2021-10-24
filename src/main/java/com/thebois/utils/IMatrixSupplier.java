@@ -4,6 +4,8 @@ package com.thebois.utils;
  * Supplier of elements in a matrix.
  *
  * @param <TElement> The type of element in the matrix.
+ *
+ * @author Mathias
  */
 @FunctionalInterface
 public interface IMatrixSupplier<TElement> {

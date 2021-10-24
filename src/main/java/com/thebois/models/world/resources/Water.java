@@ -7,6 +7,8 @@ import com.thebois.models.inventory.items.ItemType;
 
 /**
  * Resource of type water.
+ *
+ * @author Mathias
  */
 class Water extends AbstractResource {
 

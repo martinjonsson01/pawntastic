@@ -10,6 +10,9 @@ import com.thebois.models.world.structures.IStructure;
 
 /**
  * Responsible for displaying structures.
+ *
+ * @author Jacob
+ * @author Mathias
  */
 public final class StructureView implements IView {
 

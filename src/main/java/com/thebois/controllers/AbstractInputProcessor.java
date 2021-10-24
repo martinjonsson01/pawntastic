@@ -2,6 +2,8 @@ package com.thebois.controllers;
 
 /**
  * A controller handling input from mouse and keyboard.
+ *
+ * @author Mathias
  */
 public abstract class AbstractInputProcessor implements com.badlogic.gdx.InputProcessor {
 

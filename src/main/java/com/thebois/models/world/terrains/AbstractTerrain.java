@@ -6,6 +6,8 @@ import com.thebois.models.Position;
 
 /**
  * Abstract implementation of ITerrain.
+ *
+ * @author Jonathan
  */
 public abstract class AbstractTerrain implements ITerrain {
 

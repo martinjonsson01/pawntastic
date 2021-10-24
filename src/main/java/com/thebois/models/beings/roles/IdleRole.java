@@ -12,6 +12,8 @@ import com.thebois.models.world.IWorld;
 
 /**
  * The builder constructs buildings.
+ *
+ * @author Martin
  */
 class IdleRole extends AbstractRole {
 

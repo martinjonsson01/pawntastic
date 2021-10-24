@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Projector used to convert space and world coordinates.
+ *
+ * @author Mathias
  */
 public interface IProjector {
 

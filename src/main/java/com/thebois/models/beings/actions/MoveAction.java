@@ -19,6 +19,8 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 
 /**
  * Moves the performer towards a specified goal.
+ *
+ * @author Martin
  */
 class MoveAction implements IAction, Serializable {
 
@@ -134,8 +136,8 @@ class MoveAction implements IAction, Serializable {
         final int nodeBeforeObstacleIndex = Math.max(0, obstacleInPathIndex - 1);
         final Position pathNodeBeforeObstacle = path.get(nodeBeforeObstacleIndex);
 
-        final Collection<Position> recalculatedPathSegment = pathFinder.path(pathNodeBeforeObstacle,
-                                                                             destination);
+        final Collection<Position> recalculatedPathSegment =
+            pathFinder.path(pathNodeBeforeObstacle, destination);
 
         // If not possible to find another path to the destination.
         if (recalculatedPathSegment.isEmpty()) {

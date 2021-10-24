@@ -11,29 +11,22 @@ import com.thebois.views.TextureUtils;
 
 /**
  * Viewable Terrain that correspond to TerrainType but has view related information.
+ *
+ * @author Mathias
  */
 public enum ViewableTerrain {
     /**
      * Viewable Grass tile.
      */
-    GRASS(
-        TerrainType.GRASS,
-        TextureUtils.createSquareTexture(),
-        Color.valueOf("#008000")),
+    GRASS(TerrainType.GRASS, TextureUtils.createSquareTexture(), Color.valueOf("#008000")),
     /**
      * Viewable Sand Tile.
      */
-    SAND(
-        TerrainType.SAND,
-        TextureUtils.createSquareTexture(),
-        Color.valueOf("#bbc201")),
+    SAND(TerrainType.SAND, TextureUtils.createSquareTexture(), Color.valueOf("#bbc201")),
     /**
      * Viewable Sand Type.
      */
-    DIRT(
-        TerrainType.DIRT,
-        TextureUtils.createSquareTexture(),
-        Color.valueOf("#76552b"));
+    DIRT(TerrainType.DIRT, TextureUtils.createSquareTexture(), Color.valueOf("#76552b"));
     private static final Map<TerrainType, ViewableTerrain> BY_TYPE = new HashMap<>();
 
     static {

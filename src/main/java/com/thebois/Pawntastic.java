@@ -36,6 +36,11 @@ import com.thebois.views.ViewportWrapper;
 
 /**
  * The main representation of the game.
+ *
+ * @author Jacob
+ * @author Jonathan
+ * @author Martin
+ * @author Mathias
  */
 public class Pawntastic extends Game {
 

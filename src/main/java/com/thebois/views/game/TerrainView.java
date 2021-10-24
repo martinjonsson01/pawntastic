@@ -10,6 +10,8 @@ import com.thebois.models.world.terrains.ITerrain;
 
 /**
  * World view handles all the drawing of the world itself and its information on how to draw it.
+ *
+ * @author Mathias
  */
 public class TerrainView implements IView {
 

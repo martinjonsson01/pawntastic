@@ -5,6 +5,8 @@ import com.thebois.models.world.generation.noises.NoiseFactory;
 
 /**
  * All the different types of terrain in the game.
+ *
+ * @author Mathias
  */
 public enum TerrainType {
     /**

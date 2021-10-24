@@ -10,6 +10,8 @@ import com.thebois.models.beings.IActionPerformer;
  * Can never be performed. It is an action given to a being when it asks for an action but there is
  * nothing more to do.
  * </p>
+ *
+ * @author Martin
  */
 public class DoNothingAction implements IAction, Serializable {
 

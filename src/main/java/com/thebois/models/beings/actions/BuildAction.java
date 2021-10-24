@@ -11,6 +11,7 @@ import com.thebois.models.world.structures.IStructure;
 /**
  * Used to build structures.
  *
+ * @author Martin
  * @author Mathias
  */
 public class BuildAction extends AbstractTimeAction implements Serializable {

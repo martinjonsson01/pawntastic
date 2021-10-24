@@ -5,6 +5,8 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
 /**
  * The entrance point to the program.
+ *
+ * @author Martin
  */
 public final class Main {
 
@@ -21,7 +23,7 @@ public final class Main {
      *
      * @param args The arguments provided
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         final Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 
         config.setTitle("Pawntastic");

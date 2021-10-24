@@ -8,6 +8,8 @@ import com.thebois.models.world.resources.IResource;
 
 /**
  * Used to perform the harvesting of a given resource.
+ *
+ * @author Martin
  */
 public class HarvestAction extends AbstractTimeAction implements Serializable {
 

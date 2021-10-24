@@ -6,6 +6,8 @@ import com.thebois.abstractions.IPositionable;
 
 /**
  * A section of the world representing a structure or resource.
+ *
+ * @author Martin
  */
 public interface ITile extends Serializable, IPositionable {
 

@@ -4,6 +4,8 @@ package com.thebois.listeners.events;
  * Contains information about a value that has changed.
  *
  * @param <TValue> The type of the value
+ *
+ * @author Martin
  */
 public class ValueChangedEvent<TValue> implements IEvent {
 
