@@ -14,10 +14,10 @@ import com.thebois.models.world.structures.StructureType;
 public interface IStructureFinder {
 
     /**
-     * Finds and returns the closest IStructure to the passed position.
+     * Finds and returns the closest completed IStructure to the passed position.
      *
      * @param origin The position to find a structure closest to.
-     * @param type The type of structure to find.
+     * @param type   The type of structure to find.
      *
      * @return The found IStructure.
      */
