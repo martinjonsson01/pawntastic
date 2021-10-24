@@ -328,6 +328,7 @@ public class HarvesterRoleTests {
         when(performer.getPosition()).thenReturn(performerPosition);
         when(performer.canFitItem(any())).thenReturn(false);
         when(performer.hasItem(any())).thenReturn(true);
+        when(performer.getItemTypeOfAnyItem()).thenReturn(ItemType.LOG);
         when(performer.take(any())).thenReturn(ItemFactory.fromType(ItemType.LOG));
         // Set up other positions
         final Position besidesPosition = performerPosition.subtract(1, 0);

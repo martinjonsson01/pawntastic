@@ -51,7 +51,7 @@ abstract class AbstractHarvesterRole extends AbstractRole {
     @Override
     protected Collection<IActionSource> getTaskGenerators() {
         if (isEmptying) {
-            return List.of(this::createMoveToStockpile, this::createEmptyInventoryOfResource);
+            return List.of(this::createMoveToStockpile, this::createEmptyInventory);
         }
         else {
             return List.of(this::createMoveToResource, this::createHarvestResource);
@@ -88,15 +88,12 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         return ActionFactory.createMoveToStockpile(performer, structureFinder, world);
     }
 
-    private IAction createEmptyInventoryOfResource(final IActionPerformer performer) {
+    private IAction createEmptyInventory(final IActionPerformer performer) {
         if (performer.isEmpty()) {
             isEmptying = false;
             return ActionFactory.createDoNext();
         }
-        return ActionFactory.createEmptyInventoryOfItemType(
-            performer,
-            structureFinder,
-            resourceType.getItemType());
+        return ActionFactory.createEmptyInventory(performer, structureFinder);
     }
 
     private Optional<IResource> findNearbyResource(final IActionPerformer performer) {
