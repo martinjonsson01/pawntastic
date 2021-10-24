@@ -30,14 +30,7 @@ public final class TextureUtils {
      * @return The circle texture.
      */
     public static Texture createCircleTexture(final int radius) {
-        final Pixmap pixmap = new Pixmap(radius * 2, radius * 2, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fillCircle(radius, radius, radius);
-        final Texture circleTexture = new Texture(pixmap, true);
-        circleTexture.setFilter(Texture.TextureFilter.MipMapLinearLinear,
-                                Texture.TextureFilter.MipMapLinearLinear);
-        pixmap.dispose();
-        return circleTexture;
+        return createCircleTexture(radius, Color.WHITE);
     }
 
     /**
@@ -87,17 +80,6 @@ public final class TextureUtils {
     /**
      * Creates a new instance of a square shaped texture with the side length.
      *
-     * @param sideLength The side length of a square.
-     *
-     * @return The square texture.
-     */
-    public static Texture createSquareTexture(final int sideLength) {
-        return createSquareTexture(Color.WHITE, sideLength);
-    }
-
-    /**
-     * Creates a new instance of a square shaped texture with the side length.
-     *
      * @param color      The color used in the texture.
      * @param sideLength The side length of a square.
      *
@@ -110,6 +92,17 @@ public final class TextureUtils {
         final Texture squareTexture = new Texture(pixmap);
         pixmap.dispose();
         return squareTexture;
+    }
+
+    /**
+     * Creates a new instance of a square shaped texture with the side length.
+     *
+     * @param sideLength The side length of a square.
+     *
+     * @return The square texture.
+     */
+    public static Texture createSquareTexture(final int sideLength) {
+        return createSquareTexture(Color.WHITE, sideLength);
     }
 
     /**
@@ -137,17 +130,6 @@ public final class TextureUtils {
     /**
      * Creates a new instance of a triangle shaped texture with the side length.
      *
-     * @param sideLength The side length of a square.
-     *
-     * @return The triangle texture.
-     */
-    public static Texture createTriangleTexture(final int sideLength) {
-        return createTriangleTexture(Color.WHITE, sideLength);
-    }
-
-    /**
-     * Creates a new instance of a triangle shaped texture with the side length.
-     *
      * @param color      The color used in the texture.
      * @param sideLength The length of every side in the triangle.
      *
@@ -160,6 +142,17 @@ public final class TextureUtils {
         final Texture squareTexture = new Texture(pixmap);
         pixmap.dispose();
         return squareTexture;
+    }
+
+    /**
+     * Creates a new instance of a triangle shaped texture with the side length.
+     *
+     * @param sideLength The side length of a square.
+     *
+     * @return The triangle texture.
+     */
+    public static Texture createTriangleTexture(final int sideLength) {
+        return createTriangleTexture(Color.WHITE, sideLength);
     }
 
 }

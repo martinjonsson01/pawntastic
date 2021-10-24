@@ -18,8 +18,8 @@ import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
-import com.thebois.models.world.structures.StructureType;
 import com.thebois.models.inventory.Inventory;
+import com.thebois.models.world.structures.StructureType;
 
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
@@ -28,8 +28,7 @@ import com.thebois.models.inventory.Inventory;
  */
 public class Colony extends AbstractBeingGroup implements IRoleAllocator {
 
-    private static final float PAWN_INVENTORY_MAX_CAPACITY = 100f;
-
+    private static final float PAWN_INVENTORY_MAX_CAPACITY = 50f;
     private static final int NUMBER_OF_PAWNS_SPAWNED_BY_HOUSE = 1;
     private static final int NUMBER_OF_PAWNS_SPAWNED_BY_TOWN_HALL = 5;
     private static final int PAWN_SPAWN_RADIUS = 2;
@@ -127,10 +126,9 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     }
 
     private Collection<IBeing> findBeingsWithRole(final AbstractRole role) {
-        return getBeings()
-            .stream()
-            .filter(being -> role.equals(being.getRole()))
-            .collect(Collectors.toList());
+        return getBeings().stream()
+                          .filter(being -> role.equals(being.getRole()))
+                          .collect(Collectors.toList());
     }
 
     /**

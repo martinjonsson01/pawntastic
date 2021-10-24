@@ -10,19 +10,15 @@ public enum ItemType {
     /**
      * Logs are collected from trees.
      */
-    LOG(3.0f, false),
+    LOG(10f, false),
     /**
      * Rocks are collected from stones.
      */
-    ROCK(15.f, false),
+    ROCK(20f, false),
     /**
      * Fish can be caught from water.
      */
-    FISH(0.5f, true),
-    /**
-     * Wheat is harvested from wheat fields.
-     */
-    WHEAT(0.1f, true);
+    FISH(3.0f, true);
     private final float weight;
     private final boolean edible;
 

@@ -57,6 +57,11 @@ public class GiveItemAction extends AbstractTimeAction implements Serializable {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(storable, storablePosition);
+    }
+
+    @Override
     public boolean equals(final Object other) {
         if (this == other) return true;
         if (other == null || getClass() != other.getClass()) return false;
@@ -67,11 +72,6 @@ public class GiveItemAction extends AbstractTimeAction implements Serializable {
             that.storablePosition)
                && Objects.equals(itemType, that.itemType)
                && getTimeSpentPerforming() == that.getTimeSpentPerforming();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(storable, storablePosition);
     }
 
 }
