@@ -250,13 +250,13 @@ public class World
     public Optional<IStructure> getNearbyCompletedStructureOfType(
         final Position origin, final StructureType type) {
         return getStructures().stream()
-                              .filter(structure -> structure.isCompleted() && isSameType(type,
-                                                                                         structure))
+                              .filter(structure -> structure.isCompleted()
+                                                   && isSameTypeOrIsStorable(type, structure))
                               .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
                                                              origin.distanceTo(o2.getPosition())));
     }
 
-    private boolean isSameType(final StructureType type, final IStructure structure) {
+    private boolean isSameTypeOrIsStorable(final StructureType type, final IStructure structure) {
         return structure.getType().equals(type) || isStorable(structure, type);
     }
 
