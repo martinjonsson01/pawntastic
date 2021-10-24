@@ -67,8 +67,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                                                 () -> inventory.take(itemType));
+        final Exception exception =
+            assertThrows(IllegalArgumentException.class, () -> inventory.take(itemType));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
@@ -172,8 +172,8 @@ public class InventoryTests {
         // Act
         inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
         inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                                                 () -> inventory.take(ItemType.ROCK));
+        final Exception exception =
+            assertThrows(IllegalArgumentException.class, () -> inventory.take(ItemType.ROCK));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
@@ -307,6 +307,74 @@ public class InventoryTests {
 
         // Assert
         assertThat(inventory.hasItem(ItemType.LOG, 2)).isTrue();
+    }
+
+    @Test
+    public void ItemDoesNotFitIfItemIsHeavierThanMaxCapacity() {
+        //Arrange
+        final ItemType itemType = ItemType.ROCK;
+        final float maxCapacity = itemType.getWeight() - 1;
+        final Inventory inventory = new Inventory(maxCapacity);
+
+        // Act
+        final boolean doesItemFit = inventory.canFitItem(itemType);
+
+        // Assert
+        assertThat(doesItemFit).isFalse();
+    }
+
+    @Test
+    public void ItemDoesFitIfInventoryHasLargerCapacityThenItem() {
+        //Arrange
+        final ItemType itemType = ItemType.ROCK;
+        final float maxCapacity = itemType.getWeight() + 1;
+        final Inventory inventory = new Inventory(maxCapacity);
+
+        // Act
+        final boolean doesItemFit = inventory.canFitItem(itemType);
+
+        // Assert
+        assertThat(doesItemFit).isTrue();
+    }
+
+    @Test
+    public void IsEmptyIfNoItemsHaveBeenAdded() {
+        // Arrange
+        final Inventory inventory = new Inventory();
+
+        // Act
+        final boolean isEmpty = inventory.isEmpty();
+
+        // Assert
+        assertThat(isEmpty).isTrue();
+    }
+
+    @Test
+    public void isNotEmptyIfItemsHaveBeenAdded() {
+        // Arrange
+        final Inventory inventory = new Inventory(20f);
+        inventory.tryAdd(ItemFactory.fromType(ItemType.ROCK));
+        // Act
+        final boolean isEmpty = inventory.isEmpty();
+
+        // Assert
+        assertThat(isEmpty).isFalse();
+    }
+
+    @Test
+    public void getItemTypeOfAnyItemReturnsTheFirstAddedItem() {
+        // Arrange
+        final Inventory inventory = new Inventory(50f);
+        final ItemType item1 = ItemType.ROCK;
+        final ItemType item2 = ItemType.FISH;
+
+        inventory.tryAdd(ItemFactory.fromType(item1));
+        inventory.tryAdd(ItemFactory.fromType(item2));
+        // Act
+        final ItemType anyItemTypeInInventory = inventory.getItemTypeOfAnyItem();
+
+        // Assert
+        assertThat(anyItemTypeInInventory).isEqualTo(item1);
     }
 
 }

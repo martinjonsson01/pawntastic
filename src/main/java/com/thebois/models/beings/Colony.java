@@ -19,6 +19,7 @@ import com.thebois.models.beings.roles.IRoleAllocator;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
 import com.thebois.models.world.structures.StructureType;
+import com.thebois.models.inventory.Inventory;
 
 /**
  * A Colony is a collection of Pawns that can be controlled by the player.
@@ -26,6 +27,8 @@ import com.thebois.models.world.structures.StructureType;
  * @author Martin
  */
 public class Colony extends AbstractBeingGroup implements IRoleAllocator {
+
+    private static final float PAWN_INVENTORY_MAX_CAPACITY = 100f;
 
     private static final int NUMBER_OF_PAWNS_SPAWNED_BY_HOUSE = 1;
     private static final int NUMBER_OF_PAWNS_SPAWNED_BY_TOWN_HALL = 5;
@@ -146,7 +149,8 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
             addBeing(new Being(vacantPosition,
                                RoleFactory.idle(),
                                RoleFactory.fisher(),
-                               eventBusSource));
+                               eventBusSource,
+                               new Inventory(PAWN_INVENTORY_MAX_CAPACITY)));
         }
     }
 

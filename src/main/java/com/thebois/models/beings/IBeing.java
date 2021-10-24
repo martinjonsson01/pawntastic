@@ -2,6 +2,7 @@ package com.thebois.models.beings;
 
 import java.io.Serializable;
 
+import com.thebois.abstractions.IPositionable;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 
@@ -11,14 +12,7 @@ import com.thebois.models.beings.roles.AbstractRole;
  * @author Jacob
  * @author Martin
  */
-public interface IBeing extends Serializable {
-
-    /**
-     * Gets the current location.
-     *
-     * @return The current location
-     */
-    Position getPosition();
+public interface IBeing extends Serializable, IPositionable {
 
     /**
      * Gets the role.

@@ -2,21 +2,14 @@ package com.thebois.models.world;
 
 import java.io.Serializable;
 
-import com.thebois.models.Position;
+import com.thebois.abstractions.IPositionable;
 
 /**
  * A section of the world representing a structure or resource.
  *
  * @author Martin
  */
-public interface ITile extends Serializable {
-
-    /**
-     * Gets the current location.
-     *
-     * @return The current location.
-     */
-    Position getPosition();
+public interface ITile extends Serializable, IPositionable {
 
     /**
      * Gets the cost of moving across.

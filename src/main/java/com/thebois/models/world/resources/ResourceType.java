@@ -1,5 +1,6 @@
 package com.thebois.models.world.resources;
 
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.generation.noises.INoise;
 import com.thebois.models.world.generation.noises.NoiseFactory;
 
@@ -12,23 +13,29 @@ public enum ResourceType {
     /**
      * A body of water.
      */
-    WATER(0.5f, 0, NoiseFactory.createLargeChunksNoise()),
+    WATER(0.5f, 0, NoiseFactory.createLargeChunksNoise(), ItemType.FISH),
     /**
      * A natural tree.
      */
-    TREE(0.5f, 31, NoiseFactory.createSmallChunksNoise()),
+    TREE(0.5f, 31, NoiseFactory.createSmallChunksNoise(), ItemType.LOG),
     /**
      * A large stone on the ground.
      */
-    STONE(0.5f, 27, NoiseFactory.createVerySmallChunksNoise());
+    STONE(0.5f, 27, NoiseFactory.createVerySmallChunksNoise(), ItemType.ROCK);
     private final float threshold;
     private final int seedPermutation;
     private final INoise noise;
+    private final ItemType itemType;
 
-    ResourceType(final float threshold, final int seedPermutation, final INoise noise) {
+    ResourceType(
+        final float threshold,
+        final int seedPermutation,
+        final INoise noise,
+        final ItemType itemType) {
         this.threshold = threshold;
         this.seedPermutation = seedPermutation;
         this.noise = noise;
+        this.itemType = itemType;
     }
 
     /**
@@ -72,5 +79,14 @@ public enum ResourceType {
      */
     public INoise getNoise() {
         return noise;
+    }
+
+    /**
+     * Gets the item type of the item that can be harvested from the resource.
+     *
+     * @return The item type.
+     */
+    public ItemType getItemType() {
+        return itemType;
     }
 }

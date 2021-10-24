@@ -13,6 +13,10 @@ import com.thebois.models.world.resources.IResource;
  */
 public class HarvestAction extends AbstractTimeAction implements Serializable {
 
+    /**
+     * The distance between the performer and the storable, in tiles.
+     */
+    private static final float MINIMUM_HARVEST_DISTANCE = 1f;
     private final IResource resource;
 
     /**
@@ -27,12 +31,15 @@ public class HarvestAction extends AbstractTimeAction implements Serializable {
 
     @Override
     protected void onPerformCompleted(final IActionPerformer performer) {
-        performer.addItem(resource.harvest());
+        performer.tryAdd(resource.harvest());
     }
 
     @Override
     public boolean canPerform(final IActionPerformer performer) {
-        return resource.getPosition().distanceTo(performer.getPosition()) <= 1.0f;
+        final boolean isCloseEnough =
+            resource.getPosition().distanceTo(performer.getPosition()) <= MINIMUM_HARVEST_DISTANCE;
+        final boolean inventoryHasSpace = performer.canFitItem(resource.getType().getItemType());
+        return isCloseEnough && inventoryHasSpace;
     }
 
     @Override

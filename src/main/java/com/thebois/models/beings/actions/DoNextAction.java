@@ -5,26 +5,29 @@ import java.io.Serializable;
 import com.thebois.models.beings.IActionPerformer;
 
 /**
- * Makes the performer do nothing at all.
+ * Makes the performer skip an action and move onto next action.
+ *
  * <p>
- * Can never be performed. It is an action given to a being when it asks for an action but there is
- * nothing more to do.
+ * Be careful when using this action as it may create an infinite loop. As this action is always
+ * completed.
  * </p>
  *
- * @author Martin
+ * <p>
+ * It is an action given to a being when it asks for an action but has to skip the action and move
+ * on to next action.
+ * </p>
+ *
+ * @author Mathias
  */
-public class DoNothingAction implements IAction, Serializable {
-
-    private boolean isDone = false;
+public class DoNextAction implements IAction, Serializable {
 
     @Override
     public void perform(final IActionPerformer performer, final float deltaTime) {
-        isDone = true;
     }
 
     @Override
     public boolean isCompleted(final IActionPerformer performer) {
-        return isDone;
+        return true;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class DoNothingAction implements IAction, Serializable {
     @Override
     public boolean equals(final Object other) {
         if (this == other) return true;
-        return other instanceof DoNothingAction;
+        return other instanceof DoNextAction;
     }
 
 }

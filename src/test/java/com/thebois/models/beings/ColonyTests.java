@@ -26,6 +26,7 @@ import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.listeners.events.StructureCompletedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.RoleFactory;
+import com.thebois.models.inventory.Inventory;
 import com.thebois.models.world.IWorld;
 import com.thebois.models.world.TestWorld;
 import com.thebois.models.world.World;
@@ -141,7 +142,8 @@ public class ColonyTests {
             new Position(),
             RoleFactory.idle(),
             RoleFactory.fisher(),
-            EventBus::new));
+            EventBus::new,
+            new Inventory()));
 
         // Act
         final byte[] serialized1 = serialize(colony);

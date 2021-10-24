@@ -14,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.thebois.Pawntastic;
 import com.thebois.abstractions.IPositionFinder;
 import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IStructureFinder;
@@ -25,8 +26,9 @@ import com.thebois.models.beings.pathfinding.IPathFinder;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.beings.roles.RoleFactory;
 import com.thebois.models.beings.roles.RoleType;
+import com.thebois.models.inventory.IInventory;
+import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IConsumableItem;
-import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.IWorld;
 import com.thebois.testutils.InMemorySerialize;
@@ -40,6 +42,7 @@ public class BeingTests {
     private static final float HUNGER_RATE = 1f;
     private AbstractRole role;
     private Being being;
+    private IInventory inventory;
 
     public static Stream<Arguments> getPositionsAndDestinations() {
         return Stream.of(Arguments.of(new Position(0, 0), new Position(0, 0)),
@@ -89,17 +92,44 @@ public class BeingTests {
         return createBeing(new Position(), role);
     }
 
+    private static Being createBeing(final IInventory inventory) {
+        final AbstractRole role = new NothingRole();
+        return createBeing(new Position(), role, inventory);
+    }
+
     private static Being createBeing(
         final Position currentPosition, final AbstractRole role, final AbstractRole hungerRole) {
         final EventBus mockEventBusSource = mock(EventBus.class);
-        return new Being(currentPosition, role, hungerRole, () -> mockEventBusSource);
+        final IInventory mockInventory = mock(IInventory.class);
+        return new Being(currentPosition,
+                         role,
+                         hungerRole,
+                         () -> mockEventBusSource,
+                         mockInventory);
+    }
+
+    private static Being createBeing(
+        final Position currentPosition,
+        final AbstractRole role,
+        final AbstractRole hungerRole,
+        final IInventory inventory) {
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        return new Being(currentPosition, role, hungerRole, () -> mockEventBusSource, inventory);
     }
 
     private static Being createBeing(
         final Position currentPosition, final AbstractRole role) {
         final AbstractRole hungerRole = new NothingRole();
         final EventBus mockEventBusSource = mock(EventBus.class);
-        return new Being(currentPosition, role, hungerRole, () -> mockEventBusSource);
+        final IInventory inventory = mock(IInventory.class);
+        return new Being(currentPosition, role, hungerRole, () -> mockEventBusSource, inventory);
+    }
+
+    private static Being createBeing(
+        final Position currentPosition, final AbstractRole role, final IInventory inventory) {
+        final AbstractRole hungerRole = new NothingRole();
+        final EventBus mockEventBusSource = mock(EventBus.class);
+        return new Being(currentPosition, role, hungerRole, () -> mockEventBusSource, inventory);
     }
 
     public static Stream<Arguments> getNotEqualBeings() {
@@ -124,6 +154,7 @@ public class BeingTests {
 
         role = new NothingRole();
         being = createBeing(new Position(), role);
+        inventory = mock(IInventory.class);
     }
 
     @AfterEach
@@ -132,6 +163,7 @@ public class BeingTests {
         RoleFactory.setWorld(null);
         RoleFactory.setResourceFinder(null);
         RoleFactory.setStructureFinder(null);
+        inventory = null;
     }
 
     @ParameterizedTest
@@ -149,16 +181,6 @@ public class BeingTests {
         final Position actualPosition = being.getPosition();
         final float distanceToDestinationAfter = actualPosition.distanceTo(being.getDestination());
         assertThat(distanceToDestinationAfter).isLessThan(distanceToDestinationBefore);
-    }
-
-    @Test
-    public void addItemDoesNotThrow() {
-        // Arrange
-        final IActionPerformer being = createBeing();
-        final IItem item = mock(IItem.class);
-
-        // Act
-        being.addItem(item);
     }
 
     @ParameterizedTest
@@ -320,6 +342,14 @@ public class BeingTests {
 
     @Test
     public void sameObjectAfterDeserialization() throws ClassNotFoundException, IOException {
+        // Arrange
+        final EventBus eventBusSource = Pawntastic.getEventBus();
+        final IBeing being = new Being(new Position(0, 0),
+                                       new NothingRole(),
+                                       new NothingRole(),
+                                       () -> eventBusSource,
+                                       new Inventory());
+
         // Act
         final byte[] serializedBeing = InMemorySerialize.serialize(being);
         final IBeing deserializedBeing = (IBeing) InMemorySerialize.deserialize(serializedBeing);
@@ -331,11 +361,12 @@ public class BeingTests {
     @Test
     public void doesNotLoseHealthWhenHasFoodInInventoryAndTimePasses() {
         // Arrange
+        final Being being = createBeing(new Inventory(10f));
         final float timeToPass = 50f;
         final float startHealthRatio = being.getHealthRatio();
 
         final IConsumableItem food = MockFactory.createEdibleItem(0.1f, 100f, ItemType.FISH);
-        being.addItem(food);
+        being.tryAdd(food);
 
         // Act
         being.update(timeToPass);
@@ -394,13 +425,14 @@ public class BeingTests {
         final AbstractRole hungerRole = mock(AbstractRole.class);
         final IAction action = mock(IAction.class);
         final IAction hungerAction = mock(IAction.class);
-        being = createBeing(new Position(), role, hungerRole);
+        final IInventory inventory = new Inventory(10f);
+        being = createBeing(new Position(), role, hungerRole, inventory);
         when(role.obtainNextAction(being)).thenReturn(action);
         when(hungerRole.obtainNextAction(being)).thenReturn(hungerAction);
 
         being.update(timeUntilHungry);
         // Simulate finding food.
-        being.addItem(MockFactory.createEdibleItem(1f, 10f, ItemType.FISH));
+        being.tryAdd(MockFactory.createEdibleItem(1f, 10f, ItemType.FISH));
 
         final float deltaTime = 0.1f;
 
@@ -418,7 +450,7 @@ public class BeingTests {
         final float timeToPass = 0.1f;
 
         final IConsumableItem food = MockFactory.createEdibleItem(0.1f, 100f, ItemType.FISH);
-        being.addItem(food);
+        being.tryAdd(food);
 
         // Act
         being.update(timeToPass);
@@ -483,6 +515,138 @@ public class BeingTests {
             return List.of(performer -> nothingTask);
         }
 
+    }
+
+    @Test
+    public void beingDelegatesTryAddToInventory() {
+        // Arrange
+        final Being being = createBeing(inventory);
+
+        // Act
+        being.tryAdd(any());
+
+        // Assert
+        verify(inventory, times(1)).tryAdd(any());
+    }
+
+    @Test
+    public void beingDelegatesAddMultipleToInventory() {
+        // Arrange
+        final Being being = createBeing(inventory);
+
+        // Act
+        being.addMultiple(any());
+
+        // Assert
+        verify(inventory, times(1)).addMultiple(any());
+    }
+
+    @Test
+    public void beingDelegatesCanFitItemToInventory() {
+        // Arrange
+        final Being being = createBeing(inventory);
+
+        // Act
+        being.canFitItem(any());
+
+        // Assert
+        verify(inventory, times(1)).canFitItem(any());
+    }
+
+    @Test
+    public void beingDelegatesIsFullToInventory() {
+        // Arrange
+        final Being being = createBeing(inventory);
+
+        // Act
+        being.isFull();
+
+        // Assert
+        verify(inventory, times(1)).isFull();
+    }
+
+    @Test
+    public void beingDelegatesHasItemToInventory() {
+        // Arrange
+        final Being being = createBeing(inventory);
+
+        // Act
+        being.hasItem(any());
+
+        // Assert
+        verify(inventory, times(1)).hasItem(any());
+    }
+
+    @Test
+    public void beingDelegatesHasItemAmountToInventory() {
+        // Arrange
+        final Being being = createBeing(inventory);
+
+        // Act
+        being.hasItem(any(), anyInt());
+
+        // Assert
+        verify(inventory, times(1)).hasItem(any(), anyInt());
+    }
+
+    @Test
+    public void beingDelegatesNumberOfToInventory() {
+        // Arrange
+        final Being being = createBeing(inventory);
+
+        // Act
+        being.numberOf(any());
+
+        // Assert
+        verify(inventory, times(1)).numberOf(any());
+    }
+
+    @Test
+    public void beingDelegatesTakeToInventory() {
+        // Arrange
+        final Being being = createBeing(inventory);
+
+        // Act
+        being.take(any());
+
+        // Assert
+        verify(inventory, times(1)).take(any());
+    }
+
+    @Test
+    public void beingDelegatesTakeAmountToInventory() {
+        // Arrange
+        final Being being = createBeing(inventory);
+
+        // Act
+        being.takeAmount(any(), anyInt());
+
+        // Assert
+        verify(inventory, times(1)).takeAmount(any(), anyInt());
+    }
+
+    @Test
+    public void beingDelegatesGetItemTypeOfAnyItemToInventory() {
+        // Arrange
+        final Being being = createBeing(inventory);
+
+        // Act
+        being.getItemTypeOfAnyItem();
+
+        // Assert
+        verify(inventory, times(1)).getItemTypeOfAnyItem();
+    }
+
+    @Test
+    public void beingDelegatesIsEmptyToInventory() {
+        // Arrange
+        final Being being = createBeing(inventory);
+
+        // Act
+        being.isEmpty();
+
+        // Assert
+        verify(inventory, times(1)).isEmpty();
     }
 
 }

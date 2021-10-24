@@ -2,15 +2,17 @@ package com.thebois.models.beings;
 
 import java.io.Serializable;
 
+import com.thebois.abstractions.IPositionable;
 import com.thebois.models.Position;
-import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.IStorable;
+import com.thebois.models.inventory.ITakeable;
 
 /**
  * An internal interface that represents a performer of actions.
  *
  * @author Martin
  */
-public interface IActionPerformer extends Serializable {
+public interface IActionPerformer extends Serializable, IStorable, ITakeable, IPositionable {
 
     /**
      * Gives the performer a new destination.
@@ -18,19 +20,5 @@ public interface IActionPerformer extends Serializable {
      * @param position Where to go.
      */
     void setDestination(Position position);
-
-    /**
-     * Gets the current location.
-     *
-     * @return The current location
-     */
-    Position getPosition();
-
-    /**
-     * Gives an item.
-     *
-     * @param item The item to give.
-     */
-    void addItem(IItem item);
 
 }

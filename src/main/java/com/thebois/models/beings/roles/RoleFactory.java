@@ -44,11 +44,10 @@ public final class RoleFactory {
      * @throws java.util.NoSuchElementException If there is no such role.
      */
     public static AbstractRole fromType(final RoleType roleType) {
-        return all()
-            .stream()
-            .filter(role -> role.getType().equals(roleType))
-            .findFirst()
-            .orElseThrow();
+        return all().stream()
+                    .filter(role -> role.getType().equals(roleType))
+                    .findFirst()
+                    .orElseThrow();
     }
 
     /**
@@ -73,7 +72,7 @@ public final class RoleFactory {
      */
     public static AbstractRole lumberjack() {
         assertDependenciesNotNull();
-        return new LumberjackRole(resourceFinder, world);
+        return new LumberjackRole(resourceFinder, structureFinder, world);
     }
 
     /**
@@ -83,7 +82,7 @@ public final class RoleFactory {
      */
     public static AbstractRole miner() {
         assertDependenciesNotNull();
-        return new MinerRole(resourceFinder, world);
+        return new MinerRole(resourceFinder, structureFinder, world);
     }
 
     /**
@@ -93,7 +92,7 @@ public final class RoleFactory {
      */
     public static AbstractRole fisher() {
         assertDependenciesNotNull();
-        return new FisherRole(resourceFinder, world);
+        return new FisherRole(resourceFinder, structureFinder, world);
     }
 
     /**

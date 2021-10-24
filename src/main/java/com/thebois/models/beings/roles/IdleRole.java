@@ -43,8 +43,8 @@ class IdleRole extends AbstractRole {
     }
 
     private IAction getRandomMove(final IActionPerformer performer) {
-        final ITile randomVacantTile = world.getRandomVacantSpotInRadiusOf(performer.getPosition(),
-                                                                           ROAM_RADIUS);
+        final ITile randomVacantTile =
+            world.getRandomVacantSpotInRadiusOf(performer.getPosition(), ROAM_RADIUS);
         return ActionFactory.createMoveTo(randomVacantTile.getPosition());
     }
 

@@ -9,10 +9,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import com.thebois.Pawntastic;
-import com.thebois.abstractions.IResourceFinder;
-import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.abstractions.IPositionFinder;
+import com.thebois.abstractions.IResourceFinder;
 import com.thebois.abstractions.IStructureFinder;
+import com.thebois.listeners.events.ObstaclePlacedEvent;
 import com.thebois.models.Position;
 import com.thebois.models.world.generation.ResourceGenerator;
 import com.thebois.models.world.generation.TerrainGenerator;
@@ -146,9 +146,7 @@ public class World
     }
 
     private boolean isTileWithinRadiusOf(
-        final ITile tile,
-        final Position position,
-        final float radius) {
+        final ITile tile, final Position position, final float radius) {
         return radius > position.distanceTo(tile.getPosition());
     }
 
@@ -249,12 +247,22 @@ public class World
     }
 
     @Override
-    public Optional<IStructure> getNearbyStructureOfType(
+    public Optional<IStructure> getNearbyCompletedStructureOfType(
         final Position origin, final StructureType type) {
         return getStructures().stream()
-                              .filter(structure -> structure.getType().equals(type))
+                              .filter(structure -> structure.isCompleted()
+                                                   && isSameTypeOrIsStorable(type, structure))
                               .min((o1, o2) -> Float.compare(origin.distanceTo(o1.getPosition()),
                                                              origin.distanceTo(o2.getPosition())));
+    }
+
+    private boolean isSameTypeOrIsStorable(final StructureType type, final IStructure structure) {
+        return structure.getType().equals(type) || isStorable(structure, type);
+    }
+
+    private boolean isStorable(final IStructure structure, final StructureType type) {
+        return type.equals(StructureType.STOCKPILE) && structure.getType()
+                                                                .equals(StructureType.TOWN_HALL);
     }
 
     /**

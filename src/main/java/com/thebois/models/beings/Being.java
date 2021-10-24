@@ -1,6 +1,8 @@
 package com.thebois.models.beings;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -11,7 +13,6 @@ import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
 import com.thebois.models.inventory.IInventory;
-import com.thebois.models.inventory.Inventory;
 import com.thebois.models.inventory.items.IConsumableItem;
 import com.thebois.models.inventory.items.IItem;
 import com.thebois.models.inventory.items.ItemType;
@@ -21,6 +22,7 @@ import com.thebois.models.inventory.items.ItemType;
  *
  * @author Jacob
  * @author Martin
+ * @author Mathias
  */
 public class Being implements IBeing, IActionPerformer {
 
@@ -33,10 +35,6 @@ public class Being implements IBeing, IActionPerformer {
      * arrived.
      */
     private static final float DESTINATION_REACHED_DISTANCE = 0.01f;
-    /**
-     * How many kilograms a being can carry.
-     */
-    private static final float MAX_CARRYING_CAPACITY = 100f;
     /**
      * How much health to start off with.
      */
@@ -53,9 +51,9 @@ public class Being implements IBeing, IActionPerformer {
      * How much health the pawn should gain or lose per second.
      */
     private static final float HEALTH_RATES = 1f;
-    private final IInventory inventory = new Inventory(MAX_CARRYING_CAPACITY);
     private final AbstractRole hungerRole;
     private AbstractRole assignedRole;
+    private final IInventory inventory;
     private Position position;
     private AbstractRole role;
     private Position destination;
@@ -69,17 +67,20 @@ public class Being implements IBeing, IActionPerformer {
      * @param role           The starting role.
      * @param hungerRole     The role to perform when hungry.
      * @param eventBusSource A way of getting an event bus to listen for events on.
+     * @param inventory      The inventory of the being.
      */
     public Being(
         final Position startPosition,
         final AbstractRole role,
         final AbstractRole hungerRole,
-        final IEventBusSource eventBusSource) {
+        final IEventBusSource eventBusSource,
+        final IInventory inventory) {
         this.position = startPosition;
         this.destination = startPosition;
         this.role = role;
         this.assignedRole = role;
         this.hungerRole = hungerRole;
+        this.inventory = inventory;
         eventBusSource.getEventBus().post(new BeingSpawnedEvent());
     }
 
@@ -166,6 +167,61 @@ public class Being implements IBeing, IActionPerformer {
         }
     }
 
+    @Override
+    public boolean isFull() {
+        return inventory.isFull();
+    }
+
+    @Override
+    public boolean tryAdd(final IItem item) {
+        return inventory.tryAdd(item);
+    }
+
+    @Override
+    public void addMultiple(final List<IItem> stack) {
+        inventory.addMultiple(stack);
+    }
+
+    @Override
+    public boolean canFitItem(final ItemType itemType) {
+        return inventory.canFitItem(itemType);
+    }
+
+    @Override
+    public IItem take(final ItemType itemType) {
+        return inventory.take(itemType);
+    }
+
+    @Override
+    public ArrayList<IItem> takeAmount(final ItemType itemType, final int amount) {
+        return inventory.takeAmount(itemType, amount);
+    }
+
+    @Override
+    public boolean hasItem(final ItemType itemType) {
+        return inventory.hasItem(itemType);
+    }
+
+    @Override
+    public boolean hasItem(final ItemType itemType, final int amount) {
+        return inventory.hasItem(itemType, amount);
+    }
+
+    @Override
+    public int numberOf(final ItemType itemType) {
+        return inventory.numberOf(itemType);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return inventory.isEmpty();
+    }
+
+    @Override
+    public ItemType getItemTypeOfAnyItem() {
+        return inventory.getItemTypeOfAnyItem();
+    }
+
     /**
      * Calculates and sets new position.
      *
@@ -248,11 +304,6 @@ public class Being implements IBeing, IActionPerformer {
     @Override
     public void setDestination(final Position destination) {
         this.destination = destination;
-    }
-
-    @Override
-    public void addItem(final IItem item) {
-        inventory.tryAdd(item);
     }
 
 }

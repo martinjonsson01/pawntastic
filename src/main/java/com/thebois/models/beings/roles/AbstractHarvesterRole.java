@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.thebois.abstractions.IResourceFinder;
+import com.thebois.abstractions.IStructureFinder;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.beings.actions.ActionFactory;
@@ -18,30 +19,43 @@ import com.thebois.models.world.resources.ResourceType;
  * Represents a role that mainly harvests items from resources.
  *
  * @author Martin
+ * @author Mathias
  */
 abstract class AbstractHarvesterRole extends AbstractRole {
 
-    private final IResourceFinder finder;
+    private final IResourceFinder resourceFinder;
+    private final IStructureFinder structureFinder;
     private final IWorld world;
     private final ResourceType resourceType;
+    private boolean isEmptying = false;
 
     /**
-     * Instantiates with a way of finding resources.
+     * Instantiates with a way of finding resources and structures.
      *
-     * @param finder       The locator of resources.
-     * @param world        The world in which the resources are located.
-     * @param resourceType The type of resource to gather.
+     * @param resourceFinder  The locator of resources.
+     * @param structureFinder The locator of structures.
+     * @param world           The world in which the resources are located.
+     * @param resourceType    The type of resource to gather.
      */
     AbstractHarvesterRole(
-        final IResourceFinder finder, final IWorld world, final ResourceType resourceType) {
-        this.finder = finder;
+        final IResourceFinder resourceFinder,
+        final IStructureFinder structureFinder,
+        final IWorld world,
+        final ResourceType resourceType) {
+        this.resourceFinder = resourceFinder;
+        this.structureFinder = structureFinder;
         this.world = world;
         this.resourceType = resourceType;
     }
 
     @Override
     protected Collection<IActionSource> getTaskGenerators() {
-        return List.of(this::createMoveToResource, this::createHarvestResource);
+        if (isEmptying) {
+            return List.of(this::createMoveToStockpile, this::createEmptyInventory);
+        }
+        else {
+            return List.of(this::createMoveToResource, this::createHarvestResource);
+        }
     }
 
     private IAction createMoveToResource(final IActionPerformer performer) {
@@ -50,9 +64,8 @@ abstract class AbstractHarvesterRole extends AbstractRole {
 
         final IResource resource = maybeResource.get();
 
-        final Position position = performer.getPosition();
-        final Optional<Position> closestSpotNextToResource = world.getClosestNeighbourOf(resource,
-                                                                                         position);
+        final Optional<Position> closestSpotNextToResource =
+            world.getClosestNeighbourOf(resource, performer.getPosition());
 
         if (closestSpotNextToResource.isEmpty()) return ActionFactory.createDoNothing();
 
@@ -64,13 +77,28 @@ abstract class AbstractHarvesterRole extends AbstractRole {
         if (maybeResource.isEmpty()) return ActionFactory.createDoNothing();
 
         final IResource resource = maybeResource.get();
-
+        if (!performer.canFitItem(resourceType.getItemType())) {
+            isEmptying = true;
+            return ActionFactory.createDoNext();
+        }
         return ActionFactory.createHarvest(resource);
+    }
+
+    private IAction createMoveToStockpile(final IActionPerformer performer) {
+        return ActionFactory.createMoveToStockpile(performer, structureFinder, world);
+    }
+
+    private IAction createEmptyInventory(final IActionPerformer performer) {
+        if (performer.isEmpty()) {
+            isEmptying = false;
+            return ActionFactory.createDoNext();
+        }
+        return ActionFactory.createEmptyInventory(performer, structureFinder);
     }
 
     private Optional<IResource> findNearbyResource(final IActionPerformer performer) {
         final Position position = performer.getPosition();
-        return finder.getNearbyOfType(position, resourceType);
+        return resourceFinder.getNearbyOfType(position, resourceType);
     }
 
 }

@@ -63,6 +63,7 @@ public class BuildActionTests {
     public void performDeliversASingleNeededItemToStructureWhenTimeIsAtItemTransferTime() {
         // Arrange
         when(performer.getPosition()).thenReturn(besidesStructure);
+        when(performer.hasItem(any())).thenReturn(true);
 
         // Act
         action.perform(performer, ITEM_TRANSFER_TIME);
@@ -70,9 +71,6 @@ public class BuildActionTests {
         // Assert
         final ArgumentCaptor<IItem> itemCaptor = ArgumentCaptor.forClass(IItem.class);
         verify(structure, atLeastOnce()).tryDeliverItem(itemCaptor.capture());
-
-        final IItem deliveredItem = itemCaptor.getValue();
-        assertThat(neededItemTypes).contains(deliveredItem.getType());
     }
 
     @Test
@@ -80,6 +78,7 @@ public class BuildActionTests {
         // Arrange
         final Position besidesStructure = structure.getPosition().subtract(1, 0);
         when(performer.getPosition()).thenReturn(besidesStructure);
+        when(performer.hasItem(any())).thenReturn(true);
 
         // Act
         final int fractions = 10;
@@ -91,9 +90,6 @@ public class BuildActionTests {
         // Assert
         final ArgumentCaptor<IItem> itemCaptor = ArgumentCaptor.forClass(IItem.class);
         verify(structure, atLeastOnce()).tryDeliverItem(itemCaptor.capture());
-
-        final IItem deliveredItem = itemCaptor.getValue();
-        assertThat(neededItemTypes).contains(deliveredItem.getType());
     }
 
     @Test
@@ -103,20 +99,6 @@ public class BuildActionTests {
 
         // Act
         action.perform(performer, 0.1f);
-
-        // Assert
-        verify(structure, times(0)).tryDeliverItem(any());
-    }
-
-    @Test
-    public void performDeliversNothingWhenNoNeededItemsAndTimeIsItemTransferTime() {
-        // Arrange
-        when(performer.getPosition()).thenReturn(besidesStructure);
-
-        when(structure.getNeededItems()).thenReturn(List.of());
-
-        // Act
-        action.perform(performer, ITEM_TRANSFER_TIME);
 
         // Assert
         verify(structure, times(0)).tryDeliverItem(any());
@@ -137,9 +119,10 @@ public class BuildActionTests {
     }
 
     @Test
-    public void canPerformReturnsTrueWhenNearby() {
+    public void canPerformReturnsTrueWhenNearbyAndHasNeededItem() {
         // Arrange
         when(performer.getPosition()).thenReturn(besidesStructure);
+        when(performer.hasItem(any())).thenReturn(true);
 
         // Act
         final boolean canPerform = action.canPerform(performer);
@@ -153,6 +136,19 @@ public class BuildActionTests {
         // Arrange
         final Position awayFromStructure = structure.getPosition().add(10, 10);
         when(performer.getPosition()).thenReturn(awayFromStructure);
+
+        // Act
+        final boolean canPerform = action.canPerform(performer);
+
+        // Assert
+        assertThat(canPerform).isFalse();
+    }
+
+    @Test
+    public void canPerformReturnsFalseWhenPerformerDoesNotHaveNeededItem() {
+        // Arrange
+        when(performer.getPosition()).thenReturn(besidesStructure);
+        when(performer.hasItem(any())).thenReturn(false);
 
         // Act
         final boolean canPerform = action.canPerform(performer);

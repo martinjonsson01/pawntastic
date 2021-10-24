@@ -3,11 +3,8 @@ package com.thebois.models.beings.actions;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.thebois.models.beings.IActionPerformer;
-import com.thebois.models.inventory.items.IItem;
-import com.thebois.models.inventory.items.ItemFactory;
 import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.structures.IStructure;
 
@@ -15,6 +12,7 @@ import com.thebois.models.world.structures.IStructure;
  * Used to build structures.
  *
  * @author Martin
+ * @author Mathias
  */
 public class BuildAction extends AbstractTimeAction implements Serializable {
 
@@ -54,20 +52,28 @@ public class BuildAction extends AbstractTimeAction implements Serializable {
 
     @Override
     protected void onPerformCompleted(final IActionPerformer performer) {
-        final Collection<ItemType> neededItemTypes = toBuild.getNeededItems();
-        final Optional<ItemType> neededItemType = neededItemTypes.stream().findFirst();
-        if (neededItemType.isPresent()) {
-            final IItem item = ItemFactory.fromType(neededItemType.get());
-            toBuild.tryDeliverItem(item);
-        }
+        final ItemType neededItem = getNeededItemFromPerformer(performer);
+        toBuild.tryDeliverItem(performer.take(neededItem));
     }
 
     @Override
     public boolean canPerform(final IActionPerformer performer) {
-        // Note: when items have to be fetched from stockpiles (instead of magically created),
-        // this will have to take into account whether the performer has the required items
-        // in its inventory.
-        return performer.getPosition().distanceTo(toBuild.getPosition()) < MINIMUM_BUILD_DISTANCE;
+        // If you change the line below to not handle null, it can break onPerformCompleted method
+        // as this method should always be called before onPerformCompleted
+        final boolean performerHasNeededItem = getNeededItemFromPerformer(performer) != null;
+        final boolean isCloseEnough =
+            performer.getPosition().distanceTo(toBuild.getPosition()) < MINIMUM_BUILD_DISTANCE;
+        return isCloseEnough && performerHasNeededItem;
+    }
+
+    private ItemType getNeededItemFromPerformer(final IActionPerformer performer) {
+        final Collection<ItemType> neededItems = toBuild.getNeededItems();
+        for (final ItemType neededItem : neededItems) {
+            if (performer.hasItem(neededItem)) {
+                return neededItem;
+            }
+        }
+        return null;
     }
 
 }

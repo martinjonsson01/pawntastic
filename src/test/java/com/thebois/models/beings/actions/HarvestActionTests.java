@@ -11,7 +11,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.thebois.models.Position;
 import com.thebois.models.beings.IActionPerformer;
 import com.thebois.models.inventory.items.IItem;
+import com.thebois.models.inventory.items.ItemType;
 import com.thebois.models.world.resources.IResource;
+import com.thebois.models.world.resources.ResourceType;
 import com.thebois.testutils.MockFactory;
 
 import static org.assertj.core.api.Assertions.*;
@@ -23,6 +25,8 @@ public class HarvestActionTests {
     private IResource resource;
     private IAction action;
     private IItem resourceItem;
+    private final ItemType itemType = ItemType.ROCK;
+    private Position resourcePosition;
 
     public static Stream<Arguments> getEqualHarvests() {
         final IResource sameResource = mock(IResource.class);
@@ -49,7 +53,9 @@ public class HarvestActionTests {
     public void setup() {
         performer = mock(IActionPerformer.class);
         resourceItem = mock(IItem.class);
-        resource = MockFactory.createResource(new Position(1, 0), resourceItem, 10f);
+        when(resourceItem.getType()).thenReturn(itemType);
+        resourcePosition = new Position(1, 0);
+        resource = MockFactory.createResource(resourcePosition, resourceItem, 10f);
         action = ActionFactory.createHarvest(resource);
     }
 
@@ -57,6 +63,19 @@ public class HarvestActionTests {
     public void canPerformReturnsFalseWhenFarAwayFromResource() {
         // Arrange
         when(performer.getPosition()).thenReturn(new Position(10, 10));
+        when(performer.canFitItem(any())).thenReturn(true);
+        // Act
+        final boolean canPerform = action.canPerform(performer);
+
+        // Assert
+        assertThat(canPerform).isFalse();
+    }
+
+    @Test
+    public void canPerformReturnsFalseWhenPerformerHasNoInventorySpacesLeft() {
+        // Arrange
+        when(performer.getPosition()).thenReturn(resourcePosition);
+        when(performer.canFitItem(any())).thenReturn(false);
 
         // Act
         final boolean canPerform = action.canPerform(performer);
@@ -66,10 +85,11 @@ public class HarvestActionTests {
     }
 
     @Test
-    public void canPerformReturnsTrueWhenNextToResource() {
+    public void canPerformReturnsTrueWhenNextToResourceAndHasInventorySpace() {
         // Arrange
         final Position besidesResource = resource.getPosition().subtract(1, 0);
         when(performer.getPosition()).thenReturn(besidesResource);
+        when(performer.canFitItem(any())).thenReturn(true);
 
         // Act
         final boolean canPerform = action.canPerform(performer);
@@ -86,7 +106,7 @@ public class HarvestActionTests {
         }
 
         // Assert
-        verify(performer, times(0)).addItem(any());
+        verify(performer, times(0)).tryAdd(any());
     }
 
     @Test
@@ -95,42 +115,20 @@ public class HarvestActionTests {
         action.perform(performer, resource.getHarvestTime());
 
         // Assert
-        verify(performer, times(1)).addItem(eq(resourceItem));
+        verify(performer, times(1)).tryAdd(eq(resourceItem));
     }
 
     @Test
-    public void isCompletedIsFalseBeforePerforming() {
+    public void isCompletedIsFalseIfInventoryOfPerformerIsNotFull() {
+        // Arrange
+        when(resource.getType()).thenReturn(ResourceType.STONE);
+        when(performer.canFitItem(itemType)).thenReturn(true);
+
         // Act
         final boolean completed = action.isCompleted(performer);
 
         // Assert
         assertThat(completed).isFalse();
-    }
-
-    @Test
-    public void isCompletedIsTrueAfterPerformingHarvestDuration() {
-        action.perform(performer, resource.getHarvestTime());
-
-        // Act
-        final boolean completed = action.isCompleted(performer);
-
-        // Assert
-        assertThat(completed).isTrue();
-    }
-
-    @Test
-    public void isCompletedIsTrueAfterPerformingMultipleTimesThatAddUpToHarvestDuration() {
-        final int fractions = 10;
-        final float timeSpentHarvesting = resource.getHarvestTime() / fractions;
-        for (int i = 0; i < fractions; i++) {
-            action.perform(performer, timeSpentHarvesting);
-        }
-
-        // Act
-        final boolean completed = action.isCompleted(performer);
-
-        // Assert
-        assertThat(completed).isTrue();
     }
 
     @ParameterizedTest

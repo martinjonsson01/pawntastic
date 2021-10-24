@@ -36,7 +36,7 @@ public final class StructureFactory {
         return switch (type) {
             case HOUSE -> new House(position);
             case STOCKPILE -> stockpile(position);
-            case TOWN_HALL -> new TownHall(position);
+            case TOWN_HALL -> townHall(position);
         };
     }
 
@@ -56,6 +56,11 @@ public final class StructureFactory {
     private static Stockpile stockpile(final Position position) {
         assertDependenciesNotNull();
         return new Stockpile(position, inventory);
+    }
+
+    private static TownHall townHall(final Position position) {
+        assertDependenciesNotNull();
+        return new TownHall(position, inventory);
     }
 
     private static void assertDependenciesNotNull() {
