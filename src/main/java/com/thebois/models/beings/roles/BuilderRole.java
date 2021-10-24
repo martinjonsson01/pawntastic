@@ -86,6 +86,9 @@ class BuilderRole extends AbstractRole {
     }
 
     private IAction createFillInventory(final IActionPerformer performer) {
+        if (!isFilling) {
+            return ActionFactory.createDoNext();
+        }
         final Optional<IStructure> maybeStructure = findNearbyIncompleteStructure(performer);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();

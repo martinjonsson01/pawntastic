@@ -214,6 +214,36 @@ public class BuilderRoleTests {
     }
 
     @Test
+    public void obtainNextActionReturnsGiveItemActionWhenPerformerStillHasItemInInventory() {
+        // Arrange
+        final Position besidesPerformer = performer.getPosition().subtract(1, 0);
+        final IStructure structure =
+            StructureFactory.createStructure(StructureType.STOCKPILE, besidesPerformer);
+        final IStorable storable = (IStorable) structure;
+        final IItem item = mock(IItem.class);
+        final ItemType type = ItemType.ROCK;
+        when(performer.isEmpty()).thenReturn(false);
+        when(performer.takeFirstItem()).thenReturn(item);
+        when(performer.hasItem(any())).thenReturn(true);
+        when(item.getType()).thenReturn(type);
+
+        setStructureFinderNearByStructureResult(Optional.of(structure), Optional.of(structure));
+        setIWorldFinderResult(Optional.of(performer.getPosition()));
+
+        final IAction expected =
+            ActionFactory.createGiveItem(storable, type, structure.getPosition());
+
+        // Act
+        //Do one giveITemAction
+        role.obtainNextAction(performer).perform(performer, 10f);
+        //Gets the second one
+        final IAction actual = role.obtainNextAction(performer);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
     public void obtainNextActionReturnsIdleActionWhenStructureToBuildIsNotFound() {
         // Arrange
         final Position besidesPerformer = performer.getPosition().subtract(1, 0);
