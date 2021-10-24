@@ -2,7 +2,7 @@ package com.thebois.models.beings;
 
 import java.io.Serializable;
 
-import com.thebois.models.IPositionable;
+import com.thebois.abstractions.IPositionable;
 import com.thebois.models.Position;
 import com.thebois.models.inventory.IStorable;
 import com.thebois.models.inventory.ITakeable;

@@ -2,7 +2,7 @@ package com.thebois.models.world;
 
 import java.io.Serializable;
 
-import com.thebois.models.IPositionable;
+import com.thebois.abstractions.IPositionable;
 
 /**
  * A section of the world representing a structure or resource.

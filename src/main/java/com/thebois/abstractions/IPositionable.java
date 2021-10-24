@@ -1,4 +1,6 @@
-package com.thebois.models;
+package com.thebois.abstractions;
+
+import com.thebois.models.Position;
 
 /**
  * Something that has a position.
