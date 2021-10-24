@@ -105,7 +105,7 @@ class BuilderRole extends AbstractRole {
             final ITakeable takeable = (ITakeable) stockpile;
             if (!takeable.hasItem(nextNeededItem)) {
                 builderState = BuilderState.BUILDING_STRUCTURES;
-                return ActionFactory.createDoNext();
+                return ActionFactory.createDoNothing();
             }
             return ActionFactory.createTakeItem(takeable, nextNeededItem, stockpile.getPosition());
         }
