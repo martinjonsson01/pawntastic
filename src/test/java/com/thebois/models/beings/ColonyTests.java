@@ -37,6 +37,20 @@ import static org.mockito.Mockito.*;
 
 public class ColonyTests {
 
+    public static Stream<Arguments> getStructureCompletedEventsToTest() {
+        final Position position = new Position(10, 10);
+
+        return Stream.of(Arguments.of(
+                             new StructureCompletedEvent(StructureType.HOUSE, position),
+                             1),
+                         Arguments.of(new StructureCompletedEvent(
+                             StructureType.TOWN_HALL,
+                             position), 5),
+                         Arguments.of(new StructureCompletedEvent(
+                             StructureType.STOCKPILE,
+                             position), 0));
+    }
+
     @BeforeEach
     public void setup() {
         RoleFactory.setWorld(mock(IWorld.class));
@@ -73,20 +87,6 @@ public class ColonyTests {
 
         final EventBus mockEventBusSource = mock(EventBus.class);
         return new Colony(positionFinder, () -> mockEventBusSource);
-    }
-
-    public static Stream<Arguments> getStructureCompletedEventsToTest() {
-        final Position position = new Position(10, 10);
-
-        return Stream.of(Arguments.of(
-                             new StructureCompletedEvent(StructureType.HOUSE, position),
-                             1),
-                         Arguments.of(new StructureCompletedEvent(
-                             StructureType.TOWN_HALL,
-                             position), 5),
-                         Arguments.of(new StructureCompletedEvent(
-                             StructureType.STOCKPILE,
-                             position), 0));
     }
 
     @ParameterizedTest
@@ -138,7 +138,7 @@ public class ColonyTests {
         RoleFactory.setStructureFinder(world);
         RoleFactory.setWorld(world);
 
-        colony.addBeing(new Pawn(
+        colony.addBeing(new Being(
             new Position(),
             RoleFactory.idle(),
             RoleFactory.fisher(),

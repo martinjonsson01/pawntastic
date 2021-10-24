@@ -31,16 +31,14 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
     private static final int NUMBER_OF_PAWNS_SPAWNED_BY_HOUSE = 1;
     private static final int NUMBER_OF_PAWNS_SPAWNED_BY_TOWN_HALL = 5;
     private static final int PAWN_SPAWN_RADIUS = 2;
-
     private final IPositionFinder positionFinder;
     private final IEventBusSource eventBusSource;
 
     /**
      * Creates a colony and fills it with pawns in the provided open positions.
      *
-     * @param eventBusSource  A way of getting an event bus to listen for events on.
+     * @param eventBusSource A way of getting an event bus to listen for events on.
      * @param positionFinder Used to find positions in the world.
-     *
      */
     public Colony(final IPositionFinder positionFinder, final IEventBusSource eventBusSource) {
         super(eventBusSource);
@@ -145,12 +143,11 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
                                                       numberOfPawnsToSpawn,
                                                       PAWN_SPAWN_RADIUS);
         for (final Position vacantPosition : vacantPositions) {
-            addBeing(new Pawn(
-                vacantPosition,
-                RoleFactory.idle(),
-                RoleFactory.fisher(),
-                eventBusSource,
-                new Inventory(PAWN_INVENTORY_MAX_CAPACITY)));
+            addBeing(new Being(vacantPosition,
+                               RoleFactory.idle(),
+                               RoleFactory.fisher(),
+                               eventBusSource,
+                               new Inventory(PAWN_INVENTORY_MAX_CAPACITY)));
         }
     }
 
@@ -177,4 +174,5 @@ public class Colony extends AbstractBeingGroup implements IRoleAllocator {
         // IMPORTANT: Has to subscribe after being read.
         eventBusSource.getEventBus().register(this);
     }
+
 }

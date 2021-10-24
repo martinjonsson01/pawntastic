@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.thebois.Pawntastic;
+import com.thebois.listeners.IEventBusSource;
+import com.thebois.listeners.events.BeingSpawnedEvent;
 import com.thebois.listeners.events.OnDeathEvent;
 import com.thebois.models.Position;
 import com.thebois.models.beings.roles.AbstractRole;
@@ -20,7 +22,7 @@ import com.thebois.models.inventory.items.ItemType;
  *
  * @author Mathias
  */
-public abstract class AbstractBeing implements IBeing, IActionPerformer {
+public class Being implements IBeing, IActionPerformer {
 
     /**
      * The max speed of the being, in tiles/second.
@@ -59,15 +61,17 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     /**
      * Instantiates with an initial position and role.
      *
-     * @param startPosition The initial position.
-     * @param role          The starting role.
-     * @param hungerRole    The role to perform when hungry.
+     * @param startPosition  The initial position.
+     * @param role           The starting role.
+     * @param hungerRole     The role to perform when hungry.
+     * @param eventBusSource A way of getting an event bus to listen for events on.
      * @param inventory     The inventory of the being.
      */
-    public AbstractBeing(
+    public Being(
         final Position startPosition,
         final AbstractRole role,
         final AbstractRole hungerRole,
+        final IEventBusSource eventBusSource,
         final IInventory inventory) {
         this.position = startPosition;
         this.destination = startPosition;
@@ -75,6 +79,7 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
         this.assignedRole = role;
         this.hungerRole = hungerRole;
         this.inventory = inventory;
+        eventBusSource.getEventBus().post(new BeingSpawnedEvent());
     }
 
     @Override
@@ -85,8 +90,8 @@ public abstract class AbstractBeing implements IBeing, IActionPerformer {
     @Override
     public boolean equals(final Object other) {
         if (this == other) return true;
-        if (!(other instanceof AbstractBeing)) return false;
-        final AbstractBeing that = (AbstractBeing) other;
+        if (!(other instanceof Being)) return false;
+        final Being that = (Being) other;
         return Objects.equals(getPosition(), that.getPosition()) && Objects.equals(getRole(),
                                                                                    that.getRole());
     }
