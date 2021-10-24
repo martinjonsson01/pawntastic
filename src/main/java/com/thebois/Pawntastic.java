@@ -53,8 +53,8 @@ public class Pawntastic extends Game {
     private static final float VIEWPORT_HEIGHT = 1000;
     private static final int DEFAULT_FONT_SIZE = 26;
     private static final int TOOLBAR_HEIGHT = 40;
-    private static final int TILE_SIZE = (int) (Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH)
-                                                - TOOLBAR_HEIGHT) / WORLD_SIZE;
+    private static final int TILE_SIZE =
+        (int) (Math.min(VIEWPORT_HEIGHT, VIEWPORT_WIDTH) - TOOLBAR_HEIGHT) / WORLD_SIZE;
     // LibGDX assets
     private BitmapFont font;
     private TextureAtlas skinAtlas;
@@ -97,6 +97,15 @@ public class Pawntastic extends Game {
         return DEBUG;
     }
 
+    /**
+     * Gets the global event bus that most events pass through.
+     *
+     * @return The event bus.
+     */
+    public static EventBus getEventBus() {
+        return BUS;
+    }
+
     @Override
     public void create() {
 
@@ -122,11 +131,12 @@ public class Pawntastic extends Game {
         this.toolbarController = new ToolbarController(world, uiSkin, projector);
 
         // Screens
-        gameScreen = new GameScreen(viewport,
-                                    camera,
-                                    worldController.getView(),
-                                    infoController.getView(),
-                                    toolbarController.getView());
+        gameScreen = new GameScreen(
+            viewport,
+            camera,
+            worldController.getView(),
+            infoController.getView(),
+            toolbarController.getView());
         this.setScreen(gameScreen);
         // Set up Input Processors
         initInputProcessors();
@@ -173,8 +183,8 @@ public class Pawntastic extends Game {
     }
 
     private void generateFont() {
-        final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(
-            "fonts/arial.ttf"));
+        final FreeTypeFontGenerator generator =
+            new FreeTypeFontGenerator(Gdx.files.internal("fonts/arial.ttf"));
         final FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.minFilter = Texture.TextureFilter.Nearest;
@@ -183,9 +193,9 @@ public class Pawntastic extends Game {
         generator.scaleForPixelHeight(DEFAULT_FONT_SIZE);
         font = generator.generateFont(parameter);
         // To smooth out the text.
-        font.getRegion().getTexture().setFilter(
-            Texture.TextureFilter.Linear,
-            Texture.TextureFilter.Linear);
+        font.getRegion()
+            .getTexture()
+            .setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         generator.dispose();
     }
 
@@ -204,15 +214,6 @@ public class Pawntastic extends Game {
         ActionFactory.setPathFinder(pathFinder);
 
         loadSystem.dispose();
-    }
-
-    /**
-     * Gets the global event bus that most events pass through.
-     *
-     * @return The event bus.
-     */
-    public static EventBus getEventBus() {
-        return BUS;
     }
 
     @Override

@@ -16,14 +16,14 @@ import com.thebois.models.world.structures.IStructure;
  */
 public final class StructureView implements IView {
 
+    private static final int TILE_SIZE = Pawntastic.getTileSize();
     /**
      * Missing texture applied when image has not been added for specific enum.
      */
-    private static final Texture MISSING_TEXTURE = new Texture(Gdx.files.internal(
-        "missing-texture.png"));
-    private static final Texture BLUEPRINT_TEXTURE = new Texture(Gdx.files.internal(
-        "structures/blueprint.png"));
-    private static final int TILE_SIZE = Pawntastic.getTileSize();
+    private final Texture missingTexture =
+        new Texture(Gdx.files.internal("missing-texture.png"));
+    private final Texture blueprintTexture =
+        new Texture(Gdx.files.internal("structures/blueprint.png"));
     private Iterable<IStructure> structures;
 
     @Override
@@ -37,7 +37,7 @@ public final class StructureView implements IView {
                 textureToDraw = viewableStructure.getTexture();
             }
             else {
-                textureToDraw = BLUEPRINT_TEXTURE;
+                textureToDraw = blueprintTexture;
             }
 
             batch.setColor(calculateColor(viewableStructure.getColor(), structure.getBuiltRatio()));
@@ -70,7 +70,8 @@ public final class StructureView implements IView {
         for (final ViewableStructure viewableStructure : ViewableStructure.values()) {
             viewableStructure.getTexture().dispose();
         }
-        MISSING_TEXTURE.dispose();
+        missingTexture.dispose();
+        blueprintTexture.dispose();
     }
 
 }

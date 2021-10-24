@@ -10,7 +10,7 @@ public final class ItemFactory {
     /**
      * How many hunger points are restored by eating an edible item.
      */
-    private static final float NUTRIENT_VALUE = 10f;
+    private static final float NUTRIENT_VALUE = 100f;
 
     private ItemFactory() {
 
