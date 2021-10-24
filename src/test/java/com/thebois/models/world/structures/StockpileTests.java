@@ -213,16 +213,16 @@ public class StockpileTests {
     }
 
     @Test
-    public void stockpileDelegatesTakeNextItemToInventory() {
+    public void stockpileDelegatesGetItemTypeOfAnyItemToInventory() {
         // Arrange
         final IStructure structure = createStockpile();
         final ITakeable stockpile = (ITakeable) structure;
 
         // Act
-        stockpile.takeFirstItem();
+        stockpile.getItemTypeOfAnyItem();
 
         // Assert
-        verify(inventory, times(1)).takeFirstItem();
+        verify(inventory, times(1)).getItemTypeOfAnyItem();
     }
 
     @Test

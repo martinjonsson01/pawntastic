@@ -101,12 +101,11 @@ public class BeingTests {
         final Position currentPosition, final AbstractRole role, final AbstractRole hungerRole) {
         final EventBus mockEventBusSource = mock(EventBus.class);
         final IInventory mockInventory = mock(IInventory.class);
-        return new Being(
-            currentPosition,
-            role,
-            hungerRole,
-            () -> mockEventBusSource,
-            mockInventory);
+        return new Being(currentPosition,
+                         role,
+                         hungerRole,
+                         () -> mockEventBusSource,
+                         mockInventory);
     }
 
     private static Being createBeing(
@@ -627,15 +626,15 @@ public class BeingTests {
     }
 
     @Test
-    public void beingDelegatesTakeNextItemToInventory() {
+    public void beingDelegatesGetItemTypeOfAnyItemToInventory() {
         // Arrange
         final Being being = createBeing(inventory);
 
         // Act
-        being.takeFirstItem();
+        being.getItemTypeOfAnyItem();
 
         // Assert
-        verify(inventory, times(1)).takeFirstItem();
+        verify(inventory, times(1)).getItemTypeOfAnyItem();
     }
 
     @Test

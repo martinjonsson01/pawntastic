@@ -67,8 +67,8 @@ public class InventoryTests {
         final Inventory inventory = new Inventory();
 
         // Act
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                                                 () -> inventory.take(itemType));
+        final Exception exception =
+            assertThrows(IllegalArgumentException.class, () -> inventory.take(itemType));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
@@ -172,8 +172,8 @@ public class InventoryTests {
         // Act
         inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
         inventory.tryAdd(ItemFactory.fromType(ItemType.LOG));
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                                                 () -> inventory.take(ItemType.ROCK));
+        final Exception exception =
+            assertThrows(IllegalArgumentException.class, () -> inventory.take(ItemType.ROCK));
 
         // Assert
         assertThat(exception.getMessage()).isEqualTo("Specified ItemType not in inventory");
@@ -362,19 +362,19 @@ public class InventoryTests {
     }
 
     @Test
-    public void takeNextItemGetsTheLastAddedItem() {
+    public void getItemTypeOfAnyItemReturnsTheFirstAddedItem() {
         // Arrange
         final Inventory inventory = new Inventory(50f);
-        final IItem item1 = ItemFactory.fromType(ItemType.ROCK);
-        final IItem item2 = ItemFactory.fromType(ItemType.FISH);
+        final ItemType item1 = ItemType.ROCK;
+        final ItemType item2 = ItemType.FISH;
 
-        inventory.tryAdd(item1);
-        inventory.tryAdd(item2);
+        inventory.tryAdd(ItemFactory.fromType(item1));
+        inventory.tryAdd(ItemFactory.fromType(item2));
         // Act
-        final IItem lastAddedItem = inventory.takeFirstItem();
+        final ItemType anyItemTypeInInventory = inventory.getItemTypeOfAnyItem();
 
         // Assert
-        assertThat(lastAddedItem).isEqualTo(item2);
+        assertThat(anyItemTypeInInventory).isEqualTo(item1);
     }
 
 }

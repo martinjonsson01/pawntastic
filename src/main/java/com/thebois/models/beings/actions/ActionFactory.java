@@ -164,7 +164,7 @@ public final class ActionFactory {
         if (structure instanceof IStorable) {
             final IStorable storable = (IStorable) structure;
             return ActionFactory.createGiveItem(storable,
-                                                performer.takeFirstItem().getType(),
+                                                performer.getItemTypeOfAnyItem(),
                                                 structure.getPosition());
         }
         else {

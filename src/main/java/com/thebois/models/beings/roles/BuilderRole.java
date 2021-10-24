@@ -27,16 +27,15 @@ class BuilderRole extends AbstractRole {
      * Depending on what state the role is in, the performer gets different actions. Either go to
      * stockpile and fill/empty inventory or go to incomplete building and give it items.
      */
-    private BuilderState builderState = BuilderState.FETCHING_RESOURCES;
+    private BuilderState builderState = BuilderState.EMPTYING_INVENTORY;
 
     /**
-     * Whether the performer's inventory should be filled or emptied.
+     * What state the builder is in, either emptying inventory ,filling inventory,  or building.
      */
     private enum BuilderState {
-        FETCHING_RESOURCES, BUILDING_STRUCTURES
+        EMPTYING_INVENTORY, FETCHING_RESOURCES, BUILDING_STRUCTURES
     }
 
-    private boolean isFilling = false;
     private final IStructureFinder structureFinder;
     private final IWorld world;
 
@@ -60,10 +59,11 @@ class BuilderRole extends AbstractRole {
     @Override
     protected Collection<IActionSource> getTaskGenerators() {
 
-        if (builderState == BuilderState.FETCHING_RESOURCES) {
-            return List.of(this::createMoveToStockpile,
-                           this::createEmptyInventory,
-                           this::createFillInventory);
+        if (builderState == BuilderState.EMPTYING_INVENTORY) {
+            return List.of(this::createMoveToStockpile, this::createEmptyInventory);
+        }
+        else if (builderState == BuilderState.FETCHING_RESOURCES) {
+            return List.of(this::createMoveToStockpile, this::createFillInventory);
         }
         else {
             return List.of(this::createMoveToIncompleteStructure, this::createBuildStructure);
@@ -75,20 +75,14 @@ class BuilderRole extends AbstractRole {
     }
 
     private IAction createEmptyInventory(final IActionPerformer performer) {
-        if (isFilling) {
-            return ActionFactory.createDoNext();
-        }
         if (performer.isEmpty()) {
-            isFilling = true;
+            builderState = BuilderState.FETCHING_RESOURCES;
             return ActionFactory.createDoNext();
         }
         return ActionFactory.createEmptyInventory(performer, structureFinder);
     }
 
     private IAction createFillInventory(final IActionPerformer performer) {
-        if (!isFilling) {
-            return ActionFactory.createDoNext();
-        }
         final Optional<IStructure> maybeStructure = findNearbyIncompleteStructure(performer);
         if (maybeStructure.isEmpty()) return ActionFactory.createDoNothing();
         final IStructure structure = maybeStructure.get();
@@ -96,7 +90,7 @@ class BuilderRole extends AbstractRole {
         final ItemType nextNeededItem = getNextNeededItem(performer, structure);
         // Can performer fit item
         if (nextNeededItem == null || !performer.canFitItem(nextNeededItem)) {
-            setBuildingState();
+            builderState = BuilderState.BUILDING_STRUCTURES;
             return ActionFactory.createDoNext();
         }
 
@@ -110,7 +104,7 @@ class BuilderRole extends AbstractRole {
         if (stockpile instanceof ITakeable) {
             final ITakeable takeable = (ITakeable) stockpile;
             if (!takeable.hasItem(nextNeededItem)) {
-                setBuildingState();
+                builderState = BuilderState.BUILDING_STRUCTURES;
                 return ActionFactory.createDoNext();
             }
             return ActionFactory.createTakeItem(takeable, nextNeededItem, stockpile.getPosition());
@@ -118,11 +112,6 @@ class BuilderRole extends AbstractRole {
         else {
             return ActionFactory.createDoNothing();
         }
-    }
-
-    private void setBuildingState() {
-        builderState = BuilderState.BUILDING_STRUCTURES;
-        isFilling = false;
     }
 
     private ItemType getNextNeededItem(
@@ -166,7 +155,7 @@ class BuilderRole extends AbstractRole {
         }
 
         if (!performerHasNeededItem) {
-            builderState = BuilderState.FETCHING_RESOURCES;
+            builderState = BuilderState.EMPTYING_INVENTORY;
             return ActionFactory.createDoNext();
         }
 

@@ -72,10 +72,10 @@ public interface ITakeable {
     boolean isEmpty();
 
     /**
-     * Gets the top most item.
+     * Gets the ItemType of the first item.
      *
-     * @return The item to take.
+     * @return The type of item.
      */
-    IItem takeFirstItem();
+    ItemType getItemTypeOfAnyItem();
 
 }

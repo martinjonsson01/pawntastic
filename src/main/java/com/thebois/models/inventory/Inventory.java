@@ -130,8 +130,8 @@ public class Inventory implements IInventory {
     }
 
     @Override
-    public IItem takeFirstItem() {
-        return items.remove(items.size() - 1);
+    public ItemType getItemTypeOfAnyItem() {
+        return items.get(0).getType();
     }
 
     @Override

@@ -65,7 +65,7 @@ public class Being implements IBeing, IActionPerformer {
      * @param role           The starting role.
      * @param hungerRole     The role to perform when hungry.
      * @param eventBusSource A way of getting an event bus to listen for events on.
-     * @param inventory     The inventory of the being.
+     * @param inventory      The inventory of the being.
      */
     public Being(
         final Position startPosition,
@@ -216,8 +216,8 @@ public class Being implements IBeing, IActionPerformer {
     }
 
     @Override
-    public IItem takeFirstItem() {
-        return inventory.takeFirstItem();
+    public ItemType getItemTypeOfAnyItem() {
+        return inventory.getItemTypeOfAnyItem();
     }
 
     /**
